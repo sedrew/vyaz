@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+fonts/
+
+dist/
+
+.skills/
+.agents/
+.clinerules/
+.codegraph/
+
+# Build artifacts
+*.tgz
+
+# OS files
+.DS_Store
+
+# npm
+npm-debug.log*
+
+# tmp
+/tmp
+tmp/
+
+.idea/

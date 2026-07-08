@@ -1,0 +1,15 @@
+{
+  "name": "vyaz-monorepo",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "packages/core",
+    "packages/renderer"
+  ],
+  "scripts": {
+    "build": "bun run build -w packages/core && bun run build -w packages/renderer"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
