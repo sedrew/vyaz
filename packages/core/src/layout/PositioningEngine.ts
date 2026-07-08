@@ -1,19 +1,19 @@
 /**
- * PositioningEngine.ts — чистая математика X/Y позиционирования.
+ * PositioningEngine.ts — pure X/Y positioning math.
  *
- * Принимает результат pretext (линии с фрагментами) + метрики шрифтов +
- * стиль параграфа → возвращает LineBox[] с абсолютными координатами.
+ * Takes pretext output (lines with fragments) + font metrics +
+ * paragraph style → returns LineBox[] with absolute coordinates.
  *
  * X: alignment (left/center/right/justify) + indent
  * Y: baseline + lineHeight + spaceBefore/After
- * Justify: фрагментированный подход (каждый пробел → отдельный FragmentBox)
+ * Justify: fragmented approach (each space → separate FragmentBox)
  *
- * Спецификации:
+ * Specs:
  * - CSS Text Module Level 3/4 (browser mode)
  * - ISO/IEC 29500 (Office Open XML / DrawingML, office mode)
- * - Parley alignment.rs (концептуально близко, но здесь justify реализован
- *   проще: slack делится поровну между растягиваемыми space-фрагментами,
- *   без мутации ClusterData.advance)
+ * - Parley alignment.rs (conceptually close, but here justify is simpler:
+ *   slack is divided equally among stretchable space-fragments,
+ *   without mutating ClusterData.advance)
  */
 
 import type { ParagraphStyle } from '../types/Document.js';
@@ -21,7 +21,7 @@ import type { FontMetrics } from '../types/FontTypes.js';
 import type { LineBox, FragmentBox, FragmentFontMetrics } from '../types/LayoutTypes.js';
 import type { PreparedRichInlineItem } from '../compile/DocumentCompiler.js';
 
-// ── Вспомогательные типы для pretext ──────────────────────────────────
+// ── Helper types for pretext ───────────────────────────────────────────
 
 interface PretextFragment {
   itemIndex: number;
@@ -34,22 +34,22 @@ interface PretextFragment {
 
 interface PretextLine {
   fragments: PretextFragment[];
-  width: number;         // натуральная ширина (без растяжения)
+  width: number;         // natural width (without stretching)
   end: { segmentIndex: number; graphemeIndex: number };
 }
 
 // ── PositioningEngine ─────────────────────────────────────────────────
 
 /**
- * Построить LineBox[] из pretext-линий с учётом выравнивания и метрик.
+ * Build LineBox[] from pretext lines with alignment and metrics.
  *
- * @param pretextLines — результат pretext (materializeRichInlineLineRange)
- * @param items — исходные PreparedRichInlineItem[] (для метаданных)
- * @param fontMetricsFn — функция получения метрик для фрагмента
- * @param style — стиль параграфа
- * @param maxWidth — доступная ширина контейнера
- * @param startY — начальная Y-позиция
- * @param mode — режим метрик ('browser' | 'office'), влияет на расчёт высоты строки
+ * @param pretextLines — pretext result (materializeRichInlineLineRange)
+ * @param items — original PreparedRichInlineItem[] (for metadata)
+ * @param fontMetricsFn — function to get font metrics for a fragment
+ * @param style — paragraph style
+ * @param maxWidth — available container width
+ * @param startY — initial Y position
+ * @param mode — metric mode ('browser' | 'office'), affects line height calculation
  * @returns { lines: LineBox[], contentWidth: number }
  */
 export function positionLineBoxes(
@@ -71,10 +71,10 @@ export function positionLineBoxes(
   for (let lineIdx = 0; lineIdx < pretextLines.length; lineIdx++) {
     const ptLine = pretextLines[lineIdx];
 
-    // ── Построить FragmentBox[] ──────────────────────
+    // ── Build FragmentBox[] ────────────────────────────
     let maxAscent = 0;
     let maxDescent = 0;
-    let maxLineHeightBase = 0; // max(ascent + descent) — для Office-режима
+    let maxLineHeightBase = 0; // max(ascent + descent) — for Office mode
     const fragments: FragmentBox[] = [];
 
     for (const frag of ptLine.fragments) {
@@ -87,12 +87,12 @@ export function positionLineBoxes(
 
       maxAscent = Math.max(maxAscent, effectiveAscent);
       maxDescent = Math.max(maxDescent, effectiveDescent);
-      // Office: база высоты строки = ascent + descent (OS/2 usWinAscent + usWinDescent, scaled)
+      // Office: line height base = ascent + descent (OS/2 usWinAscent + usWinDescent, scaled)
       maxLineHeightBase = Math.max(maxLineHeightBase, metrics.ascent + metrics.descent);
 
-      // pretext: gapBefore — межсловный пробел ПЕРЕД словом
+      // pretext: gapBefore — inter-word space BEFORE the word
       // occupiedWidth = gapBefore + textWidth
-      // Разбиваем на два FragmentBox: пробел + слово
+      // Split into two FragmentBox: space + word
       const gapWidth = frag.gapBefore || 0;
       const textWidth = frag.occupiedWidth;
 
@@ -230,7 +230,7 @@ export function positionLineBoxes(
     const totalFragWidth = fragments.reduce((sum, f) => sum + f.width, 0);
     const effectiveLineWidth = totalFragWidth - trailingWidth;
 
-    // ── X-позиционирование ──────────────────────────
+    // ── X positioning ───────────────────────────────
     const indent = isFirstLine
       ? (style.leftIndent || 0) + (style.indent || 0)
       : (style.leftIndent || 0);
@@ -246,19 +246,19 @@ export function positionLineBoxes(
     } else if (style.alignment === 'right') {
       xOffset = indent + slack;
     } else if (style.alignment === 'justify') {
-      // Justify: равномерно распределить slack между пробельными фрагментами
-      // (кроме trailing whitespace).
+      // Justify: distribute slack evenly among whitespace fragments
+      // (excluding trailing whitespace).
       //
-      // CSS Text Module Level 3 §4.1.3: trailing spaces не участвуют в justify.
-      // CSS text-align-last: последняя строка не justify, а start-align.
-      // OOXML (ISO 29500): последняя строка абзаца не растягивается.
-      // Parley alignment.rs: исключает последнюю строку (line.break_reason == None/Explicit)
-      //   и строки с num_spaces == 0.
+      // CSS Text Module Level 3 §4.1.3: trailing spaces do not participate in justify.
+      // CSS text-align-last: last line is not justify, but start-align.
+      // OOXML (ISO 29500): last line of paragraph is not stretched.
+      // Parley alignment.rs: excludes last line (line.break_reason == None/Explicit)
+      //   and lines with num_spaces == 0.
       //
-      // Определяем, является ли эта строка последней в параграфе.
+      // Determine if this is the last line in the paragraph.
       const isLastLine = lineIdx === pretextLines.length - 1;
 
-      // Считаем только "растягиваемые" пробелы: type === 'space' и !trailing
+      // Count only "stretchable" spaces: type === 'space' and !trailing
       const stretchableSpaces = fragments.filter(
         (f) => f.type === 'space' && !f.trailing,
       );
@@ -271,12 +271,12 @@ export function positionLineBoxes(
         }
       }
 
-      // Если это последняя строка или нет пробелов — fallback на start-align
-      // (LTR → left, RTL → right — пока всегда left, Bidi будет в Phase 2)
+      // If this is the last line or no spaces — fallback to start-align
+      // (LTR → left, RTL → right — always left for now, Bidi in Phase 2)
       xOffset = indent;
     }
 
-    // Назначить X-позиции
+    // Assign X positions
     let runX = xOffset;
     for (const frag of fragments) {
       frag.x = Math.round(runX * 100) / 100;
@@ -286,17 +286,17 @@ export function positionLineBoxes(
     const lineWidth = runX - xOffset;
     contentWidth = Math.max(contentWidth, lineWidth);
 
-    // ── Y-позиционирование ──────────────────────────
-    // Алгоритм высоты строки зависит от режима:
+    // ── Y positioning ───────────────────────────────
+    // Line height algorithm depends on mode:
     //
-    // 'browser' (CSS-совместимый, parley/Chrome matching):
+    // 'browser' (CSS-compatible, parley/Chrome matching):
     //   1. lineHeightPx = maxFontSize * style.lineHeight
     //
     // 'office' (MS Office / DrawingML pixel-perfect):
-    //   В PowerPoint нет line-height-множителя для одиночной строки.
-    //   Высота строки строго = ascent + descent (OS/2.usWinAscent + usWinDescent).
-    //   Baseline = Top + ascent без каких-либо добавок (half-leading).
-    //   См. pixel-perfect-text-layout.md §1 и ECMA-376.
+    //   PowerPoint has no line-height multiplier for single lines.
+    //   Line height strictly = ascent + descent (OS/2.usWinAscent + usWinDescent).
+    //   Baseline = Top + ascent without any half-leading additions.
+    //   See pixel-perfect-text-layout.md §1 and ECMA-376.
     const maxFontSize = fragments.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
     const ascentRounded = Math.round(maxAscent);
@@ -306,23 +306,23 @@ export function positionLineBoxes(
     let baseline: number;
 
     if (mode === 'office') {
-      // DrawingML: lineHeight = ascent + descent, без lineHeight ×1.15 и без leading.
-      // DrawingML: базовая высота строки = OS/2 (usWinAscent + usWinDescent), без
-      // суммы округлённых ascent/descent — та формула давала расхождение в pixel-perfect
-      // сравнении с PowerPoint, поэтому используем maxLineHeightBase.
+      // DrawingML: lineHeight = ascent + descent, no lineHeight ×1.15 and no leading.
+      // DrawingML: base line height = OS/2 (usWinAscent + usWinDescent), without
+      // sum of rounded ascent/descent — that formula caused pixel-perfect
+      // mismatch with PowerPoint, so we use maxLineHeightBase.
       lineBoxHeight = maxLineHeightBase;
       baseline = ascentRounded;
     } else {
-      // Browser: CSS-совместимый с leading распределением.
+      // Browser: CSS-compatible with leading distribution.
       const lineHeightPx = maxFontSize * style.lineHeight;
       const ascentDescentRounded = ascentRounded + descentRounded;
 
       const rawLineBoxHeight = Math.round(lineHeightPx);
       lineBoxHeight = Math.max(rawLineBoxHeight, ascentDescentRounded);
-      const leading = lineBoxHeight - ascentDescentRounded; // всегда целое
+      const leading = lineBoxHeight - ascentDescentRounded; // always integer
 
       if (leading <= 0) {
-        // Negative или zero leading: не сжимаем строку
+        // Negative or zero leading: don't shrink the line
         baseline = ascentRounded;
       } else {
         // Positive leading: distribute as integers with above_leading < below_leading
@@ -343,7 +343,7 @@ export function positionLineBoxes(
 
     const startIdx = charIndex;
 
-    // Подсчёт символов в строке (для INDEX_CONSIST)
+    // Count characters in line (for INDEX_CONSIST)
     let lineCharCount = 0;
     for (const frag of fragments) {
       lineCharCount += frag.text.length;
@@ -358,7 +358,7 @@ export function positionLineBoxes(
     if (fragments.length > 0) {
       const lastFrag = fragments[fragments.length - 1];
       const lastFragItem = items[lastFrag.itemIndex];
-      // Если последний символ — \n, это hard break
+      // If last character is \n, it's a hard break
       if (lastFragItem && lastFrag.text.endsWith('\n')) {
         lastFrag.breakType = 'hard';
       } else if (lineIdx < pretextLines.length - 1) {
@@ -384,8 +384,8 @@ export function positionLineBoxes(
     isFirstLine = false;
   }
 
-  // Добавить spaceAfter к последней высоте
-  // (возвращаем как есть — ParagraphLayoutEngine добавит spaceAfter в общую высоту)
+  // Add spaceAfter to last line height
+  // (return as is — ParagraphLayoutEngine will add spaceAfter to total height)
 
   return { lines, contentWidth };
 }

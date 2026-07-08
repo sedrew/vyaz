@@ -1,14 +1,14 @@
 /**
- * Полифилл Canvas API для Bun/Node.js через @napi-rs/canvas.
- * Нужен для @chenglou/pretext в серверной среде (Bun/Node.js без DOM).
+ * Canvas API polyfill for Bun/Node.js via @napi-rs/canvas.
+ * Required by @chenglou/pretext in server environments (Bun/Node.js without DOM).
  *
- * Два уровня полифилла:
- *   1. globalThis.document.createElement('canvas') — pretext использует его
- *      внутри prepare() для создания временного Canvas и вызова measureText.
- *   2. OffscreenCanvas — для некоторых библиотек и ранних версий.
+ * Two levels of polyfill:
+ *   1. globalThis.document.createElement('canvas') — pretext uses this
+ *      inside prepare() to create a temporary Canvas and call measureText.
+ *   2. OffscreenCanvas — for some libraries and early versions.
  *
- * Экспортирует enableOfficeTextMeasure / disableOfficeTextMeasure —
- * переопределение ctx.measureText для fontkit-измерений в Office-режиме.
+ * Exports enableOfficeTextMeasure / disableOfficeTextMeasure —
+ * ctx.measureText override for fontkit-based measurements in Office mode.
  */
 // ⚠️ Dynamic import — prevents esbuild from resolving @napi-rs/canvas at bundle time.
 // This module is a native Node.js addon. In the browser, Canvas APIs are already available.
@@ -23,23 +23,23 @@ try {
   _createCanvas = null;
 }
 
-// ── Полифилл document.createElement('canvas') ──────────────────────────
-// Pretext внутри prepare() вызывает document.createElement('canvas'),
-// чтобы создать временный Canvas и получить контекст 2d для measureText.
-// Без этого полифилла prepare() падает с "document is not defined" в Bun.
+// ── Polyfill document.createElement('canvas') ────────────────────────────
+// Pretext internally calls document.createElement('canvas') during prepare(),
+// to create a temporary Canvas and obtain a 2d context for measureText.
+// Without this polyfill, prepare() crashes with "document is not defined" in Bun.
 
 if (typeof globalThis.document === 'undefined') {
   (globalThis as any).document = {
     createElement: (tag: string) => {
       if (tag === 'canvas' && _createCanvas) return _createCanvas(1, 1);
-      // Для других элементов — пустая заглушка
+      // For other elements — empty stub
       return {};
     },
   };
 }
 
-// ── Полифилл OffscreenCanvas ───────────────────────────────────────────
-// @napi-rs/canvas не предоставляет OffscreenCanvas, поэтому делаем шим.
+// ── Polyfill OffscreenCanvas ─────────────────────────────────────────────
+// @napi-rs/canvas does not provide OffscreenCanvas, so we create a shim.
 
 if (typeof globalThis.OffscreenCanvas === 'undefined' && _createCanvas) {
   (globalThis as any).OffscreenCanvas = class OffscreenCanvasShim {
@@ -82,22 +82,22 @@ let officeFontCache: Map<string, any> | null = null;
 let officeEnabled = false;
 
 /**
- * Парсит ctx.font строку вида "italic bold 16px Arial" → { family, size, weight }
+ * Parse ctx.font string like "italic bold 16px Arial" → { family, size, weight }
  */
 function parseFont(fontStr: string): { family: string; size: number; weight: string } | null {
-  // "italic bold 16px Arial" или "bold 16px Inter" или "16px Arial"
+  // "italic bold 16px Arial" or "bold 16px Inter" or "16px Arial"
   const pxMatch = fontStr.match(/(\d+(?:\.\d+)?)px\s+(.+)/);
   if (!pxMatch) return null;
   const size = parseFloat(pxMatch[1]);
-  // Упрощённо: всё после px — family
+  // Simplified: everything after px is the family
   const family = pxMatch[2].trim();
-  // Парсим вес из начала
+  // Parse weight from beginning
   const weightMatch = fontStr.match(/\b(bold|italic|\d{3})\b/);
   const weight = weightMatch ? (weightMatch[1] === 'bold' ? 'bold' : weightMatch[1]) : 'normal';
   return { family, size, weight };
 }
 
-/** Ключ кэша: "${family}_${weight}_normal" */
+/** Cache key: "${family}_${weight}_normal" */
 function cacheKey(family: string, weight: string): string {
   return `${family}_${weight}_normal`;
 }
@@ -127,13 +127,13 @@ function officeMeasureText(this: any, text: string): TextMetrics {
     if (glyph) {
       totalWidth += glyph.advanceWidth * scale;
     } else {
-      // Fallback для отсутствующего глифа: используем оригинал
+      // Fallback for missing glyph: use original
       if (originalMeasureText) {
         return originalMeasureText.call(this, text);
       }
-      totalWidth += parsed.size * 0.5; // грубая оценка
+      totalWidth += parsed.size * 0.5; // rough estimate
     }
-    // Пропускаем суррогатные пары
+    // Skip surrogate pairs
     if (codePoint > 0xffff) i++;
   }
 
@@ -157,8 +157,8 @@ function createEmptyMetrics(): TextMetrics {
 }
 
 /**
- * Включить Office-измерение: подменяет ctx.measureText на fontkit-based.
- * @param fontCache — Map ключ-шрифт из FontMetricsProvider
+ * Enable Office measurement: replaces ctx.measureText with fontkit-based version.
+ * @param fontCache — Map key->font from FontMetricsProvider
  */
 export function enableOfficeTextMeasure(fontCache: Map<string, any>): void {
   if (officeEnabled) return;
@@ -172,7 +172,7 @@ export function enableOfficeTextMeasure(fontCache: Map<string, any>): void {
 }
 
 /**
- * Восстановить оригинальный ctx.measureText.
+ * Restore original ctx.measureText.
  */
 export function disableOfficeTextMeasure(): void {
   if (!officeEnabled) return;

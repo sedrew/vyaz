@@ -1,5 +1,5 @@
 /**
- * RenderTypes.ts — типы, общие для всех рендереров (SVG, Canvas и др.).
+ * RenderTypes.ts — types shared across all renderers (SVG, Canvas, etc.).
  */
 
 export interface DebugFlags {

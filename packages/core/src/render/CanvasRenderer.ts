@@ -1,14 +1,14 @@
 /**
- * CanvasRenderer.ts — рендеринг LineBox[] → Canvas.
+ * CanvasRenderer.ts — render LineBox[] → Canvas.
  *
- * Принимает готовые LineBox[] с абсолютными координатами.
- * Ничего не вычисляет — только рисует (dumb drawer principle).
+ * Takes ready LineBox[] with absolute coordinates.
+ * Does not compute anything — only draws (dumb drawer principle).
  *
- * Новые опции:
- *   - sizing: 'frame' | 'content' — авто-размер холста
- *   - preserveSpaces: boolean — рисовать пробелы (вместо skip)
- *   - backgroundColor: string — цвет фона
- *   - debug: DebugFlags — отладочные оверлеи
+ * Options:
+ *   - sizing: 'frame' | 'content' — auto canvas size
+ *   - preserveSpaces: boolean — draw spaces (instead of skip)
+ *   - backgroundColor: string — background color
+ *   - debug: DebugFlags — debug overlays
  */
 
 import type { LineBox, FragmentBox } from '../types/LayoutTypes.js';
@@ -47,11 +47,11 @@ function fontStyleCSS(style: string): string {
 }
 
 /**
- * Рендерит массив LineBox[] на Canvas.
+ * Render LineBox[] array to Canvas.
  *
  * @param ctx — Canvas 2D rendering context
- * @param lines — готовые LineBox[] с абсолютными координатами
- * @param options — опции рендеринга
+ * @param lines — ready LineBox[] with absolute coordinates
+ * @param options — rendering options
  */
 export function renderToCanvas(
   ctx: CanvasRenderingContext2D | any,
@@ -127,7 +127,7 @@ export function renderToCanvas(
         ctx.stroke();
       }
 
-      // InlineWidget (простой прямоугольник)
+      // InlineWidget (simple rectangle)
       if (frag.inlineWidget) {
         const iw = frag.inlineWidget;
         const iwY = baselineY - (iw.height || frag.fontMetrics.ascent) + (iw.baselineOffset || 0);

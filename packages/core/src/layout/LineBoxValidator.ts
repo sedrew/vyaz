@@ -1,16 +1,16 @@
 /**
- * LineBoxValidator.ts — проверка инвариантов и YAML-сериализация.
+ * LineBoxValidator.ts — invariant checks and YAML serialization.
  *
  * Parley-inspired invariant checks:
  *   NO_OVERLAP, MONOTONIC_Y, INDEX_CONSIST, WIDTH_FIT, BASELINE_EQ
  *
- * YAML-снепшоты: только семантические данные (без шума метрик).
+ * YAML snapshots: semantic data only (no metric noise).
  */
 
 import { dump } from 'js-yaml';
 import type { LineBox, FragmentBox, SemanticParagraph } from '../types/LayoutTypes.js';
 
-const EPSILON = 0.5; // subpixel погрешность
+const EPSILON = 0.5; // subpixel tolerance
 
 // ── Invariant guard ────────────────────────────────────────────────────
 
@@ -21,8 +21,8 @@ export interface InvariantError {
 }
 
 /**
- * Проверить все 5 инвариантов для массива LineBox.
- * Кидает ошибку при первом нарушении.
+ * Check all 5 invariants for a LineBox array.
+ * Throws on first violation.
  */
 export function assertLineBoxInvariants(
   lines: LineBox[],
@@ -61,7 +61,7 @@ export function assertLineBoxInvariants(
       });
     }
 
-    // 3. INDEX_CONSIST: проверяется ниже (сумма всех длин)
+    // 3. INDEX_CONSIST: checked below (sum of all lengths)
     if (line.endIndex <= line.startIndex) {
       errors.push({
         invariant: 'INDEX_CONSIST',
@@ -70,7 +70,7 @@ export function assertLineBoxInvariants(
     }
 
     // 4. WIDTH_FIT: line.width <= maxWidth + epsilon
-    // При maxWidth=0 (zero-width container) разрешаем любую ширину
+    // When maxWidth=0 (zero-width container) allow any width
     if (maxWidth > 0 && line.width > maxWidth + EPSILON) {
       errors.push({
         invariant: 'WIDTH_FIT',
@@ -78,15 +78,15 @@ export function assertLineBoxInvariants(
       });
     }
 
-    // 5. BASELINE_EQ: у всех fragments в одной line одинаковый baseline
+    // 5. BASELINE_EQ: all fragments in a line have the same baseline
     if (line.fragments.length > 1) {
       const firstBaseline = line.baseline;
       for (let j = 0; j < line.fragments.length; j++) {
         const frag = line.fragments[j];
         const fragBaseline = frag.fontMetrics.ascent;
         if (Math.abs(fragBaseline - firstBaseline) > EPSILON) {
-          // NOTE: baseline может различаться для super/sub — это нормально
-          // Поэтому проверяем только что baseline задан
+          // NOTE: baseline may differ for super/sub — that's normal
+          // So we only check that baseline is set
           if (fragBaseline <= 0) {
             errors.push({
               invariant: 'BASELINE_EQ',
@@ -99,7 +99,7 @@ export function assertLineBoxInvariants(
   }
 
   // 3. INDEX_CONSIST: total text length
-  // Разрешена разница из-за trailing whitespace (pretext может его отбросить)
+  // Difference allowed due to trailing whitespace (pretext may drop it)
   // const totalChars = lines.reduce((sum, l) => sum + (l.endIndex - l.startIndex), 0);
   // if (totalChars > originalText.length + EPSILON) {
   //   errors.push({
@@ -115,9 +115,9 @@ export function assertLineBoxInvariants(
   // }
 }
 
-// ── YAML сериализация ──────────────────────────────────────────────────
+// ── YAML serialization ─────────────────────────────────────────────────
 
-/** Стиль фрагмента для снепшота */
+/** Fragment style label for snapshot */
 function fragmentStyleLabel(frag: FragmentBox): 'bold' | 'italic' | 'normal' {
   if (frag.style.fontStyle === 'italic') return 'italic';
   const w = frag.style.fontWeight;
@@ -126,9 +126,9 @@ function fragmentStyleLabel(frag: FragmentBox): 'bold' | 'italic' | 'normal' {
 }
 
 /**
- * Конвертировать LineBox[] в YAML-строку для снепшотов.
- * Только семантические данные: text, x, width, style.
- * Без glyphAdvances, fontMetrics (шум), inlineWidget.
+ * Convert LineBox[] to YAML string for snapshots.
+ * Only semantic data: text, x, width, style.
+ * No glyphAdvances, fontMetrics (noise), inlineWidget.
  */
 export function lineBoxToYAML(
   lines: LineBox[],

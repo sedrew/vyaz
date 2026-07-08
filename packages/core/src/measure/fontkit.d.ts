@@ -1,6 +1,6 @@
 /**
  * Minimal type declarations for fontkit.
- * fontkit не поставляет нативных TypeScript типов.
+ * fontkit does not ship native TypeScript types.
  */
 
 declare module 'fontkit' {

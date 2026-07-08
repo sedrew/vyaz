@@ -1,20 +1,20 @@
 /**
- * FontMetricsProvider.ts — изоморфный провайдер метрик шрифта.
+ * FontMetricsProvider.ts — isomorphic font metrics provider.
  *
- * Стратегия (приоритет):
- *   1. fontkit (Node.js) — из зарегистрированного буфера
- *      - 'browser' режим: font.hhea.ascent / font.hhea.descent
- *      - 'office'  режим:  font['OS/2'].usWinAscent / font['OS/2'].usWinDescent
- *   2. Canvas TextMetrics (браузер)
+ * Strategy (priority):
+ *   1. fontkit (Node.js) — from registered buffer
+ *      - 'browser' mode: font.hhea.ascent / font.hhea.descent
+ *      - 'office'  mode:  font['OS/2'].usWinAscent / font['OS/2'].usWinDescent
+ *   2. Canvas TextMetrics (browser)
  *   3. Fallback (fontSize * 0.85 / 0.15)
  *
- * Использует FontRegistry для регистрации шрифтов.
+ * Uses FontRegistry for font registration.
  */
 
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
 import { enableOfficeTextMeasure, disableOfficeTextMeasure } from './canvas-polyfill.js';
 
-/** Ключ кэша: "${family}_${weight}_${style}" */
+/** Cache key: "${family}_${weight}_${style}" */
 function cacheKey(family: string, weight: string, style: string): string {
   return `${family}_${weight}_${style}`;
 }
@@ -29,14 +29,14 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   setMode(mode: 'browser' | 'office'): void {
     if (this.mode === mode) return;
     this.mode = mode;
-    // Инвалидировать кэш метрик при смене режима
+    // Invalidate metrics cache on mode change
     this.metricsCache.clear();
 
-    // Переключить ctx.measureText для pretext (canvas-based line breaking)
+    // Toggle ctx.measureText for pretext (canvas-based line breaking)
     if (mode === 'office') {
       enableOfficeTextMeasure(this.cache); // fontkit-based hmtx advance widths
     } else {
-      disableOfficeTextMeasure(); // оригинальный Canvas 2D measureText
+      disableOfficeTextMeasure(); // original Canvas 2D measureText
     }
   }
 
@@ -47,8 +47,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   // ── FontRegistry ──────────────────────────────────────────────────
 
   /**
-   * Зарегистрировать бинарный шрифт для fontkit.
-   * В браузере — no-op.
+   * Register a binary font for use with fontkit.
+   * In browser — no-op.
    */
   async registerFont(
     family: string,
@@ -56,7 +56,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     source: string | Buffer,
   ): Promise<void> {
     try {
-      // Динамический ESM импорт — fontkit может отсутствовать в браузере
+      // Dynamic ESM import — fontkit may not be available in browser
       const fontkit = await import('fontkit');
       const buffer = typeof source === 'string' ? Buffer.from(source) : source;
       // @ts-ignore fontkit CJS/ESM compatibility
@@ -68,10 +68,10 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         options.style || 'normal',
       );
       this.cache.set(key, font);
-      // Инвалидировать метрики для этого шрифта
+      // Invalidate metrics for this font
       this.metricsCache.delete(key);
     } catch {
-      // fontkit не доступен (браузер) — no-op
+      // fontkit not available (browser) — no-op
     }
     return Promise.resolve();
   }
@@ -79,8 +79,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   // ── Font object access (for per-glyph advance) ────────────────────
 
   /**
-   * Получить fontkit-объект шрифта для посимвольных вычислений.
-   * Возвращает undefined если шрифт не зарегистрирован или fontkit недоступен.
+   * Get fontkit font object for per-character calculations.
+   * Returns undefined if font is not registered or fontkit unavailable.
    */
   getFont(family: string, weight = 'normal', style = 'normal'): any | undefined {
     const key = cacheKey(family, weight, style);
@@ -97,21 +97,21 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   ): FontMetrics {
     const key = cacheKey(fontFamily, weight, style);
 
-    // Кэш метрик (зависит от fontSize, поэтому включаем в ключ)
+    // Metrics cache (depends on fontSize, so include in key)
     const metricsKey = `${key}_${fontSize}_${this.mode}`;
     const cached = this.metricsCache.get(metricsKey);
     if (cached) return cached;
 
     let metrics: FontMetrics;
 
-    // Стратегия 1: fontkit
+    // Strategy 1: fontkit
     const font = this.cache.get(key);
 
     if (font) {
       const scale = fontSize / font.unitsPerEm;
 
       if (this.mode === 'office') {
-        // Office-режим: OS/2.usWinAscent + usWinDescent
+        // Office mode: OS/2.usWinAscent + usWinDescent
         const os2 = font['OS/2'];
         let ascent: number;
         let descent: number;
@@ -122,7 +122,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
           descent = Math.abs(os2.winDescent) * scale * 1.078;
           sourceTable = 'OS/2';
         } else {
-          // Fallback на hhea если OS/2 нет
+          // Fallback to hhea if OS/2 is absent
           ascent = font.ascent * scale;
           descent = Math.abs(font.descent) * scale;
           sourceTable = 'hhea';
@@ -136,7 +136,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
           sourceTable,
         };
       } else {
-        // Браузерный режим: hhea.ascender/descender
+        // Browser mode: hhea.ascender/descender
         metrics = {
           ascent: font.ascent * scale,
           descent: Math.abs(font.descent) * scale,
@@ -150,7 +150,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       return metrics;
     }
 
-    // Стратегия 2: Canvas TextMetrics (браузер)
+    // Strategy 2: Canvas TextMetrics (browser)
     if (typeof document !== 'undefined') {
       try {
         const canvas = document.createElement('canvas');
@@ -172,8 +172,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       }
     }
 
-    console.error("Font notfound")
-    // Стратегия 3: Fallback
+    console.error("Font not found")
+    // Strategy 3: Fallback
     metrics = {
       ascent: fontSize * 0.85,
       descent: fontSize * 0.15,
@@ -186,5 +186,5 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   }
 }
 
-/** Синглтон */
+/** Singleton */
 export const fontMetricsProvider = new FontMetricsProvider();

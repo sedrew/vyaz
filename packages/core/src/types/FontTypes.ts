@@ -1,50 +1,50 @@
 /**
- * FontTypes.ts — типы для шрифтовых метрик.
+ * FontTypes.ts — font metric type definitions.
  *
- * Изоморфный слой: работает и в браузере (Canvas TextMetrics), и в Node.js (fontkit).
+ * Isomorphic layer: works both in browser (Canvas TextMetrics) and Node.js (fontkit).
  *
- * Два режима:
- *   'browser' — использует hhea.ascender/descender (canvas fallback)
- *   'office'  — использует OS/2.usWinAscent/usWinDescent (как MS Office)
+ * Two modes:
+ *   'browser' — uses hhea.ascender/descender (canvas fallback)
+ *   'office'  — uses OS/2.usWinAscent/usWinDescent (MS Office compatible)
  */
 
-/** Физические метрики шрифта (в пикселях для заданного fontSize) */
+/** Physical font metrics (in pixels for a given fontSize) */
 export interface FontMetrics {
-  /** Подъём над baseline */
+  /** Rise above baseline */
   ascent: number;
-  /** Спуск под baseline (положительное число!) */
+  /** Descent below baseline (positive number!) */
   descent: number;
-  /** Высота заглавных букв */
+  /** Cap height */
   capHeight: number;
-  /** UPM оригинального шрифта (для справки) */
+  /** Original font UPM (for reference) */
   unitsPerEm: number;
   /**
-   * Какая таблица шрифта использовалась для ascent/descent:
-   *   'hhea'  — hhea.ascender/descender (браузерный режим)
-   *   'OS/2'  — OS/2.usWinAscent/usWinDescent (Office-режим)
-   *   'canvas' — canvas.measureText (браузерный fallback)
-   *   'fallback' — эмпирическая формула
+   * Which font table was used for ascent/descent:
+   *   'hhea'  — hhea.ascender/descender (browser mode)
+   *   'OS/2'  — OS/2.usWinAscent/usWinDescent (Office mode)
+   *   'canvas' — canvas.measureText (browser fallback)
+   *   'fallback' — empirical formula
    */
   sourceTable?: 'hhea' | 'OS/2' | 'canvas' | 'fallback';
 }
 
-/** Провайдер метрик — изоморфный интерфейс */
+/** Metrics provider — isomorphic interface */
 export interface IFontMetricsProvider {
   /**
-   * Установить режим измерения.
-   *   'browser' — hhea.ascender/descender (по умолчанию)
+   * Set measurement mode.
+   *   'browser' — hhea.ascender/descender (default)
    *   'office'  — OS/2.usWinAscent/usWinDescent
    */
   setMode(mode: 'browser' | 'office'): void;
 
   /**
-   * Получить текущий режим.
+   * Get current mode.
    */
   getMode(): 'browser' | 'office';
 
   /**
-   * Зарегистрировать бинарный шрифт для использования в fontkit.
-   * В браузере — no-op (шрифты регистрируются через CSS @font-face).
+   * Register a binary font for use with fontkit.
+   * In browser — no-op (fonts are registered via CSS @font-face).
    */
   registerFont(
     family: string,
@@ -53,7 +53,7 @@ export interface IFontMetricsProvider {
   ): void;
 
   /**
-   * Получить метрики для заданного семейства и размера.
+   * Get metrics for a given family and size.
    */
   getMetrics(
     fontFamily: string,
@@ -63,9 +63,9 @@ export interface IFontMetricsProvider {
   ): FontMetrics;
 }
 
-/** Glyph-level данные для одного глифа (для посимвольного трекинга/выделения) */
+/** Glyph-level data for a single glyph (per-character tracking/highlighting) */
 export interface GlyphData {
-  char: string;            // символ
-  advance: number;         // advance width в px
-  x: number;              // позиция относительно начала строки
+  char: string;            // character
+  advance: number;         // advance width in px
+  x: number;              // position relative to line start
 }

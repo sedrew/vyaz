@@ -1,29 +1,29 @@
 /**
- * LayoutTypes.ts — выходные типы (Physical Box Model).
+ * LayoutTypes.ts — output types (Physical Box Model).
  *
  * ParagraphLayoutResult → LineBox[] → FragmentBox[]
- * Это контракт между layout engine и renderer'ами.
+ * This is the contract between layout engine and renderers.
  *
- * Основан на plan.md §2.5 (Выход — Physical Box Model / Layout Tree)
+ * Based on plan.md §2.5 (Output — Physical Box Model / Layout Tree)
  */
 
 import type { TextRun, InlineWidget, TextAlignment } from './Document.js';
 
-// ── FragmentBox (атом рендеринга) ──────────────────────────────────────
+// ── FragmentBox (render atom) ─────────────────────────────────────────────
 
 export interface FragmentBox {
-  /** Смещение от LineBox.x */
+  /** Offset from LineBox.x */
   x: number;
-  /** Физическая ширина фрагмента */
+  /** Physical fragment width */
   width: number;
-  /** Текст фрагмента (или " " для пробела при justify) */
+  /** Fragment text (or " " for justify spaces) */
   text: string;
   /** Index of the source run in the paragraph's `children` array. */
   itemIndex: number;
   /** ID of the source paragraph (for SVG grouping). */
   paragraphId?: string;
 
-  /** Физические метрики шрифта для этого фрагмента */
+  /** Physical font metrics for this fragment */
   fontMetrics: FragmentFontMetrics;
 
   /**
@@ -32,31 +32,31 @@ export interface FragmentBox {
    */
   style: TextRun;
 
-  /** InlineWidget данные (если фрагмент — inline-box) */
+  /** InlineWidget data (if fragment is an inline-box) */
   inlineWidget?: InlineWidget;
 
-  /** Посимвольные advance widths (для выделения/трекинга) */
+  /** Per-character advance widths (for selection/tracking) */
   glyphAdvances?: number[];
 
-  /** Тип фрагмента: 'text' — обычный текст, 'space' — пробельный фрагмент */
+  /** Fragment type: 'text' — regular text, 'space' — whitespace fragment */
   type: 'text' | 'space';
 
   /**
-   * Признак концевого пробела (trailing whitespace).
-   * - true: фрагмент находится в конце строки, не участвует в advance строки
-   *         и не растягивается при justify (нулевая ширина для расчётов).
-   * - undefined/false: обычный фрагмент.
+   * Trailing whitespace flag.
+   * - true: fragment is at end of line, does not participate in line advance
+   *         and is not stretched during justify (zero width for calculations).
+   * - undefined/false: regular fragment.
    *
-   * См. CSS Text Module Level 3 §4.1.3 (Tracking and Dropping Spaces)
-   * и Parley LineItemData::has_trailing_whitespace.
+   * See CSS Text Module Level 3 §4.1.3 (Tracking and Dropping Spaces)
+   * and Parley LineItemData::has_trailing_whitespace.
    */
   trailing?: boolean;
 
   /**
-   * Режим разрыва строки после этого фрагмента.
-   * 'soft' — перенос по мягкому разрыву (не хватает места)
-   * 'hard' — принудительный разрыв (\n, явный разделитель)
-   * undefined — не конец строки
+   * Line break mode after this fragment.
+   * 'soft' — soft line break (insufficient space)
+   * 'hard' — forced break (\n, explicit separator)
+   * undefined — not end of line
    */
   breakType?: 'soft' | 'hard';
 }
@@ -67,51 +67,51 @@ export interface FragmentFontMetrics {
   fontSize: number;
 }
 
-// ── LineBox (строка) ───────────────────────────────────────────────────
+// ── LineBox (single line) ────────────────────────────────────────────────
 
 export interface LineBox {
-  /** Абсолютный X в контейнере (alignment + indent) */
+  /** Absolute X within container (alignment + indent) */
   x: number;
-  /** Абсолютный Y верхней границы строки */
+  /** Absolute Y of line top edge */
   y: number;
-  /** Ширина контента строки (без выравнивания) */
+  /** Line content width (without alignment) */
   width: number;
-  /** Полная высота строки (max фрагментов × lineHeight) */
+  /** Full line height (max fragments × lineHeight) */
   height: number;
 
-  /** Смещение baseline от y */
+  /** Baseline offset from y */
   baseline: number;
-  /** Максимальный подъём в строке */
+  /** Maximum ascent in line */
   ascent: number;
-  /** Максимальный спуск в строке */
+  /** Maximum descent in line */
   descent: number;
 
-  /** Индекс первого символа в исходном тексте параграфа */
+  /** Index of first character in the original paragraph text */
   startIndex: number;
-  /** Индекс последнего символа + 1 (для удобства подсчёта длины) */
+  /** Index of last character + 1 (for convenient length calculation) */
   endIndex: number;
 
-  /** Выравнивание параграфа (опционально, для PowerPoint рендера) */
+  /** Paragraph alignment (optional, for PowerPoint render) */
   alignment?: TextAlignment;
 
   fragments: FragmentBox[];
 }
 
-// ── ParagraphLayoutResult (один параграф) ──────────────────────────────
+// ── ParagraphLayoutResult (single paragraph) ─────────────────────────────
 
 export interface ParagraphLayoutResult {
-  width: number;             // ширина параграфа (maxWidth)
-  height: number;            // полная высота параграфа с отступами
+  width: number;             // paragraph width (maxWidth)
+  height: number;            // full paragraph height including spacing
   lines: LineBox[];
-  /** Реальная ширина контента (bbox текста, без пустот) */
+  /** Actual content width (text bbox, without voids) */
   contentWidth: number;
-  /** Реальная высота контента (bbox текста) */
+  /** Actual content height (text bbox) */
   contentHeight: number;
 }
 
-// ── Текстовый регион для YAML-снепшотов ────────────────────────────────
+// ── Text region for YAML snapshots ───────────────────────────────────────
 
-/** Семантический фрагмент для снепшотов (без физических метрик) */
+/** Semantic fragment for snapshots (without physical metrics) */
 export interface SemanticFragment {
   text: string;
   x: number;
@@ -119,7 +119,7 @@ export interface SemanticFragment {
   style?: 'bold' | 'italic' | 'normal';
 }
 
-/** Семантическая строка для снепшотов */
+/** Semantic line for snapshots */
 export interface SemanticLine {
   y: number;
   width: number;
@@ -128,7 +128,7 @@ export interface SemanticLine {
   fragments: SemanticFragment[];
 }
 
-/** Семантический параграф для YAML-снепшотов */
+/** Semantic paragraph for YAML snapshots */
 export interface SemanticParagraph {
   width: number;
   height: number;

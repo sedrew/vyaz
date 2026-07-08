@@ -1,5 +1,5 @@
 /**
- * render/utils.ts — общие утилиты для рендереров.
+ * render/utils.ts — shared renderer utilities.
  */
 
 import type { LineBox } from '../types/LayoutTypes.js';
