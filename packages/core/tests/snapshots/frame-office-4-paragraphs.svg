@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="350" height="144">
+  <text x="0" y="14" id="p-left-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 7.8 15.6 23.4 31.3 39.1 46.9 54.7 62.5 70.3 78.1 86.0 93.8 101.6 109.4 117.2 125.0 132.8 140.7 148.5 156.3 164.1 171.9 179.7 187.5 195.3 203.2 211.0 218.8 226.6 234.4 242.2 250.0 257.9 265.7 273.5 281.3 289.1 296.9 304.7 312.6 320.4">Left aligned — this text uses default line</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="0" y="30" id="p-left-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0 88.0 96.0 104.0 112.0 120.0 128.0 136.0 144.0 152.0 160.0 168.0 176.0 184.0 192.0 200.0 208.0 216.0 224.0 232.0 240.0 248.0 256.0 264.0">height with soft wrapping enabled.</tspan>
+  </text>
+  <text x="18.9" y="46" id="p-center-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="18.9 26.7 34.5 42.3 50.1 57.9 65.7 73.5 81.3 89.1 96.9 104.8 112.6 120.4 128.2 136.0 143.8 151.6 159.4 167.2 175.0 182.8 190.6 198.4 206.2 214.0 221.8 229.6 237.4 245.2 253.0 260.9 268.7 276.5 284.3 292.1 299.9 307.7 315.5 323.3">Center aligned — this text uses a larger</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="7" y="62" id="p-center-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="7.0 15.0 23.0 31.0 39.0 47.0 55.0 63.0 71.0 79.0 87.0 95.0 103.0 111.0 119.0 127.0 135.0 143.0 151.0 159.0 167.0 175.0 183.0 191.0 199.0 207.0 215.0 223.0 231.0 239.0 247.0 255.0 263.0 271.0 279.0 287.0 295.0 303.0 311.0 319.0 327.0 335.0">line height for generous vertical spacing.</tspan>
+  </text>
+  <text x="21.81" y="78" id="p-right-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="21.8 29.6 37.4 45.3 53.1 60.9 68.7 76.5 84.3 92.1 99.9 107.8 115.6 123.4 131.2 139.0 146.8 154.6 162.5 170.3 178.1 185.9 193.7 201.5 209.3 217.2 225.0 232.8 240.6 248.4 256.2 264.0 271.9 279.7 287.5 295.3 303.1 310.9 318.7 326.6 334.4 342.2">Right aligned — this text uses double line</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="30" y="94" id="p-right-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="30.0 38.0 46.0 54.0 62.0 70.0 78.0 86.0 94.0 102.0 110.0 118.0 126.0 134.0 142.0 150.0 158.0 166.0 174.0 182.0 190.0 198.0 206.0 214.0 222.0 230.0 238.0 246.0 254.0 262.0 270.0 278.0 286.0 294.0 302.0 310.0 318.0 326.0 334.0 342.0">height for wide open spacing throughout.</tspan>
+  </text>
+  <text x="0" y="110" id="p-justify-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 7.8 15.6 23.4 31.2 39.0 46.9 54.7 62.5 70.3 78.1 85.9 93.7 101.5 109.3 117.1 125.0 132.8 140.6 148.4 156.2 164.0 171.8 179.6 187.4 195.2 203.0 210.9 218.7 226.5 234.3 242.1 249.9 257.7 265.5 273.3 281.1 289.0 296.8 304.6 312.4">Justified paragraph — this text stretches</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="0" y="126" id="p-justify-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 7.8 15.6 23.5 31.3 39.1 46.9 54.7 62.5 70.4 78.2 86.0 93.8 101.6 109.5 117.3 125.1 132.9 140.7 148.5 156.4 164.2 172.0 179.8 187.6 195.5 203.3 211.1 218.9 226.7 234.5 242.4 250.2 258.0 265.8 273.6 281.5 289.3 297.1 304.9 312.7 320.5 328.4">spaces to fill the full width on every line</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="0" y="142" id="p-justify-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0 88.0 96.0 104.0 112.0 120.0 128.0 136.0 144.0 152.0 160.0">except the final one.</tspan>
+  </text>
+</svg>

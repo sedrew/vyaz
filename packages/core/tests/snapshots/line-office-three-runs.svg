@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="16">
+  <text x="0" y="14" id="test-p-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan>A</tspan>
+  </text>
+  <text x="0" y="14" id="test-p-1" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan> </tspan>
+    <tspan>B</tspan>
+  </text>
+  <text x="0" y="14" id="test-p-2" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan> </tspan>
+    <tspan>C</tspan>
+  </text>
+</svg>

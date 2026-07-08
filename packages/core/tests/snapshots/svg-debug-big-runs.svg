@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="398" height="64">
+  <text x="0" y="27" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000000">Hello</tspan>
+    <tspan x="40" font-weight="700" font-size="32"> </tspan>
+    <tspan x="48" font-weight="700" font-size="32">BIG</tspan>
+    <tspan x="96" font-weight="400" font-size="16"> </tspan>
+    <tspan x="112" font-weight="400" font-size="16">normal</tspan>
+    <tspan x="160" font-style="italic" font-size="20"> </tspan>
+    <tspan x="168" font-style="italic" font-size="20">italic</tspan>
+    <tspan x="228" font-style="normal" font-size="16" fill="#FF0000"> </tspan>
+    <tspan x="238" font-style="normal" font-size="16" fill="#FF0000">Red</tspan>
+    <tspan x="262" font-size="18" fill="#000000" text-decoration="underline"> </tspan>
+    <tspan x="270" font-size="18" fill="#000000" text-decoration="underline">Under</tspan>
+    <tspan x="315" font-size="14" text-decoration="line-through"> </tspan>
+    <tspan x="324" font-size="14" text-decoration="line-through">Strike</tspan>
+    <tspan x="366" font-size="10"> </tspan>
+    <tspan x="373" font-size="10">Small</tspan>
+  </text>
+  <text x="0" y="46" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000000">and</tspan>
+    <tspan x="24"> </tspan>
+    <tspan x="32">EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE</tspan>
+  </text>
+  <text x="0" y="62" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000000">finish.</tspan>
+  </text>
+<!-- debug overlay -->
+  <text x="0" y="-2" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=0.0 x=0.0 w=398.0 h=32.0 bl=27.0</text>
+  <rect x="0" y="13.4" width="40" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="40" y="-0.1999999999999993" width="8" height="32" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="48" y="-0.1999999999999993" width="48" height="32" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="96" y="13.4" width="16" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="112" y="13.4" width="48" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="160" y="10" width="8" height="20" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="168" y="10" width="60" height="20" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="228" y="13.4" width="10" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="238" y="13.4" width="24" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="262" y="11.700000000000001" width="8" height="18" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="270" y="11.700000000000001" width="45" height="18" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="315" y="15.1" width="9" height="14" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="324" y="15.1" width="42" height="14" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="366" y="18.5" width="7" height="10" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="373" y="18.5" width="25" height="10" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <text x="0" y="30" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=32.0 x=0.0 w=344.0 h=16.0 bl=46.0</text>
+  <rect x="0" y="32.4" width="24" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="24" y="32.4" width="8" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <rect x="32" y="32.4" width="312" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+  <text x="0" y="46" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=48.0 x=0.0 w=56.0 h=16.0 bl=62.0</text>
+  <rect x="0" y="48.4" width="56" height="16" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />
+</svg>

@@ -1,0 +1,23 @@
+{
+  "name": "vyaz-demo",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vyaz/core": "*",
+    "solid-js": "^1.9.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0",
+    "vite-plugin-solid": "^2.11.6",
+    "unocss": "^66.0.0",
+    "@unocss/preset-wind": "^66.0.0",
+    "@unocss/reset": "^66.0.0",
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="19">
+  <text x="228" y="15" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="228" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000000">Hello this is right aligned nowrap</tspan>
+  </text>
+</svg>

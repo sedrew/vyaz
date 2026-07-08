@@ -1,0 +1,271 @@
+{
+  "lines": [
+    {
+      "lineIndex": 0,
+      "text": "Hello, Rich Text Layout!",
+      "totalWidth": 271.58,
+      "ascent": 19.2,
+      "descent": 4.8,
+      "lineHeight": 27.6,
+      "baselineY": 91.2,
+      "xOffset": 72,
+      "runs": [
+        {
+          "text": "Hello, Rich Text Layout!",
+          "fontFamily": "Arial",
+          "fontSize": 24,
+          "fontWeight": 700,
+          "fontStyle": "normal",
+          "color": "#1a1a2e"
+        }
+      ]
+    },
+    {
+      "lineIndex": 1,
+      "text": "This demo uses @chenglou/pretext from CDN. Italic and Кириллица ",
+      "totalWidth": 434.51,
+      "ascent": 11.2,
+      "descent": 2.8,
+      "lineHeight": 16.1,
+      "baselineY": 110.8,
+      "xOffset": 72,
+      "runs": [
+        {
+          "text": "This demo uses",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": " @chenglou/pretext",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 700,
+          "fontStyle": "normal",
+          "color": "#c1121f"
+        },
+        {
+          "text": " from CDN.",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": " Italic",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "italic",
+          "color": "#0077b6"
+        },
+        {
+          "text": " and Кириллица ",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        }
+      ]
+    },
+    {
+      "lineIndex": 2,
+      "text": "тоже работает!",
+      "totalWidth": 97.66,
+      "ascent": 11.2,
+      "descent": 2.8,
+      "lineHeight": 16.1,
+      "baselineY": 126.9,
+      "xOffset": 72,
+      "runs": [
+        {
+          "text": "тоже работает!",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        }
+      ]
+    },
+    {
+      "lineIndex": 3,
+      "text": "Center aligned paragraph. Pretext uses Intl.Segmenter for correct ",
+      "totalWidth": 432.32,
+      "ascent": 12,
+      "descent": 3,
+      "lineHeight": 22.5,
+      "baselineY": 143.8,
+      "xOffset": 89.84,
+      "runs": [
+        {
+          "text": "Center aligned paragraph. Pretext uses Intl.Segmenter for correct ",
+          "fontFamily": "Georgia",
+          "fontSize": 15,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#000"
+        }
+      ]
+    },
+    {
+      "lineIndex": 4,
+      "text": "grapheme cluster breaks.",
+      "totalWidth": 166.3,
+      "ascent": 12,
+      "descent": 3,
+      "lineHeight": 22.5,
+      "baselineY": 166.3,
+      "xOffset": 222.85,
+      "runs": [
+        {
+          "text": "grapheme cluster breaks.",
+          "fontFamily": "Georgia",
+          "fontSize": 15,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#000"
+        }
+      ]
+    },
+    {
+      "lineIndex": 5,
+      "text": "Right-aligned text.",
+      "totalWidth": 145.08,
+      "ascent": 14.4,
+      "descent": 3.6,
+      "lineHeight": 20.7,
+      "baselineY": 191.2,
+      "xOffset": 394.92,
+      "runs": [
+        {
+          "text": "Right-aligned text.",
+          "fontFamily": "Arial",
+          "fontSize": 18,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#555"
+        }
+      ]
+    },
+    {
+      "lineIndex": 6,
+      "text": "Uppercase and LOWERCASE TEXT TRANSFORM",
+      "totalWidth": 322.83,
+      "ascent": 11.2,
+      "descent": 2.8,
+      "lineHeight": 16.1,
+      "baselineY": 208.7,
+      "xOffset": 72,
+      "runs": [
+        {
+          "text": "Uppercase and",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": " LOWERCASE TEXT TRANSFORM",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 700,
+          "fontStyle": "normal",
+          "color": "#6a0dad"
+        }
+      ]
+    },
+    {
+      "lineIndex": 7,
+      "text": "Superscript: E=mc2 and Subscript: H2O",
+      "totalWidth": 243.94,
+      "ascent": 11.2,
+      "descent": 2.8,
+      "lineHeight": 16.1,
+      "baselineY": 224.8,
+      "xOffset": 72,
+      "runs": [
+        {
+          "text": "Superscript: E=mc",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": "2",
+          "fontFamily": "Arial",
+          "fontSize": 9.799999999999999,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": " and Subscript: H",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": "2",
+          "fontFamily": "Arial",
+          "fontSize": 9.799999999999999,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": "O",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        }
+      ]
+    },
+    {
+      "lineIndex": 8,
+      "text": "Underlined text with background and strikethrough",
+      "totalWidth": 312.07,
+      "ascent": 11.2,
+      "descent": 2.8,
+      "lineHeight": 16.1,
+      "baselineY": 240.9,
+      "xOffset": 72,
+      "runs": [
+        {
+          "text": "Underlined text with background",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#333"
+        },
+        {
+          "text": " and strikethrough",
+          "fontFamily": "Arial",
+          "fontSize": 14,
+          "fontWeight": 400,
+          "fontStyle": "normal",
+          "color": "#dc2626"
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "totalLines": 9,
+    "totalRuns": 19,
+    "totalChars": 335,
+    "pageWidth": 612,
+    "pageHeight": 792
+  }
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="71.5" height="57">
+  <text x="15.5" y="15" id="test-p-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="15.5 22.5 29.5 36.5 43.5 50.5 57.5">AAA BBB</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="15.5" y="34" id="test-p-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="15.5 22.5 29.5 36.5 43.5 50.5 57.5">CCC DDD</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="28" y="53" id="test-p-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="28.0 36.0 44.0">EEE</tspan>
+  </text>
+</svg>

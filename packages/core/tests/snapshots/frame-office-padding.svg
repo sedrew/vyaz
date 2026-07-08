@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300">
+  <text x="30" y="14" id="p1-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 7.8 15.6 23.4 31.2 38.9 46.7 54.5 62.3 70.1 77.9 85.7 93.5 101.3 109.1 116.8 124.6 132.4 140.2 148.0 155.8 163.6 171.4 179.2 186.9 194.7 202.5 210.3 218.1 225.9 233.7 241.5 249.3 257.1 264.8 272.6 280.4">Text with left padding 30px and right</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="30" y="30" id="p1-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 7.8 15.6 23.4 31.2 39.0 46.9 54.7 62.5 70.3 78.1 85.9 93.7 101.5 109.3 117.1 125.0 132.8 140.6 148.4 156.2 164.0 171.8 179.6 187.4 195.2 203.0 210.9 218.7 226.5 234.3 242.1 249.9 257.7 265.5 273.3 281.1 289.0 296.8 304.6 312.4">padding 20px, wrapping within the reduced</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="30" y="46" id="p1-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0 88.0 96.0">content area.</tspan>
+  </text>
+</svg>

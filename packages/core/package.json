@@ -1,0 +1,26 @@
+{
+  "name": "@vyaz/core",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test",
+    "test:update": "rm -f tests/snapshots/*.svg tests/snapshots/png/*.png && bun test",
+    "demo": "node ../demo/dev.mjs",
+    "bug": "tsx packages/demo/bug-render.ts"
+  },
+  "dependencies": {
+    "@chenglou/pretext": "^0.0.8",
+    "@clean-jsdoc-theme/typedoc": "^5.0.6",
+    "@napi-rs/canvas": "^1.0.1",
+    "fontkit": "^2.0.4",
+    "js-yaml": "^5.0.0",
+    "typedoc": "^0.28.19"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.0"
+  }
+}

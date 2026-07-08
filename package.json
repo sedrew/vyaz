@@ -1,0 +1,27 @@
+{
+  "name": "vyaz-monorepo",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "packages/core",
+    "packages/demo"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm -w packages/core test",
+    "test:update": "npm -w packages/core run test:update",
+    "dev": "npm run dev -w packages/demo",
+    "demo": "npm run dev -w packages/demo"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "is-svg": "^6.1.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.3.0"
+  },
+  "dependencies": {
+    "@chenglou/pretext": "^0.0.8",
+    "@types/jest": "^30.0.0"
+  }
+}

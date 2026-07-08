@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="200">
+  <text x="0" y="24" id="p-mixed-0" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 6.0 12.0 18.0 24.0 30.0 36.0 42.0 48.0 54.0">Small 12px</tspan>
+  </text>
+  <text x="0" y="24" id="p-mixed-1" font-family="Unifont" font-size="28" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan> </tspan>
+    <tspan x="66.0 80.0 94.0 108.0 122.0 136.0 150.0 164.0">BIG 28px</tspan>
+  </text>
+  <text x="0" y="24" id="p-mixed-2" font-family="Unifont" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan> </tspan>
+    <tspan x="192.0 201.0 210.0 219.0 228.0 237.0 246.0 255.0 264.0 273.0 282.0">Medium 18px</tspan>
+  </text>
+  <text x="0" y="24" id="p-mixed-3" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan> </tspan>
+    <tspan x="300.0 306.0 312.0 318.0 324.0 330.0 336.0 342.0 348.0 354.0 360.0 366.0 372.0 378.0 384.0 390.0 396.0 402.0">back to small 12px</tspan>
+  </text>
+</svg>

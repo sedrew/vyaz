@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="16">
+  <text x="0" y="14" id="test-p-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0">Hello World</tspan>
+  </text>
+</svg>

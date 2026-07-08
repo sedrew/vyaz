@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="200">
+  <text x="0" y="26" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000000">Small 12px</tspan>
+    <tspan x="60" font-size="28"> </tspan>
+    <tspan x="66" font-size="28">BIG 28px</tspan>
+    <tspan x="178" font-size="18"> </tspan>
+    <tspan x="192" font-size="18">Medium 18px</tspan>
+    <tspan x="291" font-size="12"> </tspan>
+    <tspan x="300" font-size="12">back to small 12px</tspan>
+  </text>
+</svg>

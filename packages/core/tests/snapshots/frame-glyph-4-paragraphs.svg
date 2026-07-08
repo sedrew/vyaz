@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="250" height="191">
+  <text x="0" y="15" id="p1-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 8.0 16.0 24.0 32.0 40.0 48.0 56.0 64.0 72.0 80.0 88.0 96.0 104.0 112.0 120.0 128.0 136.0 144.0 152.0 160.0 168.0 176.0 184.0 192.0 200.0 208.0 216.0 224.0">Left text with short content.</tspan>
+  </text>
+  <text x="77" y="35" id="p2-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="77.0 85.0 93.0 101.0 109.0 117.0 125.0 133.0 141.0 149.0 157.0 165.0">Center text.</tspan>
+  </text>
+  <text x="22.46" y="58" id="p3-0" font-family="Unifont" font-size="20" fill="Blue" font-weight="300" xml:space="preserve">
+    <tspan x="22.5 32.5 42.5 52.5 62.5 72.5 82.5 92.5 102.5 112.5 122.5 132.5 142.5 152.5">Right align is</tspan>
+  </text>
+  <text x="22.46" y="58" id="p3-1" font-family="Unifont" font-size="14" fill="Black" font-weight="700" xml:space="preserve">
+    <tspan> </tspan>
+    <tspan x="172.5 178.9 185.4 191.8 198.3 204.8 211.2 217.7 224.2 230.6 237.1 243.5">a formatting</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="11.81" y="73" id="p3-1" font-family="Unifont" font-size="14" fill="Black" font-weight="700" xml:space="preserve">
+    <tspan x="11.8 18.6 25.4 32.2 39.0 45.8 52.6 59.4 66.3 73.1 79.9 86.7 93.5 100.3 107.1 113.9 120.7 127.5 134.3 141.1 147.9 154.7 161.5 168.3 175.1 181.9 188.8 195.6 202.4 209.2 216.0 222.8 229.6 236.4 243.2">option that positions text, images,</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="11.81" y="87" id="p3-1" font-family="Unifont" font-size="14" fill="Black" font-weight="700" xml:space="preserve">
+    <tspan x="11.8 18.6 25.4 32.2 39.0 45.8 52.6 59.4 66.3 73.1 79.9 86.7 93.5 100.3 107.1 113.9 120.7 127.5 134.3 141.1 147.9 154.7 161.5 168.3 175.1 181.9 188.8 195.6 202.4 209.2 216.0 222.8 229.6 236.4 243.2">or elements flush against the right</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="11.81" y="101" id="p3-1" font-family="Unifont" font-size="14" fill="Black" font-weight="700" xml:space="preserve">
+    <tspan x="11.8 18.6 25.4 32.2 39.0 45.8 52.6 59.4 66.3 73.1 79.9 86.7 93.5 100.3 107.1 113.9 120.7 127.5 134.3 141.1 147.9 154.7 161.5 168.3 175.1 181.9 188.8 195.6 202.4 209.2 216.0 222.8 229.6 236.4 243.2">margin or edge of a page, document,</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="74.53" y="115" id="p3-1" font-family="Unifont" font-size="14" fill="Black" font-weight="700" xml:space="preserve">
+    <tspan x="74.5 81.5 88.5 95.5 102.5 109.5 116.5 123.5 130.5 137.5 144.5 151.5">or container</tspan>
+  </text>
+  <text x="74.53" y="115" id="p3-2" font-family="Unifont" font-size="14" fill="#000000" font-weight="300" xml:space="preserve">
+    <tspan x="158.5 165.1 171.6 178.1 184.7 191.2 197.7 204.3 210.8 217.3 223.9 230.4 236.9 243.5">. It creates a</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="11.81" y="129" id="p3-2" font-family="Unifont" font-size="14" fill="#000000" font-weight="300" xml:space="preserve">
+    <tspan x="11.8 18.6 25.4 32.2 39.0 45.8 52.6 59.4 66.3 73.1 79.9 86.7 93.5 100.3 107.1 113.9 120.7 127.5 134.3 141.1 147.9 154.7 161.5 168.3 175.1 181.9 188.8 195.6 202.4 209.2 216.0 222.8 229.6 236.4 243.2">straight, uniform edge on the right</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="18.8" y="143" id="p3-2" font-family="Unifont" font-size="14" fill="#000000" font-weight="300" xml:space="preserve">
+    <tspan x="18.8 25.6 32.4 39.2 46.0 52.8 59.6 66.4 73.2 80.0 86.8 93.6 100.4 107.2 114.0 120.8 127.6 134.4 141.2 148.0 154.8 161.6 168.4 175.2 182.0 188.8 195.6 202.4 209.2 216.0 222.8 229.6 236.4 243.2">side, with the left edge remaining</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="208" y="157" id="p3-2" font-family="Unifont" font-size="14" fill="#000000" font-weight="300" xml:space="preserve">
+    <tspan x="208.0 215.0 222.0 229.0 236.0 243.0">uneven</tspan>
+  </text>
+  <text x="0" y="173" id="p4-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 7.7 15.4 23.2 30.9 38.6 46.3 54.1 61.8 69.5 77.2 85.0 92.7 100.4 108.1 115.9 123.6 131.3 139.0 146.8 154.5 162.2 169.9 177.7 185.4 193.1 200.8 208.6">Justify paragraph that wraps</tspan>
+    <tspan> </tspan>
+  </text>
+  <text x="0" y="189" id="p4-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 8.0 16.0 24.0 32.0 40.0">lines.</tspan>
+  </text>
+</svg>

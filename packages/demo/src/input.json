@@ -1,0 +1,338 @@
+{
+  "config": {
+    "pageWidth": 612,
+    "pageHeight": 792,
+    "margins": { "top": 72, "right": 72, "bottom": 72, "left": 72 }
+  },
+  "paragraphs": [
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Hello, Rich Text Layout!",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 24,
+            "fontWeight": 700,
+            "fontStyle": "normal",
+            "color": "#1a1a2e"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "This demo uses ",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "@chenglou/pretext",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 700,
+            "fontStyle": "normal",
+            "color": "#c1121f"
+          }
+        },
+        {
+          "type": "text",
+          "text": " from CDN. ",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Italic",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "italic",
+            "color": "#0077b6"
+          }
+        },
+        {
+          "type": "text",
+          "text": " and Кириллица тоже работает!",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "center", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Center aligned paragraph. Pretext uses Intl.Segmenter for correct grapheme cluster breaks.",
+          "style": {
+            "fontFamily": "Georgia",
+            "fontSize": 15,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#000"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "right", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+                {
+          "type": "text",
+          "text": "Right-aligned text. ",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 20,
+            "fontWeight": 600,
+            "fontStyle": "normal",
+            "color": "#555"
+          }
+        },
+        {
+          "type": "text",
+          "text": "A text alignment mode in which each line is placed so that its right edge is flush with the right boundary of the container. The left edge remains uneven because line lengths differ after wrapping.",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 18,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#555"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Uppercase: ",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "this text will be uppercased",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 700,
+            "fontStyle": "normal",
+            "color": "#6a0dad"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Lowercase: ",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "THIS TEXT WILL BE LOWERCASED",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 700,
+            "fontStyle": "normal",
+            "color": "#6a0dad"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Capitalize: ",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "each word will be capitalized",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 700,
+            "fontStyle": "normal",
+            "color": "#6a0dad"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Small-caps: ",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "small-caps is not yet implemented",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 700,
+            "fontStyle": "normal",
+            "color": "#6a0dad"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Superscript: E=mc",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333",
+            "script": "super"
+          }
+        },
+        {
+          "type": "text",
+          "text": " and Subscript: H",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333",
+            "script": "sub"
+          }
+        },
+        {
+          "type": "text",
+          "text": "O",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333"
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Underlined text with background",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#333",
+            "backgroundColor": "#fff3cd",
+            "underline": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and strikethrough",
+          "style": {
+            "fontFamily": "Arial",
+            "fontSize": 14,
+            "fontWeight": 400,
+            "fontStyle": "normal",
+            "color": "#dc2626",
+            "strikethrough": true
+          }
+        }
+      ]
+    }
+  ]
+}

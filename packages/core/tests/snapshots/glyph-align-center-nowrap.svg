@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="19">
+  <text x="70" y="15" id="test-p-0" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="70.0 78.0 86.0 94.0 102.0 110.0 118.0 126.0 134.0 142.0 150.0 158.0 166.0 174.0 182.0 190.0 198.0 206.0 214.0 222.0">Hello glyph centered</tspan>
+  </text>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="78" height="24">
+  <text x="0" y="20" id="test-p-0" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0.0 12.0 24.0">Big</tspan>
+  </text>
+  <text x="0" y="20" id="test-p-1" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan> </tspan>
+    <tspan x="48.0 54.0 60.0 66.0 72.0">Small</tspan>
+  </text>
+</svg>
