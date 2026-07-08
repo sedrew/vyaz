@@ -145,11 +145,21 @@
 4. Компиляция табуляции               → tab-stops (24)
 ```
 
-### Phase C — Точность (опционально)
+### Phase C — Per-glyph advances & kerning
 
 ```
-1. Opentype.js для GPOS кернинга     → точные advance ширины
-2. Opentype.js для GSUB лигатур      → лигатуры 'fi', 'fl' и т.д.
+1. Merge layout()/layoutGlyph() в один проход
+   → advance-кэш Map<fontId:char, unscaled advance>
+   → вычисляется один раз в PositionEngine, а не вторым проходом
+
+2. GPOS/kerning через opentype.js
+   → отдельная pair-cache-структура (leftGlyph, rightGlyph)
+   → явный флаг «применять кернинг» (per-glyph preset для анимаций
+     может хотеть моноширинные позиции без кернинга)
+
+3. Инвалидация кэша при hot-reload шрифтов
+   → fontMetricsProvider допускает динамическую регистрацию шрифтов
+   → без инвалидации кэш отдаёт стухшие advances после смены шрифта
 ```
 
 ### Phase D — Сложное (требует исследования)
