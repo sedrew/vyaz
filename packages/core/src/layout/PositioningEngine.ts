@@ -201,6 +201,15 @@ export function positionLineBoxes(
       }
     }
 
+    // ── Inline-box width correction ─────────────────────────
+    // When a fragment has an inlineWidget, override its width
+    // to match the widget width (the \uFFFC advance is not included).
+    for (const f of fragments) {
+      if (f.inlineWidget) {
+        f.width = f.inlineWidget.width;
+      }
+    }
+
     // ── Mark trailing whitespace fragments ───────────────────
     // CSS Text §4.1.3: end-of-line spaces have zero measure for line-advance calculations.
     // Parley: LineItemData.has_trailing_whitespace → trailing whitespace is excluded from advance.
