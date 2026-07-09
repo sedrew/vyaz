@@ -1,7 +1,7 @@
 /**
  * @vyaz/renderer — SVG and Canvas renderers.
  *
- * Converts LineBox[] (from @vyaz/core) into SVG strings or Canvas drawings.
+ * Converts Line[] (from @vyaz/core) into SVG strings or Canvas drawings.
  */
 
 export { renderToSVG, renderParagraphToSVG, renderResultToSVG } from './SVGRenderer.js';

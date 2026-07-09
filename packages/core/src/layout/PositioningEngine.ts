@@ -1,24 +1,24 @@
 /**
  * PositioningEngine.ts — pure X/Y positioning math.
  *
- * Takes pretext output (lines with fragments) + font metrics +
- * paragraph style → returns LineBox[] with absolute coordinates.
+ * Takes pretext output (spans with fragments) + font metrics +
+ * paragraph style → returns Line[] with absolute coordinates.
  *
  * X: alignment (left/center/right/justify) + indent
  * Y: baseline + lineHeight + spaceBefore/After
- * Justify: fragmented approach (each space → separate FragmentBox)
+ * Justify: fragmented approach (each space → separate Span)
  *
  * Specs:
  * - CSS Text Module Level 3/4 (browser mode)
  * - ISO/IEC 29500 (Office Open XML / DrawingML, office mode)
  * - Parley alignment.rs (conceptually close, but here justify is simpler:
- *   slack is divided equally among stretchable space-fragments,
+ *   slack is divided equally among stretchable space-spans,
  *   without mutating ClusterData.advance)
  */
 
 import type { ParagraphStyle } from '../types/Document.js';
 import type { FontMetrics } from '../types/FontTypes.js';
-import type { LineBox, FragmentBox, FragmentFontMetrics } from '../types/LayoutTypes.js';
+import type { Line, Span, SpanFontMetrics } from '../types/LayoutTypes.js';
 import type { PreparedRichInlineItem } from '../compile/DocumentCompiler.js';
 
 // ── Helper types for pretext ───────────────────────────────────────────
@@ -41,18 +41,18 @@ interface PretextLine {
 // ── PositioningEngine ─────────────────────────────────────────────────
 
 /**
- * Build LineBox[] from pretext lines with alignment and metrics.
+ * Build Line[] from pretext lines with alignment and metrics.
  *
  * @param pretextLines — pretext result (materializeRichInlineLineRange)
  * @param items — original PreparedRichInlineItem[] (for metadata)
- * @param fontMetricsFn — function to get font metrics for a fragment
+ * @param fontMetricsFn — function to get font metrics for a span
  * @param style — paragraph style
  * @param maxWidth — available container width
  * @param startY — initial Y position
  * @param mode — metric mode ('browser' | 'office'), affects line height calculation
- * @returns { lines: LineBox[], contentWidth: number }
+ * @returns { lines: Line[], contentWidth: number }
  */
-export function positionLineBoxes(
+export function positionLines(
   pretextLines: PretextLine[],
   items: PreparedRichInlineItem[],
   fontMetricsFn: (item: PreparedRichInlineItem) => FontMetrics,
@@ -61,8 +61,8 @@ export function positionLineBoxes(
   startY: number = 0,
   mode: 'browser' | 'office' = 'browser',
   paragraphId?: string,
-): { lines: LineBox[]; contentWidth: number } {
-  const lines: LineBox[] = [];
+): { lines: Line[]; contentWidth: number } {
+  const lines: Line[] = [];
   let currentY = startY + style.spaceBefore;
   let charIndex = 0;
   let isFirstLine = true;
@@ -71,11 +71,11 @@ export function positionLineBoxes(
   for (let lineIdx = 0; lineIdx < pretextLines.length; lineIdx++) {
     const ptLine = pretextLines[lineIdx];
 
-    // ── Build FragmentBox[] ────────────────────────────
+    // ── Build Span[] ────────────────────────────
     let maxAscent = 0;
     let maxDescent = 0;
     let maxLineHeightBase = 0; // max(ascent + descent) — for Office mode
-    const fragments: FragmentBox[] = [];
+    const spans: Span[] = [];
 
     for (const frag of ptLine.fragments) {
       const item = items[frag.itemIndex];
@@ -92,7 +92,7 @@ export function positionLineBoxes(
 
       // pretext: gapBefore — inter-word space BEFORE the word
       // occupiedWidth = gapBefore + textWidth
-      // Split into two FragmentBox: space + word
+      // Split into two Span: space + word
       const gapWidth = frag.gapBefore || 0;
       const textWidth = frag.occupiedWidth;
 
@@ -103,7 +103,7 @@ export function positionLineBoxes(
       };
 
       if (gapWidth > 0) {
-        fragments.push({
+        spans.push({
           x: 0,
           width: gapWidth,
           text: ' ',
@@ -116,7 +116,7 @@ export function positionLineBoxes(
         });
       }
 
-      // Split leading/trailing spaces from frag.text into separate space fragments
+      // Split leading/trailing spaces from frag.text into separate space spans
       // This is needed for SVG rendering to avoid xml:space="preserve" dependency
       const text = frag.text;
       const leadingMatch = text.match(/^(\s+)/);
@@ -142,9 +142,9 @@ export function positionLineBoxes(
         return totalChars > 0 ? (charCount / totalChars) * textWidth : 0;
       };
 
-      // Leading space fragment
+      // Leading space span
       if (leadingSpaceChars > 0) {
-        fragments.push({
+        spans.push({
           x: 0,
           width: computePartialWidth(leadingSpaceChars),
           text: text.slice(0, leadingSpaceChars),
@@ -157,7 +157,7 @@ export function positionLineBoxes(
         });
       }
 
-      // Text fragment (trimmed)
+      // Text span (trimmed)
       if (remainingText.length > 0) {
         const textWidth = computePartialWidth(remainingText.length);
         // Compute per-glyph advances by distributing textWidth equally across glyphs.
@@ -170,7 +170,7 @@ export function positionLineBoxes(
             glyphAdvances.push(perGlyph);
           }
         }
-        fragments.push({
+        spans.push({
           x: 0,
           width: textWidth,
           text: remainingText,
@@ -184,10 +184,10 @@ export function positionLineBoxes(
         });
       }
 
-      // Trailing space fragment
+      // Trailing space span
       if (trailingSpaceChars > 0) {
         const trailingStart = leadingSpaceChars + remainingText.length;
-        fragments.push({
+        spans.push({
           x: 0,
           width: computePartialWidth(trailingSpaceChars),
           text: text.slice(trailingStart, trailingStart + trailingSpaceChars),
@@ -202,42 +202,42 @@ export function positionLineBoxes(
     }
 
     // ── Inline-box width correction ─────────────────────────
-    // When a fragment has an inlineWidget, override its width
+    // When a span has an inlineWidget, override its width
     // to match the widget width (the \uFFFC advance is not included).
-    for (const f of fragments) {
-      if (f.inlineWidget) {
-        f.width = f.inlineWidget.width;
+    for (const s of spans) {
+      if (s.inlineWidget) {
+        s.width = s.inlineWidget.width;
       }
     }
 
-    // ── Mark trailing whitespace fragments ───────────────────
+    // ── Mark trailing whitespace spans ───────────────────
     // CSS Text §4.1.3: end-of-line spaces have zero measure for line-advance calculations.
     // Parley: LineItemData.has_trailing_whitespace → trailing whitespace is excluded from advance.
     //
     // Find the last space(s) at the end of the line and mark them trailing.
-    let trailingStartIndex = fragments.length;
-    for (let i = fragments.length - 1; i >= 0; i--) {
-      if (fragments[i].type === 'space') {
+    let trailingStartIndex = spans.length;
+    for (let i = spans.length - 1; i >= 0; i--) {
+      if (spans[i].type === 'space') {
         trailingStartIndex = i;
       } else {
         break;
       }
     }
 
-    const trailingWidth = fragments
+    const trailingWidth = spans
       .slice(trailingStartIndex)
       .reduce((sum, f) => sum + f.width, 0);
 
-    for (let i = trailingStartIndex; i < fragments.length; i++) {
-      fragments[i].trailing = true;
+    for (let i = trailingStartIndex; i < spans.length; i++) {
+      spans[i].trailing = true;
     }
 
     // ── Compute effective line width (excluding trailing whitespace) ─
-    // Use sum of actual fragment widths instead of ptLine.width, because
+    // Use sum of actual span widths instead of ptLine.width, because
     // ptLine.width may not include gapBefore spaces that were split into
-    // separate FragmentBox (e.g. "AA" + " A" → [AA][ ][A]).
-    const totalFragWidth = fragments.reduce((sum, f) => sum + f.width, 0);
-    const effectiveLineWidth = totalFragWidth - trailingWidth;
+    // separate Span (e.g. "AA" + " A" → [AA][ ][A]).
+    const totalSpanWidth = spans.reduce((sum, f) => sum + f.width, 0);
+    const effectiveLineWidth = totalSpanWidth - trailingWidth;
 
     // ── X positioning ───────────────────────────────
     const indent = isFirstLine
@@ -255,7 +255,7 @@ export function positionLineBoxes(
     } else if (style.alignment === 'right') {
       xOffset = indent + slack;
     } else if (style.alignment === 'justify') {
-      // Justify: distribute slack evenly among whitespace fragments
+      // Justify: distribute slack evenly among whitespace spans
       // (excluding trailing whitespace).
       //
       // CSS Text Module Level 3 §4.1.3: trailing spaces do not participate in justify.
@@ -268,7 +268,7 @@ export function positionLineBoxes(
       const isLastLine = lineIdx === pretextLines.length - 1;
 
       // Count only "stretchable" spaces: type === 'space' and !trailing
-      const stretchableSpaces = fragments.filter(
+      const stretchableSpaces = spans.filter(
         (f) => f.type === 'space' && !f.trailing,
       );
       const spaceCount = stretchableSpaces.length;
@@ -287,7 +287,7 @@ export function positionLineBoxes(
 
     // Assign X positions
     let runX = xOffset;
-    for (const frag of fragments) {
+    for (const frag of spans) {
       frag.x = Math.round(runX * 100) / 100;
       runX += frag.width;
     }
@@ -306,7 +306,7 @@ export function positionLineBoxes(
     //   Line height strictly = ascent + descent (OS/2.usWinAscent + usWinDescent).
     //   Baseline = Top + ascent without any half-leading additions.
     //   See pixel-perfect-text-layout.md §1 and ECMA-376.
-    const maxFontSize = fragments.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
+    const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
     const ascentRounded = Math.round(maxAscent);
     const descentRounded = Math.round(maxDescent);
@@ -354,24 +354,24 @@ export function positionLineBoxes(
 
     // Count characters in line (for INDEX_CONSIST)
     let lineCharCount = 0;
-    for (const frag of fragments) {
+    for (const frag of spans) {
       lineCharCount += frag.text.length;
     }
     const endIdx = startIdx + lineCharCount;
     charIndex = endIdx;
 
-    // ── Mark break type on the last fragment ─────────────
+    // ── Mark break type on the last span ─────────────
     // 'soft' — line wrap due to width constraint
     // 'hard' — explicit break (\n)
     // 'none'/undefined — not a line end (no break)
-    if (fragments.length > 0) {
-      const lastFrag = fragments[fragments.length - 1];
-      const lastFragItem = items[lastFrag.itemIndex];
+    if (spans.length > 0) {
+      const lastSpan = spans[spans.length - 1];
+      const lastSpanItem = items[lastSpan.itemIndex];
       // If last character is \n, it's a hard break
-      if (lastFragItem && lastFrag.text.endsWith('\n')) {
-        lastFrag.breakType = 'hard';
+      if (lastSpanItem && lastSpan.text.endsWith('\n')) {
+        lastSpan.breakType = 'hard';
       } else if (lineIdx < pretextLines.length - 1) {
-        lastFrag.breakType = 'soft';
+        lastSpan.breakType = 'soft';
       }
     }
 
@@ -386,7 +386,7 @@ export function positionLineBoxes(
       startIndex: startIdx,
       endIndex: endIdx,
       alignment: style.alignment,
-      fragments,
+      spans,
     });
 
     currentY += lineBoxHeight;

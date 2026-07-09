@@ -1,7 +1,7 @@
 /**
  * SVGRenderer.ts — SVG text builder.
  *
- * Converts LineBox[] into SVG markup using a builder pattern.
+ * Converts Line[] into SVG markup using a builder pattern.
  *
  * Three presets:
  *   flat     — all text in one <text> element, xml:space="preserve", no <tspan>
@@ -14,7 +14,7 @@
  *   const svg = renderToSVG(lines, { preset: 'preserve', style: 'css', fit: 'frag' })
  */
 
-import type { LineBox, FragmentBox, ParagraphLayoutResult } from '@vyaz/core';
+import type { Line, Span, ParagraphLayoutResult } from '@vyaz/core';
 import type { DebugFlags } from './types.js';
 import { computeBBox } from './utils.js';
 
@@ -108,11 +108,11 @@ function colorToRGB(color: string): string {
 }
 
 /** Compute gutter widths per line for justify alignment */
-function computeGutterWidths(line: LineBox, totalSlack: number): number[] {
-  const spaceFrags = line.fragments.filter(f => f.type === 'space' || f.text.trim() === '');
-  if (spaceFrags.length === 0) return [];
-  const perGap = totalSlack / spaceFrags.length;
-  return line.fragments.map(f => (f.type === 'space' || f.text.trim() === '') ? perGap : 0);
+function computeGutterWidths(line: Line, totalSlack: number): number[] {
+  const spaceSpans = line.spans.filter(f => f.type === 'space' || f.text.trim() === '');
+  if (spaceSpans.length === 0) return [];
+  const perGap = totalSlack / spaceSpans.length;
+  return line.spans.map(f => (f.type === 'space' || f.text.trim() === '') ? perGap : 0);
 }
 
 // ── Resolve options ──────────────────────────────────────────────────────
@@ -168,14 +168,14 @@ interface StyleState {
   decoration: string;
 }
 
-function defaultStyleState(frag: FragmentBox): StyleState {
+function defaultStyleState(span: Span): StyleState {
   return {
-    fontFamily: frag.style.fontFamily || 'Arial',
-    fontSize: frag.fontMetrics.fontSize || 16,
-    fontWeight: fontWeightNumeric(frag.style.fontWeight),
-    color: frag.style.color || '#000000',
-    fontStyle: frag.style.fontStyle || 'normal',
-    decoration: frag.style.underline ? 'underline' : frag.style.strikethrough ? 'line-through' : '',
+    fontFamily: span.style.fontFamily || 'Arial',
+    fontSize: span.fontMetrics.fontSize || 16,
+    fontWeight: fontWeightNumeric(span.style.fontWeight),
+    color: span.style.color || '#000000',
+    fontStyle: span.style.fontStyle || 'normal',
+    decoration: span.style.underline ? 'underline' : span.style.strikethrough ? 'line-through' : '',
   };
 }
 
@@ -206,10 +206,10 @@ function xmlStyleAttrs(s: StyleState): string {
 }
 
 /** Build attributes for <text> element */
-function buildTextAttrs(line: LineBox, frag: FragmentBox, opts: ResolvedOptions, runId?: string): string {
+function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: string): string {
   const x = line.x;
   const y = line.y + line.baseline;
-  const s = defaultStyleState(frag);
+  const s = defaultStyleState(span);
 
   let attrs = ` x="${x}" y="${y}"`;
   if (runId) attrs += ` id="${runId}"`;
@@ -235,8 +235,8 @@ function buildTextAttrs(line: LineBox, frag: FragmentBox, opts: ResolvedOptions,
 }
 
 /** Build attributes for <tspan> (expanded mode — only diff from current style) */
-function buildTspanAttrs(frag: FragmentBox, x: number, currentStyle: StyleState | null): { attrs: string; newStyle: StyleState } {
-  const s = defaultStyleState(frag);
+function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null): { attrs: string; newStyle: StyleState } {
+  const s = defaultStyleState(span);
   let attrs = ` x="${x}"`;
 
   if (currentStyle && equalStyle(s, currentStyle)) {
@@ -259,34 +259,34 @@ function buildTspanAttrs(frag: FragmentBox, x: number, currentStyle: StyleState 
 }
 
 /** Build per-glyph x positions for glyph mode */
-function buildGlyphPositions(frag: FragmentBox, _lineX: number): string {
-  if (!frag.glyphAdvances || frag.glyphAdvances.length === 0) {
+function buildGlyphPositions(span: Span, _lineX: number): string {
+  if (!span.glyphAdvances || span.glyphAdvances.length === 0) {
     return '';
   }
-  // frag.x is already absolute — computed by PositioningEngine.
+  // span.x is already absolute — computed by PositioningEngine.
   // lineX is NOT added because that would double-shift.
-  const fragX = frag.x;
-  let xPos = fragX;
+  const spanX = span.x;
+  let xPos = spanX;
   const positions: string[] = [xPos.toFixed(1)];
-  for (let i = 0; i < frag.glyphAdvances.length - 1; i++) {
-    xPos += frag.glyphAdvances[i];
+  for (let i = 0; i < span.glyphAdvances.length - 1; i++) {
+    xPos += span.glyphAdvances[i];
     positions.push(xPos.toFixed(1));
   }
   return positions.join(' ');
 }
 
 /** Build textLength attribute for a line */
-function buildFitAttr(line: LineBox, opts: ResolvedOptions): string {
+function buildFitAttr(line: Line, opts: ResolvedOptions): string {
   if (opts.fit === 'text') {
     return ` textLength="${line.width}" lengthAdjust="spacing"`;
   }
   return '';
 }
 
-/** Build textLength for a fragment */
-function buildFragFitAttr(frag: FragmentBox, opts: ResolvedOptions): string {
+/** Build textLength for a span */
+function buildSpanFitAttr(span: Span, opts: ResolvedOptions): string {
   if (opts.fit === 'frag') {
-    return ` textLength="${frag.width}"`;
+    return ` textLength="${span.width}"`;
   }
   return '';
 }
@@ -306,29 +306,29 @@ class SvgBuilder {
     }
   }
 
-  addText(line: LineBox, baseFrag: FragmentBox, runId?: string): void {
-    const attrs = buildTextAttrs(line, baseFrag, this.opts, runId);
+  addText(line: Line, baseSpan: Span, runId?: string): void {
+    const attrs = buildTextAttrs(line, baseSpan, this.opts, runId);
     const fit = buildFitAttr(line, this.opts);
     this.parts.push(`  <text${attrs}${fit}>\n`);
   }
 
-  addFlatFrag(text: string): void {
+  addFlatSpan(text: string): void {
     this.parts.push(`    ${escapeXml(text)}`);
   }
 
-  addExpandedFrag(frag: FragmentBox, x: number, style: StyleState | null): StyleState {
-    const { attrs, newStyle } = buildTspanAttrs(frag, x, style);
-    const fit = buildFragFitAttr(frag, this.opts);
-    this.parts.push(`    <tspan${attrs}${fit}>${escapeXml(frag.text)}</tspan>\n`);
+  addExpandedSpan(span: Span, x: number, style: StyleState | null): StyleState {
+    const { attrs, newStyle } = buildTspanAttrs(span, x, style);
+    const fit = buildSpanFitAttr(span, this.opts);
+    this.parts.push(`    <tspan${attrs}${fit}>${escapeXml(span.text)}</tspan>\n`);
     return newStyle;
   }
 
-  addGlyphFrag(frag: FragmentBox, lineX: number): void {
-    const positions = buildGlyphPositions(frag, lineX);
+  addGlyphSpan(span: Span, lineX: number): void {
+    const positions = buildGlyphPositions(span, lineX);
     if (positions) {
-      this.parts.push(`    <tspan x="${positions}">${escapeXml(frag.text)}</tspan>\n`);
+      this.parts.push(`    <tspan x="${positions}">${escapeXml(span.text)}</tspan>\n`);
     } else {
-      this.parts.push(`    <tspan>${escapeXml(frag.text)}</tspan>\n`);
+      this.parts.push(`    <tspan>${escapeXml(span.text)}</tspan>\n`);
     }
   }
 
@@ -350,7 +350,7 @@ class SvgBuilder {
 
 // ── Debug overlay ────────────────────────────────────────────────────────
 
-function renderDebugToSVG(lines: LineBox[], width: number, height: number, flags: DebugFlags): string {
+function renderDebugToSVG(lines: Line[], width: number, height: number, flags: DebugFlags): string {
   const parts: string[] = [];
 
   if (flags.frame && lines.length > 0) {
@@ -384,11 +384,11 @@ function renderDebugToSVG(lines: LineBox[], width: number, height: number, flags
       parts.push(`  <text x="${bx}" y="${by - 2}" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=${by.toFixed(1)} x=${bx.toFixed(1)} w=${bw.toFixed(1)} h=${bh.toFixed(1)} bl=${baselineY.toFixed(1)}</text>`);
     }
     if (flags.runs) {
-      for (const frag of line.fragments) {
-        if (frag.width <= 0) continue;
-        const rx = line.x + frag.x;
-        const ry = baselineY - frag.fontMetrics.ascent;
-        parts.push(`  <rect x="${rx}" y="${ry}" width="${frag.width}" height="${frag.fontMetrics.ascent + frag.fontMetrics.descent}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />`);
+      for (const span of line.spans) {
+        if (span.width <= 0) continue;
+        const rx = line.x + span.x;
+        const ry = baselineY - span.fontMetrics.ascent;
+        parts.push(`  <rect x="${rx}" y="${ry}" width="${span.width}" height="${span.fontMetrics.ascent + span.fontMetrics.descent}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />`);
       }
     }
   }
@@ -399,13 +399,13 @@ function renderDebugToSVG(lines: LineBox[], width: number, height: number, flags
 // ── Main render logic ────────────────────────────────────────────────────
 
 /**
- * Render LineBox[] into SVG string.
+ * Render Line[] into SVG string.
  *
- * @param lines — layout lines with fragments
+ * @param lines — layout lines with spans
  * @param options — rendering options (preset + style/fit/sizing modifiers)
  * @returns SVG string
  */
-export function renderToSVG(lines: LineBox[], options: SVGRenderOptions = {}): string {
+export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): string {
   const opts = resolveOptions(options);
 
   // Determine canvas size
@@ -435,44 +435,44 @@ export function renderToSVG(lines: LineBox[], options: SVGRenderOptions = {}): s
     if (opts.structure === 'glyph') {
       // Per-glyph positioning with run-based <text> grouping
       let currentRunIdx = -1;
-      for (const frag of line.fragments) {
-        if (!frag.text) continue;
-        const runIdx = frag.itemIndex;
+      for (const span of line.spans) {
+        if (!span.text) continue;
+        const runIdx = span.itemIndex;
         if (runIdx !== currentRunIdx) {
           if (currentRunIdx !== -1) {
             builder.closeText();
           }
-          const runId = frag.paragraphId ? `${frag.paragraphId}-${runIdx}` : undefined;
-          builder.addText(line, frag, runId);
+          const runId = span.paragraphId ? `${span.paragraphId}-${runIdx}` : undefined;
+          builder.addText(line, span, runId);
           currentRunIdx = runIdx;
         }
-        builder.addGlyphFrag(frag, line.x);
+        builder.addGlyphSpan(span, line.x);
       }
       if (currentRunIdx !== -1) {
         builder.closeText();
       }
     } else {
       // flat / expanded: single <text> per line
-      const baseFrag = line.fragments.find(f => f.type === 'text' && f.text.length > 0) || line.fragments[0];
-      if (!baseFrag) continue;
+      const baseSpan = line.spans.find(f => f.type === 'text' && f.text.length > 0) || line.spans[0];
+      if (!baseSpan) continue;
 
-      builder.addText(line, baseFrag);
+      builder.addText(line, baseSpan);
 
       if (opts.structure === 'flat') {
         // Concatenate all text on the line
-        const fullText = line.fragments.map(f => f.text).join('');
-        builder.addFlatFrag(fullText);
+        const fullText = line.spans.map(f => f.text).join('');
+        builder.addFlatSpan(fullText);
       } else {
-        // expanded: each fragment as <tspan> with diff styles
+        // expanded: each span as <tspan> with diff styles
         let currentStyle: StyleState | null = null;
-        for (const frag of line.fragments) {
-          if (!frag.text) continue;
-          const x = frag.x;
+        for (const span of line.spans) {
+          if (!span.text) continue;
+          const x = span.x;
 
-          const shouldRender = frag.type !== 'space' || opts.spacing === 'preserve';
+          const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
           if (shouldRender) {
-            const newStyle = builder.addExpandedFrag(frag, x, currentStyle);
-            if (frag.type !== 'space') {
+            const newStyle = builder.addExpandedSpan(span, x, currentStyle);
+            if (span.type !== 'space') {
               currentStyle = newStyle;
             }
           }
@@ -495,7 +495,7 @@ export function renderToSVG(lines: LineBox[], options: SVGRenderOptions = {}): s
  * Render one ParagraphLayoutResult to SVG (convenience wrapper).
  */
 export function renderParagraphToSVG(
-  lines: LineBox[],
+  lines: Line[],
   paragraphWidth: number,
   paragraphHeight: number,
   options?: SVGRenderOptions,

@@ -2,7 +2,7 @@
  * TextFrameLayoutEngine.ts — Layout a full TextFrame (multi-paragraph).
  *
  * Pipeline:
- *   TextFrame → Paragraph[] → paragraphLayoutEngine.layout() each → merge LineBox[]
+ *   TextFrame → Paragraph[] → paragraphLayoutEngine.layout() each → merge Line[]
  *
  * Handles:
  * - Paragraph stacking with Y offset accumulation
@@ -10,7 +10,7 @@
  * - frame.width/height optional → fitHorizontal/fitVertical flags
  */
 import type { TextFrame } from '../types/Document.js';
-import type { LineBox } from '../types/LayoutTypes.js';
+import type { Line } from '../types/LayoutTypes.js';
 import { paragraphLayoutEngine } from './ParagraphLayoutEngine.js';
 
 /**
@@ -21,7 +21,7 @@ import { paragraphLayoutEngine } from './ParagraphLayoutEngine.js';
  * - `'content'` → use `contentWidth` / `contentHeight`
  */
 export interface TextFrameLayoutResult {
-  lines: LineBox[];
+  lines: Line[];
   /** Frame width (set when TextFrame.width was provided). */
   frameWidth?: number;
   /** Frame height (set when TextFrame.height was provided). */
@@ -40,7 +40,7 @@ export interface TextFrameLayoutResult {
  * Layout a full TextFrame by stacking paragraphs with Y offset accumulation.
  */
 export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
-  const allLines: LineBox[] = [];
+  const allLines: Line[] = [];
   let yOffset = 0;
   let contentWidth = 0;
 

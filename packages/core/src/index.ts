@@ -37,9 +37,9 @@ export {
 // ── Output types (Physical Box Model) ───────────────────────────────────
 export type {
   ParagraphLayoutResult,
-  LineBox,
-  FragmentBox,
-  FragmentFontMetrics,
+  Line,
+  Span,
+  SpanFontMetrics,
   SemanticParagraph,
   SemanticLine,
   SemanticFragment,
@@ -54,8 +54,8 @@ export type {
 
 // ── Layout Engine ───────────────────────────────────────────────────────
 export { ParagraphLayoutEngine, paragraphLayoutEngine } from './layout/ParagraphLayoutEngine.js';
-export { positionLineBoxes } from './layout/PositioningEngine.js';
-export { assertLineBoxInvariants, lineBoxToYAML } from './layout/LineBoxValidator.js';
+export { positionLines } from './layout/PositioningEngine.js';
+export { assertLineInvariants, linesToYAML } from './layout/LineBoxValidator.js';
 export type { InvariantError } from './layout/LineBoxValidator.js';
 
 // ── TextFrame Layout Engine ──────────────────────────────────────────────
@@ -72,5 +72,3 @@ export type { PreparedRichInlineItem } from './compile/DocumentCompiler.js';
 
 // ── Font metrics ────────────────────────────────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
-
-

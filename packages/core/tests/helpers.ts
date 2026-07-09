@@ -18,10 +18,10 @@ import type {
   TextRun,
   InlineWidget,
 } from '../src/types/Document.js';
-import type { ParagraphLayoutResult, FragmentBox } from '../src/types/LayoutTypes.js';
+import type { ParagraphLayoutResult, Span } from '../src/types/LayoutTypes.js';
 import { ParagraphLayoutEngine } from '../src/layout/ParagraphLayoutEngine.js';
 import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
-import { assertLineBoxInvariants } from '../src/layout/LineBoxValidator.js';
+import { assertLineInvariants } from '../src/layout/LineBoxValidator.js';
 import { DEFAULT_PARAGRAPH_STYLE } from '../src/types/Document.js';
 
 // ── Singleton ──────────────────────────────────────────────────────────
@@ -159,35 +159,35 @@ export function layoutParagraph(
 ): ParagraphLayoutResult {
   const result = engine.layout(paragraph, maxWidth, yOffset);
   const fullText = paragraph.children.map((r) => r.text).join('');
-  assertLineBoxInvariants(result.lines, fullText, maxWidth);
+  assertLineInvariants(result.lines, fullText, maxWidth);
   return result;
 }
 
 // ── Convenience assertion helpers ──────────────────────────────────────
 
-/** Get all fragments from a result (flat across all lines). */
-export function allFragments(result: ParagraphLayoutResult): FragmentBox[] {
-  return result.lines.flatMap((l) => l.fragments);
+/** Get all spans from a result (flat across all lines). */
+export function allSpans(result: ParagraphLayoutResult): Span[] {
+  return result.lines.flatMap((l) => l.spans);
 }
 
-/** Get all text fragments from a result (only type: 'text', not 'space'). */
-export function allTextFragments(result: ParagraphLayoutResult): FragmentBox[] {
-  return allFragments(result).filter((f) => f.type === 'text');
+/** Get all text spans from a result (only type: 'text', not 'space'). */
+export function allTextSpans(result: ParagraphLayoutResult): Span[] {
+  return allSpans(result).filter((f) => f.type === 'text');
 }
 
-/** Get all space fragments from a result. */
-export function allSpaceFragments(result: ParagraphLayoutResult): FragmentBox[] {
-  return allFragments(result).filter((f) => f.type === 'space');
+/** Get all space spans from a result. */
+export function allSpaceSpans(result: ParagraphLayoutResult): Span[] {
+  return allSpans(result).filter((f) => f.type === 'space');
 }
 
 /** Get span text, ignoring trailing. */
 export function spanTexts(result: ParagraphLayoutResult): string[] {
-  return allFragments(result).map((f) => f.text);
+  return allSpans(result).map((f) => f.text);
 }
 
-/** Get the last fragment of the last line. */
-export function lastFragment(result: ParagraphLayoutResult): FragmentBox | undefined {
+/** Get the last span of the last line. */
+export function lastSpan(result: ParagraphLayoutResult): Span | undefined {
   const lastLine = result.lines[result.lines.length - 1];
   if (!lastLine) return undefined;
-  return lastLine.fragments[lastLine.fragments.length - 1];
+  return lastLine.spans[lastLine.spans.length - 1];
 }

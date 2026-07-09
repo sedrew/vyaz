@@ -1,7 +1,7 @@
 /**
  * LayoutTypes.ts — output types (Physical Box Model).
  *
- * ParagraphLayoutResult → LineBox[] → FragmentBox[]
+ * ParagraphLayoutResult → Line[] → Span[]
  * This is the contract between layout engine and renderers.
  *
  * Based on plan.md §2.5 (Output — Physical Box Model / Layout Tree)
@@ -9,22 +9,22 @@
 
 import type { TextRun, InlineWidget, TextAlignment } from './Document.js';
 
-// ── FragmentBox (render atom) ─────────────────────────────────────────────
+// ── Span (render atom, formerly FragmentBox) ─────────────────────────────
 
-export interface FragmentBox {
-  /** Offset from LineBox.x */
+export interface Span {
+  /** Offset from Line.x */
   x: number;
-  /** Physical fragment width */
+  /** Physical span width */
   width: number;
-  /** Fragment text (or " " for justify spaces) */
+  /** Span text (or " " for justify spaces) */
   text: string;
   /** Index of the source run in the paragraph's `children` array. */
   itemIndex: number;
   /** ID of the source paragraph (for SVG grouping). */
   paragraphId?: string;
 
-  /** Physical font metrics for this fragment */
-  fontMetrics: FragmentFontMetrics;
+  /** Physical font metrics for this span */
+  fontMetrics: SpanFontMetrics;
 
   /**
    * A snapshot of the source run's style at layout time.
@@ -32,20 +32,20 @@ export interface FragmentBox {
    */
   style: TextRun;
 
-  /** InlineWidget data (if fragment is an inline-box) */
+  /** InlineWidget data (if span is an inline-box) */
   inlineWidget?: InlineWidget;
 
   /** Per-character advance widths (for selection/tracking) */
   glyphAdvances?: number[];
 
-  /** Fragment type: 'text' — regular text, 'space' — whitespace fragment */
+  /** Span type: 'text' — regular text, 'space' — whitespace span */
   type: 'text' | 'space';
 
   /**
    * Trailing whitespace flag.
-   * - true: fragment is at end of line, does not participate in line advance
+   * - true: span is at end of line, does not participate in line advance
    *         and is not stretched during justify (zero width for calculations).
-   * - undefined/false: regular fragment.
+   * - undefined/false: regular span.
    *
    * See CSS Text Module Level 3 §4.1.3 (Tracking and Dropping Spaces)
    * and Parley LineItemData::has_trailing_whitespace.
@@ -53,7 +53,7 @@ export interface FragmentBox {
   trailing?: boolean;
 
   /**
-   * Line break mode after this fragment.
+   * Line break mode after this span.
    * 'soft' — soft line break (insufficient space)
    * 'hard' — forced break (\n, explicit separator)
    * undefined — not end of line
@@ -61,22 +61,22 @@ export interface FragmentBox {
   breakType?: 'soft' | 'hard';
 }
 
-export interface FragmentFontMetrics {
+export interface SpanFontMetrics {
   ascent: number;
   descent: number;
   fontSize: number;
 }
 
-// ── LineBox (single line) ────────────────────────────────────────────────
+// ── Line (single line, formerly LineBox) ─────────────────────────────────
 
-export interface LineBox {
+export interface Line {
   /** Absolute X within container (alignment + indent) */
   x: number;
   /** Absolute Y of line top edge */
   y: number;
   /** Line content width (without alignment) */
   width: number;
-  /** Full line height (max fragments × lineHeight) */
+  /** Full line height (max spans × lineHeight) */
   height: number;
 
   /** Baseline offset from y */
@@ -94,7 +94,7 @@ export interface LineBox {
   /** Paragraph alignment (optional, for PowerPoint render) */
   alignment?: TextAlignment;
 
-  fragments: FragmentBox[];
+  spans: Span[];
 }
 
 // ── ParagraphLayoutResult (single paragraph) ─────────────────────────────
@@ -102,7 +102,7 @@ export interface LineBox {
 export interface ParagraphLayoutResult {
   width: number;             // paragraph width (maxWidth)
   height: number;            // full paragraph height including spacing
-  lines: LineBox[];
+  lines: Line[];
   /** Actual content width (text bbox, without voids) */
   contentWidth: number;
   /** Actual content height (text bbox) */
@@ -111,7 +111,7 @@ export interface ParagraphLayoutResult {
 
 // ── Text region for YAML snapshots ───────────────────────────────────────
 
-/** Semantic fragment for snapshots (without physical metrics) */
+/** Semantic span for snapshots (without physical metrics) */
 export interface SemanticFragment {
   text: string;
   x: number;
@@ -134,3 +134,4 @@ export interface SemanticParagraph {
   height: number;
   lines: SemanticLine[];
 }
+

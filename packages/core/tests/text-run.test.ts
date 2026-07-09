@@ -32,11 +32,11 @@ import {
   makeStyledParagraph,
   makeMultiRunParagraph,
   layoutParagraph,
-  allFragments,
-  allTextFragments,
-  allSpaceFragments,
+  allSpans,
+  allTextSpans,
+  allSpaceSpans,
   spanTexts,
-  lastFragment,
+  lastSpan,
 } from './helpers.ts';
 
 beforeAll(async () => {
@@ -48,21 +48,21 @@ beforeAll(async () => {
 describe('TextRun.type: "text"', () => {
   test('type: "text" → Span has type: "text"', () => {
     const result = layoutParagraph(makeParagraph('Hello'));
-    const frags = allTextFragments(result);
-    expect(frags.length).toBeGreaterThan(0);
-    for (const f of frags) expect(f.type).toBe('text');
+    const spans = allTextSpans(result);
+    expect(spans.length).toBeGreaterThan(0);
+    for (const s of spans) expect(s.type).toBe('text');
   });
 
   test('text content correctly maps to Span.text', () => {
     const result = layoutParagraph(makeParagraph('Hello'));
-    const texts = allTextFragments(result).map((f) => f.text);
+    const texts = allTextSpans(result).map((s) => s.text);
     expect(texts.join('')).toContain('Hello');
   });
 
   test('non-breaking space (U+00A0) does NOT create a separate space span', () => {
     const result = layoutParagraph(makeParagraph('Hello\u00A0World'));
-    const spaces = allSpaceFragments(result);
-    const texts = allTextFragments(result).map((f) => f.text);
+    const spaces = allSpaceSpans(result);
+    const texts = allTextSpans(result).map((s) => s.text);
     const combined = texts.join('');
     expect(combined).toContain('\u00A0');
     for (const s of spaces) expect(s.text).not.toBe('\u00A0');
@@ -70,22 +70,22 @@ describe('TextRun.type: "text"', () => {
 
   test('leading spaces are trimmed (in whiteSpace: "normal" mode)', () => {
     const result = layoutParagraph(makeParagraph('   Hello'));
-    const texts = allTextFragments(result).map((f) => f.text);
+    const texts = allTextSpans(result).map((s) => s.text);
     const combined = texts.join('');
     expect(combined.trim()).toBe('Hello');
   });
 
   test('trailing spaces are trimmed — no extra fragments in whiteSpace:normal', () => {
     const result = layoutParagraph(makeParagraph('Hello   '));
-    const textFrags = allTextFragments(result);
-    expect(textFrags.length).toBeGreaterThan(0);
-    expect(textFrags[0].text).toBe('Hello');
+    const textSpans = allTextSpans(result);
+    expect(textSpans.length).toBeGreaterThan(0);
+    expect(textSpans[0].text).toBe('Hello');
   });
 
   test('multiple spaces inside a run stay in one text span', () => {
     const result = layoutParagraph(makeParagraph('Hello    World'));
-    const textFrags = allTextFragments(result).map((f) => f.text);
-    const combined = textFrags.join('');
+    const textSpans = allTextSpans(result).map((s) => s.text);
+    const combined = textSpans.join('');
     expect(combined).toContain('Hello');
     expect(combined).toContain('World');
   });
@@ -93,8 +93,8 @@ describe('TextRun.type: "text"', () => {
   test('multi-script: Latin, Cyrillic, CJK, Arabic, Devanagari — all in one text span', () => {
     const text = 'Hello Привет 你好 مرحبا नमस्ते';
     const result = layoutParagraph(makeParagraph(text));
-    const frags = allTextFragments(result);
-    const combined = frags.map((f) => f.text).join('');
+    const spans = allTextSpans(result);
+    const combined = spans.map((s) => s.text).join('');
     expect(combined).toContain('Hello');
     expect(combined).toContain('Привет');
     expect(combined).toContain('你好');
@@ -108,42 +108,42 @@ describe('TextRun.type: "text"', () => {
 describe('TextRun.type: "inline-box"', () => {
   test('type: "inline-box" → Span contains inlineWidget', () => {
     const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20 } }));
-    const inlineFrag = allFragments(result).find((f) => f.inlineWidget);
-    expect(inlineFrag).toBeDefined();
+    const inlineSpan = allSpans(result).find((s) => s.inlineWidget);
+    expect(inlineSpan).toBeDefined();
   });
 
   test('inlineWidget.width equals span width', () => {
     const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 30, height: 20 } }));
-    const inlineFrag = allFragments(result).find((f) => f.inlineWidget)!;
-    expect(inlineFrag.width).toBe(30);
+    const inlineSpan = allSpans(result).find((s) => s.inlineWidget)!;
+    expect(inlineSpan.width).toBe(30);
   });
 
   test('inlineWidget.height does not affect width', () => {
     const small = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 10 } }));
     const large = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 100 } }));
-    const smallFrag = allFragments(small).find((f) => f.inlineWidget)!;
-    const largeFrag = allFragments(large).find((f) => f.inlineWidget)!;
-    expect(smallFrag.width).toBe(largeFrag.width);
+    const smallSpan = allSpans(small).find((s) => s.inlineWidget)!;
+    const largeSpan = allSpans(large).find((s) => s.inlineWidget)!;
+    expect(smallSpan.width).toBe(largeSpan.width);
   });
 
   test('inlineWidget.baselineOffset shifts widget position', () => {
     const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20, baselineOffset: -5 } }));
-    const inlineFrag = allFragments(result).find((f) => f.inlineWidget)!;
-    expect(inlineFrag.style.inlineWidget?.baselineOffset).toBe(-5);
+    const inlineSpan = allSpans(result).find((s) => s.inlineWidget)!;
+    expect(inlineSpan.style.inlineWidget?.baselineOffset).toBe(-5);
   });
 
   test('Span has type: "text" (inline-box is not a space)', () => {
     const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20 } }));
-    for (const f of allFragments(result)) {
-      expect(f.type).toBe('text');
-      expect(f.type).not.toBe('space');
+    for (const s of allSpans(result)) {
+      expect(s.type).toBe('text');
+      expect(s.type).not.toBe('space');
     }
   });
 
   test('text inside inline-box is \'\\uFFFC\'', () => {
     const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20 } }));
-    const inlineFrag = allFragments(result).find((f) => f.inlineWidget)!;
-    expect(inlineFrag.text).toBe('\uFFFC');
+    const inlineSpan = allSpans(result).find((s) => s.inlineWidget)!;
+    expect(inlineSpan.text).toBe('\uFFFC');
   });
 });
 
@@ -152,22 +152,22 @@ describe('TextRun.type: "inline-box"', () => {
 describe('TextRun.fontFamily', () => {
   test('fontFamily: "Unifont" → Span.style.fontFamily === "Unifont"', () => {
     const result = layoutParagraph(makeParagraph('Hello', { fontFamily: 'Unifont' }));
-    const frag = allFragments(result)[0];
-    expect(frag.style.fontFamily).toBe('Unifont');
+    const span = allSpans(result)[0];
+    expect(span.style.fontFamily).toBe('Unifont');
   });
 
   test('fontFamily: "Arial" → different ascent/descent metrics than Unifont', () => {
     const unifontResult = layoutParagraph(makeParagraph('Hello', { fontFamily: 'Unifont' }));
     const arialResult = layoutParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial' }));
-    const unifontSum = unifontResult.lines[0].fragments[0].fontMetrics.ascent + unifontResult.lines[0].fragments[0].fontMetrics.descent;
-    const arialSum = arialResult.lines[0].fragments[0].fontMetrics.ascent + arialResult.lines[0].fragments[0].fontMetrics.descent;
+    const unifontSum = unifontResult.lines[0].spans[0].fontMetrics.ascent + unifontResult.lines[0].spans[0].fontMetrics.descent;
+    const arialSum = arialResult.lines[0].spans[0].fontMetrics.ascent + arialResult.lines[0].spans[0].fontMetrics.descent;
     expect(Math.abs(unifontSum - arialSum)).toBeGreaterThan(0);
   });
 
   test('default font from DEFAULT_TEXT_STYLE', () => {
     const result = layoutParagraph(makeParagraph('Hello'));
-    const frag = allFragments(result)[0];
-    expect(frag.style.fontFamily).toBe('Arial');
+    const span = allSpans(result)[0];
+    expect(span.style.fontFamily).toBe('Arial');
   });
 });
 
@@ -176,7 +176,7 @@ describe('TextRun.fontFamily', () => {
 describe('TextRun.fontSize', () => {
   test('fontSize: 16 → Span.fontMetrics.fontSize === 16', () => {
     const result = layoutParagraph(makeParagraph('Hello', { fontSize: 16 }));
-    expect(allTextFragments(result)[0].fontMetrics.fontSize).toBe(16);
+    expect(allTextSpans(result)[0].fontMetrics.fontSize).toBe(16);
   });
 
   test('fontSize: 32 → width is ~2× width of fontSize: 16 (with tolerance)', () => {
@@ -195,7 +195,7 @@ describe('TextRun.fontSize', () => {
 
   test('default fontSize — 12px from DEFAULT_TEXT_STYLE', () => {
     const result = layoutParagraph(makeParagraph('A'));
-    expect(allFragments(result)[0].fontMetrics.fontSize).toBe(12);
+    expect(allSpans(result)[0].fontMetrics.fontSize).toBe(12);
   });
 });
 
@@ -204,27 +204,27 @@ describe('TextRun.fontSize', () => {
 describe('TextRun.fontWeight', () => {
   test('fontWeight: "normal" → Span.style.fontWeight === 400', () => {
     const result = layoutParagraph(makeParagraph('Hello', { fontWeight: 'normal' }));
-    expect(allFragments(result)[0].style.fontWeight).toBe(400);
+    expect(allSpans(result)[0].style.fontWeight).toBe(400);
   });
 
   test('fontWeight: "bold" → Span.style.fontWeight === 700', () => {
     const result = layoutParagraph(makeParagraph('Hello', { fontWeight: 'bold' }));
-    expect(allFragments(result)[0].style.fontWeight).toBe(700);
+    expect(allSpans(result)[0].style.fontWeight).toBe(700);
   });
 
   test('fontWeight: 300 → Span.style.fontWeight === 300', () => {
     const result = layoutParagraph(makeParagraph('Hello', { fontWeight: 300 }));
-    expect(allFragments(result)[0].style.fontWeight).toBe(300);
+    expect(allSpans(result)[0].style.fontWeight).toBe(300);
   });
 
   test('fontWeight: 900 → Span.style.fontWeight === 900', () => {
     const result = layoutParagraph(makeParagraph('Hello', { fontWeight: 900 }));
-    expect(allFragments(result)[0].style.fontWeight).toBe(900);
+    expect(allSpans(result)[0].style.fontWeight).toBe(900);
   });
 
   test('default fontWeight — 400 from DEFAULT_TEXT_STYLE', () => {
     const result = layoutParagraph(makeParagraph('Hello'));
-    expect(allFragments(result)[0].style.fontWeight).toBe(400);
+    expect(allSpans(result)[0].style.fontWeight).toBe(400);
   });
 });
 
@@ -232,13 +232,13 @@ describe('TextRun.fontWeight', () => {
 
 describe('TextRun.fontStyle', () => {
   test('fontStyle: "normal" → Span.style.fontStyle === "normal"', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { fontStyle: 'normal' })))[0].style.fontStyle).toBe('normal');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { fontStyle: 'normal' })))[0].style.fontStyle).toBe('normal');
   });
   test('fontStyle: "italic" → Span.style.fontStyle === "italic"', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { fontStyle: 'italic' })))[0].style.fontStyle).toBe('italic');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { fontStyle: 'italic' })))[0].style.fontStyle).toBe('italic');
   });
   test('default — "normal"', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello')))[0].style.fontStyle).toBe('normal');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello')))[0].style.fontStyle).toBe('normal');
   });
 });
 
@@ -246,16 +246,16 @@ describe('TextRun.fontStyle', () => {
 
 describe('TextRun.color', () => {
   test('color: "#FF0000" → Span.style.color === "#FF0000"', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { color: '#FF0000' })))[0].style.color).toBe('#FF0000');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { color: '#FF0000' })))[0].style.color).toBe('#FF0000');
   });
   test('color: "#0000FF" → Span.style.color === "#0000FF"', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { color: '#0000FF' })))[0].style.color).toBe('#0000FF');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { color: '#0000FF' })))[0].style.color).toBe('#0000FF');
   });
   test('color: "#000" (3-hex) → correctly preserved', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { color: '#000' })))[0].style.color).toBe('#000');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { color: '#000' })))[0].style.color).toBe('#000');
   });
   test('default — "#000000"', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello')))[0].style.color).toBe('#000000');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello')))[0].style.color).toBe('#000000');
   });
 });
 
@@ -263,10 +263,10 @@ describe('TextRun.color', () => {
 
 describe('TextRun.backgroundColor', () => {
   test('backgroundColor: "#FFFF00" → Span.style.backgroundColor === "#FFFF00"', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { backgroundColor: '#FFFF00' })))[0].style.backgroundColor).toBe('#FFFF00');
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { backgroundColor: '#FFFF00' })))[0].style.backgroundColor).toBe('#FFFF00');
   });
   test('no backgroundColor → undefined', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello')))[0].style.backgroundColor).toBeUndefined();
+    expect(allSpans(layoutParagraph(makeParagraph('Hello')))[0].style.backgroundColor).toBeUndefined();
   });
 });
 
@@ -294,25 +294,25 @@ describe('TextRun.letterSpacing', () => {
 
 describe('TextRun.script: "super" / "sub"', () => {
   test('script: "super" → effectiveFontSize = fontSize * 0.65', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'super' })))[0].fontMetrics.fontSize).toBeCloseTo(20 * 0.65, 0);
+    expect(allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'super' })))[0].fontMetrics.fontSize).toBeCloseTo(20 * 0.65, 0);
   });
   test('script: "super" → baselineOffset = fontSize * -0.4 (raised)', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'super' })))[0].style.script).toBe('super');
+    expect(allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'super' })))[0].style.script).toBe('super');
   });
   test('script: "sub" → effectiveFontSize = fontSize * 0.65', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0].fontMetrics.fontSize).toBeCloseTo(20 * 0.65, 0);
+    expect(allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0].fontMetrics.fontSize).toBeCloseTo(20 * 0.65, 0);
   });
   test('script: "sub" → baselineOffset = fontSize * 0.15 (lowered)', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0].style.script).toBe('sub');
+    expect(allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0].style.script).toBe('sub');
   });
   test('script: "normal" → no scaling, no offset', () => {
-    const frag = allFragments(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'normal' })))[0];
-    expect(frag.fontMetrics.fontSize).toBe(20);
-    expect(frag.style.script).toBe('normal');
+    const span = allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'normal' })))[0];
+    expect(span.fontMetrics.fontSize).toBe(20);
+    expect(span.style.script).toBe('normal');
   });
   test('Span.fontMetrics.fontSize uses effective (scaled) size', () => {
-    const n = layoutParagraph(makeParagraph('Hi', { fontSize: 20 })).lines[0].fragments[0].fontMetrics.fontSize;
-    const s = layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'super' })).lines[0].fragments[0].fontMetrics.fontSize;
+    const n = layoutParagraph(makeParagraph('Hi', { fontSize: 20 })).lines[0].spans[0].fontMetrics.fontSize;
+    const s = layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'super' })).lines[0].spans[0].fontMetrics.fontSize;
     expect(s).toBeLessThan(n);
   });
   test('normal + superscript mixed in one line — baseline is consistent', () => {
@@ -329,10 +329,10 @@ describe('TextRun.script: "super" / "sub"', () => {
 
 describe('TextRun.underline', () => {
   test('underline: true → Span.style.underline === true', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { underline: true })))[0].style.underline).toBe(true);
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { underline: true })))[0].style.underline).toBe(true);
   });
   test('underline: false → Span.style.underline === false', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { underline: false })))[0].style.underline).toBe(false);
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { underline: false })))[0].style.underline).toBe(false);
   });
   test('underline does not affect width or height', () => {
     const w = layoutParagraph(makeParagraph('Hello')).lines[0].width;
@@ -344,10 +344,10 @@ describe('TextRun.underline', () => {
 
 describe('TextRun.strikethrough', () => {
   test('strikethrough: true → Span.style.strikethrough === true', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { strikethrough: true })))[0].style.strikethrough).toBe(true);
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { strikethrough: true })))[0].style.strikethrough).toBe(true);
   });
   test('strikethrough: false → Span.style.strikethrough === false', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { strikethrough: false })))[0].style.strikethrough).toBe(false);
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { strikethrough: false })))[0].style.strikethrough).toBe(false);
   });
   test('strikethrough does not affect width or height', () => {
     const w = layoutParagraph(makeParagraph('Hello')).lines[0].width;
@@ -359,7 +359,7 @@ describe('TextRun.strikethrough', () => {
 
 describe('TextRun.overline', () => {
   test('overline: true → Span.style.overline === true', () => {
-    expect(allFragments(layoutParagraph(makeParagraph('Hello', { overline: true })))[0].style.overline).toBe(true);
+    expect(allSpans(layoutParagraph(makeParagraph('Hello', { overline: true })))[0].style.overline).toBe(true);
   });
   test('overline does not affect width or height', () => {
     const w = layoutParagraph(makeParagraph('Hello')).lines[0].width;
@@ -373,16 +373,16 @@ describe('TextRun.overline', () => {
 
 describe('Multi-run styling', () => {
   test('each TextRun → separate itemIndex', () => {
-    const frags = allFragments(layoutParagraph(makeMultiRunParagraph([{ text: 'Hello' }, { text: 'World' }])));
-    expect(frags.length).toBeGreaterThanOrEqual(2);
-    expect(frags.filter((f) => f.itemIndex === 0).length).toBeGreaterThan(0);
-    expect(frags.filter((f) => f.itemIndex === 1).length).toBeGreaterThan(0);
+    const spans = allSpans(layoutParagraph(makeMultiRunParagraph([{ text: 'Hello' }, { text: 'World' }])));
+    expect(spans.length).toBeGreaterThanOrEqual(2);
+    expect(spans.filter((s) => s.itemIndex === 0).length).toBeGreaterThan(0);
+    expect(spans.filter((s) => s.itemIndex === 1).length).toBeGreaterThan(0);
   });
 
   test('adjacent runs with identical styles → different Span (no merge)', () => {
-    const frags = allFragments(layoutParagraph(makeMultiRunParagraph([{ text: 'Hello' }, { text: 'World' }])));
-    const run0 = frags.filter((f) => f.itemIndex === 0);
-    const run1 = frags.filter((f) => f.itemIndex === 1);
+    const spans = allSpans(layoutParagraph(makeMultiRunParagraph([{ text: 'Hello' }, { text: 'World' }])));
+    const run0 = spans.filter((s) => s.itemIndex === 0);
+    const run1 = spans.filter((s) => s.itemIndex === 1);
     expect(run0.length).toBeGreaterThan(0);
     expect(run1.length).toBeGreaterThan(0);
   });
@@ -414,8 +414,8 @@ describe('Multi-run styling', () => {
 
 describe('Span.trailing', () => {
   test('trailing space marker is optional', () => {
-    const frags = allFragments(layoutParagraph(makeParagraph('Hello World ')));
-    const trailing = frags.filter((f) => f.trailing);
+    const spans = allSpans(layoutParagraph(makeParagraph('Hello World ')));
+    const trailing = spans.filter((s) => s.trailing);
     for (const t of trailing) expect(t.type).toBe('space');
   });
 
@@ -430,7 +430,7 @@ describe('Span.trailing', () => {
 
 describe('Span.breakType', () => {
   test('last span of the last line → breakType: undefined', () => {
-    const last = lastFragment(layoutParagraph(makeParagraph('Hello')));
+    const last = lastSpan(layoutParagraph(makeParagraph('Hello')));
     expect(last).toBeDefined();
     expect(last!.breakType).toBeUndefined();
   });
@@ -439,13 +439,12 @@ describe('Span.breakType', () => {
     const result = layoutParagraph(makeParagraph('Hello World How Are You'), 50);
     expect(result.lines.length).toBeGreaterThanOrEqual(2);
     const firstLine = result.lines[0];
-    const lastFrag = firstLine.fragments[firstLine.fragments.length - 1];
-    expect(lastFrag.breakType).toBe('soft');
+    const lastSpan = firstLine.spans[firstLine.spans.length - 1];
+    expect(lastSpan.breakType).toBe('soft');
   });
 
-
   test('single-line paragraph → breakType: undefined', () => {
-    const last = lastFragment(layoutParagraph(makeParagraph('Single line')));
+    const last = lastSpan(layoutParagraph(makeParagraph('Single line')));
     expect(last).toBeDefined();
     expect(last!.breakType).toBeUndefined();
   });
@@ -455,26 +454,26 @@ describe('Span.breakType', () => {
 
 describe('Span.glyphAdvances', () => {
   test('glyphAdvances array length = text.length', () => {
-    for (const frag of allTextFragments(layoutParagraph(makeParagraph('Hello')))) {
-      if (frag.glyphAdvances) expect(frag.glyphAdvances.length).toBe(frag.text.length);
+    for (const span of allTextSpans(layoutParagraph(makeParagraph('Hello')))) {
+      if (span.glyphAdvances) expect(span.glyphAdvances.length).toBe(span.text.length);
     }
   });
   test('each advance > 0', () => {
-    for (const frag of allTextFragments(layoutParagraph(makeParagraph('Hello')))) {
-      if (frag.glyphAdvances) for (const adv of frag.glyphAdvances) expect(adv).toBeGreaterThan(0);
+    for (const span of allTextSpans(layoutParagraph(makeParagraph('Hello')))) {
+      if (span.glyphAdvances) for (const adv of span.glyphAdvances) expect(adv).toBeGreaterThan(0);
     }
   });
   test('sum(glyphAdvances) ≈ span.width', () => {
-    for (const frag of allTextFragments(layoutParagraph(makeParagraph('Hello')))) {
-      if (frag.glyphAdvances && frag.glyphAdvances.length > 0) {
-        expect(Math.abs(frag.glyphAdvances.reduce((a, b) => a + b, 0) - frag.width)).toBeLessThan(2);
+    for (const span of allTextSpans(layoutParagraph(makeParagraph('Hello')))) {
+      if (span.glyphAdvances && span.glyphAdvances.length > 0) {
+        expect(Math.abs(span.glyphAdvances.reduce((a, b) => a + b, 0) - span.width)).toBeLessThan(2);
       }
     }
   });
   test('inline-box: glyphAdvances is undefined', () => {
-    const frag = allFragments(layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20 } }))).find((f) => f.inlineWidget);
-    expect(frag).toBeDefined();
-    expect(frag!.glyphAdvances).toBeUndefined();
+    const span = allSpans(layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20 } }))).find((s) => s.inlineWidget);
+    expect(span).toBeDefined();
+    expect(span!.glyphAdvances).toBeUndefined();
   });
 });
 
