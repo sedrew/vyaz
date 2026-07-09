@@ -10,13 +10,15 @@
  * Exports enableOfficeTextMeasure / disableOfficeTextMeasure —
  * ctx.measureText override for fontkit-based measurements in Office mode.
  */
+import { createRequire } from 'module';
+
 // ⚠️ Dynamic import — prevents esbuild from resolving @napi-rs/canvas at bundle time.
 // This module is a native Node.js addon. In the browser, Canvas APIs are already available.
 let _createCanvas: ((w: number, h: number) => any) | null = null;
 
+const _require = createRequire(import.meta.url);
 try {
-  // Dynamic require — kept as eval to avoid esbuild static analysis
-  const mod: any = (Function('return require("@napi-rs/canvas")'))();
+  const mod: any = _require('@napi-rs/canvas');
   _createCanvas = mod.createCanvas;
 } catch {
   // Browser — document.createElement('canvas') is available natively, no polyfill needed
@@ -28,7 +30,18 @@ try {
 // to create a temporary Canvas and obtain a 2d context for measureText.
 // Without this polyfill, prepare() crashes with "document is not defined" in Bun.
 
-if (typeof globalThis.document === 'undefined') {
+function needsCanvasPolyfill(): boolean {
+  if (typeof globalThis.document === 'undefined') return true;
+  try {
+    const el = globalThis.document.createElement('canvas');
+    if (!el || typeof el.getContext !== 'function') return true;
+    return false;
+  } catch {
+    return true;
+  }
+}
+
+if (needsCanvasPolyfill()) {
   (globalThis as any).document = {
     createElement: (tag: string) => {
       if (tag === 'canvas' && _createCanvas) return _createCanvas(1, 1);
