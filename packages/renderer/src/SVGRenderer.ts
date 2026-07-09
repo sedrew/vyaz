@@ -3,11 +3,14 @@
  *
  * Converts Line[] into SVG markup using a builder pattern.
  *
- * Three presets:
+ * Four presets:
  *   flat     — all text in one <text> element, xml:space="preserve", no <tspan>
- *   browser  — expanded <tspan> per run, NO xml:space, spaces skipped (browser collapses them)
- *   preserve — expanded <tspan> per run, xml:space="preserve", spaces render as <tspan> </tspan>,
- *              textLength on each line by default for pixel-perfect width
+ *   browser  — expanded <tspan> per run, xml:space="preserve", diff attributes, no textLength
+ *   preserve — expanded <tspan> per run, xml:space="preserve", diff attributes, textLength
+ *   glyph    — <tspan> per glyph with per-character x positions, xml:space="preserve"
+ *
+ * All presets preserve whitespace via xml:space="preserve". Space spans (type: 'space')
+ * are rendered as separate <tspan> elements with explicit x coordinates.
  *
  * Usage:
  *   const svg = renderToSVG(lines, { preset: 'browser' })
@@ -66,7 +69,7 @@ type ResolvedOptions = {
 
 const PRESETS: Record<SvgPreset, { structure: StructureMode; spacing: SpacingMode; defaultFit: SvgFit }> = {
   flat:     { structure: 'flat',     spacing: 'preserve', defaultFit: 'none' },
-  browser:  { structure: 'expanded', spacing: 'browser',  defaultFit: 'none' },
+  browser:  { structure: 'expanded', spacing: 'preserve', defaultFit: 'none' },
   preserve: { structure: 'expanded', spacing: 'preserve', defaultFit: 'none' },
   glyph:    { structure: 'glyph',    spacing: 'preserve', defaultFit: 'none' },
 };

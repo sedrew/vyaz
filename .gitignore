@@ -9,6 +9,8 @@ dist/
 .clinerules/
 .codegraph/
 
+.thinking/
+
 # Build artifacts
 *.tgz
 
