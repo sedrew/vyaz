@@ -24,9 +24,11 @@
  */
 
 import { describe, test, expect, beforeAll } from 'bun:test';
+import { spyOn } from 'bun:test';
 import {
   engine,
   registerUnifont,
+  registerArialVariants,
   hasCanvas,
   makeParagraph,
   makeStyledParagraph,
@@ -38,9 +40,12 @@ import {
   spanTexts,
   lastSpan,
 } from './helpers.ts';
+import { FontNotFoundError } from '../src/measure/FontNotFoundError.js';
+import { compileParagraph } from '../src/compile/DocumentCompiler.js';
 
 beforeAll(async () => {
   await registerUnifont();
+  await registerArialVariants();
 });
 
 // ── 1. TextRun.type: 'text' ──────────────────────────────────────────────
@@ -212,14 +217,14 @@ describe('TextRun.fontWeight', () => {
     expect(allSpans(result)[0].style.fontWeight).toBe(700);
   });
 
-  test('fontWeight: 300 → Span.style.fontWeight === 300', () => {
-    const result = layoutParagraph(makeParagraph('Hello', { fontWeight: 300 }));
-    expect(allSpans(result)[0].style.fontWeight).toBe(300);
+  test('fontWeight: 300 → style.fontWeight === 300 (via compileParagraph)', () => {
+    const items = compileParagraph(makeParagraph('Hello', { fontWeight: 300 }));
+    expect(items[0].metadata.style.fontWeight).toBe(300);
   });
 
-  test('fontWeight: 900 → Span.style.fontWeight === 900', () => {
-    const result = layoutParagraph(makeParagraph('Hello', { fontWeight: 900 }));
-    expect(allSpans(result)[0].style.fontWeight).toBe(900);
+  test('fontWeight: 900 → style.fontWeight === 900 (via compileParagraph)', () => {
+    const items = compileParagraph(makeParagraph('Hello', { fontWeight: 900 }));
+    expect(items[0].metadata.style.fontWeight).toBe(900);
   });
 
   test('default fontWeight — 400 from DEFAULT_TEXT_STYLE', () => {
@@ -515,5 +520,74 @@ describe('Invariants (assertLineInvariants)', () => {
   test('Baseline Consistency: baseline > 0 for all lines', () => {
     const result = layoutParagraph(makeParagraph('Hello World'), 200);
     for (const line of result.lines) expect(line.baseline).toBeGreaterThan(0);
+  });
+});
+
+// ── 20. FontWeight → width (Arial) ────────────────────────────────────────
+
+describe('TextRun.fontWeight → width (Arial)', () => {
+  test('Arial normal vs Arial bold — bold is wider', () => {
+    const normal = layoutParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial', fontWeight: 'normal' }));
+    const bold = layoutParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial', fontWeight: 'bold' }));
+    expect(bold.lines[0].width).toBeGreaterThan(normal.lines[0].width);
+  });
+
+  test('Arial 400 vs Arial 700 — 700 is wider', () => {
+    const w400 = layoutParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial', fontWeight: 400 }));
+    const w700 = layoutParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial', fontWeight: 700 }));
+    expect(w700.lines[0].width).toBeGreaterThan(w400.lines[0].width);
+  });
+
+  test('Arial normal vs Arial italic — does not crash', () => {
+    const normal = layoutParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial', fontStyle: 'normal' }));
+    const italic = layoutParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial', fontStyle: 'italic' }));
+    expect(normal.lines[0].width).toBeGreaterThan(0);
+    expect(italic.lines[0].width).toBeGreaterThan(0);
+  });
+});
+
+// ── 21. FontWeight → width (Unifont monospace) ──────────────────────────
+
+describe('TextRun.fontWeight → width (Unifont monospace)', () => {
+  test('Unifont bold is not registered — throws FontNotFoundError', () => {
+    // Unifont has only weight: 'normal' registered
+    expect(() => layoutParagraph(
+      makeParagraph('Hello', { fontFamily: 'Unifont', fontWeight: 'bold' }),
+    )).toThrow(FontNotFoundError);
+  });
+});
+
+// ── 22. FontNotFoundError ────────────────────────────────────────────────
+
+describe('FontNotFoundError', () => {
+  test('unregistered fontWeight variant throws FontNotFoundError', () => {
+    // Unifont registered with weight: 'normal' only
+    expect(() => layoutParagraph(
+      makeStyledParagraph('Hello', { fontFamily: 'Unifont', fontWeight: 'bold' }),
+      500,
+    )).toThrow(FontNotFoundError);
+  });
+
+  test('unregistered font family throws FontNotFoundError', () => {
+    expect(() => layoutParagraph(
+      makeStyledParagraph('Hello', { fontFamily: 'NonExistentFont12345' }),
+      500,
+    )).toThrow(FontNotFoundError);
+  });
+});
+
+// ── 23. Arial registration warning ───────────────────────────────────────
+
+describe('Arial registration warning', () => {
+  test('warns when Arial not found on system', async () => {
+    const warnSpy = spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      await registerArialVariants([]);
+      expect(warnSpy).toHaveBeenCalledTimes(1);
+      const msg = warnSpy.mock.calls[0][0];
+      expect(msg).toContain('Arial font files not found');
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 });

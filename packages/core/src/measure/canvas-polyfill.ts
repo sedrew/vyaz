@@ -170,6 +170,21 @@ function createEmptyMetrics(): TextMetrics {
 }
 
 /**
+ * Register a font with @napi-rs/canvas so ctx.measureText() works in Node.js.
+ * No-op in browser or when @napi-rs/canvas is not available.
+ */
+export function registerCanvasFont(fontPath: string, family: string): void {
+  try {
+    const mod = _require('@napi-rs/canvas');
+    if (mod?.registerFont) {
+      mod.registerFont(fontPath, { family });
+    }
+  } catch {
+    // @napi-rs/canvas not available — no-op
+  }
+}
+
+/**
  * Enable Office measurement: replaces ctx.measureText with fontkit-based version.
  * @param fontCache — Map key->font from FontMetricsProvider
  */

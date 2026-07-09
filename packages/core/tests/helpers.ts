@@ -9,7 +9,7 @@
  */
 
 import { readFileSync, existsSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
+import { resolve, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import type {
@@ -23,6 +23,7 @@ import { ParagraphLayoutEngine } from '../src/layout/ParagraphLayoutEngine.js';
 import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
 import { assertLineInvariants } from '../src/layout/LineBoxValidator.js';
 import { DEFAULT_PARAGRAPH_STYLE } from '../src/types/Document.js';
+import getSystemFonts from 'get-system-fonts';
 
 // ── Singleton ──────────────────────────────────────────────────────────
 
@@ -54,6 +55,87 @@ export async function registerUnifont(): Promise<void> {
   }
   const data = readFileSync(fontPath);
   await fontMetricsProvider.registerFont('Unifont', { weight: 'normal', style: 'normal' }, data);
+}
+
+// ── Arial variants registration ──────────────────────────────────────
+
+/** Parse font subfamily name → { weight, style }. */
+function parseSubfamily(subfamily: string): { weight: string; style: string } {
+  const lower = subfamily.toLowerCase();
+  const style = lower.includes('italic') ? 'italic' : 'normal';
+
+  let weight: string;
+  if (lower.includes('thin') || lower.includes('hairline')) {
+    weight = 'thin';
+  } else if (lower.includes('extralight') || lower.includes('ultralight')) {
+    weight = 'extralight';
+  } else if (lower.includes('light')) {
+    weight = 'light';
+  } else if (lower.includes('semibold') || lower.includes('demibold')) {
+    weight = 'semibold';
+  } else if (lower.includes('bold') || lower.includes('heavy') || lower.includes('black')) {
+    weight = 'bold';
+  } else if (lower.includes('medium')) {
+    weight = 'medium';
+  } else {
+    weight = 'normal';
+  }
+  return { weight, style };
+}
+
+/**
+ * Find and register Arial font variants (Regular, Bold, Italic, Bold Italic)
+ * from the system. Uses get-system-fonts to locate font files.
+ * If Arial is not found, logs a warning — tests that require Arial
+ * should be guarded by hasCanvas().
+ *
+ * @param mockPaths — optional override for getSystemFonts() result (for testing)
+ */
+export async function registerArialVariants(mockPaths?: string[]): Promise<void> {
+  try {
+    let fontPaths: string[];
+    if (mockPaths !== undefined) {
+      fontPaths = mockPaths;
+    } else {
+      fontPaths = await getSystemFonts();
+    }
+    const arialPaths = fontPaths.filter((p) => {
+      const name = p.toLowerCase().replace(/\\/g, '/').split('/').pop() || '';
+      return name.startsWith('arial') && (name.endsWith('.ttf') || name.endsWith('.otf'));
+    });
+
+    if (arialPaths.length === 0) {
+      console.warn('Arial font files not found on the system — Arial font weight tests will be skipped.');
+      return;
+    }
+
+    // Dynamic import — fontkit may not be available
+    let fontkit: any;
+    try {
+      fontkit = await import('fontkit');
+      fontkit = fontkit.default || fontkit;
+    } catch {
+      console.warn('fontkit not available — cannot register Arial variants.');
+      return;
+    }
+
+    for (const fontPath of arialPaths) {
+      try {
+        const buffer = readFileSync(fontPath);
+        const font = fontkit.create(buffer);
+        const family = font.familyName;
+        if (!family || !family.toLowerCase().startsWith('arial')) continue;
+
+        const { weight, style } = parseSubfamily(font.subfamilyName || 'Regular');
+        await fontMetricsProvider.registerFont(family, { weight, style }, buffer, fontPath);
+        console.log(`Registered: ${family} (${weight}/${style})`);
+      } catch {
+        // Skip individual file errors
+      }
+    }
+  } catch (err) {
+    console.warn('Failed to register Arial variants:', err);
+  }
 }
 
 // ── Default paragraph style ───────────────────────────────────────────

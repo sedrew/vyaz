@@ -45,11 +45,14 @@ export interface IFontMetricsProvider {
   /**
    * Register a binary font for use with fontkit.
    * In browser — no-op (fonts are registered via CSS @font-face).
+   *
+   * @param sourcePath — path to .ttf/.otf file for optional @napi-rs/canvas.registerFont()
    */
   registerFont(
     family: string,
     options: { weight?: string; style?: string },
     source: string | Buffer,
+    sourcePath?: string,
   ): void;
 
   /**

@@ -72,3 +72,9 @@ export type { PreparedRichInlineItem } from './compile/DocumentCompiler.js';
 
 // ── Font metrics ────────────────────────────────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
+
+// ── System font registry ────────────────────────────────────────────────
+export { SystemFontRegistry, systemFontRegistry } from './measure/SystemFontRegistry.js';
+
+// ── Errors ──────────────────────────────────────────────────────────────
+export { FontNotFoundError } from './measure/FontNotFoundError.js';

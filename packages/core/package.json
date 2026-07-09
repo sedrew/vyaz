@@ -17,6 +17,7 @@
     "@clean-jsdoc-theme/typedoc": "^5.0.6",
     "@napi-rs/canvas": "^1.0.2",
     "fontkit": "^2.0.4",
+    "get-system-fonts": "^2.0.2",
     "js-yaml": "^5.0.0",
     "typedoc": "^0.28.19"
   },
