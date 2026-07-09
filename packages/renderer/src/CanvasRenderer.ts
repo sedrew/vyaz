@@ -1,7 +1,7 @@
 /**
- * CanvasRenderer.ts — render LineBox[] → Canvas.
+ * CanvasRenderer.ts — render Line[] → Canvas.
  *
- * Takes ready LineBox[] with absolute coordinates.
+ * Takes ready Line[] with absolute coordinates.
  * Does not compute anything — only draws (dumb drawer principle).
  *
  * Options:
@@ -11,7 +11,7 @@
  *   - debug: DebugFlags — debug overlays
  */
 
-import type { LineBox, FragmentBox } from '@vyaz/core';
+import type { Line, Span } from '@vyaz/core';
 import type { DebugFlags } from './types.js';
 import { computeBBox } from './utils.js';
 
@@ -23,8 +23,8 @@ export interface CanvasRenderOptions {
    */
   sizing?: 'frame' | 'content';
   /**
-   * When true: render space fragments with a space character.
-   * When false (default): skip space fragments (position is already accounted for in x).
+   * When true: render space spans with a space character.
+   * When false (default): skip space spans (position is already accounted for in x).
    */
   preserveSpaces?: boolean;
   /** Background color for clearing. If omitted, canvas is cleared transparent. */
@@ -47,15 +47,15 @@ function fontStyleCSS(style: string): string {
 }
 
 /**
- * Render LineBox[] array to Canvas.
+ * Render Line[] array to Canvas.
  *
  * @param ctx — Canvas 2D rendering context
- * @param lines — ready LineBox[] with absolute coordinates
+ * @param lines — ready Line[] with absolute coordinates
  * @param options — rendering options
  */
 export function renderToCanvas(
   ctx: CanvasRenderingContext2D | any,
-  lines: LineBox[],
+  lines: Line[],
   options: CanvasRenderOptions = {},
 ): void {
   const sizing = options.sizing ?? 'frame';
@@ -88,49 +88,49 @@ export function renderToCanvas(
   for (const line of lines) {
     const baselineY = line.y + line.baseline;
 
-    for (const frag of line.fragments) {
-      const x = line.x + frag.x;
+    for (const span of line.spans) {
+      const x = line.x + span.x;
 
       // Font setting
-      const style = fontStyleCSS(frag.style.fontStyle);
-      const weight = fontWeightCSS(frag.style.fontWeight);
-      const size = frag.fontMetrics.fontSize;
-      const family = frag.style.fontFamily;
+      const style = fontStyleCSS(span.style.fontStyle);
+      const weight = fontWeightCSS(span.style.fontWeight);
+      const size = span.fontMetrics.fontSize;
+      const family = span.style.fontFamily;
       ctx.font = `${style} ${weight} ${size}px ${family}`;
-      ctx.fillStyle = frag.style.color || '#000000';
+      ctx.fillStyle = span.style.color || '#000000';
       ctx.textBaseline = 'alphabetic';
 
       // Draw text
-      if (preserveSpaces || frag.type !== 'space') {
-        ctx.fillText(frag.text, x, baselineY);
+      if (preserveSpaces || span.type !== 'space') {
+        ctx.fillText(span.text, x, baselineY);
       }
 
       // Underline
-      if (frag.style.underline) {
+      if (span.style.underline) {
         const ulY = baselineY + 2;
-        ctx.strokeStyle = frag.style.color || '#000000';
+        ctx.strokeStyle = span.style.color || '#000000';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(x, ulY);
-        ctx.lineTo(x + frag.width, ulY);
+        ctx.lineTo(x + span.width, ulY);
         ctx.stroke();
       }
 
       // Strikethrough
-      if (frag.style.strikethrough) {
-        const stY = baselineY - frag.fontMetrics.ascent * 0.4;
-        ctx.strokeStyle = frag.style.color || '#000000';
+      if (span.style.strikethrough) {
+        const stY = baselineY - span.fontMetrics.ascent * 0.4;
+        ctx.strokeStyle = span.style.color || '#000000';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(x, stY);
-        ctx.lineTo(x + frag.width, stY);
+        ctx.lineTo(x + span.width, stY);
         ctx.stroke();
       }
 
       // InlineWidget (simple rectangle)
-      if (frag.inlineWidget) {
-        const iw = frag.inlineWidget;
-        const iwY = baselineY - (iw.height || frag.fontMetrics.ascent) + (iw.baselineOffset || 0);
+      if (span.inlineWidget) {
+        const iw = span.inlineWidget;
+        const iwY = baselineY - (iw.height || span.fontMetrics.ascent) + (iw.baselineOffset || 0);
         ctx.fillStyle = '#cccccc';
         ctx.fillRect(x, iwY, iw.width, iw.height);
       }
@@ -148,7 +148,7 @@ export function renderToCanvas(
 /** Draw debug overlays on canvas */
 export function renderDebugToCanvas(
   ctx: CanvasRenderingContext2D,
-  lines: LineBox[],
+  lines: Line[],
   _width: number,
   _height: number,
   flags: DebugFlags,
@@ -230,14 +230,14 @@ export function renderDebugToCanvas(
       ctx.fillText(label, bx, labelY);
     }
 
-    // Run boxes — purple rects around FragmentBox
+    // Run boxes — purple rects around Spans
     if (flags.runs) {
-      for (const frag of line.fragments) {
-        if (frag.width <= 0) continue;
-        const rx = line.x + frag.x;
-        const ry = baselineY - frag.fontMetrics.ascent;
-        const rw = frag.width;
-        const rh = frag.fontMetrics.ascent + frag.fontMetrics.descent;
+      for (const span of line.spans) {
+        if (span.width <= 0) continue;
+        const rx = line.x + span.x;
+        const ry = baselineY - span.fontMetrics.ascent;
+        const rw = span.width;
+        const rh = span.fontMetrics.ascent + span.fontMetrics.descent;
         ctx.strokeStyle = 'rgba(200,100,255,0.4)';
         ctx.lineWidth = 0.5;
         ctx.strokeRect(rx, ry, rw, rh);

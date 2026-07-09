@@ -8,7 +8,7 @@
  */
 
 import { dump } from 'js-yaml';
-import type { LineBox, FragmentBox, SemanticParagraph } from '../types/LayoutTypes.js';
+import type { Line, Span, SemanticParagraph } from '../types/LayoutTypes.js';
 
 const EPSILON = 0.5; // subpixel tolerance
 
@@ -21,11 +21,11 @@ export interface InvariantError {
 }
 
 /**
- * Check all 5 invariants for a LineBox array.
+ * Check all 5 invariants for a Line array.
  * Throws on first violation.
  */
-export function assertLineBoxInvariants(
-  lines: LineBox[],
+export function assertLineInvariants(
+  lines: Line[],
   originalText: string,
   maxWidth: number,
 ): void {
@@ -78,19 +78,19 @@ export function assertLineBoxInvariants(
       });
     }
 
-    // 5. BASELINE_EQ: all fragments in a line have the same baseline
-    if (line.fragments.length > 1) {
+    // 5. BASELINE_EQ: all spans in a line have the same baseline
+    if (line.spans.length > 1) {
       const firstBaseline = line.baseline;
-      for (let j = 0; j < line.fragments.length; j++) {
-        const frag = line.fragments[j];
-        const fragBaseline = frag.fontMetrics.ascent;
-        if (Math.abs(fragBaseline - firstBaseline) > EPSILON) {
+      for (let j = 0; j < line.spans.length; j++) {
+        const span = line.spans[j];
+        const spanBaseline = span.fontMetrics.ascent;
+        if (Math.abs(spanBaseline - firstBaseline) > EPSILON) {
           // NOTE: baseline may differ for super/sub — that's normal
           // So we only check that baseline is set
-          if (fragBaseline <= 0) {
+          if (spanBaseline <= 0) {
             errors.push({
               invariant: 'BASELINE_EQ',
-              message: `Line ${i}, fragment ${j}: baseline=${fragBaseline} is invalid`,
+              message: `Line ${i}, span ${j}: baseline=${spanBaseline} is invalid`,
             });
           }
         }
@@ -117,21 +117,21 @@ export function assertLineBoxInvariants(
 
 // ── YAML serialization ─────────────────────────────────────────────────
 
-/** Fragment style label for snapshot */
-function fragmentStyleLabel(frag: FragmentBox): 'bold' | 'italic' | 'normal' {
-  if (frag.style.fontStyle === 'italic') return 'italic';
-  const w = frag.style.fontWeight;
+/** Span style label for snapshot */
+function spanStyleLabel(span: Span): 'bold' | 'italic' | 'normal' {
+  if (span.style.fontStyle === 'italic') return 'italic';
+  const w = span.style.fontWeight;
   if (w === 'bold' || w === 700) return 'bold';
   return 'normal';
 }
 
 /**
- * Convert LineBox[] to YAML string for snapshots.
+ * Convert Line[] to YAML string for snapshots.
  * Only semantic data: text, x, width, style.
  * No glyphAdvances, fontMetrics (noise), inlineWidget.
  */
-export function lineBoxToYAML(
-  lines: LineBox[],
+export function linesToYAML(
+  lines: Line[],
   paragraphWidth: number,
   paragraphHeight: number,
 ): string {
@@ -143,11 +143,11 @@ export function lineBoxToYAML(
       width: Math.round(line.width * 100) / 100,
       height: Math.round(line.height * 100) / 100,
       baseline: Math.round(line.baseline * 100) / 100,
-      fragments: line.fragments.map(frag => ({
-        text: frag.text,
-        x: Math.round(frag.x * 100) / 100,
-        width: Math.round(frag.width * 100) / 100,
-        ...(fragmentStyleLabel(frag) !== 'normal' ? { style: fragmentStyleLabel(frag) } : {}),
+      fragments: line.spans.map(span => ({
+        text: span.text,
+        x: Math.round(span.x * 100) / 100,
+        width: Math.round(span.width * 100) / 100,
+        ...(spanStyleLabel(span) !== 'normal' ? { style: spanStyleLabel(span) } : {}),
       })),
     })),
   };
@@ -159,3 +159,4 @@ export function lineBoxToYAML(
     sortKeys: false,
   });
 }
+

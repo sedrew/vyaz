@@ -12,11 +12,43 @@
  */
 
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
-import { enableOfficeTextMeasure, disableOfficeTextMeasure } from './canvas-polyfill.js';
+import { enableOfficeTextMeasure, disableOfficeTextMeasure, registerCanvasFont } from './canvas-polyfill.js';
+import { FontNotFoundError } from './FontNotFoundError.js';
 
-/** Cache key: "${family}_${weight}_${style}" */
+// ── Weight normalisation ─────────────────────────────────────────────────
+
+/**
+ * Map named font weights to numeric strings.
+ * Both directions work: 'bold' → '700', 700 → '700', '700' → '700'.
+ */
+const WEIGHT_TO_NUM: Record<string, string> = {
+  thin: '100',
+  hairline: '100',
+  ultralight: '200',
+  extralight: '200',
+  light: '300',
+  normal: '400',
+  medium: '500',
+  semibold: '600',
+  demibold: '600',
+  bold: '700',
+  ultrabold: '800',
+  extrabold: '800',
+  heavy: '900',
+  black: '900',
+};
+
+/** Normalise weight to a numeric string ("400", "700", etc.). */
+function normaliseWeight(weight: string): string {
+  const lower = weight.toLowerCase();
+  const mapped = WEIGHT_TO_NUM[lower];
+  if (mapped) return mapped;
+  return weight; // already numeric or unrecognised — pass through
+}
+
+/** Cache key: "${family}_${weight}_${style}" with normalised weight. */
 function cacheKey(family: string, weight: string, style: string): string {
-  return `${family}_${weight}_${style}`;
+  return `${family}_${normaliseWeight(weight)}_${style}`;
 }
 
 export class FontMetricsProvider implements IFontMetricsProvider {
@@ -48,12 +80,15 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 
   /**
    * Register a binary font for use with fontkit.
-   * In browser — no-op.
+   * In browser — no-op (fonts are registered via CSS @font-face).
+   *
+   * @param sourcePath — if provided, also registers with @napi-rs/canvas for Node.js canvas measureText
    */
   async registerFont(
     family: string,
     options: { weight?: string; style?: string },
     source: string | Buffer,
+    sourcePath?: string,
   ): Promise<void> {
     try {
       // Dynamic ESM import — fontkit may not be available in browser
@@ -70,6 +105,11 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       this.cache.set(key, font);
       // Invalidate metrics for this font
       this.metricsCache.delete(key);
+
+      // Also register with @napi-rs/canvas so ctx.measureText() uses real fonts
+      if (sourcePath) {
+        registerCanvasFont(sourcePath, family);
+      }
     } catch {
       // fontkit not available (browser) — no-op
     }
@@ -150,7 +190,12 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       return metrics;
     }
 
-    // Strategy 2: Canvas TextMetrics (browser)
+    // Strategy 2: If fontkit cache is non-empty, fontkit is available but font not found → throw
+    if (this.cache.size > 0) {
+      throw new FontNotFoundError(fontFamily, weight, style);
+    }
+
+    // Strategy 3: Canvas TextMetrics (browser, fallback when fontkit unavailable)
     if (typeof document !== 'undefined') {
       try {
         const canvas = document.createElement('canvas');
@@ -172,17 +217,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       }
     }
 
-    console.error("Font not found")
-    // Strategy 3: Fallback
-    metrics = {
-      ascent: fontSize * 0.85,
-      descent: fontSize * 0.15,
-      capHeight: fontSize * 0.7,
-      unitsPerEm: 1000,
-      sourceTable: 'fallback',
-    };
-    this.metricsCache.set(metricsKey, metrics);
-    return metrics;
+    // Font not found — throw error with clear message
+    throw new FontNotFoundError(fontFamily, weight, style);
   }
 }
 

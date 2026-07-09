@@ -6,8 +6,8 @@
  *   → compile (DocumentCompiler)
  *   → prepareRichInline (pretext)
  *   → walkRichInlineLineRanges + materializeRichInlineLineRange (pretext)
- *   → positionLineBoxes (PositioningEngine)
- *   → assertLineBoxInvariants (LineBoxValidator)
+ *   → positionLines (PositioningEngine)
+ *   → assertLineInvariants (LineInvariants)
  *
  * Supports autofit via AutoFitEngine.findScale.
  * Caches PreparedRichInline per paragraph key (Parley LayoutContext pattern).
@@ -23,8 +23,8 @@ import type { ParagraphLayoutResult } from '../types/LayoutTypes.js';
 import { compileParagraph, getParagraphText } from '../compile/DocumentCompiler.js';
 import type { PreparedRichInlineItem } from '../compile/DocumentCompiler.js';
 import { fontMetricsProvider } from '../measure/FontMetricsProvider.js';
-import { positionLineBoxes } from './PositioningEngine.js';
-import { assertLineBoxInvariants } from './LineBoxValidator.js';
+import { positionLines } from './PositioningEngine.js';
+import { assertLineInvariants } from './LineBoxValidator.js';
 
 // @ts-ignore
 import { prepareRichInline, materializeRichInlineLineRange, walkRichInlineLineRanges, type PreparedRichInline } from '@chenglou/pretext/rich-inline';
@@ -52,7 +52,7 @@ export class ParagraphLayoutEngine {
    * @param paragraph — input paragraph
    * @param maxWidth — available container width (px)
    * @param fontProvider — optional metrics provider (default: fontMetricsProvider)
-   * @returns ParagraphLayoutResult with LineBox[]
+   * @returns ParagraphLayoutResult with Line[]
    */
   layout(
     paragraph: Paragraph,
@@ -89,7 +89,7 @@ export class ParagraphLayoutEngine {
 
     // Phase 4: Position
     const renderMode = provider.getMode();
-    const { lines, contentWidth } = positionLineBoxes(
+    const { lines, contentWidth } = positionLines(
       materializedLines,
       items,
       (item) => {
@@ -111,7 +111,7 @@ export class ParagraphLayoutEngine {
     );
 
     // Phase 5: Validate
-    assertLineBoxInvariants(lines, getParagraphText(paragraph), maxWidth);
+    assertLineInvariants(lines, getParagraphText(paragraph), maxWidth);
 
     // Phase 6: Compute height
     const totalHeight = lines.length > 0
@@ -129,8 +129,8 @@ export class ParagraphLayoutEngine {
   /**
    * Layout with per-glyph advance widths (for SVG glyph mode).
    *
-   * After basic layout, fills FragmentBox.glyphAdvances
-   * via fontkit for each text fragment.
+   * After basic layout, fills Span.glyphAdvances
+   * via fontkit for each text span.
    *
    * @param paragraph — input paragraph
    * @param maxWidth — available container width (px)
@@ -145,14 +145,14 @@ export class ParagraphLayoutEngine {
     const result = this.layout(paragraph, maxWidth, yOffset);
 
     for (const line of result.lines) {
-      for (const frag of line.fragments) {
-        if (frag.type === 'text' && frag.text.length > 0) {
-          frag.glyphAdvances = this.computeGlyphAdvances(
-            frag.text,
-            frag.style.fontFamily,
-            frag.fontMetrics.fontSize,
-            String(frag.style.fontWeight || 400),
-            frag.style.fontStyle || 'normal',
+      for (const span of line.spans) {
+        if (span.type === 'text' && span.text.length > 0) {
+          span.glyphAdvances = this.computeGlyphAdvances(
+            span.text,
+            span.style.fontFamily,
+            span.fontMetrics.fontSize,
+            String(span.style.fontWeight || 400),
+            span.style.fontStyle || 'normal',
           );
         }
       }
