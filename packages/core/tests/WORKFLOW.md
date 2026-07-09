@@ -32,6 +32,12 @@ tests/
 - **Fixtures**: placed in `tests/fixtures/`
 - **Helpers**: shared utilities in `tests/helpers.ts`
 
+## Output type names
+
+Layout engine produces two core types:
+- **`Line`** — a single line of text (formerly `LineBox`)
+- **`Span`** — a render atom inside a line (formerly `FragmentBox`)
+
 ## Test helpers (`helpers.ts`)
 
 | Helper | Purpose |
@@ -40,11 +46,11 @@ tests/
 | `makeStyledParagraph(text, style)` | Paragraph with custom font (Arial, etc.) |
 | `makeMultiRunParagraph(runs)` | Multi-run Paragraph with different styles |
 | `layoutParagraph(paragraph, maxWidth?)` | Layout + invariant assertion |
-| `allFragments(result)` | Flat array of all FragmentBox |
-| `allTextFragments(result)` | Only `type: 'text'` fragments |
-| `allSpaceFragments(result)` | Only `type: 'space'` fragments |
-| `spanTexts(result)` | Array of fragment texts |
-| `lastFragment(result)` | Last fragment of last line |
+| `allSpans(result)` | Flat array of all `Span` |
+| `allTextSpans(result)` | Only `type: 'text'` spans |
+| `allSpaceSpans(result)` | Only `type: 'space'` spans |
+| `spanTexts(result)` | Array of span texts |
+| `lastSpan(result)` | Last span of last line |
 | `hasCanvas()` | Check if @napi-rs/canvas is available |
 | `registerUnifont()` | Register Unifont in fontMetricsProvider |
 
@@ -58,7 +64,7 @@ tests/
 1. Create `tests/<feature>.test.ts`
 2. Import helpers from `./helpers.ts`
 3. Call `layoutParagraph()` with the Paragraph builder
-4. Assert on FragmentBox, LineBox, or ParagraphLayoutResult
+4. Assert on `Span`, `Line`, or `ParagraphLayoutResult`
 
 ## Font registration
 
@@ -78,10 +84,10 @@ Use Bun's built-in assertions (`expect` from `bun:test`):
 import { describe, test, expect, beforeAll } from 'bun:test';
 ```
 
-For fragment properties:
+For span properties:
 
 ```ts
 const result = layoutParagraph(makeParagraph('Hello'));
-const frag = allFragments(result)[0];
-expect(frag.type).toBe('text');
-expect(frag.style.fontFamily).toBe('Unifont');
+const span = allSpans(result)[0];
+expect(span.type).toBe('text');
+expect(span.style.fontFamily).toBe('Unifont');
