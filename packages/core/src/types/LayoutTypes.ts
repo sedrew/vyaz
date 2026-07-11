@@ -65,6 +65,10 @@ export interface SpanFontMetrics {
   ascent: number;
   descent: number;
   fontSize: number;
+  /** Vertical offset from baseline (px). Used for sub/superscript positioning.
+   *  Negative = above baseline (superscript). Positive = below baseline (subscript).
+   *  Undefined or 0 = normal baseline position. */
+  baselineOffset?: number;
 }
 
 // ── Line (single line, formerly LineBox) ─────────────────────────────────

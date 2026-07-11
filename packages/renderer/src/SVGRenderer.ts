@@ -309,14 +309,42 @@ class SvgBuilder {
     }
   }
 
-  addText(line: Line, baseSpan: Span, runId?: string): void {
-    const attrs = buildTextAttrs(line, baseSpan, this.opts, runId);
+  addText(line: Line, baseSpan: Span, runId?: string, yOverride?: number, fontSizeOverride?: number): void {
+    let attrs: string;
+    if (yOverride !== undefined && fontSizeOverride !== undefined) {
+      // For flat mode sub/superscript — override y and font-size
+      const s = defaultStyleState(baseSpan);
+      const x = line.x;
+      attrs = ` x="${x}" y="${yOverride}"`;
+      if (this.opts.style === 'css') {
+        let css = cssStyleString(s);
+        if (this.opts.spacing === 'preserve') css += '; white-space: pre';
+        attrs += ` style="${css}"`;
+      } else {
+        let xml = ` font-family="${s.fontFamily}" font-size="${fontSizeOverride}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+        if (s.fontStyle === 'italic') xml += ' font-style="italic"';
+        if (s.decoration) xml += ` text-decoration="${s.decoration}"`;
+        if (this.opts.spacing === 'preserve') xml += ' xml:space="preserve"';
+        attrs += xml;
+      }
+    } else {
+      attrs = buildTextAttrs(line, baseSpan, this.opts, runId);
+    }
     const fit = buildFitAttr(line, this.opts);
     this.parts.push(`  <text${attrs}${fit}>\n`);
   }
 
   addFlatSpan(text: string): void {
-    this.parts.push(`    ${escapeXml(text)}`);
+    this.parts.push(`${escapeXml(text)}`);
+  }
+
+  /** Write a raw SVG line (for flat mode where each span is its own <text>). */
+  pushLine(line: string): void {
+    this.parts.push(line);
+  }
+
+  closeText(): void {
+    this.parts.push('</text>\n');
   }
 
   addExpandedSpan(span: Span, x: number, style: StyleState | null): StyleState {
@@ -335,9 +363,6 @@ class SvgBuilder {
     }
   }
 
-  closeText(): void {
-    this.parts.push('  </text>\n');
-  }
 
   addDebug(debugOverlay: string): void {
     if (debugOverlay) {
@@ -454,34 +479,52 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
       if (currentRunIdx !== -1) {
         builder.closeText();
       }
+    } else if (opts.structure === 'flat') {
+      // flat mode: group spans by (baseline + offset). Each group → one <text>.
+      const groups: { spans: Span[]; targetY: number; fontSize: number }[] = [];
+      for (const span of line.spans) {
+        if (!span.text) continue;
+        const offset = span.fontMetrics.baselineOffset || 0;
+        const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+        const fontSize = span.fontMetrics.fontSize;
+        const last = groups[groups.length - 1];
+        if (last && last.targetY === targetY && last.fontSize === fontSize) {
+          last.spans.push(span);
+        } else {
+          groups.push({ spans: [span], targetY, fontSize });
+        }
+      }
+      for (const group of groups) {
+        const s = defaultStyleState(group.spans[0]);
+        const text = group.spans.map(sp => escapeXml(sp.text)).join('');
+        let attrs = ` x="${line.x}" y="${group.targetY}" font-family="${s.fontFamily}" font-size="${group.fontSize}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+        if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
+        if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
+        attrs += ' xml:space="preserve"';
+        // text-anchor for center/right alignment
+        if (line.alignment === 'center') attrs += ' text-anchor="middle"';
+        else if (line.alignment === 'right') attrs += ' text-anchor="end"';
+        builder.pushLine(`  <text${attrs}>${text}</text>\n`);
+      }
     } else {
-      // flat / expanded: single <text> per line
+      // expanded: single <text> per line with <tspan> children
       const baseSpan = line.spans.find(f => f.type === 'text' && f.text.length > 0) || line.spans[0];
       if (!baseSpan) continue;
 
       builder.addText(line, baseSpan);
+      let currentStyle: StyleState | null = null;
+      for (const span of line.spans) {
+        if (!span.text) continue;
+        const x = span.x;
 
-      if (opts.structure === 'flat') {
-        // Concatenate all text on the line
-        const fullText = line.spans.map(f => f.text).join('');
-        builder.addFlatSpan(fullText);
-      } else {
-        // expanded: each span as <tspan> with diff styles
-        let currentStyle: StyleState | null = null;
-        for (const span of line.spans) {
-          if (!span.text) continue;
-          const x = span.x;
-
-          const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
-          if (shouldRender) {
-            const newStyle = builder.addExpandedSpan(span, x, currentStyle);
-            if (span.type !== 'space') {
-              currentStyle = newStyle;
-            }
+        const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
+        if (shouldRender) {
+          const newStyle = builder.addExpandedSpan(span, x, currentStyle);
+          if (span.type !== 'space') {
+            currentStyle = newStyle;
           }
         }
       }
-
       builder.closeText();
     }
   }

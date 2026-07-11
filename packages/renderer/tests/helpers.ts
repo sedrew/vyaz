@@ -9,6 +9,7 @@
 import { readFileSync, existsSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import isSvg from 'is-svg';
 
 import { fontMetricsProvider, layoutTextFrame } from '@vyaz/core';
 import type {
@@ -39,6 +40,8 @@ export const SNAPSHOTS_DIR = resolve(__dirname, 'snapshots');
  * Use expect() for assertion so diff output is clear.
  */
 export function matchSvgSnapshot(name: string, svg: string): void {
+  expect(isSvg(svg)).toBe(true);
+
   if (!existsSync(SNAPSHOTS_DIR)) {
     mkdirSync(SNAPSHOTS_DIR, { recursive: true });
   }
@@ -47,8 +50,6 @@ export function matchSvgSnapshot(name: string, svg: string): void {
   if (!existsSync(filePath)) {
     // First run — create snapshot
     writeFileSync(filePath, svg, 'utf-8');
-    // Use expect() so Bun tracks it as a test assertion
-    expect(true).toBe(true);
     return;
   }
 
@@ -80,6 +81,7 @@ export async function registerUnifont(): Promise<void> {
   // but for SVG attribute tests we only verify the attribute values, not the positions
   await fontMetricsProvider.registerFont('Unifont', { weight: 'bold', style: 'normal' }, data);
   await fontMetricsProvider.registerFont('Unifont', { weight: 'normal', style: 'italic' }, data);
+  await fontMetricsProvider.registerFont('Unifont', { weight: 'bold', style: 'italic' }, data);
 }
 
 // ── Default paragraph style ───────────────────────────────────────────────
