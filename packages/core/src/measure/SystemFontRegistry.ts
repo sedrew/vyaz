@@ -12,6 +12,7 @@
  */
 
 import { fontMetricsProvider } from './FontMetricsProvider.js';
+import { isNodeLike } from '../utils/env.js';
 
 interface ScanResult {
   /** Total font files found on the system */
@@ -87,6 +88,12 @@ export class SystemFontRegistry {
    * @returns stats about what was found and registered
    */
   async scan(): Promise<ScanResult> {
+    // System font scanning requires Node.js — no-op in browser
+    if (!isNodeLike) {
+      console.warn('[vyaz] systemFontRegistry.scan() недоступен в браузере');
+      return { total: 0, registered: 0 };
+    }
+
     // Dynamic imports — hidden from bundler static analysis.
     // Only resolves on Node.js.  No-op in browser.
     const [{ readFileSync }, getSystemFontsModule] = await Promise.all([

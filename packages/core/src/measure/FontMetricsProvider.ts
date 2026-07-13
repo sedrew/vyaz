@@ -14,6 +14,7 @@
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
 import { enableOfficeTextMeasure, disableOfficeTextMeasure, registerCanvasFont } from './canvas-polyfill.js';
 import { FontNotFoundError } from './FontNotFoundError.js';
+import { isNodeLike } from '../utils/env.js';
 
 // ── Weight normalisation ─────────────────────────────────────────────────
 
@@ -90,9 +91,16 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     source: string | Buffer,
     sourcePath?: string,
   ): Promise<void> {
+    // fontkit is a Node.js native addon — skip in browser
+    if (!isNodeLike) {
+      console.warn(`[vyaz] registerFont("${family}") недоступен в браузере, используется Canvas TextMetrics fallback`);
+      return;
+    }
+
     try {
       // Dynamic ESM import — fontkit may not be available in browser
       const fontkit = await import('fontkit');
+      // @ts-ignore Buffer — not typed with moduleResolution:bundler but available at runtime
       const buffer = typeof source === 'string' ? Buffer.from(source) : source;
       // @ts-ignore fontkit CJS/ESM compatibility
       const fk = fontkit.default || fontkit;
