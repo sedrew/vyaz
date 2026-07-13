@@ -623,11 +623,17 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
           groups.push({ spans: [span], targetY, fontSize });
         }
       }
+      // Find the first text span's x to use as baseline offset
+      const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
       const fitAttr = buildFitAttr(line, opts);
       for (const group of groups) {
         const s = defaultStyleState(group.spans[0]);
         const text = group.spans.map(sp => escapeXml(sp.text)).join('');
-        let attrs = ` x="${fmt(line.x)}" y="${fmt(group.targetY)}" font-family="${s.fontFamily}" font-size="${fmt(group.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+        // line.x includes padding.left. span.x includes alignment offset but NOT padding.
+        // For single-span groups: span.x = firstTextX → x = line.x (correct for padding & alignment).
+        // For sub/super script: span.x differs from firstTextX → x = line.x + span.x - firstTextX.
+        const groupX = line.x + (group.spans[0].x - firstTextX);
+        let attrs = ` x="${fmt(groupX)}" y="${fmt(group.targetY)}" font-family="${s.fontFamily}" font-size="${fmt(group.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
         if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
         if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
         attrs += ' xml:space="preserve"';
@@ -637,25 +643,60 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         builder.pushLine(`  <text${attrs}${fitAttr}>${text}</text>\n`);
       }
     } else {
-      // expanded: single <text> per line with <tspan> children
-      const baseSpan = line.spans.find(f => f.type === 'text' && f.text.length > 0) || line.spans[0];
-      if (!baseSpan) continue;
-
-      builder.addText(line, baseSpan);
-      let currentStyle: StyleState | null = null;
+      // expanded: group spans by baseline offset (for sub/superscript).
+      // Each group becomes a separate <text> element at the correct y.
+      type TspanGroup = { targetY: number; spans: Span[] };
+      const groups: TspanGroup[] = [];
       for (const span of line.spans) {
         if (!span.text) continue;
-        const x = span.x;
-
-        const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
-        if (shouldRender) {
-          const newStyle = builder.addExpandedSpan(span, x, currentStyle);
-          if (span.type !== 'space') {
-            currentStyle = newStyle;
-          }
+        const offset = span.fontMetrics.baselineOffset || 0;
+        const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+        const last = groups[groups.length - 1];
+        if (last && last.targetY === targetY) {
+          last.spans.push(span);
+        } else {
+          groups.push({ targetY, spans: [span] });
         }
       }
-      builder.closeText();
+
+      for (const group of groups) {
+        const baseSpan = group.spans.find(f => f.type === 'text' && f.text.length > 0) || group.spans[0];
+        if (!baseSpan) continue;
+
+        // Only use yOverride when the group targetY differs from the line baseline
+        const lineBaseY = Math.round((line.y + line.baseline) * 100) / 100;
+        const needsOffset = group.targetY !== lineBaseY;
+        if (needsOffset) {
+          // For offset groups (sub/superscript), override y and font-size from first span
+          const s = defaultStyleState(baseSpan);
+          const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
+          const groupX = line.x + (group.spans[0].x - firstTextX);
+          const fontSize = baseSpan.fontMetrics.fontSize;
+          let attrs = ` x="${fmt(groupX)}" y="${fmt(group.targetY)}" font-family="${s.fontFamily}" font-size="${fmt(fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+          if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
+          if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
+          attrs += ' xml:space="preserve"';
+          const fit = buildFitAttr(line, opts);
+          builder.pushLine(`  <text${attrs}${fit}>\n`);
+        } else {
+          builder.addText(line, baseSpan);
+        }
+
+        let currentStyle: StyleState | null = null;
+        for (const span of group.spans) {
+          if (!span.text) continue;
+          const x = span.x;
+
+          const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
+          if (shouldRender) {
+            const newStyle = builder.addExpandedSpan(span, x, currentStyle);
+            if (span.type !== 'space') {
+              currentStyle = newStyle;
+            }
+          }
+        }
+        builder.closeText();
+      }
     }
   }
 

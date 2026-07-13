@@ -307,7 +307,7 @@ describe('TextRun.script: "super" / "sub"', () => {
   test('script: "sub" → effectiveFontSize = fontSize * 0.65', () => {
     expect(allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0].fontMetrics.fontSize).toBeCloseTo(20 * 0.65, 0);
   });
-  test('script: "sub" → baselineOffset = fontSize * 0.15 (lowered)', () => {
+  test('script: "sub" → baselineOffset = fontSize * 0.25 (lowered)', () => {
     expect(allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0].style.script).toBe('sub');
   });
   test('script: "normal" → no scaling, no offset', () => {
@@ -334,9 +334,9 @@ describe('TextRun.script: "super" / "sub"', () => {
     expect(span.fontMetrics.baselineOffset).toBeCloseTo(20 * -0.4, 1);
   });
 
-  test('subscript → baselineOffset = fontSize * 0.15 (positive, lowered)', () => {
+  test('subscript → baselineOffset = fontSize * 0.25 (positive, lowered)', () => {
     const span = allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0];
-    expect(span.fontMetrics.baselineOffset).toBeCloseTo(20 * 0.15, 1);
+    expect(span.fontMetrics.baselineOffset).toBeCloseTo(20 * 0.25, 1);
   });
 
   test('normal script → baselineOffset is undefined', () => {
