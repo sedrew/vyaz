@@ -9,14 +9,6 @@ export default defineConfig({
     {
       name: 'browser-stubs',
       load(id) {
-        // canvas-polyfill — has `import { createRequire } from 'module'` which breaks in browser
-        if (id.includes('canvas-polyfill') && !id.includes('stubs')) {
-          return `
-export function registerCanvasFont() {}
-export function enableOfficeTextMeasure() {}
-export function disableOfficeTextMeasure() {}
-`
-        }
         // SystemFontRegistry — has `import { readFileSync } from 'node:fs'`
         if (id.includes('SystemFontRegistry') && !id.includes('stubs')) {
           return `
