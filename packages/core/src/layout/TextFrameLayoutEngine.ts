@@ -41,7 +41,7 @@ export interface TextFrameLayoutResult {
  */
 export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
   const allLines: Line[] = [];
-  let yOffset = 0;
+  let yOffset = frame.padding?.top ?? 0;
   let contentWidth = 0;
 
   const leftPad = frame.padding?.left ?? 0;
@@ -55,6 +55,11 @@ export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
     const maxWidth = frame.width !== undefined
       ? frame.width - leftPad - rightPad
       : Infinity;
+
+    // If wrap is disabled, force no-wrap on the paragraph
+    if (frame.wrap === false) {
+      p.style = { ...p.style, whiteSpace: 'nowrap' };
+    }
 
     const result = paragraphLayoutEngine.layout(p, maxWidth, yOffset);
 

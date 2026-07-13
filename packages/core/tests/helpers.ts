@@ -17,8 +17,10 @@ import type {
   ParagraphStyle,
   TextRun,
   InlineWidget,
+  TextFrame,
 } from '../src/types/Document.js';
 import type { ParagraphLayoutResult, Span } from '../src/types/LayoutTypes.js';
+import type { TextFrameLayoutResult } from '../src/layout/TextFrameLayoutEngine.js';
 import { ParagraphLayoutEngine } from '../src/layout/ParagraphLayoutEngine.js';
 import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
 import { assertLineInvariants } from '../src/layout/LineBoxValidator.js';
@@ -224,6 +226,35 @@ export function makeMultiRunParagraph(runs: RunInput[]): Paragraph {
     children,
     style: { ...BASE_PARAGRAPH_STYLE },
   };
+}
+
+// ── TextFrame builder ─────────────────────────────────────────────────
+
+const DEFAULT_TEXT_FRAME_STYLE = {
+  wrap: true,
+};
+
+/**
+ * Create a TextFrame with the given paragraphs and optional frame overrides.
+ */
+export function makeTextFrame(
+  paragraphs: Paragraph[],
+  overrides?: Partial<TextFrame>,
+): TextFrame {
+  return {
+    ...DEFAULT_TEXT_FRAME_STYLE,
+    ...overrides,
+    paragraphs,
+  };
+}
+
+// ── TextFrame layout helper ───────────────────────────────────────────
+
+/**
+ * Flat array of all spans from a TextFrameLayoutResult.
+ */
+export function allTextFrameSpans(result: TextFrameLayoutResult): Span[] {
+  return result.lines.flatMap((l) => l.spans);
 }
 
 // ── Layout helper ──────────────────────────────────────────────────────
