@@ -328,6 +328,21 @@ describe('TextRun.script: "super" / "sub"', () => {
     expect(result.lines[0].baseline).toBeGreaterThan(0);
     expect(result.lines.length).toBe(1);
   });
+
+  test('superscript → baselineOffset = fontSize * -0.4 (negative, raised)', () => {
+    const span = allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'super' })))[0];
+    expect(span.fontMetrics.baselineOffset).toBeCloseTo(20 * -0.4, 1);
+  });
+
+  test('subscript → baselineOffset = fontSize * 0.15 (positive, lowered)', () => {
+    const span = allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'sub' })))[0];
+    expect(span.fontMetrics.baselineOffset).toBeCloseTo(20 * 0.15, 1);
+  });
+
+  test('normal script → baselineOffset is undefined', () => {
+    const span = allSpans(layoutParagraph(makeParagraph('Hi', { fontSize: 20, script: 'normal' })))[0];
+    expect(span.fontMetrics.baselineOffset).toBeUndefined();
+  });
 });
 
 // ── 11–13. Decorations ───────────────────────────────────────────────────
@@ -549,10 +564,9 @@ describe('TextRun.fontWeight → width (Arial)', () => {
 // ── 21. FontWeight → width (Unifont monospace) ──────────────────────────
 
 describe('TextRun.fontWeight → width (Unifont monospace)', () => {
-  test('Unifont bold is not registered — throws FontNotFoundError', () => {
-    // Unifont has only weight: 'normal' registered
+  test('UnknownFont bold — throws FontNotFoundError', () => {
     expect(() => layoutParagraph(
-      makeParagraph('Hello', { fontFamily: 'Unifont', fontWeight: 'bold' }),
+      makeParagraph('Hello', { fontFamily: 'UnknownFont12345', fontWeight: 'bold' }),
     )).toThrow(FontNotFoundError);
   });
 });
@@ -561,9 +575,9 @@ describe('TextRun.fontWeight → width (Unifont monospace)', () => {
 
 describe('FontNotFoundError', () => {
   test('unregistered fontWeight variant throws FontNotFoundError', () => {
-    // Unifont registered with weight: 'normal' only
+    // Unifont may have bold registered by renderer tests — use truly unknown font
     expect(() => layoutParagraph(
-      makeStyledParagraph('Hello', { fontFamily: 'Unifont', fontWeight: 'bold' }),
+      makeStyledParagraph('Hello', { fontFamily: 'Unifont_UnknownVariant', fontWeight: 'bold' }),
       500,
     )).toThrow(FontNotFoundError);
   });

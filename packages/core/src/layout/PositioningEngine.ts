@@ -100,6 +100,7 @@ export function positionLines(
         ascent: metrics.ascent,
         descent: metrics.descent,
         fontSize: item.metadata.effectiveFontSize,
+        baselineOffset: item.metadata.baselineOffset || undefined,
       };
 
       if (gapWidth > 0) {
