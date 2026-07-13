@@ -63,7 +63,7 @@ export interface PreparedRichInlineItem {
 
 const SUPER_SUB_SCALE = 0.65;
 const SUPER_OFFSET_RATIO = -0.4;
-const SUB_OFFSET_RATIO = 0.15;
+const SUB_OFFSET_RATIO = 0.25;
 
 /**
  * Compile a paragraph into PreparedRichInlineItem[].

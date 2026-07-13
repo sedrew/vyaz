@@ -179,6 +179,7 @@ export function renderFrameToSVG(
   const result = layoutTextFrame(frame);
   const svg = renderToSVG(result.lines, {
     sizing: 'content',
+    contentPadding: 10,
     ...options,
   });
   return { result, svg };

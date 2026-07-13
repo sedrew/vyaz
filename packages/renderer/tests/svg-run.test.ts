@@ -63,7 +63,7 @@ describe('Basic SVG output', () => {
 
   test('run valid SVG snapshot', () => {
     const frame = makeTextFrame(makeParagraph('Hello'));
-    const { svg } = renderFrameToSVG(frame);
+    const { svg } = renderFrameToSVG(frame, { debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-basic-plain-text', svg);
   });
 
@@ -154,17 +154,17 @@ describe('Style properties in SVG (preset="preserve")', () => {
   });
 
   test('run script super font-size', () => {
-    getFirstTspanAttr('Hi', { fontSize: 24, script: 'super' as any }, 'font-size', String(24 * 0.65));
+    getFirstTspanAttr('Hi', { fontSize: 24, script: 'super' as any }, 'font-size', '15.6');
   });
 
   test('run script sub font-size', () => {
-    getFirstTspanAttr('Hi', { fontSize: 24, script: 'sub' as any }, 'font-size', String(24 * 0.65));
+    getFirstTspanAttr('Hi', { fontSize: 24, script: 'sub' as any }, 'font-size', '15.6');
   });
 
   test('run snapshot with style attributes', () => {
     const para = makeParagraph('Bold Italic', { fontWeight: 'bold', fontStyle: 'italic' });
     const frame = makeTextFrame(para);
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-style-properties', svg);
   });
 });
@@ -188,7 +188,7 @@ describe('Multi-run SVG', () => {
       { text: 'Hello ' },
       { text: 'World', style: { fontWeight: 'bold' } },
     ]));
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-multi-run-hello-world', svg);
   });
 
@@ -235,7 +235,7 @@ describe('Preset: "flat"', () => {
 
   test('run flat snapshot', () => {
     const frame = makeTextFrame(makeParagraph('Hello World'));
-    const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-flat-hello-world', svg);
   });
 
@@ -278,9 +278,14 @@ describe('Preset: "flat"', () => {
       { text: '2', style: { fontFamily: 'Unifont', fontSize: 24, script: 'super' as any } },
     ]);
     const frame = makeTextFrame(para);
-    const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat', debug: { frameBox: true, contentBox: true } });
     const ast = parse(svg);
-    const texts = findElements(ast as unknown as ElementNode, 'text');
+    // Filter out debug overlay <text> elements (they have font-size="10" and no text content)
+    const allTexts = findElements(ast as unknown as ElementNode, 'text');
+    const texts = allTexts.filter(t => {
+      const child = t.children?.[0] as any;
+      return child?.value && child.value.trim().length > 0;
+    });
 
     // superscript в отдельном <text>: "c" и "2"
     expect(texts.length).toBe(2);
@@ -291,7 +296,7 @@ describe('Preset: "flat"', () => {
     // superscript выше (y меньше), font-size меньше
     const superY = Number(texts[1].properties.y);
     expect(superY).toBeLessThan(textY);
-    expect(String(texts[1].properties['font-size'])).toBe(String(24 * 0.65));
+    expect(String(texts[1].properties['font-size'])).toBe('15.6');
 
     matchSvgSnapshot('run-flat-superscript', svg);
   });
@@ -303,9 +308,14 @@ describe('Preset: "flat"', () => {
       { text: 'O', style: { fontFamily: 'Unifont', fontSize: 24 } },
     ]);
     const frame = makeTextFrame(para);
-    const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat', debug: { frameBox: true, contentBox: true } });
     const ast = parse(svg);
-    const texts = findElements(ast as unknown as ElementNode, 'text');
+    // Filter out debug overlay <text> elements (they have font-size="10" and no text content)
+    const allTexts = findElements(ast as unknown as ElementNode, 'text');
+    const texts = allTexts.filter(t => {
+      const child = t.children?.[0] as any;
+      return child?.value && child.value.trim().length > 0;
+    });
 
     // subscript в отдельном <text>: "H", "2", "O"
     expect(texts.length).toBe(3);
@@ -316,7 +326,7 @@ describe('Preset: "flat"', () => {
     // subscript ниже (y больше), font-size меньше
     const subY = Number(texts[1].properties.y);
     expect(subY).toBeGreaterThan(Number(texts[0].properties.y));
-    expect(String(texts[1].properties['font-size'])).toBe(String(24 * 0.65));
+    expect(String(texts[1].properties['font-size'])).toBe('15.6');
 
     matchSvgSnapshot('run-flat-subscript', svg);
   });
@@ -341,7 +351,7 @@ describe('Preset: "preserve"', () => {
       { text: 'Hello ' },
       { text: 'World', style: { fontWeight: 'bold' } },
     ]));
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-preserve-hello-world', svg);
   });
 
@@ -394,7 +404,7 @@ describe('Preset: "glyph"', () => {
 
   test('run glyph snapshot', () => {
     const frame = makeTextFrame(makeParagraph('Hello'));
-    const { svg } = renderFrameToSVG(frame, { preset: 'glyph' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'glyph', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-glyph-hello', svg);
   });
 
@@ -520,7 +530,7 @@ describe('NBSP (non-breaking space — Rule 5.2)', () => {
 
   test('run NBSP snapshot', () => {
     const frame = makeTextFrame(makeParagraph('Hello\u00A0World'));
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-nbsp-hello-world', svg);
   });
 });
@@ -542,7 +552,7 @@ describe('xml:space="preserve" across all modes', () => {
 
   test('run xml:space snapshot', () => {
     const frame = makeTextFrame(makeParagraph('Hello World'));
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-xmlspace-snapshot', svg);
   });
 });
@@ -571,7 +581,7 @@ describe('Zero-width space (class D — Rule 9)', () => {
 
   test('run ZWSP snapshot', () => {
     const frame = makeTextFrame(makeParagraph('Hello\u200BWorld'));
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-zwsp-hello-world', svg);
   });
 });
@@ -694,7 +704,7 @@ describe('Justify alignment (§7 — Rules 7.1–7.4)', () => {
     ]);
     para.style.alignment = 'justify';
     const frame = makeTextFrame(para, { width: 300 });
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-justify-multi-run', svg);
   });
 });
@@ -707,7 +717,7 @@ describe('Additional coverage', () => {
     const para = makeParagraph(longText);
     para.style.whiteSpace = 'nowrap';
     const frame = makeTextFrame(para);
-    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
 
     expect(isSvg(svg)).toBe(true);
     // Long text stays on one line (no wrap)
@@ -723,7 +733,7 @@ describe('Additional coverage', () => {
       { text: '2', style: { fontFamily: 'Unifont', fontSize: 24, script: 'super' as any } },
     ]);
     const frame = makeTextFrame(para);
-    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
 
     // Should have 2 tspans: "c" and "2" (superscript)
     expect(result.lines[0].spans.length).toBe(2);
@@ -742,7 +752,7 @@ describe('Additional coverage', () => {
       { text: '2', style: { fontFamily: 'Unifont', fontSize: 24, script: 'sub' as any } },
     ]);
     const frame = makeTextFrame(para);
-    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
 
     // C₈H₁₀N₄O₂ — 8 runs, 4 text + 4 subscript alternating
     expect(result.lines[0].spans.length).toBe(8);
@@ -757,7 +767,7 @@ describe('Additional coverage', () => {
       { text: 'WORLD ', style: { fontFamily: 'Unifont', fontSize: 24 } },
     ]);
     const frame = makeTextFrame(para);
-    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { result, svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
 
     // normal → super → normal — at least 3 tspans (spaces may create extra spans)
     expect(result.lines[0].spans.length).toBeGreaterThanOrEqual(3);
@@ -774,7 +784,7 @@ describe('Additional coverage', () => {
       underline: true,
     });
     const frame = makeTextFrame(para);
-    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-all-styles-snapshot', svg);
   });
 });

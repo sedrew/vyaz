@@ -75,9 +75,14 @@ export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
     yOffset = result.height;
   }
 
+  const bottomPad = frame.padding?.bottom ?? 0;
   const contentHeight = allLines.length > 0
-    ? allLines[allLines.length - 1].y + allLines[allLines.length - 1].height
-    : 0;
+    ? allLines[allLines.length - 1].y + allLines[allLines.length - 1].height + bottomPad
+    : bottomPad;
+
+  // contentWidth must include right padding so the content bbox accounts for
+  // the full padded area when horizontal sizing is 'content'.
+  contentWidth += rightPad;
 
   return {
     lines: allLines,

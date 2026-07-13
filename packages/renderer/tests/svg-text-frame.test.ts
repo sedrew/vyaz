@@ -65,17 +65,14 @@ function renderTextFrameSVG(
   const frame = makeTextFrame(paragraphs, frameOpts as any);
   const result = layoutTextFrame(frame);
 
-  const svgWidth = result.fitHorizontal === 'frame' && result.frameWidth
-    ? result.frameWidth
-    : result.contentWidth;
-  const svgHeight = result.fitVertical === 'frame' && result.frameHeight
-    ? result.frameHeight
-    : result.contentHeight;
-
   return renderToSVG(result.lines, {
-    width: svgWidth,
-    height: svgHeight,
-    sizing: 'frame',
+    sizing: {
+      horizontal: result.fitHorizontal === 'frame' && result.frameWidth ? 'frame' : 'content',
+      vertical: result.fitVertical === 'frame' && result.frameHeight ? 'frame' : 'content',
+    },
+    width: result.fitHorizontal === 'frame' && result.frameWidth ? result.frameWidth : result.contentWidth,
+    height: result.fitVertical === 'frame' && result.frameHeight ? result.frameHeight : result.contentHeight,
+    debug: { frameBox: true, contentBox: true },
     ...renderOpts,
   } as any);
 }

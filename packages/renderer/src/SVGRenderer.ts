@@ -19,7 +19,7 @@
 
 import type { Line, Span, ParagraphLayoutResult } from '@vyaz/core';
 import type { DebugFlags } from './types.js';
-import { computeBBox } from './utils.js';
+import { computeBBox, fmt } from './utils.js';
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -31,6 +31,8 @@ export type SvgFit = 'none' | 'text' | 'frag';
 
 export type SvgSizing = 'frame' | 'content';
 
+export type PerAxisSizing = { horizontal: SvgSizing; vertical: SvgSizing };
+
 export interface SVGRenderOptions {
   /** Shorthand that sets structure + spacing at once. */
   preset?: SvgPreset;
@@ -38,14 +40,26 @@ export interface SVGRenderOptions {
   style?: SvgStyle;
   /** How `textLength` is applied. */
   fit?: SvgFit;
-  /** How SVG determines its size: 'frame' — use width/height from options; 'content' — compute BBox from lines. */
-  sizing?: SvgSizing;
-  /** SVG canvas width (px). Used when sizing='frame' or as fallback. */
+  /**
+   * How SVG determines its canvas size.
+   * Single string: applies to both axes. Object: per-axis control.
+   * 'frame' — use explicit width/height from options.
+   * 'content' — compute from lines bounding box.
+   */
+  sizing?: SvgSizing | PerAxisSizing;
+  /** SVG canvas width (px). Used when horizontal sizing='frame' or as fallback. */
   width?: number;
-  /** SVG canvas height (px). Used when sizing='frame' or as fallback. */
+  /** SVG canvas height (px). Used when vertical sizing='frame' or as fallback. */
   height?: number;
   /** CSS class for `<svg>`. */
   className?: string;
+  /**
+   * Extra padding added around the SVG canvas. Content coordinates stay unchanged;
+   * the SVG viewBox is shifted and canvas is enlarged so debug overlays
+   * (frameBox / contentBox) are visible with a gap from the edge.
+   * Useful for snapshot tests to clearly show frame vs content boundaries.
+   */
+  contentPadding?: number;
   /** Debug overlays. */
   debug?: DebugFlags;
 }
@@ -58,10 +72,12 @@ type ResolvedOptions = {
   spacing: SpacingMode;
   style: 'css' | 'xml';
   fit: 'none' | 'text' | 'frag';
-  sizing: 'frame' | 'content';
+  sizingHorizontal: 'frame' | 'content';
+  sizingVertical: 'frame' | 'content';
   width?: number;
   height?: number;
   className?: string;
+  contentPadding: number;
   debug?: DebugFlags;
 };
 
@@ -70,7 +86,7 @@ type ResolvedOptions = {
 const PRESETS: Record<SvgPreset, { structure: StructureMode; spacing: SpacingMode; defaultFit: SvgFit }> = {
   flat:     { structure: 'flat',     spacing: 'preserve', defaultFit: 'none' },
   browser:  { structure: 'expanded', spacing: 'preserve', defaultFit: 'none' },
-  preserve: { structure: 'expanded', spacing: 'preserve', defaultFit: 'none' },
+  preserve: { structure: 'expanded', spacing: 'preserve', defaultFit: 'frag' },
   glyph:    { structure: 'glyph',    spacing: 'preserve', defaultFit: 'none' },
 };
 
@@ -100,14 +116,20 @@ function fontWeightNumeric(weight: string | number): number {
 
 function colorToRGB(color: string): string {
   if (!color) return 'rgb(0, 0, 0)';
+  if (color[0] !== '#') return color;
+
   let hex = color;
-  if (hex.length === 4 && hex[0] === '#') {
+  if (hex.length === 4) {
     hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
   }
-  if (hex.length === 7 && hex[0] === '#') {
+  if (hex.length === 7) {
     return `rgb(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)})`;
   }
-  return 'rgb(0, 0, 0)';
+  if (hex.length === 9) {
+    const a = parseInt(hex.slice(7, 9), 16) / 255;
+    return `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a.toFixed(3)})`;
+  }
+  return color;
 }
 
 /** Compute gutter widths per line for justify alignment */
@@ -145,7 +167,19 @@ function resolveOptions(opts: SVGRenderOptions): ResolvedOptions {
 
   const style = opts.style ?? 'xml';
   let fit = opts.fit ?? defaultFit;
-  const sizing = opts.sizing ?? 'frame';
+
+  // Normalize per-axis sizing
+  let sizingHorizontal: 'frame' | 'content';
+  let sizingVertical: 'frame' | 'content';
+
+  if (typeof opts.sizing === 'object' && opts.sizing !== null) {
+    sizingHorizontal = opts.sizing.horizontal ?? 'frame';
+    sizingVertical = opts.sizing.vertical ?? 'frame';
+  } else {
+    const s = opts.sizing ?? 'frame';
+    sizingHorizontal = s;
+    sizingVertical = s;
+  }
 
   // Validation rules
   if (structure === 'glyph' && fit !== 'none') {
@@ -157,7 +191,80 @@ function resolveOptions(opts: SVGRenderOptions): ResolvedOptions {
     fit = 'text';
   }
 
-  return { structure, spacing, style, fit, sizing, width: opts.width, height: opts.height, className: opts.className, debug: opts.debug };
+  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug };
+}
+
+/**
+ * Resolve final SVG canvas width/height + viewBox.
+ *
+ * When either axis uses 'content' sizing, computes the BBox from lines.
+ */
+function resolveSize(lines: Line[], opts: ResolvedOptions): { width: number; height: number; viewBox: { x: number; y: number; w: number; h: number }; frameWidth?: number; frameHeight?: number } {
+  const needsBBox = opts.sizingHorizontal === 'content' || opts.sizingVertical === 'content';
+  const bbox = needsBBox ? computeBBox(lines) : null;
+
+  // Original frame dimensions (from user options) — used for frameBox overlay.
+  // Only set when the user explicitly provided a value, regardless of sizing mode.
+  // (sizing='frame' uses opts.width/height; sizing='content' may also have a frame value
+  //  passed explicitly for frameBox purposes.)
+  const frameWidth = opts.width;
+  const frameHeight = opts.height;
+
+  let width: number;
+  let height: number;
+
+  if (opts.sizingHorizontal === 'content') {
+    width = bbox!.width;
+  } else {
+    if (opts.width === undefined) {
+      throw new Error(
+        `renderToSVG: horizontal sizing="frame" requires explicit width. ` +
+        `Got width=${opts.width}.`
+      );
+    }
+    width = opts.width;
+  }
+
+  if (opts.sizingVertical === 'content') {
+    height = bbox!.height;
+  } else {
+    if (opts.height === undefined) {
+      throw new Error(
+        `renderToSVG: vertical sizing="frame" requires explicit height. ` +
+        `Got height=${opts.height}.`
+      );
+    }
+    height = opts.height;
+  }
+
+  // viewBox: derived per-axis. If an axis uses 'content' sizing, use the content bbox
+  // for that axis; otherwise use the frame dimension.
+  let viewBox: { x: number; y: number; w: number; h: number };
+  if (bbox) {
+    viewBox = {
+      x: opts.sizingHorizontal === 'content' ? bbox.x : 0,
+      y: opts.sizingVertical === 'content' ? bbox.y : 0,
+      w: opts.sizingHorizontal === 'content' ? bbox.width : width,
+      h: opts.sizingVertical === 'content' ? bbox.height : height,
+    };
+  } else {
+    viewBox = { x: 0, y: 0, w: width, h: height };
+  }
+
+  // Apply contentPadding: enlarge canvas and shift viewBox so padded area is visible
+  const pad = opts.contentPadding || 0;
+  if (pad > 0) {
+    width += pad * 2;
+    height += pad * 2;
+    viewBox = {
+      x: viewBox.x - pad,
+      y: viewBox.y - pad,
+      w: viewBox.w + pad * 2,
+      h: viewBox.h + pad * 2,
+    };
+  }
+
+  return { width, height, viewBox, frameWidth, frameHeight };
 }
 
 // ── Attribute builders ───────────────────────────────────────────────────
@@ -172,13 +279,17 @@ interface StyleState {
 }
 
 function defaultStyleState(span: Span): StyleState {
+  const decorations: string[] = [];
+  if (span.style.underline) decorations.push('underline');
+  if (span.style.strikethrough) decorations.push('line-through');
+
   return {
     fontFamily: span.style.fontFamily || 'Arial',
     fontSize: span.fontMetrics.fontSize || 16,
     fontWeight: fontWeightNumeric(span.style.fontWeight),
     color: span.style.color || '#000000',
     fontStyle: span.style.fontStyle || 'normal',
-    decoration: span.style.underline ? 'underline' : span.style.strikethrough ? 'line-through' : '',
+    decoration: decorations.join(' '),
   };
 }
 
@@ -192,7 +303,7 @@ function equalStyle(a: StyleState, b: StyleState): boolean {
 function cssStyleString(s: StyleState): string {
   const parts: string[] = [];
   parts.push(`font-family: '${s.fontFamily}', sans-serif`);
-  parts.push(`font-size: ${s.fontSize}px`);
+  parts.push(`font-size: ${fmt(s.fontSize)}px`);
   parts.push(`fill: ${colorToRGB(s.color)}`);
   if (s.fontWeight !== 400) parts.push(`font-weight: ${s.fontWeight}`);
   if (s.fontStyle === 'italic') parts.push(`font-style: italic`);
@@ -202,7 +313,7 @@ function cssStyleString(s: StyleState): string {
 
 /** Build XML presentation attributes for a style */
 function xmlStyleAttrs(s: StyleState): string {
-  let attrs = `font-family="${s.fontFamily}" font-size="${s.fontSize}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+  let attrs = `font-family="${s.fontFamily}" font-size="${fmt(s.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
   if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
   if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
   return attrs;
@@ -214,7 +325,7 @@ function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: s
   const y = line.y + line.baseline;
   const s = defaultStyleState(span);
 
-  let attrs = ` x="${x}" y="${y}"`;
+  let attrs = ` x="${fmt(x)}" y="${fmt(y)}"`;
   if (runId) attrs += ` id="${runId}"`;
 
   if (opts.style === 'css') {
@@ -240,7 +351,7 @@ function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: s
 /** Build attributes for <tspan> (expanded mode — only diff from current style) */
 function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null): { attrs: string; newStyle: StyleState } {
   const s = defaultStyleState(span);
-  let attrs = ` x="${x}"`;
+  let attrs = ` x="${fmt(x)}"`;
 
   if (currentStyle && equalStyle(s, currentStyle)) {
     return { attrs, newStyle: s };
@@ -252,7 +363,7 @@ function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null)
   if (!currentStyle || s.fontWeight !== currentStyle.fontWeight) attrs += ` font-weight="${s.fontWeight}"`;
   if (!currentStyle || s.fontStyle !== currentStyle.fontStyle) attrs += ` font-style="${s.fontStyle}"`;
   if (!currentStyle || s.fontFamily !== currentStyle.fontFamily) attrs += ` font-family="${s.fontFamily}"`;
-  if (!currentStyle || s.fontSize !== currentStyle.fontSize) attrs += ` font-size="${s.fontSize}"`;
+  if (!currentStyle || s.fontSize !== currentStyle.fontSize) attrs += ` font-size="${fmt(s.fontSize)}"`;
   if (!currentStyle || s.color !== currentStyle.color) attrs += ` fill="${s.color}"`;
   if (!currentStyle || s.decoration !== currentStyle.decoration) {
     if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
@@ -270,10 +381,10 @@ function buildGlyphPositions(span: Span, _lineX: number): string {
   // lineX is NOT added because that would double-shift.
   const spanX = span.x;
   let xPos = spanX;
-  const positions: string[] = [xPos.toFixed(1)];
+  const positions: string[] = [fmt(xPos, 1)];
   for (let i = 0; i < span.glyphAdvances.length - 1; i++) {
     xPos += span.glyphAdvances[i];
-    positions.push(xPos.toFixed(1));
+    positions.push(fmt(xPos, 1));
   }
   return positions.join(' ');
 }
@@ -281,7 +392,7 @@ function buildGlyphPositions(span: Span, _lineX: number): string {
 /** Build textLength attribute for a line */
 function buildFitAttr(line: Line, opts: ResolvedOptions): string {
   if (opts.fit === 'text') {
-    return ` textLength="${line.width}" lengthAdjust="spacing"`;
+    return ` textLength="${fmt(line.width)}" lengthAdjust="spacing"`;
   }
   return '';
 }
@@ -289,24 +400,31 @@ function buildFitAttr(line: Line, opts: ResolvedOptions): string {
 /** Build textLength for a span */
 function buildSpanFitAttr(span: Span, opts: ResolvedOptions): string {
   if (opts.fit === 'frag') {
-    return ` textLength="${span.width}"`;
+    return ` textLength="${fmt(span.width)}"`;
   }
   return '';
 }
 
 // ── SVG builder ──────────────────────────────────────────────────────────
 
+interface ViewBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 class SvgBuilder {
   private parts: string[] = [];
   private opts: ResolvedOptions;
 
-  constructor(width: number, height: number, opts: ResolvedOptions) {
+  constructor(width: number, height: number, opts: ResolvedOptions, viewBox?: ViewBox) {
     this.opts = opts;
     const className = opts.className ? ` class="${escapeXml(opts.className)}"` : '';
-    this.parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"${className}>\n`);
-    if (opts.className) {
-      this.parts[0] = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" class="${escapeXml(opts.className)}">\n`;
-    }
+    const vb = viewBox
+      ? `viewBox="${fmt(viewBox.x)} ${fmt(viewBox.y)} ${fmt(viewBox.w)} ${fmt(viewBox.h)}"`
+      : `viewBox="0 0 ${fmt(width)} ${fmt(height)}"`;
+    this.parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${fmt(width)}" height="${fmt(height)}" ${vb}${className}>\n`);
   }
 
   addText(line: Line, baseSpan: Span, runId?: string, yOverride?: number, fontSizeOverride?: number): void {
@@ -315,13 +433,13 @@ class SvgBuilder {
       // For flat mode sub/superscript — override y and font-size
       const s = defaultStyleState(baseSpan);
       const x = line.x;
-      attrs = ` x="${x}" y="${yOverride}"`;
+      attrs = ` x="${fmt(x)}" y="${fmt(yOverride)}"`;
       if (this.opts.style === 'css') {
         let css = cssStyleString(s);
         if (this.opts.spacing === 'preserve') css += '; white-space: pre';
         attrs += ` style="${css}"`;
       } else {
-        let xml = ` font-family="${s.fontFamily}" font-size="${fontSizeOverride}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+        let xml = ` font-family="${s.fontFamily}" font-size="${fmt(fontSizeOverride)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
         if (s.fontStyle === 'italic') xml += ' font-style="italic"';
         if (s.decoration) xml += ` text-decoration="${s.decoration}"`;
         if (this.opts.spacing === 'preserve') xml += ' xml:space="preserve"';
@@ -378,17 +496,51 @@ class SvgBuilder {
 
 // ── Debug overlay ────────────────────────────────────────────────────────
 
-function renderDebugToSVG(lines: Line[], width: number, height: number, flags: DebugFlags): string {
+function renderDebugToSVG(
+  lines: Line[],
+  flags: DebugFlags,
+  frameSize?: { width: number; height: number },
+  contentSize?: { width: number; height: number },
+): string {
   const parts: string[] = [];
 
-  if (flags.frame && lines.length > 0) {
-    const first = lines[0];
-    const last = lines[lines.length - 1];
-    const maxW = Math.max(...lines.map(l => l.x + l.width));
+  // Frame container bounding box
+  if ((flags.frameBox || flags.frame) && frameSize) {
     parts.push(
-      `  <rect x="${first.x}" y="${first.y}" width="${maxW - first.x}" height="${last.y + last.height - first.y}"` +
-      ` fill="none" stroke="rgba(255,200,0,0.6)" stroke-width="1" stroke-dasharray="6,2" />`,
+      `  <rect x="0" y="0" width="${fmt(frameSize.width)}" height="${fmt(frameSize.height)}"` +
+      ` fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1.5" stroke-dasharray="4,3" />`,
     );
+    if (flags.labels) {
+      parts.push(
+        `  <text x="4" y="14" font-size="10" fill="rgba(0,140,255,0.9)" font-family="monospace">frame ${fmt(frameSize.width)}×${fmt(frameSize.height)}</text>`,
+      );
+    }
+  }
+
+  // Content bounding box
+  if (flags.contentBox) {
+    const bbox = computeBBox(lines);
+    parts.push(
+      `  <rect x="${fmt(bbox.x)}" y="${fmt(bbox.y)}" width="${fmt(bbox.width)}" height="${fmt(bbox.height)}"` +
+      ` fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />`,
+    );
+    if (flags.labels) {
+      const labelY = bbox.y + bbox.height + 14;
+      parts.push(
+        `  <text x="${fmt(bbox.x)}" y="${fmt(labelY)}" font-size="10" fill="rgba(255,60,140,0.9)" font-family="monospace">content ${fmt(bbox.width)}×${fmt(bbox.height)}</text>`,
+      );
+    }
+  }
+
+  // Overflow warning when content exceeds frame
+  if (flags.contentBox && frameSize && contentSize && flags.labels) {
+    const overflowX = contentSize.width > frameSize.width;
+    const overflowY = contentSize.height > frameSize.height;
+    if (overflowX || overflowY) {
+      parts.push(
+        `  <text x="4" y="${fmt(frameSize.height + 14)}" font-size="10" fill="rgba(220,0,0,0.9)" font-family="monospace">⚠ content overflow: ${overflowX ? `Δx=${fmt(contentSize.width - frameSize.width)} ` : ''}${overflowY ? `Δy=${fmt(contentSize.height - frameSize.height)}` : ''}</text>`,
+      );
+    }
   }
 
   for (const line of lines) {
@@ -396,27 +548,27 @@ function renderDebugToSVG(lines: Line[], width: number, height: number, flags: D
     const baselineY = line.y + line.baseline;
 
     if (flags.lineGap) {
-      parts.push(`  <rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="rgba(0,150,255,0.10)" stroke="none" />`);
+      parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="rgba(0,150,255,0.10)" stroke="none" />`);
     }
     if (flags.box) {
-      parts.push(`  <rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="none" stroke="rgba(255,100,100,0.5)" stroke-width="1" />`);
+      parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="none" stroke="rgba(255,100,100,0.5)" stroke-width="1" />`);
     }
     if (flags.baseline) {
-      parts.push(`  <line x1="${bx}" y1="${baselineY}" x2="${bx + bw}" y2="${baselineY}" stroke="rgba(100,100,255,0.5)" stroke-width="1" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY)}" stroke="rgba(100,100,255,0.5)" stroke-width="1" />`);
     }
     if (flags.ascentDescent) {
-      parts.push(`  <line x1="${bx}" y1="${baselineY - line.ascent}" x2="${bx + bw}" y2="${baselineY - line.ascent}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
-      parts.push(`  <line x1="${bx}" y1="${baselineY + line.descent}" x2="${bx + bw}" y2="${baselineY + line.descent}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY - line.ascent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY - line.ascent)}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY + line.descent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY + line.descent)}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
     }
     if (flags.labels) {
-      parts.push(`  <text x="${bx}" y="${by - 2}" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=${by.toFixed(1)} x=${bx.toFixed(1)} w=${bw.toFixed(1)} h=${bh.toFixed(1)} bl=${baselineY.toFixed(1)}</text>`);
+      parts.push(`  <text x="${fmt(bx)}" y="${fmt(by - 2)}" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=${fmt(by)} x=${fmt(bx)} w=${fmt(bw)} h=${fmt(bh)} bl=${fmt(baselineY)}</text>`);
     }
     if (flags.runs) {
       for (const span of line.spans) {
         if (span.width <= 0) continue;
         const rx = line.x + span.x;
         const ry = baselineY - span.fontMetrics.ascent;
-        parts.push(`  <rect x="${rx}" y="${ry}" width="${span.width}" height="${span.fontMetrics.ascent + span.fontMetrics.descent}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />`);
+        parts.push(`  <rect x="${fmt(rx)}" y="${fmt(ry)}" width="${fmt(span.width)}" height="${fmt(span.fontMetrics.ascent + span.fontMetrics.descent)}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />`);
       }
     }
   }
@@ -436,28 +588,10 @@ function renderDebugToSVG(lines: Line[], width: number, height: number, flags: D
 export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): string {
   const opts = resolveOptions(options);
 
-  // Determine canvas size
-  let svgWidth: number;
-  let svgHeight: number;
+  // Determine canvas size and viewBox
+  const { width: svgWidth, height: svgHeight, viewBox, frameWidth, frameHeight } = resolveSize(lines, opts);
 
-  if (opts.sizing === 'content') {
-    const bbox = computeBBox(lines);
-    svgWidth = bbox.width;
-    svgHeight = bbox.height;
-  } else {
-    // sizing='frame' requires explicit width/height — no fallback
-    if (opts.width === undefined || opts.height === undefined) {
-      throw new Error(
-        `renderToSVG: sizing="frame" requires explicit width and height. ` +
-        `Got width=${opts.width}, height=${opts.height}. ` +
-        `Use renderResultToSVG(result, options) to auto-pass dimensions.`
-      );
-    }
-    svgWidth = opts.width;
-    svgHeight = opts.height;
-  }
-
-  const builder = new SvgBuilder(svgWidth, svgHeight, opts);
+  const builder = new SvgBuilder(svgWidth, svgHeight, opts, viewBox);
 
   for (const line of lines) {
     if (opts.structure === 'glyph') {
@@ -494,43 +628,91 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
           groups.push({ spans: [span], targetY, fontSize });
         }
       }
+      // Find the first text span's x to use as baseline offset
+      const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
+      const fitAttr = buildFitAttr(line, opts);
       for (const group of groups) {
         const s = defaultStyleState(group.spans[0]);
         const text = group.spans.map(sp => escapeXml(sp.text)).join('');
-        let attrs = ` x="${line.x}" y="${group.targetY}" font-family="${s.fontFamily}" font-size="${group.fontSize}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+        // line.x includes padding.left. span.x includes alignment offset but NOT padding.
+        // For single-span groups: span.x = firstTextX → x = line.x (correct for padding & alignment).
+        // For sub/super script: span.x differs from firstTextX → x = line.x + span.x - firstTextX.
+        const groupX = line.x + (group.spans[0].x - firstTextX);
+        let attrs = ` x="${fmt(groupX)}" y="${fmt(group.targetY)}" font-family="${s.fontFamily}" font-size="${fmt(group.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
         if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
         if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
         attrs += ' xml:space="preserve"';
         // text-anchor for center/right alignment
         if (line.alignment === 'center') attrs += ' text-anchor="middle"';
         else if (line.alignment === 'right') attrs += ' text-anchor="end"';
-        builder.pushLine(`  <text${attrs}>${text}</text>\n`);
+        builder.pushLine(`  <text${attrs}${fitAttr}>${text}</text>\n`);
       }
     } else {
-      // expanded: single <text> per line with <tspan> children
-      const baseSpan = line.spans.find(f => f.type === 'text' && f.text.length > 0) || line.spans[0];
-      if (!baseSpan) continue;
-
-      builder.addText(line, baseSpan);
-      let currentStyle: StyleState | null = null;
+      // expanded: group spans by baseline offset (for sub/superscript).
+      // Each group becomes a separate <text> element at the correct y.
+      type TspanGroup = { targetY: number; spans: Span[] };
+      const groups: TspanGroup[] = [];
       for (const span of line.spans) {
         if (!span.text) continue;
-        const x = span.x;
-
-        const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
-        if (shouldRender) {
-          const newStyle = builder.addExpandedSpan(span, x, currentStyle);
-          if (span.type !== 'space') {
-            currentStyle = newStyle;
-          }
+        const offset = span.fontMetrics.baselineOffset || 0;
+        const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+        const last = groups[groups.length - 1];
+        if (last && last.targetY === targetY) {
+          last.spans.push(span);
+        } else {
+          groups.push({ targetY, spans: [span] });
         }
       }
-      builder.closeText();
+
+      for (const group of groups) {
+        const baseSpan = group.spans.find(f => f.type === 'text' && f.text.length > 0) || group.spans[0];
+        if (!baseSpan) continue;
+
+        // Only use yOverride when the group targetY differs from the line baseline
+        const lineBaseY = Math.round((line.y + line.baseline) * 100) / 100;
+        const needsOffset = group.targetY !== lineBaseY;
+        if (needsOffset) {
+          // For offset groups (sub/superscript), override y and font-size from first span
+          const s = defaultStyleState(baseSpan);
+          const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
+          const groupX = line.x + (group.spans[0].x - firstTextX);
+          const fontSize = baseSpan.fontMetrics.fontSize;
+          let attrs = ` x="${fmt(groupX)}" y="${fmt(group.targetY)}" font-family="${s.fontFamily}" font-size="${fmt(fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+          if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
+          if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
+          attrs += ' xml:space="preserve"';
+          const fit = buildFitAttr(line, opts);
+          builder.pushLine(`  <text${attrs}${fit}>\n`);
+        } else {
+          builder.addText(line, baseSpan);
+        }
+
+        let currentStyle: StyleState | null = null;
+        for (const span of group.spans) {
+          if (!span.text) continue;
+          const x = span.x;
+
+          const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
+          if (shouldRender) {
+            const newStyle = builder.addExpandedSpan(span, x, currentStyle);
+            if (span.type !== 'space') {
+              currentStyle = newStyle;
+            }
+          }
+        }
+        builder.closeText();
+      }
     }
   }
 
   if (opts.debug) {
-    const debugSvg = renderDebugToSVG(lines, svgWidth, svgHeight, opts.debug);
+    // frameSize: only when both axes are explicitly set as 'frame'
+    const frameSize = frameWidth !== undefined && frameHeight !== undefined
+      ? { width: frameWidth, height: frameHeight }
+      : undefined;
+    const contentBbox = computeBBox(lines);
+    const contentSize = { width: contentBbox.width, height: contentBbox.height };
+    const debugSvg = renderDebugToSVG(lines, opts.debug, frameSize, contentSize);
     builder.addDebug(debugSvg);
   }
 

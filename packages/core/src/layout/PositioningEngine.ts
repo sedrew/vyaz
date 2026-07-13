@@ -82,8 +82,12 @@ export function positionLines(
       if (!item) continue;
 
       const metrics = fontMetricsFn(item);
-      const effectiveAscent = metrics.ascent + (item.metadata.baselineOffset || 0);
-      const effectiveDescent = metrics.descent - (item.metadata.baselineOffset || 0);
+      // baselineOffset: superscript → negative (glyph moves up).
+      // ascent must increase (glyph above baseline), descent must decrease (less overhang below).
+      // subscript → positive (glyph moves down).
+      // ascent must decrease, descent must increase.
+      const effectiveAscent = metrics.ascent - (item.metadata.baselineOffset || 0);
+      const effectiveDescent = metrics.descent + (item.metadata.baselineOffset || 0);
 
       maxAscent = Math.max(maxAscent, effectiveAscent);
       maxDescent = Math.max(maxDescent, effectiveDescent);
