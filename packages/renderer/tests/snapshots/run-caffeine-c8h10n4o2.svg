@@ -1,12 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="86.99" height="28">
+<svg xmlns="http://www.w3.org/2000/svg" width="106.99" height="48" viewBox="-10 -10 106.99 48">
   <text x="0" y="22" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000">C</tspan>
-    <tspan x="12" font-size="15.600000000000001">8</tspan>
-    <tspan x="19.8" font-size="24">H</tspan>
-    <tspan x="31.8" font-size="15.600000000000001">10</tspan>
-    <tspan x="47.39" font-size="24">N</tspan>
-    <tspan x="59.39" font-size="15.600000000000001">4</tspan>
-    <tspan x="67.19" font-size="24">O</tspan>
-    <tspan x="79.19" font-size="15.600000000000001">2</tspan>
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000" textLength="12">C</tspan>
+    <tspan x="12" font-size="15.6" textLength="7.8">8</tspan>
+    <tspan x="19.8" font-size="24" textLength="12">H</tspan>
+    <tspan x="31.8" font-size="15.6" textLength="15.59">10</tspan>
+    <tspan x="47.39" font-size="24" textLength="12">N</tspan>
+    <tspan x="59.39" font-size="15.6" textLength="7.8">4</tspan>
+    <tspan x="67.19" font-size="24" textLength="12">O</tspan>
+    <tspan x="79.19" font-size="15.6" textLength="7.8">2</tspan>
 </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="86.99" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
 </svg>

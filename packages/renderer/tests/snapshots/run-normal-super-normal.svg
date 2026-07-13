@@ -1,9 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="242.98" height="33">
+<svg xmlns="http://www.w3.org/2000/svg" width="262.98" height="53" viewBox="-10 -10 262.98 53">
   <text x="0" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000">NORMAL</tspan>
-    <tspan x="72" font-size="15.600000000000001">super</tspan>
-    <tspan x="110.98" font-size="24">HELLO</tspan>
-    <tspan x="170.98"> </tspan>
-    <tspan x="182.98">WORLD</tspan>
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000" textLength="72">NORMAL</tspan>
+    <tspan x="72" font-size="15.6" textLength="38.98">super</tspan>
+    <tspan x="110.98" font-size="24" textLength="60">HELLO</tspan>
+    <tspan x="170.98" textLength="12"> </tspan>
+    <tspan x="182.98" textLength="60">WORLD</tspan>
 </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="242.98" height="33" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
 </svg>

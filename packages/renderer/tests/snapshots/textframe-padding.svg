@@ -1,3 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="27.350000381469727" height="29">
+<svg xmlns="http://www.w3.org/2000/svg" width="27.35" height="14" viewBox="20 15 27.35 14">
   <text x="20" y="26" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">Hello</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="27.35" height="29" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1.5" stroke-dasharray="4,3" />
+  <rect x="20" y="15" width="27.35" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
 </svg>

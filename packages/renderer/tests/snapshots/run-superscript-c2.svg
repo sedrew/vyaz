@@ -1,6 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="19.8" height="33">
+<svg xmlns="http://www.w3.org/2000/svg" width="39.8" height="53" viewBox="-10 -10 39.8 53">
   <text x="0" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000">c</tspan>
-    <tspan x="12" font-size="15.600000000000001">2</tspan>
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000" textLength="12">c</tspan>
+    <tspan x="12" font-size="15.6" textLength="7.8">2</tspan>
 </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="19.8" height="33" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
 </svg>
