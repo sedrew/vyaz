@@ -237,11 +237,16 @@ function resolveSize(lines: Line[], opts: ResolvedOptions): { width: number; hei
     height = opts.height;
   }
 
-  // viewBox: always derived from the actual content bbox when content-sized,
-  // otherwise full frame
+  // viewBox: derived per-axis. If an axis uses 'content' sizing, use the content bbox
+  // for that axis; otherwise use the frame dimension.
   let viewBox: { x: number; y: number; w: number; h: number };
   if (bbox) {
-    viewBox = { x: bbox.x, y: bbox.y, w: bbox.width, h: bbox.height };
+    viewBox = {
+      x: opts.sizingHorizontal === 'content' ? bbox.x : 0,
+      y: opts.sizingVertical === 'content' ? bbox.y : 0,
+      w: opts.sizingHorizontal === 'content' ? bbox.width : width,
+      h: opts.sizingVertical === 'content' ? bbox.height : height,
+    };
   } else {
     viewBox = { x: 0, y: 0, w: width, h: height };
   }
