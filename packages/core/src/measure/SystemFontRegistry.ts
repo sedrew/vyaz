@@ -6,10 +6,11 @@
  *   import { systemFontRegistry } from './SystemFontRegistry.js';
  *   await systemFontRegistry.scan();
  *   console.log(systemFontRegistry.getRegisteredFamilies());
+ *
+ * ⚠️ Node.js built-in module imports are dynamic (lazy) to avoid
+ * Vite/Webpack externalization errors in browser builds.
  */
 
-import { readFileSync } from 'node:fs';
-import getSystemFonts from 'get-system-fonts';
 import { fontMetricsProvider } from './FontMetricsProvider.js';
 
 interface ScanResult {
@@ -86,6 +87,15 @@ export class SystemFontRegistry {
    * @returns stats about what was found and registered
    */
   async scan(): Promise<ScanResult> {
+    // Dynamic imports — hidden from bundler static analysis.
+    // Only resolves on Node.js.  No-op in browser.
+    const [{ readFileSync }, getSystemFontsModule] = await Promise.all([
+      // @ts-ignore — 'node:fs' is a Node.js built-in; not resolvable with moduleResolution:bundler.
+      import('node:fs'),
+      import('get-system-fonts') as any,
+    ]);
+    const getSystemFonts = (getSystemFontsModule.default || getSystemFontsModule) as (opts?: any) => Promise<string[]>;
+
     const paths: string[] = await getSystemFonts();
     let registered = 0;
 

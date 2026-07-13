@@ -9,20 +9,40 @@
  *
  * Exports enableOfficeTextMeasure / disableOfficeTextMeasure —
  * ctx.measureText override for fontkit-based measurements in Office mode.
+ *
+ * ⚠️ All Node.js built-in module imports are dynamic (lazy) to avoid
+ * Vite/Webpack externalization errors in browser builds.
  */
-import { createRequire } from 'module';
 
-// ⚠️ Dynamic import — prevents esbuild from resolving @napi-rs/canvas at bundle time.
-// This module is a native Node.js addon. In the browser, Canvas APIs are already available.
+// ── Lazy Node.js module loader ─────────────────────────────────────
+// Dynamic import('module') — hidden from bundler static analysis.
+// Only resolves on Node.js / Bun.  No-op in browser.
+// Use 'any' for process to avoid requiring @types/node in browser contexts.
+const _process: any = typeof globalThis !== 'undefined'
+  ? (globalThis as any).process
+  : undefined;
+
+let _require: ((id: string) => any) | null = null;
 let _createCanvas: ((w: number, h: number) => any) | null = null;
 
-const _require = createRequire(import.meta.url);
-try {
-  const mod: any = _require('@napi-rs/canvas');
-  _createCanvas = mod.createCanvas;
-} catch {
-  // Browser — document.createElement('canvas') is available natively, no polyfill needed
-  _createCanvas = null;
+async function _initNodeDeps(): Promise<void> {
+  try {
+    // @ts-ignore — 'module' is a Node.js built-in; not resolvable with moduleResolution:bundler.
+    // This dynamic import is guarded by a runtime check and never executes in browser.
+    const m: any = await import('module');
+    _require = m.createRequire(import.meta.url);
+    const canvas: any = _require!('@napi-rs/canvas');
+    _createCanvas = canvas.createCanvas;
+  } catch {
+    // Browser or server without @napi-rs/canvas
+    _createCanvas = null;
+  }
+}
+
+// ESM top-level await — guarded by runtime check so bundlers don't
+// attempt to resolve 'module' at compile time.
+if (_process && (_process.versions?.node || _process.versions?.bun)) {
+  await _initNodeDeps();
 }
 
 // ── Polyfill document.createElement('canvas') ────────────────────────────
@@ -174,6 +194,7 @@ function createEmptyMetrics(): TextMetrics {
  * No-op in browser or when @napi-rs/canvas is not available.
  */
 export function registerCanvasFont(fontPath: string, family: string): void {
+  if (!_require) return; // @napi-rs/canvas not available
   try {
     const mod = _require('@napi-rs/canvas');
     if (mod?.registerFont) {
