@@ -18,7 +18,7 @@
  *   const svg = renderToSVG(lines, { preset: 'preserve', style: 'css', fit: 'frag' })
  */
 
-import type { Line, Span, ParagraphLayoutResult, ParagraphGroup } from '@vyaz/core';
+import type { Line, Span, ParagraphLayoutResult, ParagraphGroup, MultiColumnConfig } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
 import { computeBBox, fmt } from './utils.js';
@@ -64,6 +64,13 @@ export interface SVGRenderOptions {
   contentPadding?: number;
   /** Debug overlays. */
   debug?: DebugFlags;
+  /**
+   * Multi-column layout configuration for debug overlays.
+   * When set, paragraph and column boxes are rendered per-column.
+   */
+  columns?: MultiColumnConfig;
+  /** Left padding from frame (needed for column debug rendering). */
+  paddingLeft?: number;
 }
 
 type SpacingMode = 'browser' | 'preserve';
@@ -653,6 +660,9 @@ function renderDebugToSVG(
   flags: DebugFlags,
   frameSize?: { width: number; height: number },
   contentSize?: { width: number; height: number },
+  columns?: MultiColumnConfig,
+  leftPad?: number,
+  rightPad?: number,
 ): string {
   const parts: string[] = [];
   const sw = flags.widthBorder ?? 1;
@@ -696,7 +706,25 @@ function renderDebugToSVG(
     }
   }
 
-  // Paragraph bounding boxes
+  // ── Column separators ────────────────────────────────────────────
+  if (columns && columns.count > 1 && (flags.paragraphBox || flags.columnBox)) {
+    const colCount = columns.count;
+    const colGap = columns.gap;
+    const lp = leftPad ?? 0;
+    // Calculate colWidth from frame or content
+    const totalHorizontalSpace = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
+    const usableWidth = totalHorizontalSpace - lp - (rightPad ?? 0);
+    const colWidth = (usableWidth - (colCount - 1) * colGap) / colCount;
+    for (let c = 1; c < colCount; c++) {
+      const sepX = lp + c * (colWidth + colGap) - colGap / 2;
+      parts.push(
+        `  <line x1="${fmt(sepX)}" y1="0" x2="${fmt(sepX)}" y2="${fmt(frameSize?.height ?? 9999)}"` +
+        ` stroke="rgba(100,100,100,0.15)" stroke-width="1" stroke-dasharray="2,2" />`,
+      );
+    }
+  }
+
+  // Paragraph bounding boxes — per-column
   if (flags.paragraphBox) {
     const paraGroups = groupLinesByParagraph(lines);
     const paraColors = [
@@ -705,20 +733,49 @@ function renderDebugToSVG(
       'rgba(80,0,180,0.25)',
       'rgba(180,180,0,0.25)',
     ];
-    // Container right edge: use frame width, or content bbox, or max line extent
-    const containerRight = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
+
     for (let i = 0; i < paraGroups.length; i++) {
       const group = paraGroups[i];
       if (group.lines.length === 0) continue;
-      const firstLine = group.lines[0];
-      const lastLine = group.lines[group.lines.length - 1];
-      const top = firstLine.y;
-      const bottom = lastLine.y + lastLine.height;
+
+      // Group lines within this paragraph by columnIndex
+      const colMap = new Map<number, { top: number; bottom: number }>();
+      for (const line of group.lines) {
+        const ci = line.columnIndex ?? 0;
+        const existing = colMap.get(ci);
+        const lineTop = line.y;
+        const lineBottom = line.y + line.height;
+        if (existing) {
+          existing.top = Math.min(existing.top, lineTop);
+          existing.bottom = Math.max(existing.bottom, lineBottom);
+        } else {
+          colMap.set(ci, { top: lineTop, bottom: lineBottom });
+        }
+      }
+
+      // For non-column layout, colX = 0, colW = containerRight
+      // For column layout, calculate per-column position
+      const lp = leftPad ?? 0;
+      const rp = rightPad ?? 0;
+      const totalW = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
+      const usableW = totalW - lp - rp;
+      const colCount = columns?.count ?? 1;
+      const colGap = columns?.gap ?? 0;
+      const colW = (usableW - (colCount - 1) * colGap) / colCount;
+
       const color = paraColors[i % paraColors.length];
-      parts.push(`  <rect x="0" y="${fmt(top)}" width="${fmt(containerRight)}" height="${fmt(bottom - top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
+      for (const [ci, rect] of colMap) {
+        const colX = lp + ci * (colW + colGap);
+        parts.push(`  <rect x="${fmt(colX)}" y="${fmt(rect.top)}" width="${fmt(colW)}" height="${fmt(rect.bottom - rect.top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
+      }
+
       const label = group.tag ? `#${group.pIdx} ${group.tag}` : `#${group.pIdx}`;
       if (flags.labels) {
-        parts.push(`  <text x="4" y="${fmt(top - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
+        // Place label at top-left of the first column for this paragraph
+        const firstColIdx = Math.min(...Array.from(colMap.keys()));
+        const firstColX = lp + firstColIdx * (colW + colGap);
+        const firstTop = colMap.get(firstColIdx)!.top;
+        parts.push(`  <text x="${fmt(firstColX + 4)}" y="${fmt(firstTop - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
       }
     }
   }
@@ -910,7 +967,15 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
       : undefined;
     const contentBbox = computeBBox(lines);
     const contentSize = { width: contentBbox.width, height: contentBbox.height };
-    const debugSvg = renderDebugToSVG(lines, opts.debug, frameSize, contentSize);
+    const debugSvg = renderDebugToSVG(
+      lines,
+      opts.debug,
+      frameSize,
+      contentSize,
+      options.columns,
+      options.paddingLeft,
+      0, // rightPad — not tracked in options yet
+    );
     builder.addDebug(debugSvg);
   }
 

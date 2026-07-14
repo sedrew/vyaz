@@ -112,6 +112,9 @@ export interface Line {
   /** Paragraph alignment (optional, for PowerPoint render) */
   alignment?: TextAlignment;
 
+  /** Column index (0-based) when frame has multi-column layout. */
+  columnIndex?: number;
+
   spans: Span[];
 }
 

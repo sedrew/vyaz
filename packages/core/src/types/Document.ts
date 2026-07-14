@@ -516,13 +516,23 @@ export interface Paragraph {
  * use multiple `TextFrame` instances placed side-by-side.
  *
  * @see {@link https://www.w3.org/TR/css-multicol-1/ | CSS Multi-column Layout Level 1}
- * @todo Not yet implemented in the layout engine.
  */
 export interface MultiColumnConfig {
   /** Number of columns (like CSS `column-count`). */
   count: number;
   /** Gap between columns in px (like CSS `column-gap`). */
   gap: number;
+  /**
+   * Column fill strategy:
+   * - `'auto'`: fill columns sequentially (top-to-bottom, then next column).
+   * - `'balance'`: distribute lines evenly across columns.
+   *
+   * Defaults to `'auto'` when absent.
+   *
+   * @see {@link https://www.w3.org/TR/css-multicol-1/#cf | CSS Multi-column: column-fill}
+   * @todo `'balance'` not yet implemented.
+   */
+  fill?: 'auto' | 'balance';
 }
 
 // ── TextFrame (root container) ──────────────────────────────────────────

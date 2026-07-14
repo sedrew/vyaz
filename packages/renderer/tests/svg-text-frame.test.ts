@@ -248,6 +248,43 @@ describe('TextFrame SVG snapshots', () => {
     }
   });
 
+  test('textframe-multi-column.svg: 2 columns with wrapping text', () => {
+    const content: RunInput[] = [
+      { text: 'Typography ', style: { fontSize: 14, fontWeight: 'bold', color: '#000' } },
+      { text: 'is the art and technique of arranging type to make written language legible, readable and appealing. ', style: { fontSize: 14, fontWeight: 'normal', color: '#333' } },
+      { text: 'Layout ', style: { fontSize: 14, fontWeight: 'bold', color: '#000' } },
+      { text: 'engine processes text through multiple stages: compilation, preparation, line breaking, positioning, and validation.', style: { fontSize: 14, fontWeight: 'normal', color: '#333' } },
+    ];
+    const p = makeMultiRunParagraph(content);
+    p.style.alignment = 'left';
+    p.style.spaceAfter = 8;
+
+    const p2 = makeMultiRunParagraph([
+      { text: 'Second paragraph ', style: { fontSize: 13, fontWeight: 'normal', color: '#444' } },
+      { text: 'with multi-column layout enabled. Text flows from one column to the next.', style: { fontSize: 13, fontWeight: 'normal', color: '#666' } },
+    ]);
+    p2.style.alignment = 'left';
+
+    const svg = renderTextFrameSVG(
+      [p, p2],
+      {
+        width: 500,
+        height: 200,
+        columns: { count: 2, gap: 20 },
+      } as any,
+      { preset: 'flat', debug: { frameBox: true, paragraphBox: true, widthBorder: 1 } },
+    );
+
+    const name = 'textframe-multi-column.svg';
+    const expected = readSnapshot(name);
+    if (expected) {
+      expect(svg.trim()).toBe(expected.trim());
+    } else {
+      writeFileSync(snapshotPath(name), svg);
+      expect(svg).toBeTruthy();
+    }
+  });
+
   test('textframe-padding-left.svg: padding left shift', () => {
     const svg = renderTextFrameSVG(
       [makeParagraph('Hello')],

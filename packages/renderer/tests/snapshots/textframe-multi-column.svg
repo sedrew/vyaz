@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="200" viewBox="0 0 500 200">
+  <text x="0" y="13" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">Typography is the art and technique </text>
+  <text x="260" y="13" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">of arranging type to make written </text>
+  <text x="0" y="29" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">language legible, readable and </text>
+  <text x="260" y="29" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">appealing. Layout engine processes </text>
+  <text x="0" y="45" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">text through multiple stages: </text>
+  <text x="260" y="45" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">compilation, preparation, line </text>
+  <text x="0" y="61" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">breaking, positioning, and validation.</text>
+  <text x="260" y="60" font-family="Arial" font-size="13" fill="#444" font-weight="400" xml:space="preserve">Second paragraph with multi-column </text>
+  <text x="260" y="75" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">layout enabled. Text flows from one </text>
+  <text x="0" y="76" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">column to the next.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="500" height="200" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="500" height="64" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="500" y="0" width="500" height="48" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="500" y="48" width="500" height="30" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="64" width="500" height="15" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+</svg>
