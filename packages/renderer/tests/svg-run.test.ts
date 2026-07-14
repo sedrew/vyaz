@@ -20,11 +20,27 @@ import {
   renderFrameToSVG,
   matchSvgSnapshot,
 } from './helpers.ts';
+import { fontMetricsProvider } from '@vyaz/core';
+import { readFileSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // ── Setup ─────────────────────────────────────────────────────────────────
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+async function registerArial(): Promise<void> {
+  const fontPath = '/System/Library/Fonts/Supplemental/Arial.ttf';
+  const data = readFileSync(fontPath);
+  await fontMetricsProvider.registerFont('Arial', { weight: 'normal', style: 'normal' }, data, fontPath);
+  await fontMetricsProvider.registerFont('Arial', { weight: 'bold', style: 'normal' }, data, fontPath);
+  await fontMetricsProvider.registerFont('Arial', { weight: 'normal', style: 'italic' }, data, fontPath);
+  await fontMetricsProvider.registerFont('Arial', { weight: 'bold', style: 'italic' }, data, fontPath);
+}
+
 beforeAll(async () => {
   await registerUnifont();
+  await registerArial();
 });
 
 // ── AST helpers ───────────────────────────────────────────────────────────
@@ -429,6 +445,12 @@ describe('Preset: "glyph"', () => {
     const frame = makeTextFrame(makeParagraph('Hello'));
     const { svg } = renderFrameToSVG(frame, { preset: 'glyph', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-glyph-hello', svg);
+  });
+
+  test('run glyph snapshot with Arial', () => {
+    const frame = makeTextFrame(makeParagraph('Hello', { fontFamily: 'Arial' }));
+    const { svg } = renderFrameToSVG(frame, { preset: 'glyph', debug: { frameBox: true, contentBox: true } });
+    matchSvgSnapshot('run-glyph-hello-arial', svg);
   });
 
   test('run x positions equals character count', () => {

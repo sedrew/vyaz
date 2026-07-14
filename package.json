@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "packages/core",
-    "packages/renderer"
+    "packages/renderer",
+    "packages/demo"
   ],
   "scripts": {
     "build": "bun run build -w packages/core && bun run build -w packages/renderer"

@@ -53,11 +53,9 @@ interface PretextLine {
  * @param startY — initial Y position
  * @param mode — metric mode ('browser' | 'office'), affects line height calculation
  * @param tag — optional tag for debugging
- * @param measureText — optional function to measure text width accurately.
- *   When provided, used instead of proportional distribution for split fragments
- *   (leading/trailing whitespace vs trimmed text). The function accepts
- *   (text, fontSize, fontFamily, fontWeight, fontStyle) and returns width in px.
- *   Falls back to proportional distribution when omitted.
+ * @param measureText — function to measure text width accurately via fontkit.
+ *   The function accepts (text, fontSize, fontFamily, fontWeight, fontStyle)
+ *   and returns width in px. Throws FontNotFoundError if font not registered.
  * @returns { lines: Line[], contentWidth: number }
  */
 export function positionLines(
@@ -68,8 +66,8 @@ export function positionLines(
   maxWidth: number,
   startY: number = 0,
   mode: 'browser' | 'office' = 'browser',
+  measureText: (text: string, fontSize: number, fontFamily?: string, fontWeight?: string, fontStyle?: string) => number,
   tag?: string,
-  measureText?: (text: string, fontSize: number, fontFamily?: string, fontWeight?: string, fontStyle?: string) => number,
 ): { lines: Line[]; contentWidth: number } {
   const lines: Line[] = [];
   let currentY = startY + style.spaceBefore;
@@ -162,13 +160,10 @@ export function positionLines(
       if (trailingSpaceChars > 0) fragments.push(text.slice(leadingSpaceChars + remainingText.length));
 
       // Build measure function with font parameters baked in
-      let fragmentMeasureFn: MeasureFn | undefined;
-      if (measureText) {
-        const { fontFamily, fontWeight, fontStyle } = item.metadata.style;
-        const fsWeight = String(fontWeight || 400);
-        const fsStyle = fontStyle || 'normal';
-        fragmentMeasureFn = (t: string) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle);
-      }
+      const { fontFamily, fontWeight, fontStyle } = item.metadata.style;
+      const fsWeight = String(fontWeight || 400);
+      const fsStyle = fontStyle || 'normal';
+      const fragmentMeasureFn: MeasureFn = (t: string) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle);
 
       const resolvedWidths = resolveFragmentWidths(fragments, text, textWidth, fragmentMeasureFn);
       let resolvedIdx = 0;
@@ -196,16 +191,6 @@ export function positionLines(
       // Text span (trimmed)
       if (remainingText.length > 0) {
         const actualTextWidth = trimmedWidth;
-        // Compute per-glyph advances by distributing textWidth equally across glyphs.
-        // For monospace fonts this is exact; for proportional it's a linear approximation.
-        // The FontMetricsProvider can later supply real glyph advances when available.
-        const glyphAdvances: number[] = [];
-        if (remainingText.length > 1) {
-          const perGlyph = actualTextWidth / remainingText.length;
-          for (let i = 0; i < remainingText.length; i++) {
-            glyphAdvances.push(perGlyph);
-          }
-        }
         spans.push({
           x: 0,
           width: actualTextWidth,
@@ -217,7 +202,6 @@ export function positionLines(
           style: item.metadata.style,
           inlineWidget: item.metadata.inlineWidget,
           type: 'text',
-          glyphAdvances: glyphAdvances.length > 0 ? glyphAdvances : undefined,
         });
       }
 

@@ -276,6 +276,22 @@ export function layoutParagraph(
   return result;
 }
 
+// ── Layout with per-glyph advances ────────────────────────────────────
+
+/**
+ * Layout a paragraph with per-glyph advance widths (for SVG glyph mode).
+ *
+ * @example
+ * layoutGlyphParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial' }));
+ */
+export function layoutGlyphParagraph(
+  paragraph: Paragraph,
+  maxWidth: number = 500,
+  yOffset: number = 0,
+): ParagraphLayoutResult {
+  return engine.layoutGlyph(paragraph, maxWidth, yOffset);
+}
+
 // ── Convenience assertion helpers ──────────────────────────────────────
 
 /** Get all spans from a result (flat across all lines). */

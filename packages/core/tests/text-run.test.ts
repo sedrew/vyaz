@@ -34,6 +34,7 @@ import {
   makeStyledParagraph,
   makeMultiRunParagraph,
   layoutParagraph,
+  layoutGlyphParagraph,
   allSpans,
   allTextSpans,
   allSpaceSpans,
@@ -494,6 +495,41 @@ describe('Span.glyphAdvances', () => {
     const span = allSpans(layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20 } }))).find((s) => s.inlineWidget);
     expect(span).toBeDefined();
     expect(span!.glyphAdvances).toBeUndefined();
+  });
+});
+
+// ── 17b. Span.glyphAdvances — Arial proportional font ────────────────────
+
+describe('Span.glyphAdvances — Arial proportional', () => {
+  test('Arial glyphAdvances are non-uniform (H ≠ e in width)', () => {
+    const result = layoutGlyphParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial' }));
+    for (const span of allTextSpans(result)) {
+      if (span.glyphAdvances && span.glyphAdvances.length > 1) {
+        // 'H' and 'e' have different widths in Arial proportional font
+        const diff = Math.abs(span.glyphAdvances[0] - span.glyphAdvances[1]);
+        expect(diff).toBeGreaterThan(0.5);
+      }
+    }
+  });
+
+  test('Arial glyphAdvances differ from Unifont monospace', () => {
+    const arial = layoutGlyphParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial' }));
+    const unifont = layoutGlyphParagraph(makeParagraph('Hello', { fontFamily: 'Unifont' }));
+    const arialAdvances = allTextSpans(arial)[0]?.glyphAdvances;
+    const unifontAdvances = allTextSpans(unifont)[0]?.glyphAdvances;
+    expect(arialAdvances).toBeDefined();
+    expect(unifontAdvances).toBeDefined();
+    // At least one advance should differ significantly (Arial proportional vs Unifont monospace)
+    const maxDiff = Math.max(...arialAdvances!.map((a, i) => Math.abs(a - unifontAdvances![i])));
+    expect(maxDiff).toBeGreaterThan(1);
+  });
+
+  test('sum of Arial glyphAdvances ≈ span.width', () => {
+    for (const span of allTextSpans(layoutGlyphParagraph(makeStyledParagraph('Hello', { fontFamily: 'Arial' })))) {
+      if (span.glyphAdvances && span.glyphAdvances.length > 0) {
+        expect(Math.abs(span.glyphAdvances.reduce((a, b) => a + b, 0) - span.width)).toBeLessThan(2);
+      }
+    }
   });
 });
 

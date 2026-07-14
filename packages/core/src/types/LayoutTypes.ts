@@ -38,7 +38,7 @@ export interface Span {
   inlineWidget?: InlineWidget;
 
   /** Per-character advance widths (for selection/tracking) */
-  glyphAdvances?: number[];
+  glyphAdvances?: number[] | Float32Array;
 
   /** Span type: 'text' — regular text, 'space' — whitespace span */
   type: 'text' | 'space';

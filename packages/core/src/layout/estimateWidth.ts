@@ -1,54 +1,9 @@
 /**
  * estimateWidth.ts — per-fragment width resolution.
  *
- * Two sources (priority order):
- *   1. Exact measurement via FontMetricsProvider.measureText() — fontkit / opentype.js
- *   2. Weight-based fallback estimatePartialWidth — when no font data available
- *
- * After any measurement — correctToSumInvariant to preserve line-breaking invariant.
+ * Uses exact measurement via FontMetricsProvider.measureText() (fontkit).
+ * After measurement — correctToSumInvariant to preserve line-breaking invariant.
  */
-
-// ── Weight-based fallback ─────────────────────────────────────────────
-
-/**
- * Per-character weight for approximate width estimation.
- * More accurate than charCount/totalChars for proportional fonts.
- *
- * Values:
- *   - space      = 0.35
- *   - narrow cha = 0.4 (i, l, ., ,, ;, :, ', !, |)
- *   - default    = 1.0
- */
-const CHAR_WEIGHT: Record<string, number> = {};
-for (const c of ' \t') CHAR_WEIGHT[c] = 0.35;
-for (const c of 'iIl.,;:\'!|') CHAR_WEIGHT[c] = 0.4;
-
-function charWeight(c: string): number {
-  return CHAR_WEIGHT[c] ?? 1.0;
-}
-
-/**
- * Weight-based fallback width estimation.
- *
- * Distributes occupiedWidth proportionally by character weights:
- *   fragmentWidth = (fragmentWeight / totalWeight) * occupiedWidth
- *
- * Used when FontMetricsProvider.measureText() is unavailable (returns -1).
- * Significantly better than charCount/totalChars for proportional fonts.
- */
-function estimatePartialWidth(
-  fragment: string,
-  occupiedWidth: number,
-  fullFragmentText: string,
-): number {
-  if (!fragment || !fullFragmentText || occupiedWidth <= 0) return 0;
-
-  const fragmentWeight = [...fragment].reduce((sum, c) => sum + charWeight(c), 0);
-  const totalWeight = [...fullFragmentText].reduce((sum, c) => sum + charWeight(c), 0);
-
-  if (totalWeight <= 0) return 0;
-  return (fragmentWeight / totalWeight) * occupiedWidth;
-}
 
 // ── Invariant correction ─────────────────────────────────────────────
 
@@ -102,7 +57,7 @@ export function resolveFragmentWidths(
   fragments: string[],
   fullText: string,
   occupiedWidth: number,
-  measureFn?: MeasureFn,
+  measureFn: MeasureFn,
 ): number[] {
   if (fragments.length === 0) return [];
   if (fragments.length === 1) {
@@ -110,17 +65,10 @@ export function resolveFragmentWidths(
     return [occupiedWidth];
   }
 
-  // Step 1: Measure each fragment (exact or fallback)
-  const measured = fragments.map(f => {
-    // Try exact measurement first
-    if (measureFn) {
-      const exact = measureFn(f);
-      if (exact >= 0) return exact;
-    }
-    // Fallback: weight-based estimate
-    return estimatePartialWidth(f, occupiedWidth, fullText);
-  });
+  // Step 1: Measure each fragment exactly via fontkit
+  // measureFn throws FontNotFoundError if font not registered
+  const measured = fragments.map(f => measureFn(f));
 
-  // Step 2: Correct to sum invariant (always, regardless of source)
+  // Step 2: Correct to sum invariant
   return correctToSumInvariant(measured, occupiedWidth);
 }
