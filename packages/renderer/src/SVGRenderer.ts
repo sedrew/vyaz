@@ -337,13 +337,9 @@ function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: s
     if (opts.spacing === 'preserve') attrs += ' xml:space="preserve"';
   }
 
-  // text-anchor is only meaningful for flat mode where text sits directly in <text>.
-  // For expanded/glyph modes, each <tspan> has explicit x="..." coordinates that already
-  // account for alignment — text-anchor on <text> would then double-shift the text.
-  if (opts.structure === 'flat') {
-    const anchor = line.alignment === 'center' ? 'middle' : line.alignment === 'right' ? 'end' : 'start';
-    if (anchor !== 'start') attrs += ` text-anchor="${anchor}"`;
-  }
+  // text-anchor is intentionally NOT used in flat mode.
+  // PositioningEngine already accounts for alignment by shifting line.x.
+  // Adding text-anchor would double-shift the text.
 
   return attrs;
 }
@@ -642,9 +638,6 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
         if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
         attrs += ' xml:space="preserve"';
-        // text-anchor for center/right alignment
-        if (line.alignment === 'center') attrs += ' text-anchor="middle"';
-        else if (line.alignment === 'right') attrs += ' text-anchor="end"';
         builder.pushLine(`  <text${attrs}${fitAttr}>${text}</text>\n`);
       }
     } else {

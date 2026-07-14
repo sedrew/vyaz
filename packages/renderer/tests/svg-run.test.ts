@@ -247,7 +247,7 @@ describe('Preset: "flat"', () => {
     expect(tspans.length).toBe(0);
   });
 
-  test('run left alignment no text-anchor', () => {
+  test('run left alignment flat', () => {
     const frame = makeTextFrame(makeParagraph('Hello'));
     const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
     const ast = parse(svg);
@@ -255,21 +255,28 @@ describe('Preset: "flat"', () => {
     expect(textEl!.properties.textAnchor).toBeUndefined();
   });
 
-  test('run center alignment text-anchor middle', () => {
+  test('run center alignment flat', () => {
     const para = makeParagraph('Hello');
     para.style.alignment = 'center';
     const frame = makeTextFrame(para);
     const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
-    // Check raw SVG since text-anchor is an XML attribute on <text>
-    expect(svg).toContain('text-anchor="middle"');
+    const ast = parse(svg);
+    const textEl = getTextElement(ast);
+    // no text-anchor — positioning by line.x (PositioningEngine shifts x)
+    expect(textEl!.properties.textAnchor).toBeUndefined();
+    expect(Number(textEl!.properties.x)).toBeGreaterThan(0);
   });
 
-  test('run right alignment text-anchor end', () => {
+  test('run right alignment flat', () => {
     const para = makeParagraph('Hello');
     para.style.alignment = 'right';
     const frame = makeTextFrame(para);
     const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
-    expect(svg).toContain('text-anchor="end"');
+    const ast = parse(svg);
+    const textEl = getTextElement(ast);
+    // no text-anchor — positioning by line.x (PositioningEngine shifts x)
+    expect(textEl!.properties.textAnchor).toBeUndefined();
+    expect(Number(textEl!.properties.x)).toBeGreaterThan(0);
   });
 
   test('run flat superscript snapshot', () => {
