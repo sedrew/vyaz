@@ -11,3 +11,7 @@ export { renderToCanvas, renderDebugToCanvas } from './CanvasRenderer.js';
 export type { CanvasRenderOptions } from './CanvasRenderer.js';
 
 export type { DebugFlags } from './types.js';
+
+// HTML-to-TextFrame parser
+export { htmlToTextFrame } from './html/index.js';
+export type { HtmlToTextFrameOptions } from './html/index.js';

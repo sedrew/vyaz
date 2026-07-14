@@ -12,10 +12,16 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target bun"
   },
   "dependencies": {
-    "@vyaz/core": "*"
+    "@vyaz/core": "*",
+    "hast-util-from-html": "^2.0.3",
+    "rehype-parse": "^9.0.1",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
+    "@types/hast": "^3.0.5",
     "@types/node": "^26.1.1",
+    "hast": "^1.0.0",
     "is-svg": "^6.1.0",
     "svg-parser": "^2.0.4",
     "typescript": "^5.4.0"

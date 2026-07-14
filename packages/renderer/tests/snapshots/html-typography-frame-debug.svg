@@ -1,0 +1,418 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="1816" viewBox="-10 -10 620 1816">
+  <text x="0" y="30" font-family="Unifont" font-size="32" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="32" fill="#000">This is the Example Content H1 Tag</tspan>
+  </text>
+  <text x="0" y="48" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">The HTML example content is designed to provide some dummy content to help you design your</tspan>
+  </text>
+  <text x="0" y="62" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">typography and general CSS styles, and to ensure that you've accounted for</tspan>
+    <tspan x="450" font-style="italic">every single</tspan>
+    <tspan x="528" font-style="normal">HTML5 tag in</tspan>
+  </text>
+  <text x="0" y="76" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">your stylesheet.</tspan>
+  </text>
+  <text x="0" y="101" font-family="Unifont" font-size="24" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="24" fill="#000">Normal, Basic Stuff headed by this H2 Tag</tspan>
+  </text>
+  <text x="0" y="118" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">This is a normal paragraph. It contains some text. According to some sources, paragraphs should be</tspan>
+  </text>
+  <text x="0" y="132" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">30em x the font size (for example, 10px font size = 300px wide paragraph). Use</tspan>
+    <tspan x="474" font-style="italic">ems</tspan>
+    <tspan x="498" font-style="normal">to make this</tspan>
+  </text>
+  <text x="0" y="146" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">happen. Also, line height should be 6 - 7px bigger than the font size. It may or may not be</tspan>
+  </text>
+  <text x="0" y="160" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">appropriate to use</tspan>
+    <tspan x="114" font-style="italic">ems</tspan>
+    <tspan x="138" font-style="normal">for this. Here is some</tspan>
+    <tspan x="276" font-size="10">small text</tspan>
+  </text>
+  <text x="0" y="174" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Complex computer systems find their way into everyday life, and at the same time the market is</tspan>
+  </text>
+  <text x="0" y="188" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">saturated with competing brands. This has made usability more popular and widely recognized in</tspan>
+  </text>
+  <text x="0" y="202" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">recent years, as companies see the benefits of researching and developing their products with user-</tspan>
+  </text>
+  <text x="0" y="216" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">oriented methods instead of technology-oriented methods. By understanding and researching the</tspan>
+  </text>
+  <text x="0" y="230" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">interaction between product and user, the usability expert can also provide insight that is</tspan>
+  </text>
+  <text x="0" y="244" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">unattainable by traditional company-oriented market research. For example, after observing and</tspan>
+  </text>
+  <text x="0" y="258" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">interviewing users, the usability expert may identify needed functionality or design flaws that were</tspan>
+  </text>
+  <text x="0" y="272" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">not anticipated. A method called contextual inquiry does this in the naturally occurring context of</tspan>
+  </text>
+  <text x="0" y="286" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">the users own environment.</tspan>
+  </text>
+  <text x="0" y="307" font-family="Unifont" font-size="20" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="20" fill="#000">A Level Three Heading</tspan>
+  </text>
+  <text x="0" y="323" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">There is no consensus about the relation of the terms ergonomics (or human factors) and usability.</tspan>
+  </text>
+  <text x="0" y="337" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Some think of usability as the software specialization of the larger topic of ergonomics. Others</tspan>
+  </text>
+  <text x="0" y="351" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">view these topics as tangential, with ergonomics focusing on physiological matters (e.g., turning a</tspan>
+  </text>
+  <text x="0" y="365" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">door handle) and usability focusing on psychological matters (e.g., recognizing that a door can be</tspan>
+  </text>
+  <text x="0" y="379" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">opened by turning its handle).</tspan>
+  </text>
+  <text x="0" y="396" font-family="Unifont" font-size="16" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="16" fill="#000">Level Four Heading</tspan>
+  </text>
+  <text x="0" y="411" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Drinking vinegar Carles Banksy messenger bag, skateboard literally tofu selfies fugiat. Aesthetic</tspan>
+  </text>
+  <text x="0" y="425" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Marfa minim, Odd Future craft beer art party sint 3 wolf moon hella viral. Yr 8-bit whatever</tspan>
+  </text>
+  <text x="0" y="439" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">skateboard church-key aute. +1 velit pariatur fugiat disrupt, nisi you probably haven't heard of</tspan>
+  </text>
+  <text x="0" y="453" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">them stumptown. Sed quinoa lomo, officia flannel Pinterest fingerstache letterpress et 8-bit 3 wolf</tspan>
+  </text>
+  <text x="0" y="467" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">moon occaecat +1 fixie. Delectus occupy fugiat chillwave, tousled fap sunt Carles four loko Portland</tspan>
+  </text>
+  <text x="0" y="481" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">tempor single-origin coffee pug Brooklyn. Chillwave deep v meggings mixtape fashion axe mumblecore</tspan>
+  </text>
+  <text x="0" y="495" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">adipisicing, butcher Austin +1 literally banjo.</tspan>
+  </text>
+  <text x="0" y="509" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Delectus seitan fashion axe, four loko pop-up Portland nisi slow-carb YOLO. Cillum sartorial</tspan>
+  </text>
+  <text x="0" y="523" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">excepteur aliqua before they sold out sriracha. Ut master cleanse wolf, occaecat banh mi gentrify</tspan>
+  </text>
+  <text x="0" y="537" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">narwhal normcore pickled id nihil. Ethical vinyl fixie, sunt mlkshk trust fund non cillum freegan</tspan>
+  </text>
+  <text x="0" y="551" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">bicycle rights hella pop-up Williamsburg. Bicycle rights proident assumenda Thundercats, skateboard</tspan>
+  </text>
+  <text x="0" y="565" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">lo-fi four loko church-key High Life Brooklyn cray dolore kale chips. Literally brunch fanny pack,</tspan>
+  </text>
+  <text x="0" y="579" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">in authentic pork belly sartorial normcore banh mi +1 Neutra squid pug chillwave Marfa. Laborum jean</tspan>
+  </text>
+  <text x="0" y="593" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">shorts bicycle rights mixtape, eiusmod ut excepteur.</tspan>
+  </text>
+  <text x="0" y="607" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">This seems like a good place for an image:</tspan>
+  </text>
+  <text x="0" y="621" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">￼</tspan>
+  </text>
+  <text x="0" y="635" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Okay, so here's something kind of sort of new. The figure tags are very useful when displaying</tspan>
+  </text>
+  <text x="0" y="649" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">images with figures and captions and what-not. This paragraph needs to be a little longer, so here</tspan>
+  </text>
+  <text x="0" y="663" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">comes some lorum ipsum! Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy</tspan>
+  </text>
+  <text x="0" y="677" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam,</tspan>
+  </text>
+  <text x="0" y="691" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</tspan>
+  </text>
+  <text x="0" y="705" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum</tspan>
+  </text>
+  <text x="0" y="719" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio.</tspan>
+  </text>
+  <text x="0" y="733" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">￼ This is the figure caption of what we are looking at. With a link.</tspan>
+  </text>
+  <text x="0" y="747" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">The tag is used to define a short quotation: do not use me.</tspan>
+  </text>
+  <text x="0" y="768" font-family="Unifont" font-size="20" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="20" fill="#000">Blockquotes below</tspan>
+  </text>
+  <text x="40" y="796" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="40" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">The Internet will change the world.</tspan>
+  </text>
+  <text x="40" y="834" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="40" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Hello, world. I did not say that!</tspan>
+  </text>
+  <text x="0" y="860" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Here are some blockquotes with cite tags</tspan>
+  </text>
+  <text x="40" y="886" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="40" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Stuff is Good. Some Dude, 2011</tspan>
+  </text>
+  <text x="0" y="912" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">This paragraph contains a link, some</tspan>
+    <tspan x="222" font-style="italic">em text (typically italicized)</tspan>
+    <tspan x="402" font-style="normal">, and some</tspan>
+    <tspan x="468" font-weight="700">strong test</tspan>
+    <tspan x="534" font-weight="400">, typically</tspan>
+  </text>
+  <text x="0" y="927" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">bolded. In addition don't forget to style the tag: CSS tag! The</tspan>
+  </text>
+  <text x="0" y="922.2" font-family="Unifont" font-size="7.8" fill="#000" font-weight="400">
+    <tspan x="384" font-weight="400" font-style="normal" font-family="Unifont" font-size="7.8" fill="#000">tag: 1st. The</tspan>
+  </text>
+  <text x="0" y="930" font-family="Unifont" font-size="7.8" fill="#000" font-weight="400">
+    <tspan x="438.58" font-weight="400" font-style="normal" font-family="Unifont" font-size="7.8" fill="#000">tag: McLaughlin.</tspan>
+  </text>
+  <text x="0" y="942" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">A new tag is the tag, which shows progress: Page 2 of 5. Here's another example: 76%. You can style</tspan>
+  </text>
+  <text x="0" y="956" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">them based on their</tspan>
+    <tspan x="120" font-style="italic">value</tspan>
+    <tspan x="156" font-style="normal">and</tspan>
+    <tspan x="180" font-style="italic">max</tspan>
+    <tspan x="204" font-style="normal">attributes.</tspan>
+  </text>
+  <text x="0" y="970" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">The following content is inside an address tag (most browsers typically render this in italics):</tspan>
+  </text>
+  <text x="0" y="984" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Link to Email 123 Regular Address Lane #A-123, Some City, ST 12345-6789</tspan>
+  </text>
+  <text x="0" y="1009" font-family="Unifont" font-size="24" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="24" fill="#000">Below this H2 tag is an example of a table</tspan>
+  </text>
+  <text x="0" y="1033" font-family="Unifont" font-size="20" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="20" fill="#000">Oh, and here is a H3 tag</tspan>
+  </text>
+  <text x="0" y="1052" font-family="Unifont" font-size="16" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="16" fill="#000">And a H4 Tag right here</tspan>
+  </text>
+  <text x="0" y="1067" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Here comes a perfectly coded table, with all elements:</tspan>
+  </text>
+  <text x="0" y="1082" font-family="Unifont" font-size="14" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="14" fill="#000">The table is below this H5 tag</tspan>
+  </text>
+  <text x="0" y="1097" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">How I feel on different days of the week Day of Week How I feel Score Random Number Sunday Relaxed 5</tspan>
+  </text>
+  <text x="0" y="1111" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">15 Monday Stressed 1 123 Tuesday Hyped 8 432.3 Wednesday Zoned 3 234.2 Thursday Anxious 4 8423.3</tspan>
+  </text>
+  <text x="0" y="1125" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">Friday Stoked 7 401.2 Saturday Elated 9 2340.2 That is All No more Number Number</tspan>
+  </text>
+  <text x="0" y="1150" font-family="Unifont" font-size="24" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="24" fill="#000">Here comes some code examples under this H2 tag</tspan>
+  </text>
+  <text x="0" y="1174" font-family="Unifont" font-size="20" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="20" fill="#000">Inline code (this is a h3 tag)</tspan>
+  </text>
+  <text x="0" y="1190" font-family="Unifont" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000">It is usually a good idea to use the</tspan>
+    <tspan x="222" font-family="monospace">tag for inline code, like: this is some code. There is also the tag, which</tspan>
+  </text>
+  <text x="0" y="1204" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">defines sample output (not the same as code), so you should style it similarly, but perhaps a tiny bit different: this is</tspan>
+  </text>
+  <text x="0" y="1218" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">some sample output. Also, there is the tag for marking up keyboard input (ie. keystrokes). Here are some keystrokes:</tspan>
+  </text>
+  <text x="0" y="1232" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">Ctrl + Alt + \ + Q</tspan>
+  </text>
+  <text x="0" y="1246" font-family="monospace" font-size="12" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="monospace" font-size="12" fill="#000">This is just an excuse for me to use the H6 tag in context</tspan>
+    <tspan x="289.9" font-weight="400">Final there's the</tspan>
+    <tspan x="373.95" font-style="italic">tag. It's kind of ambiguous, but from best I</tspan>
+  </text>
+  <text x="0" y="1260" font-family="monospace" font-size="12" fill="#000" font-weight="400" font-style="italic">
+    <tspan x="0" font-weight="400" font-style="italic" font-family="monospace" font-size="12" fill="#000">can tell, it is used to apply custom markup to a variable inside of a block. Example: variable = 1234.56. It is probably a</tspan>
+  </text>
+  <text x="0" y="1281" font-family="monospace" font-size="12" fill="#000" font-weight="400" font-style="italic">
+    <tspan x="0" font-weight="400" font-style="italic" font-family="monospace" font-size="12" fill="#000">good idea to style it in normal paragraph context, too: a_variable.</tspan>
+    <tspan x="330.18" font-weight="700" font-style="normal" font-size="20">Block code H3 Header</tspan>
+    <tspan x="519.9" font-weight="400" font-size="12">The above</tspan>
+  </text>
+  <text x="0" y="1297" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">examples describe inline code. There is also block code, which can be styled effectively with CSS. Use the tag to style</tspan>
+  </text>
+  <text x="0" y="1311" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">that code. Here is some basic tag stuff: I am the very model of a modern Major-General, I've information vegetable,</tspan>
+  </text>
+  <text x="0" y="1325" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">animal, and mineral, I know the kings of England, and I quote the fights historical From Marathon to Waterloo, in order</tspan>
+  </text>
+  <text x="0" y="1339" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">categorical; I'm very well acquainted, too, with matters mathematical, I understand equations, both the simple and</tspan>
+  </text>
+  <text x="0" y="1353" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">quadratical, About binomial theorem I'm teeming with a lot o' news, With many cheerful facts about the square of the</tspan>
+  </text>
+  <text x="0" y="1367" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">hypotenuse. I'm very good at integral and differential calculus; I know the scientific names of beings animalculous: In</tspan>
+  </text>
+  <text x="0" y="1381" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">short, in matters vegetable, animal, and mineral, I am the very model of a modern Major-General. I know our mythic</tspan>
+  </text>
+  <text x="0" y="1395" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">history, King Arthur's and Sir Caradoc's; I answer hard acrostics, I've a pretty taste for paradox, I quote in elegiacs all</tspan>
+  </text>
+  <text x="0" y="1409" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">the crimes of Heliogabalus, In conics I can floor peculiarities parabolous; I can tell undoubted Raphaels from Gerard</tspan>
+  </text>
+  <text x="0" y="1423" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">Dows and Zoffanies, I know the croaking chorus from The Frogs of Aristophanes! Then I can hum a fugue of which I've</tspan>
+  </text>
+  <text x="0" y="1437" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">heard the music's din afore, And whistle all the airs from that infernal nonsense Pinafore. You may want to use the</tspan>
+  </text>
+  <text x="0" y="1451" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">combination to style preformatted code separately from regular preformatted text: //a terrible idea -- breaking the</tspan>
+  </text>
+  <text x="0" y="1465" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">right-click functionality on web sites var message=&#34;Copyright Year by Your Site. WARNING ! All content contained</tspan>
+  </text>
+  <text x="0" y="1479" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">within this site is protected by copyright laws. Unauthorized use of our material is strictly prohibited.&#34;; function click(e)</tspan>
+  </text>
+  <text x="0" y="1493" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">{ if (document.all) { if (event.button==2||event.button==3) { alert(message); return false; } } if (document.layers) { if</tspan>
+  </text>
+  <text x="0" y="1507" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">(e.which == 3) { alert(message); return false; } } } if (document.layers) {</tspan>
+  </text>
+  <text x="0" y="1524" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">document.captureEvents(Event.MOUSEDOWN); } document.onmousedown=click;</tspan>
+    <tspan x="414.03" font-weight="700" font-size="16">The</tspan>
+    <tspan x="443.52" text-decoration="line-through">and</tspan>
+    <tspan x="472.58" text-decoration="underline line-through">tags H4</tspan>
+    <tspan x="527.33" font-weight="400" font-size="12">The</tspan>
+    <tspan x="549.45" text-decoration="line-through">and</tspan>
+    <tspan x="571.25" text-decoration="underline line-through">tags</tspan>
+  </text>
+  <text x="0" y="1539" font-family="monospace" font-size="12" fill="#000" font-weight="400" text-decoration="underline line-through">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000" text-decoration="underline line-through">are especially useful in preformatted blocks. Typically, you want to use a red background for tags, and use a green</tspan>
+  </text>
+  <text x="0" y="1553" font-family="monospace" font-size="12" fill="#000" font-weight="400" text-decoration="underline line-through">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000" text-decoration="underline line-through">background for tags. Below are some preformatted blocks in a table with two columns, with these tags in use.</tspan>
+    <tspan x="555.69">Use of</tspan>
+  </text>
+  <text x="0" y="1574" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">DEL and INS tags Old New abc def ghi lnm opq rst uvw xyz abc def</tspan>
+    <tspan x="340.75" text-decoration="underline">ghi</tspan>
+    <tspan x="359.14">jki</tspan>
+    <tspan x="373.48" text-decoration="line-through">lnm</tspan>
+    <tspan x="395.43" text-decoration="underline">lmn</tspan>
+    <tspan x="417.38">opq rst uvw xyz</tspan>
+    <tspan x="500.84" font-weight="700" font-size="20">The</tspan>
+  </text>
+  <text x="0" y="1597" font-family="monospace" font-size="20" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="monospace" font-size="20" fill="#000">definition tag H3</tspan>
+    <tspan x="144.32" font-weight="400" font-size="12">Finally there's the definition tag: Steve Oh, and below is a horizontal rule… The tag is used</tspan>
+  </text>
+  <text x="0" y="1613" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">to provide citations within HTML, similar to how you would provide footnotes in printed text. Here is a citation, in</tspan>
+  </text>
+  <text x="0" y="1627" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">context (mouse over it): As outlined in The Battle Cry of Freedom , the Civil War had many complex causes. The tag is</tspan>
+  </text>
+  <text x="0" y="1641" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">a block-level item, that can be used to provide a summary for an article or section of your site: Copyright 1999-2011.</tspan>
+  </text>
+  <text x="0" y="1666" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">All pages and graphics on this web site are the property of the company Refsnes Data.</tspan>
+    <tspan x="437.64" font-weight="700" font-size="24">Let us look at</tspan>
+  </text>
+  <text x="0" y="1694" font-family="monospace" font-size="24" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="monospace" font-size="24" fill="#000">some lists H2</tspan>
+    <tspan x="137.87" font-size="20">Un-ordered lists H3</tspan>
+    <tspan x="307.05" font-weight="400" font-size="12">Below we shall look at some unordered lists.</tspan>
+    <tspan x="533.55" font-weight="700" font-size="16">Single</tspan>
+  </text>
+  <text x="0" y="1714" font-family="monospace" font-size="16" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="monospace" font-size="16" fill="#000">layer H4</tspan>
+    <tspan x="59.37" font-weight="400" font-size="12">Oranges Apples Carrots Tomatoes Spinach</tspan>
+    <tspan x="276.05" font-weight="700" font-size="16">Multi-Layer H4</tspan>
+    <tspan x="380.86" font-weight="400" font-size="12">Fruit Oranges Apples Tomatoes Vegetables</tspan>
+  </text>
+  <text x="0" y="1736" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">Carrots Spinach Canned Fresh Baby Frozen</tspan>
+    <tspan x="219.89" font-weight="700" font-size="20">Same Content with Ordered Lists</tspan>
+    <tspan x="501.57" font-size="16">Single layer</tspan>
+  </text>
+  <text x="0" y="1755" font-family="monospace" font-size="16" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="monospace" font-size="16" fill="#000">H4</tspan>
+    <tspan x="22.73" font-weight="400" font-size="12">Oranges Apples Carrots Tomatoes Spinach</tspan>
+    <tspan x="239.41" font-weight="700" font-size="16">Multi-Layer H4</tspan>
+    <tspan x="344.22" font-weight="400" font-size="12">Fruit Oranges Apples Tomatoes Vegetables</tspan>
+  </text>
+  <text x="0" y="1777" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">Carrots Spinach Canned Fresh Baby Frozen</tspan>
+    <tspan x="219.89" font-weight="700" font-size="20">Do not forget about definition lists!</tspan>
+    <tspan x="519.27" font-weight="400" font-size="12">Coffee Black</tspan>
+  </text>
+  <text x="0" y="1793" font-family="monospace" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="monospace" font-size="12" fill="#000">hot drink Milk White cold drink Beer The best drink of all</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="600" height="37" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="37" width="600" height="42" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="79" width="600" height="28" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="107" width="600" height="56" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="163" width="600" height="126" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="289" width="600" height="23" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="312" width="600" height="70" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="382" width="600" height="18" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="400" width="600" height="98" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="498" width="600" height="98" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="596" width="600" height="14" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="610" width="600" height="14" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="624" width="600" height="98" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="722" width="600" height="14" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="736" width="600" height="14" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="750" width="600" height="23" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="785" width="600" height="14" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="823" width="600" height="14" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="849" width="600" height="14" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="875" width="600" height="14" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="901" width="600" height="30" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="931" width="600" height="28" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="959" width="600" height="14" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="973" width="600" height="14" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="987" width="600" height="28" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="1015" width="600" height="23" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="1038" width="600" height="18" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="1056" width="600" height="14" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="1070" width="600" height="16" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="1086" width="600" height="42" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+  <rect x="0" y="1128" width="600" height="28" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="1" />
+  <rect x="0" y="1156" width="600" height="23" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="1" />
+  <rect x="0" y="1179" width="600" height="56" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="0" y="1235" width="600" height="561" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+</svg>

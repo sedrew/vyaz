@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="1816" viewBox="-10 -10 620 1816">
+  <text x="0" y="30" font-family="Unifont" font-size="32" fill="#000" font-weight="700" xml:space="preserve">This is the Example Content H1 Tag</text>
+  <text x="0" y="48" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">The HTML example content is designed to provide some dummy content to help you design your </text>
+  <text x="0" y="62" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">typography and general CSS styles, and to ensure that you've accounted for every single HTML5 tag in </text>
+  <text x="0" y="76" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">your stylesheet.</text>
+  <text x="0" y="101" font-family="Unifont" font-size="24" fill="#000" font-weight="700" xml:space="preserve">Normal, Basic Stuff headed by this H2 Tag</text>
+  <text x="0" y="118" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">This is a normal paragraph. It contains some text. According to some sources, paragraphs should be </text>
+  <text x="0" y="132" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">30em x the font size (for example, 10px font size = 300px wide paragraph). Use ems to make this </text>
+  <text x="0" y="146" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">happen. Also, line height should be 6 - 7px bigger than the font size. It may or may not be </text>
+  <text x="0" y="160" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">appropriate to use ems for this. Here is some</text>
+  <text x="270" y="160" font-family="Unifont" font-size="10" fill="#000" font-weight="400" xml:space="preserve"> small text</text>
+  <text x="0" y="174" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Complex computer systems find their way into everyday life, and at the same time the market is </text>
+  <text x="0" y="188" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">saturated with competing brands. This has made usability more popular and widely recognized in </text>
+  <text x="0" y="202" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">recent years, as companies see the benefits of researching and developing their products with user-</text>
+  <text x="0" y="216" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">oriented methods instead of technology-oriented methods. By understanding and researching the </text>
+  <text x="0" y="230" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">interaction between product and user, the usability expert can also provide insight that is </text>
+  <text x="0" y="244" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">unattainable by traditional company-oriented market research. For example, after observing and </text>
+  <text x="0" y="258" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">interviewing users, the usability expert may identify needed functionality or design flaws that were </text>
+  <text x="0" y="272" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">not anticipated. A method called contextual inquiry does this in the naturally occurring context of </text>
+  <text x="0" y="286" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">the users own environment.</text>
+  <text x="0" y="307" font-family="Unifont" font-size="20" fill="#000" font-weight="700" xml:space="preserve">A Level Three Heading</text>
+  <text x="0" y="323" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">There is no consensus about the relation of the terms ergonomics (or human factors) and usability. </text>
+  <text x="0" y="337" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Some think of usability as the software specialization of the larger topic of ergonomics. Others </text>
+  <text x="0" y="351" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">view these topics as tangential, with ergonomics focusing on physiological matters (e.g., turning a </text>
+  <text x="0" y="365" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">door handle) and usability focusing on psychological matters (e.g., recognizing that a door can be </text>
+  <text x="0" y="379" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">opened by turning its handle).</text>
+  <text x="0" y="396" font-family="Unifont" font-size="16" fill="#000" font-weight="700" xml:space="preserve">Level Four Heading</text>
+  <text x="0" y="411" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Drinking vinegar Carles Banksy messenger bag, skateboard literally tofu selfies fugiat. Aesthetic </text>
+  <text x="0" y="425" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Marfa minim, Odd Future craft beer art party sint 3 wolf moon hella viral. Yr 8-bit whatever </text>
+  <text x="0" y="439" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">skateboard church-key aute. +1 velit pariatur fugiat disrupt, nisi you probably haven't heard of </text>
+  <text x="0" y="453" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">them stumptown. Sed quinoa lomo, officia flannel Pinterest fingerstache letterpress et 8-bit 3 wolf </text>
+  <text x="0" y="467" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">moon occaecat +1 fixie. Delectus occupy fugiat chillwave, tousled fap sunt Carles four loko Portland </text>
+  <text x="0" y="481" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">tempor single-origin coffee pug Brooklyn. Chillwave deep v meggings mixtape fashion axe mumblecore </text>
+  <text x="0" y="495" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">adipisicing, butcher Austin +1 literally banjo.</text>
+  <text x="0" y="509" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Delectus seitan fashion axe, four loko pop-up Portland nisi slow-carb YOLO. Cillum sartorial </text>
+  <text x="0" y="523" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">excepteur aliqua before they sold out sriracha. Ut master cleanse wolf, occaecat banh mi gentrify </text>
+  <text x="0" y="537" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">narwhal normcore pickled id nihil. Ethical vinyl fixie, sunt mlkshk trust fund non cillum freegan </text>
+  <text x="0" y="551" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">bicycle rights hella pop-up Williamsburg. Bicycle rights proident assumenda Thundercats, skateboard </text>
+  <text x="0" y="565" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">lo-fi four loko church-key High Life Brooklyn cray dolore kale chips. Literally brunch fanny pack, </text>
+  <text x="0" y="579" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">in authentic pork belly sartorial normcore banh mi +1 Neutra squid pug chillwave Marfa. Laborum jean </text>
+  <text x="0" y="593" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">shorts bicycle rights mixtape, eiusmod ut excepteur.</text>
+  <text x="0" y="607" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">This seems like a good place for an image:</text>
+  <text x="0" y="621" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">￼</text>
+  <text x="0" y="635" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Okay, so here's something kind of sort of new. The figure tags are very useful when displaying </text>
+  <text x="0" y="649" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">images with figures and captions and what-not. This paragraph needs to be a little longer, so here </text>
+  <text x="0" y="663" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">comes some lorum ipsum! Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy </text>
+  <text x="0" y="677" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, </text>
+  <text x="0" y="691" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. </text>
+  <text x="0" y="705" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum </text>
+  <text x="0" y="719" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio.</text>
+  <text x="0" y="733" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">￼ This is the figure caption of what we are looking at. With a link.</text>
+  <text x="0" y="747" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">The tag is used to define a short quotation: do not use me.</text>
+  <text x="0" y="768" font-family="Unifont" font-size="20" fill="#000" font-weight="700" xml:space="preserve">Blockquotes below</text>
+  <text x="40" y="796" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">The Internet will change the world.</text>
+  <text x="40" y="834" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Hello, world. I did not say that!</text>
+  <text x="0" y="860" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Here are some blockquotes with cite tags</text>
+  <text x="40" y="886" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Stuff is Good. Some Dude, 2011</text>
+  <text x="0" y="912" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">This paragraph contains a link, some em text (typically italicized), and some strong test, typically </text>
+  <text x="0" y="927" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">bolded. In addition don't forget to style the tag: CSS tag! The</text>
+  <text x="378" y="922.2" font-family="Unifont" font-size="7.8" fill="#000" font-weight="400" xml:space="preserve"> tag: 1st. The</text>
+  <text x="434.68" y="930" font-family="Unifont" font-size="7.8" fill="#000" font-weight="400" xml:space="preserve"> tag: McLaughlin.</text>
+  <text x="0" y="942" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">A new tag is the tag, which shows progress: Page 2 of 5. Here's another example: 76%. You can style </text>
+  <text x="0" y="956" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">them based on their value and max attributes.</text>
+  <text x="0" y="970" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">The following content is inside an address tag (most browsers typically render this in italics):</text>
+  <text x="0" y="984" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Link to Email 123 Regular Address Lane #A-123, Some City, ST 12345-6789</text>
+  <text x="0" y="1009" font-family="Unifont" font-size="24" fill="#000" font-weight="700" xml:space="preserve">Below this H2 tag is an example of a table</text>
+  <text x="0" y="1033" font-family="Unifont" font-size="20" fill="#000" font-weight="700" xml:space="preserve">Oh, and here is a H3 tag</text>
+  <text x="0" y="1052" font-family="Unifont" font-size="16" fill="#000" font-weight="700" xml:space="preserve">And a H4 Tag right here</text>
+  <text x="0" y="1067" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Here comes a perfectly coded table, with all elements:</text>
+  <text x="0" y="1082" font-family="Unifont" font-size="14" fill="#000" font-weight="700" xml:space="preserve">The table is below this H5 tag</text>
+  <text x="0" y="1097" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">How I feel on different days of the week Day of Week How I feel Score Random Number Sunday Relaxed 5 </text>
+  <text x="0" y="1111" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">15 Monday Stressed 1 123 Tuesday Hyped 8 432.3 Wednesday Zoned 3 234.2 Thursday Anxious 4 8423.3 </text>
+  <text x="0" y="1125" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Friday Stoked 7 401.2 Saturday Elated 9 2340.2 That is All No more Number Number</text>
+  <text x="0" y="1150" font-family="Unifont" font-size="24" fill="#000" font-weight="700" xml:space="preserve">Here comes some code examples under this H2 tag</text>
+  <text x="0" y="1174" font-family="Unifont" font-size="20" fill="#000" font-weight="700" xml:space="preserve">Inline code (this is a h3 tag)</text>
+  <text x="0" y="1190" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">It is usually a good idea to use the tag for inline code, like: this is some code. There is also the tag, which </text>
+  <text x="0" y="1204" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">defines sample output (not the same as code), so you should style it similarly, but perhaps a tiny bit different: this is </text>
+  <text x="0" y="1218" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">some sample output. Also, there is the tag for marking up keyboard input (ie. keystrokes). Here are some keystrokes: </text>
+  <text x="0" y="1232" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Ctrl + Alt + \ + Q</text>
+  <text x="0" y="1246" font-family="monospace" font-size="12" fill="#000" font-weight="700" xml:space="preserve">This is just an excuse for me to use the H6 tag in context Final there's the tag. It's kind of ambiguous, but from best I </text>
+  <text x="0" y="1260" font-family="monospace" font-size="12" fill="#000" font-weight="400" font-style="italic" xml:space="preserve">can tell, it is used to apply custom markup to a variable inside of a block. Example: variable = 1234.56. It is probably a </text>
+  <text x="0" y="1281" font-family="monospace" font-size="12" fill="#000" font-weight="400" font-style="italic" xml:space="preserve">good idea to style it in normal paragraph context, too: a_variable.</text>
+  <text x="327.02" y="1281" font-family="monospace" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Block code H3 Header</text>
+  <text x="516.74" y="1281" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> The above </text>
+  <text x="0" y="1297" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">examples describe inline code. There is also block code, which can be styled effectively with CSS. Use the tag to style </text>
+  <text x="0" y="1311" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">that code. Here is some basic tag stuff: I am the very model of a modern Major-General, I've information vegetable, </text>
+  <text x="0" y="1325" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">animal, and mineral, I know the kings of England, and I quote the fights historical From Marathon to Waterloo, in order </text>
+  <text x="0" y="1339" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">categorical; I'm very well acquainted, too, with matters mathematical, I understand equations, both the simple and </text>
+  <text x="0" y="1353" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">quadratical, About binomial theorem I'm teeming with a lot o' news, With many cheerful facts about the square of the </text>
+  <text x="0" y="1367" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">hypotenuse. I'm very good at integral and differential calculus; I know the scientific names of beings animalculous: In </text>
+  <text x="0" y="1381" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">short, in matters vegetable, animal, and mineral, I am the very model of a modern Major-General. I know our mythic </text>
+  <text x="0" y="1395" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">history, King Arthur's and Sir Caradoc's; I answer hard acrostics, I've a pretty taste for paradox, I quote in elegiacs all </text>
+  <text x="0" y="1409" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">the crimes of Heliogabalus, In conics I can floor peculiarities parabolous; I can tell undoubted Raphaels from Gerard </text>
+  <text x="0" y="1423" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Dows and Zoffanies, I know the croaking chorus from The Frogs of Aristophanes! Then I can hum a fugue of which I've </text>
+  <text x="0" y="1437" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">heard the music's din afore, And whistle all the airs from that infernal nonsense Pinafore. You may want to use the </text>
+  <text x="0" y="1451" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">combination to style preformatted code separately from regular preformatted text: //a terrible idea -- breaking the </text>
+  <text x="0" y="1465" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">right-click functionality on web sites var message=&#34;Copyright Year by Your Site. WARNING ! All content contained </text>
+  <text x="0" y="1479" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">within this site is protected by copyright laws. Unauthorized use of our material is strictly prohibited.&#34;; function click(e) </text>
+  <text x="0" y="1493" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">{ if (document.all) { if (event.button==2||event.button==3) { alert(message); return false; } } if (document.layers) { if </text>
+  <text x="0" y="1507" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">(e.which == 3) { alert(message); return false; } } } if (document.layers) { </text>
+  <text x="0" y="1524" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">document.captureEvents(Event.MOUSEDOWN); } document.onmousedown=click;</text>
+  <text x="410.87" y="1524" font-family="monospace" font-size="16" fill="#000" font-weight="700" xml:space="preserve"> The and tags H4</text>
+  <text x="524.17" y="1524" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> The and tags </text>
+  <text x="0" y="1539" font-family="monospace" font-size="12" fill="#000" font-weight="400" text-decoration="underline line-through" xml:space="preserve">are especially useful in preformatted blocks. Typically, you want to use a red background for tags, and use a green </text>
+  <text x="0" y="1553" font-family="monospace" font-size="12" fill="#000" font-weight="400" text-decoration="underline line-through" xml:space="preserve">background for tags. Below are some preformatted blocks in a table with two columns, with these tags in use. Use of </text>
+  <text x="0" y="1574" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">DEL and INS tags Old New abc def ghi lnm opq rst uvw xyz abc def ghi jki lnm lmn opq rst uvw xyz</text>
+  <text x="497.68" y="1574" font-family="monospace" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> The </text>
+  <text x="0" y="1597" font-family="monospace" font-size="20" fill="#000" font-weight="700" xml:space="preserve">definition tag H3</text>
+  <text x="141.16" y="1597" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Finally there's the definition tag: Steve Oh, and below is a horizontal rule… The tag is used </text>
+  <text x="0" y="1613" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">to provide citations within HTML, similar to how you would provide footnotes in printed text. Here is a citation, in </text>
+  <text x="0" y="1627" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">context (mouse over it): As outlined in The Battle Cry of Freedom , the Civil War had many complex causes. The tag is </text>
+  <text x="0" y="1641" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">a block-level item, that can be used to provide a summary for an article or section of your site: Copyright 1999-2011. </text>
+  <text x="0" y="1666" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">All pages and graphics on this web site are the property of the company Refsnes Data.</text>
+  <text x="434.48" y="1666" font-family="monospace" font-size="24" fill="#000" font-weight="700" xml:space="preserve"> Let us look at </text>
+  <text x="0" y="1694" font-family="monospace" font-size="24" fill="#000" font-weight="700" xml:space="preserve">some lists H2</text>
+  <text x="134.71" y="1694" font-family="monospace" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Un-ordered lists H3</text>
+  <text x="303.89" y="1694" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Below we shall look at some unordered lists.</text>
+  <text x="530.39" y="1694" font-family="monospace" font-size="16" fill="#000" font-weight="700" xml:space="preserve"> Single </text>
+  <text x="0" y="1714" font-family="monospace" font-size="16" fill="#000" font-weight="700" xml:space="preserve">layer H4</text>
+  <text x="56.21" y="1714" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Oranges Apples Carrots Tomatoes Spinach</text>
+  <text x="272.89" y="1714" font-family="monospace" font-size="16" fill="#000" font-weight="700" xml:space="preserve"> Multi-Layer H4</text>
+  <text x="377.7" y="1714" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Fruit Oranges Apples Tomatoes Vegetables </text>
+  <text x="0" y="1736" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Carrots Spinach Canned Fresh Baby Frozen</text>
+  <text x="216.73" y="1736" font-family="monospace" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Same Content with Ordered Lists</text>
+  <text x="498.41" y="1736" font-family="monospace" font-size="16" fill="#000" font-weight="700" xml:space="preserve"> Single layer </text>
+  <text x="0" y="1755" font-family="monospace" font-size="16" fill="#000" font-weight="700" xml:space="preserve">H4</text>
+  <text x="19.57" y="1755" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Oranges Apples Carrots Tomatoes Spinach</text>
+  <text x="236.25" y="1755" font-family="monospace" font-size="16" fill="#000" font-weight="700" xml:space="preserve"> Multi-Layer H4</text>
+  <text x="341.06" y="1755" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Fruit Oranges Apples Tomatoes Vegetables </text>
+  <text x="0" y="1777" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Carrots Spinach Canned Fresh Baby Frozen</text>
+  <text x="216.73" y="1777" font-family="monospace" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Do not forget about definition lists!</text>
+  <text x="516.11" y="1777" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Coffee Black </text>
+  <text x="0" y="1793" font-family="monospace" font-size="12" fill="#000" font-weight="400" xml:space="preserve">hot drink Milk White cold drink Beer The best drink of all</text>
+</svg>
