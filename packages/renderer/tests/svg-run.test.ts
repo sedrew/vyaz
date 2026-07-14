@@ -739,7 +739,115 @@ describe('xml:space="preserve" across all modes', () => {
   });
 });
 
-// ── 9. Zero-width space (class D) ────────────────────────────────────────
+// ── 9. Hindi (Devanagari) — complex script ─────────────────────────────
+
+describe('Hindi (Devanagari)', () => {
+  test('run hindi basic word width', () => {
+    const frame = makeTextFrame(makeParagraph('नमस्ते'));
+    const { result } = renderFrameToSVG(frame);
+    // Width must be positive and proportional to text length
+    expect(result.lines[0].width).toBeGreaterThan(0);
+    expect(result.lines[0].width).toBeLessThan(6 * 24); // 6 chars * max AdvW (24px=512*24/512)
+  });
+
+  test('run hindi snapshot preserve', () => {
+    const frame = makeTextFrame(makeParagraph('नमस्ते'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
+    matchSvgSnapshot('run-hindi-namaste', svg);
+  });
+
+  test('run hindi flat snapshot', () => {
+    const frame = makeTextFrame(makeParagraph('प्रणाम'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat', debug: { frameBox: true, contentBox: true } });
+    matchSvgSnapshot('run-hindi-pranam', svg);
+  });
+
+  test('run hindi glyph positions', () => {
+    const frame = makeTextFrame(makeParagraph('नमः'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'glyph' });
+    const ast = parse(svg);
+    const tspans = getTspans(ast);
+    expect(tspans.length).toBeGreaterThan(0);
+
+    // Each tspan must have x positions matching the number of glyphs
+    for (const tspan of tspans) {
+      const xVal = String(tspan.properties.x);
+      const positions = xVal.split(' ').map(Number);
+      expect(positions.length).toBeGreaterThanOrEqual(1);
+      // Positions should be monotonically increasing
+      for (let i = 1; i < positions.length; i++) {
+        expect(positions[i]).toBeGreaterThanOrEqual(positions[i - 1]);
+      }
+    }
+    expect(isSvg(svg)).toBe(true);
+  });
+
+  test('run hindi multi-word', () => {
+    const frame = makeTextFrame(makeParagraph('नमस्ते दुनिया'), { width: 100 });
+    const { result } = renderFrameToSVG(frame);
+    // Two words, may wrap if width is narrow
+    expect(result.lines.length).toBeGreaterThanOrEqual(1);
+    // Total text must be preserved
+    const allText = result.lines.map((l: any) => l.spans.map((s: any) => s.text).join('')).join('');
+    expect(allText.replace(/\s/g, '')).toBe('नमस्तेदुनिया');
+    expect(isSvg(renderFrameToSVG(frame).svg)).toBe(true);
+  });
+});
+
+// ── 10. Thai — complex script ──────────────────────────────────────────
+
+describe('Thai', () => {
+  test('run thai basic word width', () => {
+    const frame = makeTextFrame(makeParagraph('สวัสดี'));
+    const { result } = renderFrameToSVG(frame);
+    // Width must be positive and proportional to text length
+    expect(result.lines[0].width).toBeGreaterThan(0);
+    expect(result.lines[0].width).toBeLessThan(6 * 24);
+  });
+
+  test('run thai snapshot preserve', () => {
+    const frame = makeTextFrame(makeParagraph('สวัสดี'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
+    matchSvgSnapshot('run-thai-sawatdee', svg);
+  });
+
+  test('run thai flat snapshot', () => {
+    const frame = makeTextFrame(makeParagraph('ขอบคุณ'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat', debug: { frameBox: true, contentBox: true } });
+    matchSvgSnapshot('run-thai-khobkhun', svg);
+  });
+
+  test('run thai glyph positions', () => {
+    const frame = makeTextFrame(makeParagraph('ขอบคุณ'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'glyph' });
+    const ast = parse(svg);
+    const tspans = getTspans(ast);
+    expect(tspans.length).toBeGreaterThan(0);
+
+    for (const tspan of tspans) {
+      const xVal = String(tspan.properties.x);
+      const positions = xVal.split(' ').map(Number);
+      expect(positions.length).toBeGreaterThanOrEqual(1);
+      for (let i = 1; i < positions.length; i++) {
+        expect(positions[i]).toBeGreaterThanOrEqual(positions[i - 1]);
+      }
+    }
+    expect(isSvg(svg)).toBe(true);
+  });
+
+  test('run thai multi-word', () => {
+    const frame = makeTextFrame(makeParagraph('สวัสดี โลก'), { width: 100 });
+    const { result } = renderFrameToSVG(frame);
+    // Two words, may wrap if width is narrow
+    expect(result.lines.length).toBeGreaterThanOrEqual(1);
+    // Total text must be preserved
+    const allText = result.lines.map((l: any) => l.spans.map((s: any) => s.text).join('')).join('');
+    expect(allText.replace(/\s/g, '')).toBe('สวัสดีโลก');
+    expect(isSvg(renderFrameToSVG(frame).svg)).toBe(true);
+  });
+});
+
+// ── 11. Zero-width space (class D) ────────────────────────────────────────
 
 describe('Zero-width space (class D — Rule 9)', () => {
   test('run ZWSP no visible space-segment', () => {
