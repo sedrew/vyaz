@@ -96,7 +96,6 @@ export type TextDecorationStyle = 'solid' | 'double' | 'dotted' | 'dashed' | 'wa
  * Text case transform.
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#text-transform-property | CSS Text: text-transform}
- * @todo Not yet implemented in the layout engine.
  */
 export type TextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 
@@ -282,7 +281,7 @@ export interface TextRun {
 
   // ── Text transform ────────────────────────────────────────────────
 
-  /** Case transform (uppercase, lowercase, capitalize). @todo Not yet implemented. */
+  /** Case transform (uppercase, lowercase, capitalize). */
   textTransform?: TextTransform;
   /** Force full-width characters (CJK). @todo Not yet implemented. */
   fullWidth?: boolean;

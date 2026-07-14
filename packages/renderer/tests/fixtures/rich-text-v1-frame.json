@@ -302,12 +302,66 @@
       ]
     },
     {
+      "id": "lineheight-section",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 16, "spaceAfter": 4 },
+      "children": [
+        {
+          "type": "text",
+          "text": "6. Line spacing (lineHeight)",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "fontWeight": "bold",
+          "color": "#000000"
+        }
+      ]
+    },
+    {
+      "id": "lineheight-1-0",
+      "style": { "alignment": "left", "lineHeight": 1.0, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[1.0] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Tight spacing with no extra leading.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-1-15",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 2, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[1.15] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Default line spacing in text layout.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-1-5",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 2, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[1.5] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Comfortable reading spacing.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-2-0",
+      "style": { "alignment": "left", "lineHeight": 2.0, "spaceBefore": 2, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[2.0] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Double spacing — easy for annotations.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-3-0",
+      "style": { "alignment": "left", "lineHeight": 3.0, "spaceBefore": 2, "spaceAfter": 6 },
+      "children": [
+        { "type": "text", "text": "[3.0] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Very loose spacing.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
       "id": "lists-section",
       "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 16, "spaceAfter": 4 },
       "children": [
         {
           "type": "text",
-          "text": "5. Lists (bullet, nested, numbered)",
+          "text": "7. Lists (bullet, nested, numbered)",
           "fontFamily": "Arial",
           "fontSize": 13.56,
           "fontWeight": "bold",
