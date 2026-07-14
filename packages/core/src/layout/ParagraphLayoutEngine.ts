@@ -89,6 +89,47 @@ export class ParagraphLayoutEngine {
 
     // Phase 4: Position
     const renderMode = provider.getMode();
+
+    // Build measureText callback: measure any text fragment accurately
+    // by summing glyph advances from fontkit. Same algorithm as computeGlyphAdvances.
+    // Accepts font parameters per-call so each fragment is measured with
+    // its actual font family/weight/style for multi-style lines.
+    // Uses fontMetricsProvider.getFont() directly (the concrete class) since
+    // IFontMetricsProvider doesn't expose getFont(). In browser environments
+    // where fonts aren't registered, it falls back to proportional distribution
+    // inside positionLines().
+    const measureTextFn = (
+      text: string,
+      fontSize: number,
+      fontFamily?: string,
+      fontWeight?: string,
+      fontStyle?: string,
+    ): number => {
+      if (!text) return 0;
+      const font = fontMetricsProvider.getFont(
+        fontFamily || 'Arial',
+        fontWeight || '400',
+        fontStyle || 'normal',
+      );
+      if (font) {
+        const scale = fontSize / font.unitsPerEm;
+        let total = 0;
+        for (let i = 0; i < text.length; i++) {
+          const codePoint = text.codePointAt(i)!;
+          const glyph = font.glyphForCodePoint(codePoint);
+          if (glyph) {
+            total += glyph.advanceWidth * scale;
+          } else {
+            total += fontSize * 0.5;
+          }
+          if (codePoint > 0xffff) i++;
+        }
+        return Math.round(total * 100) / 100;
+      }
+      // Fallback: approximate (rare — only when fontkit is unavailable)
+      return fontSize * text.length * 0.6;
+    };
+
     const { lines, contentWidth } = positionLines(
       materializedLines,
       items,
@@ -108,6 +149,7 @@ export class ParagraphLayoutEngine {
       yOffset,
       renderMode,
       paragraph.id,
+      measureTextFn,
     );
 
     // Phase 5: Validate

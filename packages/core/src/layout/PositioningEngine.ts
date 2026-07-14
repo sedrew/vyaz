@@ -20,6 +20,8 @@ import type { ParagraphStyle } from '../types/Document.js';
 import type { FontMetrics } from '../types/FontTypes.js';
 import type { Line, Span, SpanFontMetrics } from '../types/LayoutTypes.js';
 import type { PreparedRichInlineItem } from '../compile/DocumentCompiler.js';
+import type { MeasureFn } from './estimateWidth.js';
+import { resolveFragmentWidths } from './estimateWidth.js';
 
 // ── Helper types for pretext ───────────────────────────────────────────
 
@@ -50,6 +52,12 @@ interface PretextLine {
  * @param maxWidth — available container width
  * @param startY — initial Y position
  * @param mode — metric mode ('browser' | 'office'), affects line height calculation
+ * @param tag — optional tag for debugging
+ * @param measureText — optional function to measure text width accurately.
+ *   When provided, used instead of proportional distribution for split fragments
+ *   (leading/trailing whitespace vs trimmed text). The function accepts
+ *   (text, fontSize, fontFamily, fontWeight, fontStyle) and returns width in px.
+ *   Falls back to proportional distribution when omitted.
  * @returns { lines: Line[], contentWidth: number }
  */
 export function positionLines(
@@ -61,6 +69,7 @@ export function positionLines(
   startY: number = 0,
   mode: 'browser' | 'office' = 'browser',
   tag?: string,
+  measureText?: (text: string, fontSize: number, fontFamily?: string, fontWeight?: string, fontStyle?: string) => number,
 ): { lines: Line[]; contentWidth: number } {
   const lines: Line[] = [];
   let currentY = startY + style.spaceBefore;
@@ -127,7 +136,6 @@ export function positionLines(
       const text = frag.text;
       const leadingMatch = text.match(/^(\s+)/);
 
-      const totalChars = text.length;
       let remainingText = text;
       let leadingSpaceChars = 0;
       let trailingSpaceChars = 0;
@@ -144,16 +152,37 @@ export function positionLines(
         }
       }
 
-      const computePartialWidth = (charCount: number) => {
-        return totalChars > 0 ? (charCount / totalChars) * textWidth : 0;
-      };
+      // Resolve widths via resolveFragmentWidths:
+      //   exact measurement (measureText) when available,
+      //   weight-based fallback otherwise,
+      //   then correctToSumInvariant to preserve line-breaking invariant.
+      const fragments: string[] = [];
+      if (leadingSpaceChars > 0) fragments.push(text.slice(0, leadingSpaceChars));
+      if (remainingText.length > 0) fragments.push(remainingText);
+      if (trailingSpaceChars > 0) fragments.push(text.slice(leadingSpaceChars + remainingText.length));
+
+      // Build measure function with font parameters baked in
+      let fragmentMeasureFn: MeasureFn | undefined;
+      if (measureText) {
+        const { fontFamily, fontWeight, fontStyle } = item.metadata.style;
+        const fsWeight = String(fontWeight || 400);
+        const fsStyle = fontStyle || 'normal';
+        fragmentMeasureFn = (t: string) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle);
+      }
+
+      const resolvedWidths = resolveFragmentWidths(fragments, text, textWidth, fragmentMeasureFn);
+      let resolvedIdx = 0;
+      const leadingWidth = leadingSpaceChars > 0 ? resolvedWidths[resolvedIdx++] : 0;
+      const trimmedWidth = remainingText.length > 0 ? resolvedWidths[resolvedIdx++] : 0;
+      const trailingWidthVal = trailingSpaceChars > 0 ? resolvedWidths[resolvedIdx++] : 0;
 
       // Leading space span
       if (leadingSpaceChars > 0) {
+        const leadingText = text.slice(0, leadingSpaceChars);
         spans.push({
           x: 0,
-          width: computePartialWidth(leadingSpaceChars),
-          text: text.slice(0, leadingSpaceChars),
+          width: leadingWidth,
+          text: leadingText,
           itemIndex: frag.itemIndex,
           pIdx: 0,
           tag,
@@ -166,20 +195,20 @@ export function positionLines(
 
       // Text span (trimmed)
       if (remainingText.length > 0) {
-        const textWidth = computePartialWidth(remainingText.length);
+        const actualTextWidth = trimmedWidth;
         // Compute per-glyph advances by distributing textWidth equally across glyphs.
         // For monospace fonts this is exact; for proportional it's a linear approximation.
         // The FontMetricsProvider can later supply real glyph advances when available.
         const glyphAdvances: number[] = [];
         if (remainingText.length > 1) {
-          const perGlyph = textWidth / remainingText.length;
+          const perGlyph = actualTextWidth / remainingText.length;
           for (let i = 0; i < remainingText.length; i++) {
             glyphAdvances.push(perGlyph);
           }
         }
         spans.push({
           x: 0,
-          width: textWidth,
+          width: actualTextWidth,
           text: remainingText,
           itemIndex: frag.itemIndex,
           pIdx: 0,
@@ -195,10 +224,11 @@ export function positionLines(
       // Trailing space span
       if (trailingSpaceChars > 0) {
         const trailingStart = leadingSpaceChars + remainingText.length;
+        const trailingText = text.slice(trailingStart, trailingStart + trailingSpaceChars);
         spans.push({
           x: 0,
-          width: computePartialWidth(trailingSpaceChars),
-          text: text.slice(trailingStart, trailingStart + trailingSpaceChars),
+          width: trailingWidthVal,
+          text: trailingText,
           itemIndex: frag.itemIndex,
           pIdx: 0,
           tag,
