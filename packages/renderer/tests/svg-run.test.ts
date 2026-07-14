@@ -371,7 +371,144 @@ describe('Preset: "flat"', () => {
   });
 });
 
-// ── 5. Preset: 'preserve' (expanded tspan) ───────────────────────────────
+// ── 5. Style matching in flat and expanded modes ──────────────────────────
+
+describe('Style matching (styleSignature grouping)', () => {
+  test('flat mode: different fontWeight creates separate <text> elements', () => {
+    const frame = makeTextFrame(makeMultiRunParagraph([
+      { text: 'Hello', style: { fontWeight: 'bold' } },
+      { text: ' World', style: { fontWeight: 'normal' } },
+    ]));
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
+    const ast = parse(svg);
+    const allTexts = findElements(ast as unknown as ElementNode, 'text');
+    // Filter out debug overlay <text> (they have font-size="10" or font-family="monospace")
+    const texts = allTexts.filter(t => {
+      const child = t.children?.[0] as any;
+      return child?.value && child.value.trim().length > 0;
+    });
+
+    // Two <text> elements: bold "Hello" + normal " World"
+    expect(texts.length).toBe(2);
+    expect(String(texts[0].properties['font-weight'])).toBe('700');
+    expect(String(texts[1].properties['font-weight'])).toBe('400');
+  });
+
+  test('flat mode: same style merges into one <text>', () => {
+    const frame = makeTextFrame(makeParagraph('Hello World'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
+    const ast = parse(svg);
+    const allTexts = findElements(ast as unknown as ElementNode, 'text');
+    const texts = allTexts.filter(t => {
+      const child = t.children?.[0] as any;
+      return child?.value && child.value.trim().length > 0;
+    });
+
+    // Single <text> with "Hello World" — same font across all spans
+    expect(texts.length).toBe(1);
+    const content = ((texts[0].children?.[0] as any)?.value || '').trim();
+    expect(content).toBe('Hello World');
+  });
+
+  test('flat mode: different fontFamily creates separate <text>', () => {
+    // Use Unifont and Arial — both registered
+    const frame = makeTextFrame(makeMultiRunParagraph([
+      { text: 'Unifont', style: { fontFamily: 'Unifont' } },
+      { text: ' Arial', style: { fontFamily: 'Arial' } },
+    ]));
+    const { svg } = renderFrameToSVG(frame, { preset: 'flat' });
+    const ast = parse(svg);
+    const allTexts = findElements(ast as unknown as ElementNode, 'text');
+    const texts = allTexts.filter(t => {
+      const child = t.children?.[0] as any;
+      return child?.value && child.value.trim().length > 0;
+    });
+
+    expect(texts.length).toBe(2);
+    expect(String(texts[0].properties['font-family'])).toContain('Unifont');
+    expect(String(texts[1].properties['font-family'])).toContain('Arial');
+  });
+
+  // Helper: find <text> elements that contain actual text content (not debug overlays)
+  function getTextElements(ast: RootNode): ElementNode[] {
+    const allTexts = findElements(ast as unknown as ElementNode, 'text');
+    return allTexts.filter(t => {
+      // Skip debug overlay <text> — they appear AFTER our content text elements
+      // Debug text has small font and uses monospace, or has "frame"/"content"/"y=" labels
+      const childText = ((t.children?.[0] as any)?.value || '').trim();
+      if (childText.startsWith('frame ') || childText.startsWith('content ') ||
+          childText.startsWith('⚠') || childText.startsWith('¶') ||
+          childText.startsWith('y=') || childText.startsWith('#')) return false;
+      if (String(t.properties['font-family']) === 'monospace') return false;
+
+      // Check if this <text> has non-empty <tspan> children
+      const tspans = (t.children || []).filter((c: any) => c.tagName === 'tspan');
+      return tspans.length > 0 || childText.length > 0;
+    });
+  }
+
+  /** Get direct <tspan> children of a <text> element (not recursive). */
+  function getDirectTspans(textEl: ElementNode): ElementNode[] {
+    return (textEl.children || []).filter((c: any) => c.tagName === 'tspan') as ElementNode[];
+  }
+
+  test('expanded mode: different fontWeight creates separate <text> with <tspan>', () => {
+    // " World" gets split into space + text spans by layout, so second <text> may have 2 tspans
+    // Use words without leading space to avoid extra spans
+    const frame = makeTextFrame(makeMultiRunParagraph([
+      { text: 'Hello', style: { fontWeight: 'bold' } },
+      { text: 'World', style: { fontWeight: 'normal' } },
+    ]));
+    const { svg } = renderFrameToSVG(frame, { preset: 'browser' });
+    const ast = parse(svg);
+    const texts = getTextElements(ast);
+
+    // Two <text> elements, each with at least one <tspan>
+    expect(texts.length).toBe(2);
+    const tspans0 = getDirectTspans(texts[0]);
+    const tspans1 = getDirectTspans(texts[1]);
+    expect(tspans0.length).toBeGreaterThanOrEqual(1);
+    expect(tspans1.length).toBeGreaterThanOrEqual(1);
+
+    // First <text> weight=700, second weight=400
+    expect(String(tspans0[0].properties['font-weight'])).toBe('700');
+    expect(String(tspans1[0].properties['font-weight'])).toBe('400');
+  });
+
+  test('expanded mode: same style merges into one <text> with <tspan> runs', () => {
+    // Single-run "Hello World" — whole text is one span, so 1 <text> with 1 <tspan>
+    const frame = makeTextFrame(makeParagraph('Hello World'));
+    const { svg } = renderFrameToSVG(frame, { preset: 'browser' });
+    const ast = parse(svg);
+    const texts = getTextElements(ast);
+
+    // Single <text> with one <tspan> — same style across all content
+    expect(texts.length).toBe(1);
+    const tspans = getDirectTspans(texts[0]);
+    expect(tspans.length).toBeGreaterThanOrEqual(1);
+    // Verify text content is preserved
+    const text = tspans.map((ts: any) => ts.children?.[0]?.value || '').join('');
+    expect(text).toBe('Hello World');
+  });
+
+  test('expanded mode: different color creates separate <text>', () => {
+    const frame = makeTextFrame(makeMultiRunParagraph([
+      { text: 'Red', style: { color: '#FF0000' } },
+      { text: ' Blue', style: { color: '#0000FF' } },
+    ]));
+    const { svg } = renderFrameToSVG(frame, { preset: 'browser' });
+    const ast = parse(svg);
+    const texts = getTextElements(ast);
+
+    expect(texts.length).toBe(2);
+    const tspans0 = getDirectTspans(texts[0]);
+    const tspans1 = getDirectTspans(texts[1]);
+    expect(String(tspans0[0].properties.fill)).toBe('#FF0000');
+    expect(String(tspans1[0].properties.fill)).toBe('#0000FF');
+  });
+});
+
+// ── 6. Preset: 'preserve' (expanded tspan) ───────────────────────────────
 
 describe('Preset: "preserve"', () => {
   test('run expanded tspan per run', () => {

@@ -311,6 +311,15 @@ function equalStyle(a: StyleState, b: StyleState): boolean {
     a.letterSpacing === b.letterSpacing;
 }
 
+/**
+ * Compute a deterministic string key for a span's style.
+ * Used to group spans by identical style when building <text> elements.
+ */
+function styleSignature(span: Span): string {
+  const s = defaultStyleState(span);
+  return `${s.fontFamily}|${s.fontSize}|${s.fontWeight}|${s.color}|${s.fontStyle}|${s.decoration}|${s.letterSpacing ?? ''}`;
+}
+
 /** Build style string for CSS mode */
 function cssStyleString(s: StyleState): string {
   const parts: string[] = [];
@@ -333,7 +342,16 @@ function xmlStyleAttrs(s: StyleState): string {
   return attrs;
 }
 
-/** Build attributes for <text> element */
+/** Build attributes for <text> element.
+ *
+ * NOTE: `text-decoration` and `letter-spacing` are intentionally NOT added
+ * here because they would be inherited by all child `<tspan>` elements.
+ * SVG text-decoration on `<text>` cascades to ALL `<tspan>` descendants,
+ * even those that should NOT have decoration. These attributes are set
+ * on `<tspan>` level by `buildTspanAttrs()` instead.
+ *
+ * Flat mode (no `<tspan>`) adds them separately in the flat render path.
+ */
 function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: string): Record<string, string | number> {
   const x = line.x;
   const y = line.y + line.baseline;
@@ -346,7 +364,10 @@ function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: s
   if (runId) attrs.id = runId;
 
   if (opts.style === 'css') {
-    let css = cssStyleString(s);
+    // text-decoration and letter-spacing are intentionally excluded
+    // from <text> to prevent inheritance by child <tspan> elements.
+    let css = `font-family: '${s.fontFamily}', sans-serif; font-size: ${fmt(s.fontSize)}px; fill: ${colorToRGB(s.color)}; font-weight: ${s.fontWeight}`;
+    if (s.fontStyle === 'italic') css += `; font-style: italic`;
     if (opts.spacing === 'preserve') css += '; white-space: pre';
     attrs.style = css;
   } else {
@@ -356,7 +377,6 @@ function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: s
     attrs.fill = s.color;
     attrs['font-weight'] = s.fontWeight;
     if (s.fontStyle === 'italic') attrs['font-style'] = 'italic';
-    if (s.decoration) attrs['text-decoration'] = s.decoration;
     if (opts.spacing === 'preserve') attrs['xml:space'] = 'preserve';
   }
 
@@ -396,18 +416,24 @@ function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null)
   return { attrs, newStyle: s };
 }
 
-/** Build per-glyph x positions for glyph mode */
+/** Build per-glyph x positions for glyph mode.
+ *
+ * Accounts for letterSpacing by adding it to each glyph advance.
+ * The `letter-spacing` attribute should NOT be set on `<tspan>` when
+ * using glyph mode, because the spacing is already baked into the x positions.
+ */
 function buildGlyphPositions(span: Span, _lineX: number): string {
   if (!span.glyphAdvances || span.glyphAdvances.length === 0) {
     return '';
   }
   // span.x is already absolute — computed by PositioningEngine.
   // lineX is NOT added because that would double-shift.
+  const ls = span.style.letterSpacing || 0;
   const spanX = span.x;
   let xPos = spanX;
   const positions: string[] = [fmt(xPos, 1)];
   for (let i = 0; i < span.glyphAdvances.length - 1; i++) {
-    xPos += span.glyphAdvances[i];
+    xPos += span.glyphAdvances[i] + ls;
     positions.push(fmt(xPos, 1));
   }
   return positions.join(' ');
@@ -549,7 +575,9 @@ class SvgAstBuilder {
 
     let textAttrs: Record<string, string | number>;
     if (yOverride !== undefined && fontSizeOverride !== undefined) {
-      // For flat mode sub/superscript — override y and font-size
+      // For sub/superscript — override y and font-size.
+      // text-decoration and letter-spacing intentionally excluded from <text>
+      // to prevent inheritance by child <tspan> elements (expanded mode).
       const s = defaultStyleState(baseSpan);
       const x = line.x;
       const attrs: Record<string, string | number> = {
@@ -557,7 +585,8 @@ class SvgAstBuilder {
         y: fmt(yOverride),
       };
       if (this.opts.style === 'css') {
-        let css = cssStyleString(s);
+        let css = `font-family: '${s.fontFamily}', sans-serif; font-size: ${fmt(fontSizeOverride)}px; fill: ${colorToRGB(s.color)}; font-weight: ${s.fontWeight}`;
+        if (s.fontStyle === 'italic') css += `; font-style: italic`;
         if (this.opts.spacing === 'preserve') css += '; white-space: pre';
         attrs.style = css;
       } else {
@@ -566,7 +595,6 @@ class SvgAstBuilder {
         attrs.fill = s.color;
         attrs['font-weight'] = s.fontWeight;
         if (s.fontStyle === 'italic') attrs['font-style'] = 'italic';
-        if (s.decoration) attrs['text-decoration'] = s.decoration;
         if (this.opts.spacing === 'preserve') attrs['xml:space'] = 'preserve';
       }
       textAttrs = attrs;
@@ -847,18 +875,22 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
       }
       builder.closeText();
     } else if (opts.structure === 'flat') {
-      // flat mode: group spans by (baseline + offset). Each group → one <text>.
-      const groups: { spans: Span[]; targetY: number; fontSize: number }[] = [];
+      // flat mode: each unique style → separate <text> element.
+      // Group spans by (targetY + styleSignature) so bold/normal/italic
+      // each get their own <text>. Never merge spans with different styles.
+      interface FlatGroup { spans: Span[]; targetY: number; signature: string; fontSize: number }
+      const groups: FlatGroup[] = [];
       for (const span of line.spans) {
         if (!span.text) continue;
         const offset = span.fontMetrics.baselineOffset || 0;
         const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+        const sig = styleSignature(span);
         const fontSize = span.fontMetrics.fontSize;
         const last = groups[groups.length - 1];
-        if (last && last.targetY === targetY && last.fontSize === fontSize) {
+        if (last && last.targetY === targetY && last.signature === sig) {
           last.spans.push(span);
         } else {
-          groups.push({ spans: [span], targetY, fontSize });
+          groups.push({ spans: [span], targetY, signature: sig, fontSize });
         }
       }
       // Find the first text span's x to use as baseline offset
@@ -882,6 +914,7 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         };
         if (s.fontStyle === 'italic') textAttrs['font-style'] = 'italic';
         if (s.decoration) textAttrs['text-decoration'] = s.decoration;
+        if (s.letterSpacing !== undefined && s.letterSpacing !== 0) textAttrs['letter-spacing'] = fmt(s.letterSpacing);
         textAttrs['xml:space'] = 'preserve';
         if (fitAttr) {
           Object.assign(textAttrs, fitAttr);
@@ -893,19 +926,21 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         builder.addRawLine(`  <text ${attrsStr}>${text}</text>\n`);
       }
     } else {
-      // expanded: group spans by baseline offset (for sub/superscript).
-      // Each group becomes a separate <text> element at the correct y.
-      type TspanGroup = { targetY: number; spans: Span[] };
+      // expanded: group spans by (targetY + styleSignature) so each
+      // unique style combination gets its own <text> element.
+      // Inside each group, <tspan> is used per span with diff attributes.
+      type TspanGroup = { targetY: number; spans: Span[]; signature: string };
       const groups: TspanGroup[] = [];
       for (const span of line.spans) {
         if (!span.text) continue;
         const offset = span.fontMetrics.baselineOffset || 0;
         const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+        const sig = styleSignature(span);
         const last = groups[groups.length - 1];
-        if (last && last.targetY === targetY) {
+        if (last && last.targetY === targetY && last.signature === sig) {
           last.spans.push(span);
         } else {
-          groups.push({ targetY, spans: [span] });
+          groups.push({ targetY, spans: [span], signature: sig });
         }
       }
 
@@ -917,7 +952,9 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         const lineBaseY = Math.round((line.y + line.baseline) * 100) / 100;
         const needsOffset = group.targetY !== lineBaseY;
         if (needsOffset) {
-          // For offset groups (sub/superscript), override y and font-size from first span
+          // For offset groups (sub/superscript), override y and font-size from first span.
+          // text-decoration and letter-spacing intentionally excluded from <text>
+          // to prevent inheritance by child <tspan> elements.
           const s = defaultStyleState(baseSpan);
           const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
           const groupX = line.x + (group.spans[0].x - firstTextX);
@@ -931,7 +968,6 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
             'font-weight': s.fontWeight,
           };
           if (s.fontStyle === 'italic') textAttrs['font-style'] = 'italic';
-          if (s.decoration) textAttrs['text-decoration'] = s.decoration;
           textAttrs['xml:space'] = 'preserve';
           const fit = buildFitAttr(line, opts);
           if (fit) {

@@ -154,7 +154,7 @@
     <tspan> </tspan>
     <tspan x="190 199.4 203.4 210 216 219.4 222.7 229.4 235.4">Gray text</tspan>
   </text>
-  <text x="0" y="292" id="effects-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" text-decoration="underline" xml:space="preserve">
+  <text x="0" y="292" id="effects-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="0 8 14.7 21.4 28 34.7 43.4 46.7 50 56.7 62.7">Shadow text</tspan>
   </text>
   <text x="0" y="292" id="effects-1" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
@@ -169,7 +169,7 @@
     <tspan> </tspan>
     <tspan x="147.8">|</tspan>
   </text>
-  <text x="0" y="292" id="effects-4" font-family="Arial" font-size="12" fill="#000" font-weight="400" text-decoration="line-through" xml:space="preserve">
+  <text x="0" y="292" id="effects-4" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
     <tspan x="154.3 162.3 165.6 169.6 176.3 182.3 188.9 192.3 195.6 202.3 208.3">Stroke text</tspan>
   </text>
@@ -182,7 +182,7 @@
     <tspan x="221.4 230 232.7 239.4 246 248.7 251.4 258.1 264.7 268.1 271.4 281.4 288.1 292.1 298.1 304.7">Highlight marker</tspan>
   </text>
   <text x="0" y="310" id="letter-spacing-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
-    <tspan x="0 8 14.7 18.7 25.3 32 38.7 42 48.7 55.4">Spread out</tspan>
+    <tspan x="0 12 22.7 30.7 41.3 52 62.7 70 80.7 91.4">Spread out</tspan>
   </text>
   <text x="0" y="310" id="letter-spacing-1" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
@@ -190,7 +190,7 @@
   </text>
   <text x="0" y="310" id="letter-spacing-2" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
-    <tspan x="108.5 114.5 121.1 127.8 134.5 141.2 147.8 153.8 160.5">condensed</tspan>
+    <tspan x="108.5 113.5 119.1 124.8 130.5 136.2 141.8 146.8 152.5">condensed</tspan>
   </text>
   <text x="0" y="310" id="letter-spacing-3" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
