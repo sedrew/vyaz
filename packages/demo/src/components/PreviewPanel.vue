@@ -1,7 +1,7 @@
 <template>
   <div class="preview-panel">
     <div class="preview-header">
-      <h2>SVG Preview</h2>
+      <h2>Preview</h2>
     </div>
     <div class="preview-controls">
       <div class="control-group">
@@ -21,13 +21,20 @@
           <option value="justify">Justify</option>
         </select>
       </div>
-      <div class="control-group">
+      <div class="control-group" v-if="rendererMode === 'svg'">
         <label>Preset</label>
         <select v-model="svgPreset">
           <option value="browser">Browser</option>
           <option value="flat">Flat</option>
           <option value="preserve">Preserve</option>
           <option value="glyph">Glyph</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label>Renderer</label>
+        <select v-model="rendererMode">
+          <option value="svg">SVG</option>
+          <option value="canvas">Canvas</option>
         </select>
       </div>
     </div>
@@ -66,12 +73,15 @@
         <span>LineGap</span>
       </label>
     </div>
-    <div class="preview-canvas" ref="canvasRef">
+    <div class="preview-canvas" ref="previewContainerRef">
       <div v-if="loading" class="loading-overlay">
         <div class="loading-spinner"></div>
         <p>Loading fonts…</p>
       </div>
-      <div v-else-if="svgString" v-html="svgString" class="svg-output"></div>
+      <div v-else-if="rendererMode === 'svg' && svgString" v-html="svgString" class="svg-output"></div>
+      <div v-else-if="rendererMode === 'canvas'" class="canvas-wrapper">
+        <canvas ref="canvasEl"></canvas>
+      </div>
       <div v-else class="preview-empty">
         <p>No content to render</p>
       </div>
@@ -80,9 +90,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted } from 'vue'
+import { ref, computed, reactive, onMounted, watch, nextTick } from 'vue'
 import { layoutTextFrame, fontMetricsProvider } from '@vyaz/core'
-import { renderToSVG } from '@vyaz/renderer'
+import type { Line } from '@vyaz/core'
+import { renderToSVG, renderToCanvas } from '@vyaz/renderer'
 import type { DebugFlags } from '@vyaz/renderer'
 import { proseMirrorToVyaz } from '../lib/proseMirrorToVyaz'
 
@@ -90,11 +101,13 @@ const props = defineProps<{
   proseJson: unknown
 }>()
 
-const canvasRef = ref<HTMLElement | null>(null)
+const previewContainerRef = ref<HTMLElement | null>(null)
+const canvasEl = ref<HTMLCanvasElement | null>(null)
 const frameWidth = ref(600)
 const frameHeight = ref(0)
 const alignment = ref<'left' | 'center' | 'right' | 'justify'>('left')
 const svgPreset = ref<'flat' | 'browser' | 'preserve' | 'glyph'>('browser')
+const rendererMode = ref<'svg' | 'canvas'>('svg')
 const loading = ref(true)
 
 const debug = reactive<DebugFlags>({
@@ -107,6 +120,15 @@ const debug = reactive<DebugFlags>({
   runs: false,
   lineGap: false,
 })
+
+// ── Inline debug watcher: override frameBox default when other flags are set ──
+// If any debug flag is toggled on, enable frameBox too so the frame rect is visible.
+watch(debug, () => {
+  const anyDebug = Object.values(debug).some(v => v)
+  if (anyDebug && !debug.frameBox) {
+    debug.frameBox = true
+  }
+}, { deep: true })
 
 /** Google Fonts CSS URL for fonts used in this demo */
 const GOOGLE_FONTS_URL =
@@ -245,11 +267,26 @@ onMounted(async () => {
   }
 })
 
-const svgString = computed(() => {
-  if (loading.value) return ''
+// ── Layout computation (shared by both renderers) ────────────────────────
+
+interface LayoutCache {
+  lines: Line[]
+  frameWidth?: number
+  frameHeight?: number
+  contentWidth: number
+  contentHeight: number
+  fitHorizontal: 'frame' | 'content'
+  fitVertical: 'frame' | 'content'
+}
+
+/**
+ * Compute the text layout. Returns null when there's nothing to render.
+ */
+function computeLayout(): LayoutCache | null {
+  if (loading.value) return null
 
   const doc = props.proseJson as any
-  if (!doc || doc.type !== 'doc') return ''
+  if (!doc || doc.type !== 'doc') return null
 
   try {
     const effectiveHeight = frameHeight.value > 0 ? frameHeight.value : undefined
@@ -262,21 +299,121 @@ const svgString = computed(() => {
 
     const result = layoutTextFrame(textFrame)
 
+    return {
+      lines: result.lines,
+      frameWidth: result.frameWidth,
+      frameHeight: result.frameHeight,
+      contentWidth: result.contentWidth,
+      contentHeight: result.contentHeight,
+      fitHorizontal: result.fitHorizontal,
+      fitVertical: result.fitVertical,
+    }
+  } catch (err) {
+    console.error('Vyaz layout error:', err)
+    return null
+  }
+}
+
+// ── SVG rendering ────────────────────────────────────────────────────────
+
+const svgString = computed(() => {
+  if (rendererMode.value !== 'svg') return ''
+  const layout = computeLayout()
+  if (!layout) return ''
+
+  try {
     const hasDebug = Object.values(debug).some(v => v)
 
-    const svg = renderToSVG(result.lines, {
-      width: result.fitHorizontal === 'frame' ? result.frameWidth : result.contentWidth,
-      height: result.fitVertical === 'frame' ? result.frameHeight : result.contentHeight,
+    const svg = renderToSVG(layout.lines, {
+      width: layout.fitHorizontal === 'frame' ? layout.frameWidth : layout.contentWidth,
+      height: layout.fitVertical === 'frame' ? layout.frameHeight : layout.contentHeight,
       preset: svgPreset.value,
       debug: hasDebug ? { ...debug } : undefined,
     })
 
     return svg
   } catch (err) {
-    console.error('Vyaz render error:', err)
+    console.error('Vyaz SVG render error:', err)
     return `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="50">
       <text x="10" y="30" font-family="monospace" font-size="14" fill="red">Render Error: ${String(err)}</text>
     </svg>`
+  }
+})
+
+// ── Canvas rendering ─────────────────────────────────────────────────────
+
+/**
+ * Redraw the canvas whenever props/dimensions change.
+ */
+function drawCanvas(): void {
+  const canvas = canvasEl.value
+  if (!canvas) return
+
+  const layout = computeLayout()
+  if (!layout) {
+    canvas.width = 0
+    canvas.height = 0
+    return
+  }
+
+  try {
+    const ctx = canvas.getContext('2d')
+    if (!ctx) {
+      console.warn('[vyaz demo] Canvas 2D context not available')
+      return
+    }
+
+    // Determine canvas dimensions same as SVG sizing
+    const w = layout.fitHorizontal === 'frame' ? layout.frameWidth ?? layout.contentWidth : layout.contentWidth
+    const h = layout.fitVertical === 'frame' ? layout.frameHeight ?? layout.contentHeight : layout.contentHeight
+
+    // Apply device pixel ratio for crisp rendering
+    const dpr = window.devicePixelRatio || 1
+    canvas.width = w * dpr
+    canvas.height = h * dpr
+    canvas.style.width = `${w}px`
+    canvas.style.height = `${h}px`
+    ctx.scale(dpr, dpr)
+
+    const hasDebug = Object.values(debug).some(v => v)
+
+    renderToCanvas(ctx, layout.lines, {
+      sizing: 'frame',
+      backgroundColor: '#ffffff',
+      debug: hasDebug ? { ...debug } : undefined,
+    })
+  } catch (err) {
+    console.error('Vyaz Canvas render error:', err)
+    // Draw error message on canvas
+    canvas.width = 400
+    canvas.height = 50
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(0, 0, 400, 50)
+      ctx.fillStyle = 'red'
+      ctx.font = '14px monospace'
+      ctx.fillText(`Render Error: ${String(err)}`, 10, 30)
+    }
+  }
+}
+
+// Watch changes and redraw canvas
+watch(
+  () => [props.proseJson, frameWidth.value, frameHeight.value, alignment.value, rendererMode.value, debug],
+  async () => {
+    if (rendererMode.value === 'canvas') {
+      await nextTick()
+      drawCanvas()
+    }
+  },
+  { deep: true, immediate: false },
+)
+
+// Also watch canvas element availability (first mount + mode switch)
+watch(canvasEl, () => {
+  if (rendererMode.value === 'canvas' && canvasEl.value) {
+    nextTick(() => drawCanvas())
   }
 })
 </script>
@@ -427,6 +564,20 @@ const svgString = computed(() => {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+.canvas-wrapper {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  max-width: 100%;
+}
+
+.canvas-wrapper canvas {
+  display: block;
+  max-width: 100%;
+  height: auto !important; /* overrides inline style for responsive */
 }
 
 .preview-empty {
