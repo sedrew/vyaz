@@ -21,6 +21,15 @@
           <option value="justify">Justify</option>
         </select>
       </div>
+      <div class="control-group">
+        <label>Preset</label>
+        <select v-model="svgPreset">
+          <option value="browser">Browser</option>
+          <option value="flat">Flat</option>
+          <option value="preserve">Preserve</option>
+          <option value="glyph">Glyph</option>
+        </select>
+      </div>
     </div>
     <div class="preview-controls debug-controls">
       <span class="debug-label">Debug:</span>
@@ -85,6 +94,7 @@ const canvasRef = ref<HTMLElement | null>(null)
 const frameWidth = ref(600)
 const frameHeight = ref(0)
 const alignment = ref<'left' | 'center' | 'right' | 'justify'>('left')
+const svgPreset = ref<'flat' | 'browser' | 'preserve' | 'glyph'>('browser')
 const loading = ref(true)
 
 const debug = reactive<DebugFlags>({
@@ -257,7 +267,7 @@ const svgString = computed(() => {
     const svg = renderToSVG(result.lines, {
       width: result.fitHorizontal === 'frame' ? result.frameWidth : result.contentWidth,
       height: result.fitVertical === 'frame' ? result.frameHeight : result.contentHeight,
-      preset: 'browser',
+      preset: svgPreset.value,
       debug: hasDebug ? { ...debug } : undefined,
     })
 
