@@ -25,8 +25,12 @@
     <div class="preview-controls debug-controls">
       <span class="debug-label">Debug:</span>
       <label class="debug-checkbox">
-        <input type="checkbox" v-model="debug.frame" />
+        <input type="checkbox" v-model="debug.frameBox" />
         <span>TextFrame</span>
+      </label>
+      <label class="debug-checkbox">
+        <input type="checkbox" v-model="debug.contentBox" />
+        <span>ContentBox</span>
       </label>
       <label class="debug-checkbox">
         <input type="checkbox" v-model="debug.box" />
@@ -79,7 +83,8 @@ const frameHeight = ref(0)
 const alignment = ref<'left' | 'center' | 'right' | 'justify'>('left')
 
 const debug = reactive<DebugFlags>({
-  frame: true,
+  frameBox: true,
+  contentBox: false,
   box: false,
   baseline: false,
   ascentDescent: false,
