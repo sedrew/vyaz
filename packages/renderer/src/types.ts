@@ -7,6 +7,10 @@ export interface DebugFlags {
   frameBox?: boolean;
   /** Actual content bounding box (BBox of all lines) */
   contentBox?: boolean;
+  /** Paragraph bounding boxes (grouped by paragraphId). */
+  paragraphBox?: boolean;
+  /** Stroke width (px) for all debug border lines. Default 1. */
+  widthBorder?: number;
   /** Show filled rect for each line's lineHeight (background fill). */
   lineGap?: boolean;
   /** Line box outline */

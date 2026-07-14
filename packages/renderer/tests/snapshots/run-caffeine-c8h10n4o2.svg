@@ -24,5 +24,5 @@
     <tspan x="79.19" font-weight="400" font-style="normal" font-family="Unifont" font-size="15.6" fill="#000000" textLength="7.8">2</tspan>
 </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="86.99" height="29" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="86.99" height="29" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

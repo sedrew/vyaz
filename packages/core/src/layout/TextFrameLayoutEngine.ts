@@ -66,6 +66,10 @@ export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
     for (const line of result.lines) {
       // Shift lines by left padding
       line.x += leftPad;
+      // Set pIdx on each span in this paragraph
+      for (const span of line.spans) {
+        span.pIdx = i;
+      }
       allLines.push(line);
     }
 

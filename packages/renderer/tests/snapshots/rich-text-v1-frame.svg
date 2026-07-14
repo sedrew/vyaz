@@ -1,0 +1,244 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="626.59" height="1165" viewBox="-10 -10 626.59 1165">
+  <text x="0" y="18" font-family="Arial" font-size="20" fill="#000000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="20" fill="#000000">All Text Manipulations + Text Wrap (7 types, fixed) + Autofit +</tspan>
+</text>
+  <text x="0" y="42" font-family="Arial" font-size="20" fill="#000000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="20" fill="#000000">Languages</tspan>
+</text>
+  <text x="0" y="69" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#444444">Strict style: minimal colored borders, only black and gray outlines.</tspan>
+</text>
+  <text x="0" y="87" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#444444">Merged: fonts, sizes, effects, spacing, columns, drop caps, lists, text wrap (7 types), autofit (5</tspan>
+</text>
+  <text x="0" y="105" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#444444">types), world languages, vertical text.</tspan>
+</text>
+  <text x="0" y="147" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="13.56" fill="#000000">1. Fonts, sizes, colors, shadows, gradients, stroke</tspan>
+</text>
+  <text x="0" y="171" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#000000">Arial</tspan>
+    <tspan x="30.87">|</tspan>
+    <tspan x="38.16" font-weight="700">Arial Bold</tspan>
+    <tspan x="105.91" font-weight="400">|</tspan>
+    <tspan x="113.2" font-style="italic">Arial Italic</tspan>
+    <tspan x="175.68" font-style="normal">|</tspan>
+    <tspan x="182.97" font-family="Arial Black">Arial Black</tspan>
+</text>
+  <text x="0" y="217" font-family="Arial" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000">12px</tspan>
+    <tspan x="29.79" font-size="13.56">|</tspan>
+    <tspan x="37.08" font-size="18">18px</tspan>
+    <tspan x="79.88" font-size="13.56">|</tspan>
+    <tspan x="87.17" font-weight="700" font-size="28">28px Bold</tspan>
+    <tspan x="224.75" font-weight="400" font-size="13.56">|</tspan>
+    <tspan x="232.04" font-size="34">34px</tspan>
+</text>
+  <text x="0" y="247" font-family="Arial" font-size="12" fill="#b91c1c" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#b91c1c">Red tint</tspan>
+    <tspan x="44.67" fill="#000000">|</tspan>
+    <tspan x="51.11" fill="#1e3a8a">Dark blue</tspan>
+    <tspan x="105.79" fill="#000000">|</tspan>
+    <tspan x="112.23" fill="#2d6a4f">Forest green</tspan>
+    <tspan x="183.58" fill="#000000">|</tspan>
+    <tspan x="190.02" fill="#6c757d">Gray text</tspan>
+</text>
+  <text x="0" y="269" font-family="Arial" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000">Shadow text</tspan>
+    <tspan x="69.36">|</tspan>
+    <tspan x="75.8">Gradient text</tspan>
+    <tspan x="147.82">|</tspan>
+    <tspan x="154.26">Stroke text</tspan>
+    <tspan x="214.93">|</tspan>
+    <tspan x="221.37">Highlight marker</tspan>
+</text>
+  <text x="0" y="291" font-family="Arial" font-size="12" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000">S p r e a d o u t</tspan>
+    <tspan x="153.31">|</tspan>
+    <tspan x="159.75">condensed</tspan>
+    <tspan x="212.79">|</tspan>
+    <tspan x="219.23">UPPERCASE TEXT</tspan>
+    <tspan x="330.57">|</tspan>
+    <tspan x="337.01">Capitalize Words</tspan>
+</text>
+  <text x="0" y="317" font-family="Arial" font-size="11" fill="#000" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="11" fill="#000">Small caps</tspan>
+    <tspan x="57.58" font-size="13.56">|</tspan>
+    <tspan x="64.87">light rotation</tspan>
+    <tspan x="142.43">|</tspan>
+</text>
+  <text x="145.95" y="313.4" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="149.72" font-weight="400" font-style="normal" font-family="Arial" font-size="5.85" fill="#000">superscript</tspan>
+</text>
+  <text x="0" y="317" font-family="Arial" font-size="13.56" fill="#000" font-weight="400">
+    <tspan x="182.07" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#000">normal</tspan>
+</text>
+  <text x="223.48" y="319.25" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="227.25" font-weight="400" font-style="normal" font-family="Arial" font-size="5.85" fill="#000">subscript</tspan>
+</text>
+  <text x="0" y="358" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="13.56" fill="#000000">4. Multilingual text</tspan>
+</text>
+  <text x="0" y="386" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">Русский</tspan>
+    <tspan x="44.45" font-weight="400">: Привет, мир! Это демонстрация поддержки кириллицы.</tspan>
+</text>
+  <text x="0" y="407" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">English</tspan>
+    <tspan x="39.72" font-weight="400">: This is an English text example. It shows Latin script with different styles.</tspan>
+</text>
+  <text x="0" y="428" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">中文</tspan>
+    <tspan x="16.5" font-weight="400">: 这是一个中文示例。本软件支持汉字。你好，世界！</tspan>
+</text>
+  <text x="0" y="449" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">العربية</tspan>
+    <tspan x="24.22" font-weight="400">: هذا نص عربي. اللغة العربية تكتب من اليمين إلى اليسار. مرحبا!</tspan>
+</text>
+  <text x="0" y="470" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">हिन्दी</tspan>
+    <tspan x="49.5" font-weight="400">: यह हिन्दी पाठ का उदाहरण है। नमस्ते!</tspan>
+</text>
+  <text x="0" y="491" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">Ελληνικά</tspan>
+    <tspan x="48" font-weight="400">: Αυτό είναι ένα παράδειγμα ελληνικής γλώσσας. Γειά σου Κόσμε!</tspan>
+</text>
+  <text x="0" y="512" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">Deutsch</tspan>
+    <tspan x="43.4" font-weight="400">: Dies ist ein deutscher Text. Zeigt Umlaute: ä, ö, ü.</tspan>
+</text>
+  <text x="0" y="533" font-family="Arial" font-size="11" fill="#000" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000">Français</tspan>
+    <tspan x="45.25" font-weight="400">: Exemple de texte français avec accents: é, è, ç, à.</tspan>
+</text>
+  <text x="0" y="572" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a">[left alignment]</tspan>
+    <tspan x="89.34" font-size="20" fill="#000">Typography</tspan>
+    <tspan x="206.2" font-weight="400" font-size="14" fill="#333">is the art and technique of arranging type.</tspan>
+    <tspan x="468.49" font-weight="700" fill="#000">Good design</tspan>
+    <tspan x="557.93" font-weight="400" fill="#333">makes</tspan>
+</text>
+  <text x="0" y="598" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">the reader feel nothing, because everything is just right.</tspan>
+    <tspan x="347.87" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a">Balance</tspan>
+    <tspan x="413.13" font-weight="400" font-style="normal" font-size="14" fill="#333">between form and function is</tspan>
+</text>
+  <text x="0" y="620" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">the key. This paragraph shows how different weights, sizes and colors interact within a single</tspan>
+</text>
+  <text x="0" y="641" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">block of text aligned to the left.</tspan>
+    <tspan x="193.02" font-weight="700" font-style="italic" fill="#b91c1c">Pay attention</tspan>
+    <tspan x="284.81" font-weight="400" font-style="normal" fill="#444">to the subtle shifts in style that guide your eye</tspan>
+</text>
+  <text x="0" y="662" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">across the content. A well-crafted text block feels natural, even when many styles are mixed</tspan>
+</text>
+  <text x="0" y="683" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">together.</tspan>
+    <tspan x="57.56" font-size="11" fill="#888">(note: left alignment is default)</tspan>
+</text>
+  <text x="13.97" y="724" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700">
+    <tspan x="13.97" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a">[center alignment]</tspan>
+    <tspan x="121.32" font-size="20" fill="#000">Typography</tspan>
+    <tspan x="238.18" font-weight="400" font-size="14" fill="#333">is the art and technique of arranging type.</tspan>
+    <tspan x="500.48" font-weight="700" fill="#000">Good design</tspan>
+</text>
+  <text x="18.14" y="750" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="18.14" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">makes the reader feel nothing, because everything is just right.</tspan>
+    <tspan x="411.13" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a">Balance</tspan>
+    <tspan x="476.39" font-weight="400" font-style="normal" font-size="14" fill="#333">between form and</tspan>
+</text>
+  <text x="8.34" y="772" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="8.34" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">function is the key. This paragraph shows how different weights, sizes and colors interact within</tspan>
+</text>
+  <text x="8.58" y="793" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="8.58" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">a single block of text centered on the page.</tspan>
+    <tspan x="279.43" font-weight="700" font-style="italic" fill="#b91c1c">Pay attention</tspan>
+    <tspan x="371.22" font-weight="400" font-style="normal" fill="#444">to the subtle shifts in style that guide</tspan>
+</text>
+  <text x="10.46" y="814" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="10.46" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">your eye across the content. A well-crafted text block feels natural, even when many styles are</tspan>
+</text>
+  <text x="192.51" y="835" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="192.51" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">mixed together.</tspan>
+    <tspan x="291.31" font-size="11" fill="#888">(note: center alignment)</tspan>
+</text>
+  <text x="37.3" y="876" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700">
+    <tspan x="37.3" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a">[right alignment]</tspan>
+    <tspan x="135.3" font-size="20" fill="#000">Typography</tspan>
+    <tspan x="252.16" font-weight="400" font-size="14" fill="#333">is the art and technique of arranging type.</tspan>
+    <tspan x="514.45" font-weight="700" fill="#000">Good design</tspan>
+</text>
+  <text x="36.27" y="902" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="36.27" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">makes the reader feel nothing, because everything is just right.</tspan>
+    <tspan x="429.26" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a">Balance</tspan>
+    <tspan x="494.52" font-weight="400" font-style="normal" font-size="14" fill="#333">between form and</tspan>
+</text>
+  <text x="16.68" y="924" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="16.68" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">function is the key. This paragraph shows how different weights, sizes and colors interact within</tspan>
+</text>
+  <text x="34.29" y="945" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="34.29" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">a single block of text aligned to the right.</tspan>
+    <tspan x="288.01" font-weight="700" font-style="italic" fill="#b91c1c">Pay attention</tspan>
+    <tspan x="379.8" font-weight="400" font-style="normal" fill="#444">to the subtle shifts in style that guide</tspan>
+</text>
+  <text x="20.93" y="966" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="20.93" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">your eye across the content. A well-crafted text block feels natural, even when many styles are</tspan>
+</text>
+  <text x="394.2" y="987" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="394.2" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">mixed together.</tspan>
+    <tspan x="492.99" font-size="11" fill="#888">(note: right alignment)</tspan>
+</text>
+  <text x="0" y="1028" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a">[justify alignment]</tspan>
+    <tspan x="116.21" font-size="20" fill="#000">Typography</tspan>
+    <tspan x="242.62" font-weight="400" font-size="14" fill="#333">is the art and technique of arranging type.</tspan>
+    <tspan x="514.45" font-weight="700" fill="#000">Good design</tspan>
+</text>
+  <text x="0" y="1054" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">makes the reader feel nothing, because everything is just right.</tspan>
+    <tspan x="411.13" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a">Balance</tspan>
+    <tspan x="494.52" font-weight="400" font-style="normal" font-size="14" fill="#333">between form and</tspan>
+</text>
+  <text x="0" y="1076" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">function is the key. This paragraph shows how different weights, sizes and colors interact within</tspan>
+</text>
+  <text x="0" y="1097" font-family="Arial" font-size="14" fill="#333" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">a single block of text justified to both edges.</tspan>
+    <tspan x="281.38" font-weight="700" font-style="italic" fill="#b91c1c">Pay attention</tspan>
+    <tspan x="379.8" font-weight="400" font-style="normal" fill="#444">to the subtle shifts in style that guide</tspan>
+</text>
+  <text x="0" y="1118" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">your eye across the content. A well-crafted text block feels natural, even when many styles are</tspan>
+</text>
+  <text x="0" y="1139" font-family="Arial" font-size="14" fill="#444" font-weight="400">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444">mixed together.</tspan>
+    <tspan x="98.79" font-size="11" fill="#888">(note: justify alignment)</tspan>
+</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="578.45" height="48" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="2" />
+  <rect x="0" y="56" width="393" height="18" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="2" />
+  <rect x="0" y="74" width="557.63" height="36" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="2" />
+  <rect x="0" y="134" width="322.94" height="18" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="2" />
+  <rect x="0" y="156" width="264.02" height="20" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="2" />
+  <rect x="0" y="180" width="305.77" height="51" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="2" />
+  <rect x="0" y="235" width="238.69" height="18" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="2" />
+  <rect x="0" y="257" width="308.73" height="18" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="2" />
+  <rect x="0" y="279" width="427.48" height="18" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="2" />
+  <rect x="0" y="301" width="250.63" height="24" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="2" />
+  <rect x="0" y="345" width="118.16" height="18" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="2" />
+  <rect x="0" y="375" width="334.36" height="15" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="2" />
+  <rect x="0" y="396" width="399.66" height="15" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="2" />
+  <rect x="0" y="417" width="212.37" height="15" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="2" />
+  <rect x="0" y="438" width="255.66" height="15" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="2" />
+  <rect x="0" y="459" width="308.04" height="15" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="2" />
+  <rect x="0" y="480" width="366.61" height="15" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="2" />
+  <rect x="0" y="501" width="292.27" height="15" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="2" />
+  <rect x="0" y="522" width="296.6" height="15" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="2" />
+  <rect x="0" y="551" width="599.16" height="138" fill="none" stroke="rgba(180,180,0,0.25)" stroke-width="2" />
+  <rect x="8.34" y="703" width="589.33" height="138" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="2" />
+  <rect x="16.68" y="855" width="589.91" height="138" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="2" />
+  <rect x="0" y="1007" width="606.59" height="138" fill="none" stroke="rgba(80,0,180,0.25)" stroke-width="2" />
+</svg>

@@ -1,0 +1,291 @@
+{
+  "description": "rich_text_v1 — snapshot of text styles for SVG test",
+  "width": 600,
+  "wrap": true,
+  "verticalAlignment": "top",
+  "defaultStyle": {
+    "fontFamily": "Arial",
+    "fontSize": 13.56,
+    "fontWeight": "normal",
+    "fontStyle": "normal",
+    "color": "#000000"
+  },
+  "paragraphs": [
+    {
+      "id": "title",
+      "style": { "alignment": "left", "lineHeight": 1.2, "spaceBefore": 0, "spaceAfter": 8 },
+      "children": [
+        {
+          "type": "text",
+          "text": "All Text Manipulations + Text Wrap (7 types, fixed) + Autofit + Languages",
+          "fontFamily": "Arial",
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "color": "#000000"
+        }
+      ]
+    },
+    {
+      "id": "subtitle-1",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Strict style: minimal colored borders, only black and gray outlines.",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "color": "#444444"
+        }
+      ]
+    },
+    {
+      "id": "subtitle-2",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 8 },
+      "children": [
+        {
+          "type": "text",
+          "text": "Merged: fonts, sizes, effects, spacing, columns, drop caps, lists, text wrap (7 types), autofit (5 types), world languages, vertical text.",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "color": "#444444"
+        }
+      ]
+    },
+    {
+      "id": "section-1-header",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 16, "spaceAfter": 4 },
+      "children": [
+        {
+          "type": "text",
+          "text": "1. Fonts, sizes, colors, shadows, gradients, stroke",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "fontWeight": "bold",
+          "color": "#000000"
+        }
+      ]
+    },
+    {
+      "id": "font-families",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "Arial", "fontFamily": "Arial", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": " | ", "fontFamily": "Arial", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": "Arial Bold", "fontFamily": "Arial", "fontSize": 13.56, "fontWeight": "bold", "color": "#000000" },
+        { "type": "text", "text": " | ", "fontFamily": "Arial", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": "Arial Italic", "fontFamily": "Arial", "fontSize": 13.56, "fontStyle": "italic", "color": "#000000" },
+        { "type": "text", "text": " | ", "fontFamily": "Arial", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": "Arial Black", "fontFamily": "Arial Black", "fontSize": 13.56, "color": "#000000" }
+      ]
+    },
+    {
+      "id": "font-sizes",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "12px", "fontSize": 12, "color": "#000" },
+        { "type": "text", "text": " | ", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "18px", "fontSize": 18, "color": "#000" },
+        { "type": "text", "text": " | ", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "28px Bold", "fontSize": 28, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " | ", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "34px", "fontSize": 34, "color": "#000" }
+      ]
+    },
+    {
+      "id": "colors",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "Red tint", "color": "#b91c1c" },
+        { "type": "text", "text": " | ", "color": "#000000" },
+        { "type": "text", "text": "Dark blue", "color": "#1e3a8a" },
+        { "type": "text", "text": " | ", "color": "#000000" },
+        { "type": "text", "text": "Forest green", "color": "#2d6a4f" },
+        { "type": "text", "text": " | ", "color": "#000000" },
+        { "type": "text", "text": "Gray text", "color": "#6c757d" }
+      ]
+    },
+    {
+      "id": "effects",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "Shadow text", "color": "#000" },
+        { "type": "text", "text": " | ", "color": "#000" },
+        { "type": "text", "text": "Gradient text", "color": "#000" },
+        { "type": "text", "text": " | ", "color": "#000" },
+        { "type": "text", "text": "Stroke text", "color": "#000" },
+        { "type": "text", "text": " | ", "color": "#000" },
+        { "type": "text", "text": "Highlight marker", "color": "#000", "backgroundColor": "#ffff00" }
+      ]
+    },
+    {
+      "id": "letter-spacing",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "S p r e a d  o u t", "letterSpacing": 4, "color": "#000" },
+        { "type": "text", "text": " | ", "color": "#000" },
+        { "type": "text", "text": "condensed", "letterSpacing": -1, "color": "#000" },
+        { "type": "text", "text": " | ", "color": "#000" },
+        { "type": "text", "text": "UPPERCASE TEXT", "color": "#000" },
+        { "type": "text", "text": " | ", "color": "#000" },
+        { "type": "text", "text": "Capitalize Words", "color": "#000" }
+      ]
+    },
+    {
+      "id": "scripts",
+      "style": { "alignment": "left", "lineHeight": 1.8, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "Small caps", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": " | ", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "light rotation", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": " | ", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "superscript", "fontSize": 9, "script": "super", "color": "#000" },
+        { "type": "text", "text": " ", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "normal", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": " ", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "subscript", "fontSize": 9, "script": "sub", "color": "#000" }
+      ]
+    },
+    {
+      "id": "languages-section",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 16, "spaceAfter": 4 },
+      "children": [
+        {
+          "type": "text",
+          "text": "4. Multilingual text",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "fontWeight": "bold",
+          "color": "#000000"
+        }
+      ]
+    },
+    {
+      "id": "russian",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 8, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "Русский", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": Привет, мир! Это демонстрация поддержки кириллицы.", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "english",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "English", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": This is an English text example. It shows Latin script with different styles.", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "chinese",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "中文", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": 这是一个中文示例。本软件支持汉字。你好，世界！", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "arabic",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "العربية", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": هذا نص عربي. اللغة العربية تكتب من اليمين إلى اليسار. مرحبا!", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "hindi",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "हिन्दी", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": यह हिन्दी पाठ का उदाहरण है। नमस्ते!", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "greek",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "Ελληνικά", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": Αυτό είναι ένα παράδειγμα ελληνικής γλώσσας. Γειά σου Κόσμε!", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "german",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "Deutsch", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": Dies ist ein deutscher Text. Zeigt Umlaute: ä, ö, ü.", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "french",
+      "style": { "alignment": "left", "lineHeight": 1.4, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "Français", "fontWeight": "bold", "fontSize": 11, "color": "#000" },
+        { "type": "text", "text": ": Exemple de texte français avec accents: é, è, ç, à.", "fontSize": 11, "color": "#000" }
+      ]
+    },
+    {
+      "id": "align-left-text",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 12, "spaceAfter": 6 },
+      "children": [
+        { "type": "text", "text": "[left alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
+        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text aligned to the left. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
+        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
+        { "type": "text", "text": " (note: left alignment is default)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+      ]
+    },
+    {
+      "id": "align-center-text",
+      "style": { "alignment": "center", "lineHeight": 1.5, "spaceBefore": 8, "spaceAfter": 6 },
+      "children": [
+        { "type": "text", "text": "[center alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
+        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text centered on the page. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
+        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
+        { "type": "text", "text": " (note: center alignment)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+      ]
+    },
+    {
+      "id": "align-right-text",
+      "style": { "alignment": "right", "lineHeight": 1.5, "spaceBefore": 8, "spaceAfter": 6 },
+      "children": [
+        { "type": "text", "text": "[right alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
+        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text aligned to the right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
+        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
+        { "type": "text", "text": " (note: right alignment)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+      ]
+    },
+    {
+      "id": "align-justify-text",
+      "style": { "alignment": "justify", "lineHeight": 1.5, "spaceBefore": 8, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[justify alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
+        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text justified to both edges. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
+        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
+        { "type": "text", "text": " (note: justify alignment)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+      ]
+    }
+  ]
+}

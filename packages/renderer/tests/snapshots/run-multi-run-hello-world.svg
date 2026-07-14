@@ -5,5 +5,5 @@
     <tspan x="36" font-weight="700" textLength="30">World</tspan>
 </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="66" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="66" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

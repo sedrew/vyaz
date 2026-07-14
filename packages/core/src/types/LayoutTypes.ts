@@ -20,6 +20,8 @@ export interface Span {
   text: string;
   /** Index of the source run in the paragraph's `children` array. */
   itemIndex: number;
+  /** Paragraph index in TextFrame.paragraphs[]. Stable key for grouping & diff. */
+  pIdx: number;
   /** ID of the source paragraph (for SVG grouping). */
   paragraphId?: string;
 

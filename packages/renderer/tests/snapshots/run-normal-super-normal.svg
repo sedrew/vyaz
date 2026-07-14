@@ -11,5 +11,5 @@
     <tspan x="182.98" textLength="60">WORLD</tspan>
 </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="242.98" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="242.98" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

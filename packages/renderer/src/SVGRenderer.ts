@@ -492,6 +492,31 @@ class SvgBuilder {
 
 // ── Debug overlay ────────────────────────────────────────────────────────
 
+/**
+ * Group lines into paragraphs using pIdx (paragraph index) from spans.
+ * Returns array sorted by index with paragraphId as optional label.
+ */
+function groupLinesByParagraph(lines: Line[]): { lines: Line[]; pIdx: number; paragraphId: string | undefined }[] {
+  const groups: { lines: Line[]; pIdx: number; paragraphId: string | undefined }[] = [];
+  let currentIdx = -1;
+  let currentGroup: Line[] = [];
+
+  for (const line of lines) {
+    const span = line.spans[0];
+    const idx = span?.pIdx ?? -1;
+    if (idx !== currentIdx && currentGroup.length > 0) {
+      groups.push({ lines: currentGroup, pIdx: currentIdx, paragraphId: currentGroup[0].spans[0]?.paragraphId });
+      currentGroup = [];
+    }
+    currentIdx = idx;
+    currentGroup.push(line);
+  }
+  if (currentGroup.length > 0) {
+    groups.push({ lines: currentGroup, pIdx: currentIdx, paragraphId: currentGroup[0].spans[0]?.paragraphId });
+  }
+  return groups;
+}
+
 function renderDebugToSVG(
   lines: Line[],
   flags: DebugFlags,
@@ -499,12 +524,13 @@ function renderDebugToSVG(
   contentSize?: { width: number; height: number },
 ): string {
   const parts: string[] = [];
+  const sw = flags.widthBorder ?? 1;
 
   // Frame container bounding box
   if ((flags.frameBox || flags.frame) && frameSize) {
     parts.push(
       `  <rect x="0" y="0" width="${fmt(frameSize.width)}" height="${fmt(frameSize.height)}"` +
-      ` fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1.5" stroke-dasharray="4,3" />`,
+      ` fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="${fmt(sw)}" stroke-dasharray="4,3" />`,
     );
     if (flags.labels) {
       parts.push(
@@ -518,7 +544,7 @@ function renderDebugToSVG(
     const bbox = computeBBox(lines);
     parts.push(
       `  <rect x="${fmt(bbox.x)}" y="${fmt(bbox.y)}" width="${fmt(bbox.width)}" height="${fmt(bbox.height)}"` +
-      ` fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />`,
+      ` fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="${fmt(sw)}" stroke-dasharray="1,2" />`,
     );
     if (flags.labels) {
       const labelY = bbox.y + bbox.height + 14;
@@ -539,6 +565,33 @@ function renderDebugToSVG(
     }
   }
 
+  // Paragraph bounding boxes
+  if (flags.paragraphBox) {
+    const paraGroups = groupLinesByParagraph(lines);
+    const paraColors = [
+      'rgba(0,180,80,0.25)',
+      'rgba(180,0,80,0.25)',
+      'rgba(80,0,180,0.25)',
+      'rgba(180,180,0,0.25)',
+    ];
+    for (let i = 0; i < paraGroups.length; i++) {
+      const group = paraGroups[i];
+      if (group.lines.length === 0) continue;
+      const firstLine = group.lines[0];
+      const lastLine = group.lines[group.lines.length - 1];
+      const minX = Math.min(...group.lines.map(l => l.x));
+      const maxX = Math.max(...group.lines.map(l => l.x + l.width));
+      const top = firstLine.y;
+      const bottom = lastLine.y + lastLine.height;
+      const color = paraColors[i % paraColors.length];
+      parts.push(`  <rect x="${fmt(minX)}" y="${fmt(top)}" width="${fmt(maxX - minX)}" height="${fmt(bottom - top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
+      const label = group.paragraphId ? `#${group.pIdx} ${group.paragraphId}` : `#${group.pIdx}`;
+      if (flags.labels) {
+        parts.push(`  <text x="${fmt(minX)}" y="${fmt(top - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
+      }
+    }
+  }
+
   for (const line of lines) {
     const bx = line.x, by = line.y, bw = line.width, bh = line.height;
     const baselineY = line.y + line.baseline;
@@ -547,14 +600,14 @@ function renderDebugToSVG(
       parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="rgba(0,150,255,0.10)" stroke="none" />`);
     }
     if (flags.box) {
-      parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="none" stroke="rgba(255,100,100,0.5)" stroke-width="1" />`);
+      parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="none" stroke="rgba(255,100,100,0.5)" stroke-width="${fmt(sw)}" />`);
     }
     if (flags.baseline) {
-      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY)}" stroke="rgba(100,100,255,0.5)" stroke-width="1" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY)}" stroke="rgba(100,100,255,0.5)" stroke-width="${fmt(sw)}" />`);
     }
     if (flags.ascentDescent) {
-      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY - line.ascent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY - line.ascent)}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
-      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY + line.descent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY + line.descent)}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY - line.ascent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY - line.ascent)}" stroke="rgba(100,255,100,0.4)" stroke-width="${fmt(sw)}" stroke-dasharray="3,2" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY + line.descent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY + line.descent)}" stroke="rgba(100,255,100,0.4)" stroke-width="${fmt(sw)}" stroke-dasharray="3,2" />`);
     }
     if (flags.labels) {
       parts.push(`  <text x="${fmt(bx)}" y="${fmt(by - 2)}" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=${fmt(by)} x=${fmt(bx)} w=${fmt(bw)} h=${fmt(bh)} bl=${fmt(baselineY)}</text>`);
@@ -564,7 +617,7 @@ function renderDebugToSVG(
         if (span.width <= 0) continue;
         const rx = line.x + span.x;
         const ry = baselineY - span.fontMetrics.ascent;
-        parts.push(`  <rect x="${fmt(rx)}" y="${fmt(ry)}" width="${fmt(span.width)}" height="${fmt(span.fontMetrics.ascent + span.fontMetrics.descent)}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />`);
+        parts.push(`  <rect x="${fmt(rx)}" y="${fmt(ry)}" width="${fmt(span.width)}" height="${fmt(span.fontMetrics.ascent + span.fontMetrics.descent)}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="${fmt(sw)}" />`);
       }
     }
   }

@@ -3,5 +3,5 @@
   <text x="12" y="27" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">2</text>
   <text x="19.8" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">O</text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="31.8" height="29" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="31.8" height="29" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>
