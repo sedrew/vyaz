@@ -121,6 +121,90 @@
 
       <div class="toolbar-separator"></div>
 
+      <!-- Alignment -->
+      <div class="toolbar-group">
+        <button
+          class="toolbar-btn"
+          :class="{ active: editor.isActive({ textAlign: 'left' }) }"
+          @click="editor.chain().focus().setTextAlign('left').run()"
+          title="Align left"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 21h18v-2H3v2zm0-4h14v-2H3v2zm0-4h18v-2H3v2zm0-8v2h18V5H3z" fill="currentColor"/></svg>
+        </button>
+        <button
+          class="toolbar-btn"
+          :class="{ active: editor.isActive({ textAlign: 'center' }) }"
+          @click="editor.chain().focus().setTextAlign('center').run()"
+          title="Align center"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M7 21h10v-2H7v2zm-4-4h18v-2H3v2zm0-4h18v-2H3v2zm4-4h10V5H7v2zM3 3v2h18V3H3z" fill="currentColor"/></svg>
+        </button>
+        <button
+          class="toolbar-btn"
+          :class="{ active: editor.isActive({ textAlign: 'right' }) }"
+          @click="editor.chain().focus().setTextAlign('right').run()"
+          title="Align right"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 21h18v-2H3v2zm6-4h12v-2H9v2zm-6-4h18v-2H3v2zm6-4h12V5H9v2zM3 3v2h18V3H3z" fill="currentColor"/></svg>
+        </button>
+        <button
+          class="toolbar-btn"
+          :class="{ active: editor.isActive({ textAlign: 'justify' }) }"
+          @click="editor.chain().focus().setTextAlign('justify').run()"
+          title="Justify"
+        >
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 21h18v-2H3v2zm0-4h18v-2H3v2zm0-4h18v-2H3v2zm0-4h18V5H3v2zm0-4v2h18V3H3z" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <div class="toolbar-separator"></div>
+
+      <!-- Subscript / Superscript -->
+      <div class="toolbar-group">
+        <button
+          class="toolbar-btn text-btn"
+          :class="{ active: editor.isActive('subscript') }"
+          @click="editor.chain().focus().toggleSubscript().run()"
+          title="Subscript"
+        >A<sub>2</sub></button>
+        <button
+          class="toolbar-btn text-btn"
+          :class="{ active: editor.isActive('superscript') }"
+          @click="editor.chain().focus().toggleSuperscript().run()"
+          title="Superscript"
+        >A<sup>2</sup></button>
+      </div>
+
+      <div class="toolbar-separator"></div>
+
+      <!-- Font Family -->
+      <div class="toolbar-group">
+        <select
+          class="toolbar-select"
+          :value="currentFontFamily"
+          @change="setFontFamily(($event.target as HTMLSelectElement).value)"
+          title="Font family"
+        >
+          <option v-for="f in fontFamilies" :key="f" :value="f">{{ f }}</option>
+        </select>
+      </div>
+
+      <div class="toolbar-separator"></div>
+
+      <!-- Font Size -->
+      <div class="toolbar-group">
+        <select
+          class="toolbar-select"
+          :value="currentFontSize"
+          @change="setFontSize(Number(($event.target as HTMLSelectElement).value))"
+          title="Font size"
+        >
+          <option v-for="s in fontSizes" :key="s" :value="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="toolbar-separator"></div>
+
       <!-- Undo/Redo -->
       <div class="toolbar-group">
         <button
@@ -151,6 +235,10 @@ import StarterKit from '@tiptap/starter-kit'
 import { TextStyle } from '@tiptap/extension-text-style'
 import { Color } from '@tiptap/extension-color'
 import Underline from '@tiptap/extension-underline'
+import TextAlign from '@tiptap/extension-text-align'
+import Subscript from '@tiptap/extension-subscript'
+import Superscript from '@tiptap/extension-superscript'
+import FontFamily from '@tiptap/extension-font-family'
 import { watch, onBeforeUnmount, ref } from 'vue'
 
 const emit = defineEmits<{
@@ -165,6 +253,33 @@ function setColor(e: Event) {
   editor.value?.chain().focus().setColor(color).run()
 }
 
+const fontFamilies = [
+  'Arial',
+  'Helvetica',
+  'Times New Roman',
+  'Georgia',
+  'Courier New',
+  'Verdana',
+  'Trebuchet MS',
+  'Impact',
+]
+
+const fontSizes = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 64, 72]
+
+const currentFontFamily = ref('Arial')
+const currentFontSize = ref(16)
+
+function setFontFamily(family: string) {
+  currentFontFamily.value = family
+  editor.value?.chain().focus().setFontFamily(family).run()
+}
+
+function setFontSize(size: number) {
+  currentFontSize.value = size
+  // Tiptap FontSize isn't installed — use TextStyle attrs
+  editor.value?.chain().focus().setMark('textStyle', { fontSize: size }).run()
+}
+
 const editor = useEditor({
   extensions: [
     StarterKit.configure({
@@ -175,6 +290,12 @@ const editor = useEditor({
     TextStyle,
     Color,
     Underline,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'],
+    }),
+    Subscript,
+    Superscript,
+    FontFamily,
   ],
   content: `
     <h1>Vyaz Demo</h1>
@@ -286,6 +407,29 @@ onBeforeUnmount(() => {
   font-weight: 700;
   width: auto;
   padding: 0 6px;
+}
+
+/* ── Select dropdowns (font family, size) ───────── */
+
+.toolbar-select {
+  padding: 3px 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 12px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  max-width: 120px;
+}
+
+.toolbar-select:hover {
+  border-color: #999;
+}
+
+.toolbar-select:focus {
+  border-color: #4a90d9;
+  box-shadow: 0 0 0 2px rgba(74, 144, 217, 0.15);
 }
 
 /* ── Color picker ───────────────────────────────── */

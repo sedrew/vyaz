@@ -23,6 +23,7 @@ import type { ParagraphLayoutResult } from '../types/LayoutTypes.js';
 import { compileParagraph, getParagraphText } from '../compile/DocumentCompiler.js';
 import type { PreparedRichInlineItem } from '../compile/DocumentCompiler.js';
 import { fontMetricsProvider } from '../measure/FontMetricsProvider.js';
+import { FontNotFoundError } from '../measure/FontNotFoundError.js';
 import { positionLines } from './PositioningEngine.js';
 import { assertLineInvariants } from './LineBoxValidator.js';
 
@@ -111,23 +112,22 @@ export class ParagraphLayoutEngine {
         fontWeight || '400',
         fontStyle || 'normal',
       );
-      if (font) {
-        const scale = fontSize / font.unitsPerEm;
-        let total = 0;
-        for (let i = 0; i < text.length; i++) {
-          const codePoint = text.codePointAt(i)!;
-          const glyph = font.glyphForCodePoint(codePoint);
-          if (glyph) {
-            total += glyph.advanceWidth * scale;
-          } else {
-            total += fontSize * 0.5;
-          }
-          if (codePoint > 0xffff) i++;
-        }
-        return Math.round(total * 100) / 100;
+      if (!font) {
+        throw new FontNotFoundError(fontFamily || 'Arial', fontWeight || '400', fontStyle || 'normal');
       }
-      // Fallback: approximate (rare — only when fontkit is unavailable)
-      return fontSize * text.length * 0.6;
+      const scale = fontSize / font.unitsPerEm;
+      let total = 0;
+      for (let i = 0; i < text.length; i++) {
+        const codePoint = text.codePointAt(i)!;
+        const glyph = font.glyphForCodePoint(codePoint);
+        if (glyph) {
+          total += glyph.advanceWidth * scale;
+        } else {
+          total += fontSize * 0.5;
+        }
+        if (codePoint > 0xffff) i++;
+      }
+      return Math.round(total * 100) / 100;
     };
 
     const { lines, contentWidth } = positionLines(
@@ -148,9 +148,24 @@ export class ParagraphLayoutEngine {
       maxWidth,
       yOffset,
       renderMode,
-      paragraph.id,
       measureTextFn,
+      paragraph.id,
     );
+
+    // Phase 4b: Fill per-glyph advances via fontkit
+    for (const line of lines) {
+      for (const span of line.spans) {
+        if (span.type === 'text' && span.text.length > 0 && !span.inlineWidget && !span.glyphAdvances) {
+          span.glyphAdvances = this.computeGlyphAdvances(
+            span.text,
+            span.style.fontFamily,
+            span.fontMetrics.fontSize,
+            String(span.style.fontWeight || 400),
+            span.style.fontStyle || 'normal',
+          );
+        }
+      }
+    }
 
     // Phase 5: Validate
     assertLineInvariants(lines, getParagraphText(paragraph), maxWidth);
@@ -171,36 +186,15 @@ export class ParagraphLayoutEngine {
   /**
    * Layout with per-glyph advance widths (for SVG glyph mode).
    *
-   * After basic layout, fills Span.glyphAdvances
-   * via fontkit for each text span.
-   *
-   * @param paragraph — input paragraph
-   * @param maxWidth — available container width (px)
-   * @param yOffset — starting Y position
-   * @returns ParagraphLayoutResult with glyphAdvances[]
+   * glyphAdvances are now filled by layout() automatically, so
+   * this method is equivalent to layout(). Kept for API compatibility.
    */
   layoutGlyph(
     paragraph: Paragraph,
     maxWidth: number,
     yOffset: number = 0,
   ): ParagraphLayoutResult {
-    const result = this.layout(paragraph, maxWidth, yOffset);
-
-    for (const line of result.lines) {
-      for (const span of line.spans) {
-        if (span.type === 'text' && span.text.length > 0) {
-          span.glyphAdvances = this.computeGlyphAdvances(
-            span.text,
-            span.style.fontFamily,
-            span.fontMetrics.fontSize,
-            String(span.style.fontWeight || 400),
-            span.style.fontStyle || 'normal',
-          );
-        }
-      }
-    }
-
-    return result;
+    return this.layout(paragraph, maxWidth, yOffset);
   }
 
   /**
@@ -215,9 +209,7 @@ export class ParagraphLayoutEngine {
   ): number[] {
     const font = fontMetricsProvider.getFont(fontFamily, weight, style);
     if (!font) {
-      // Fallback: uniform distribution
-      const avgWidth = fontSize * 0.6;
-      return Array.from(text).map(() => avgWidth);
+      throw new FontNotFoundError(fontFamily, weight, style);
     }
 
     const scale = fontSize / font.unitsPerEm;

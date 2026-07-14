@@ -6,7 +6,7 @@
  *   - fallback + invariant together: sum == occupiedWidth
  */
 import { describe, expect, test } from 'vitest';
-import { resolveFragmentWidths, correctToSumInvariant } from '../src/layout/estimateWidth.js';
+import { resolveFragmentWidths, correctToSumInvariant, type MeasureFn } from '../src/layout/estimateWidth.js';
 
 // ── correctToSumInvariant ────────────────────────────────────────────
 
@@ -58,59 +58,56 @@ describe('correctToSumInvariant', () => {
 // ── resolveFragmentWidths ─────────────────────────────────────────────
 
 describe('resolveFragmentWidths', () => {
+  const simpleMeasureFn: MeasureFn = (text) => text.length * 10;
+
   test('single fragment — returns occupiedWidth as-is', () => {
-    const result = resolveFragmentWidths(['hello'], 'hello', 100);
+    const result = resolveFragmentWidths(['hello'], 'hello', 100, simpleMeasureFn);
     expect(result).toEqual([100]);
   });
 
-  test('multiple fragments — distributes by weight-based fallback', () => {
-    // " between form" → [" ", "between", " form"]
-    // weights: ' '=0.35, 'between'(7×1.0)=7.0, ' form'(space=0.35 + 4×1.0=4.0)=4.35
-    // total = 0.35 + 7.0 + 4.35 = 11.7
-    // "between" = 7.0 / 11.7 * 100 ≈ 59.83
-    // " form" = 4.35 / 11.7 * 100 ≈ 37.18
-    // leading " " = 0.35 / 11.7 * 100 ≈ 2.99
+  test('multiple fragments — distributes by measureFn', () => {
     const result = resolveFragmentWidths(
       [' ', 'between', ' form'],
       ' between form',
       100,
+      (text) => {
+        if (text === ' ') return 2;
+        if (text === 'between') return 60;
+        if (text === ' form') return 35;
+        return 0;
+      },
     );
     expect(result).toHaveLength(3);
-    // Sum must equal occupiedWidth
     expect(result.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 5);
-    // "between" should get > 50px (wider than naive 7/13*100=53.8)
-    expect(result[1]).toBeGreaterThan(55);
-    // Leading space should get < 3px (narrower than naive 1/13*100=7.7)
-    expect(result[0]).toBeLessThan(4);
-  });
-
-  test('weight-based fallback gives better result than charCount/totalChars', () => {
-    // Naive: "between" = 7/13 * 100 ≈ 53.8px
-    // Weight-based: "between" = 7.0/11.7 * 100 ≈ 59.8px
-    // Real font measurement would be closer to 60+ for proportional font
-    const result = resolveFragmentWidths(
-      [' ', 'between', ' form'],
-      ' between form',
-      100,
-    );
-    const naiveWidth = (7 / 13) * 100;
-    expect(result[1]).toBeGreaterThan(naiveWidth);
   });
 
   test('empty fragments returns empty array', () => {
-    const result = resolveFragmentWidths([], '', 100);
+    const result = resolveFragmentWidths([], '', 100, simpleMeasureFn);
     expect(result).toEqual([]);
   });
 
-  test('occupuesWidth = 0 returns zeros', () => {
-    const result = resolveFragmentWidths(['a', 'b'], 'ab', 0);
-    expect(result).toEqual([0, 0]);
+  test('correctToSumInvariant corrects widths to sum to occupiedWidth', () => {
+    const result = resolveFragmentWidths(
+      ['a', 'b'],
+      'ab',
+      100,
+      (text) => text === 'a' ? 40 : 40, // sum = 80, delta = 20
+    );
+    expect(result).toHaveLength(2);
+    expect(result.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 5);
   });
 
   test('empty fragment string returns 0 for that fragment', () => {
-    const result = resolveFragmentWidths(['', 'hello', ''], ' hello ', 100);
+    const result = resolveFragmentWidths(['', 'hello', ''], ' hello ', 100, (text) => {
+      if (text === 'hello') return 80;
+      return 0;
+    });
     expect(result).toHaveLength(3);
-    expect(result[1]).toBeGreaterThan(0);
+    // Empty fragments get 0, 'hello' absorbs the correction delta
+    // raw: [0, 80, 0] → sum=80 → delta=20 → corrected: [0, 100, 0]
+    expect(result[0]).toBe(0);
+    expect(result[1]).toBeCloseTo(100, 5);
+    expect(result[2]).toBe(0);
     expect(result.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 5);
   });
 });
@@ -118,7 +115,7 @@ describe('resolveFragmentWidths', () => {
 // ── resolveFragmentWidths with measureFn ─────────────────────────────
 
 describe('resolveFragmentWidths with measureFn', () => {
-  test('uses measureFn when available and returns non-negative', () => {
+  test('uses measureFn and returns non-negative', () => {
     const result = resolveFragmentWidths(
       [' ', 'between', ' form'],
       ' between form',
@@ -126,31 +123,11 @@ describe('resolveFragmentWidths with measureFn', () => {
       (text) => text === 'between' ? 60 : text === ' form' ? 35 : 5,
     );
     expect(result).toHaveLength(3);
-    // Sum should equal occupiedWidth (via correction)
     expect(result.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 5);
   });
 
-  test('falls back to weight-based when measureFn returns -1', () => {
-    const result = resolveFragmentWidths(
-      [' ', 'between', ' form'],
-      ' between form',
-      100,
-      () => -1,
-    );
-    expect(result).toHaveLength(3);
-    expect(result.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 5);
-    // Should be same as weight-based fallback
-    const fallbackResult = resolveFragmentWidths(
-      [' ', 'between', ' form'],
-      ' between form',
-      100,
-    );
-    expect(result).toEqual(fallbackResult);
-  });
 
   test('correction applied after measurement provides sum == occupiedWidth', () => {
-    // Simulate fontkit measurement that doesn't sum to occupiedWidth
-    // due to kerning differences
     const result = resolveFragmentWidths(
       [' ', 'between', ' form'],
       ' between form',
@@ -162,11 +139,8 @@ describe('resolveFragmentWidths with measureFn', () => {
         return 0;
       },
     );
-    // Raw sum = 3 + 58 + 36 = 97, delta = +3
-    // After correction: ~3.09 + 59.79 + 37.11 = 100
     expect(result.reduce((a, b) => a + b, 0)).toBeCloseTo(100, 5);
-    // Each fragment should differ from raw measurement
-    expect(result[0]).toBeGreaterThan(3); // 3 → 3.09
-    expect(result[1]).toBeGreaterThan(58); // 58 → 59.79
+    expect(result[0]).toBeGreaterThan(3);
+    expect(result[1]).toBeGreaterThan(58);
   });
 });

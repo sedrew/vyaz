@@ -123,51 +123,90 @@ function makeTextRun(text: string, marks?: PMark[]): TextRun {
   }
 }
 
+// ── Content walker (handles hardBreak → \n) ────────────────────────────
+
+/**
+ * Walk ProseMirror content nodes inside a paragraph/heading.
+ * - text nodes → collect text with current marks
+ * - hardBreak → append "\n" to current accumulated text
+ * - Different mark sets between adjacent text nodes → create separate TextRuns
+ * - Same marks → merge into one TextRun
+ *
+ * Tiptap's hardBreak means Shift+Enter in the editor.
+ */
+function collectRuns(node: PMNode): TextRun[] {
+  const runs: TextRun[] = []
+
+  if (!node.content) return runs
+
+  let currentText = ''
+  let currentMarks: PMark[] | undefined
+
+  function flush() {
+    if (currentText.length > 0) {
+      runs.push(makeTextRun(currentText, currentMarks))
+      currentText = ''
+    }
+  }
+
+  for (const child of node.content) {
+    if (child.type === 'text') {
+      // Check if marks changed from previous segment
+      const marksChanged = marksSignature(child.marks) !== marksSignature(currentMarks)
+      if (marksChanged && currentText.length > 0) {
+        flush()
+      }
+      currentText += child.text ?? ''
+      currentMarks = child.marks
+    } else if (child.type === 'hardBreak') {
+      // Shift+Enter → insert \n within the same text run
+      currentText += '\n'
+      // marks reset after hardBreak (same line in ProseMirror)
+    }
+  }
+
+  flush()
+  return runs
+}
+
+/** Deterministic string key for mark array comparison. */
+function marksSignature(marks: PMark[] | undefined): string {
+  if (!marks || marks.length === 0) return ''
+  return marks.map(m => `${m.type}:${JSON.stringify(m.attrs ?? {})}`).join('|')
+}
+
 // ── Node → Paragraph converter ─────────────────────────────────────────
 
 function pmNodeToParagraph(node: PMNode): Paragraph | null {
   switch (node.type) {
-    case 'paragraph': {
-      const runs = node.content?.filter(n => n.type === 'text').map(n =>
-        makeTextRun(n.text ?? '', n.marks)
-      ) ?? []
+    case 'paragraph':
+    case 'heading': {
+      const runs = collectRuns(node)
 
-      // If no text runs, add an empty one so spacing is visible
       if (runs.length === 0) {
         runs.push(makeTextRun(' '))
       }
 
-      return {
-        style: {
-          alignment: 'left',
-          lineHeight: 1.4,
-          spaceBefore: 4,
-          spaceAfter: 8,
-        },
-        children: runs,
-      }
-    }
+      const isHeading = node.type === 'heading'
+      const level = isHeading ? (node.attrs?.level as number) ?? 1 : undefined
+      const headingFontSize = level ? (HEADING_SIZES_BY_LEVEL[level] ?? DEFAULT_FONT_SIZE) : undefined
 
-    case 'heading': {
-      const level = (node.attrs?.level as number) ?? 1
-      const fontSize = HEADING_SIZES_BY_LEVEL[level] ?? DEFAULT_FONT_SIZE
-      const runs = node.content?.filter(n => n.type === 'text').map(n => {
-        const run = makeTextRun(n.text ?? '', n.marks)
-        run.fontSize = fontSize
-        run.fontWeight = 'bold'
-        return run
-      }) ?? []
-
-      if (runs.length === 0) {
-        runs.push(makeTextRun(' ', []))
+      if (isHeading) {
+        for (const r of runs) {
+          r.fontSize = headingFontSize!
+          r.fontWeight = 'bold'
+        }
       }
+
+      // Extract textAlign from node attrs (set by @tiptap/extension-text-align)
+      const alignment = (node.attrs?.textAlign as TextAlignment) ?? 'left'
 
       return {
         style: {
-          alignment: 'left',
-          lineHeight: 1.3,
-          spaceBefore: 12,
-          spaceAfter: 6,
+          alignment,
+          lineHeight: isHeading ? 1.3 : 1.4,
+          spaceBefore: isHeading ? 12 : 4,
+          spaceAfter: isHeading ? 6 : 8,
         },
         children: runs,
       }
