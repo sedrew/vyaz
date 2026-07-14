@@ -5,7 +5,7 @@
     <tspan x="24" textLength="18">BBB</tspan>
     <tspan x="42" textLength="6"> </tspan>
     <tspan x="48" textLength="18">CCC</tspan>
-</text>
+  </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="66" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="66" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

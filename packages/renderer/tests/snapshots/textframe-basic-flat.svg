@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="61.8" height="14" viewBox="0 0 61.8 14">
   <text x="0" y="11" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">Hello World</text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="61.8" height="14" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1.5" stroke-dasharray="4,3" />
-  <rect x="0" y="0" width="61.8" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="61.8" height="14" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="61.8" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

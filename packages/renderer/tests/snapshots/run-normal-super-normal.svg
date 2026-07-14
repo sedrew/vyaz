@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="262.98" height="48" viewBox="-10 -10 262.98 48">
   <text x="0" y="23" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000" textLength="72">NORMAL</tspan>
-</text>
-  <text x="72" y="13.4" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">
+  </text>
+  <text x="0" y="13.4" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="72" font-weight="400" font-style="normal" font-family="Unifont" font-size="15.6" fill="#000000" textLength="38.98">super</tspan>
-</text>
+  </text>
   <text x="0" y="23" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="110.98" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000" textLength="60">HELLO</tspan>
     <tspan x="170.98" textLength="12"> </tspan>
     <tspan x="182.98" textLength="60">WORLD</tspan>
-</text>
+  </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="242.98" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="242.98" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

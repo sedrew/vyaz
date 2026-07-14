@@ -1,7 +1,8 @@
 /**
  * SVGRenderer.ts — SVG text builder.
  *
- * Converts Line[] into SVG markup using a builder pattern.
+ * Converts Line[] into SVG markup using an AST-first approach.
+ * Builds a tree of SvgNode, then serializes to string in one pass.
  *
  * Four presets:
  *   flat     — all text in one <text> element, xml:space="preserve", no <tspan>
@@ -17,8 +18,9 @@
  *   const svg = renderToSVG(lines, { preset: 'preserve', style: 'css', fit: 'frag' })
  */
 
-import type { Line, Span, ParagraphLayoutResult } from '@vyaz/core';
-import type { DebugFlags } from './types.js';
+import type { Line, Span, ParagraphLayoutResult, ParagraphGroup } from '@vyaz/core';
+import { groupLinesByParagraph } from '@vyaz/core';
+import type { DebugFlags, SvgElement, SvgNode } from './types.js';
 import { computeBBox, fmt } from './utils.js';
 
 // ── Types ────────────────────────────────────────────────────────────────
@@ -276,6 +278,7 @@ interface StyleState {
   color: string;
   fontStyle: string;
   decoration: string;
+  letterSpacing?: number;
 }
 
 function defaultStyleState(span: Span): StyleState {
@@ -290,13 +293,15 @@ function defaultStyleState(span: Span): StyleState {
     color: span.style.color || '#000000',
     fontStyle: span.style.fontStyle || 'normal',
     decoration: decorations.join(' '),
+    letterSpacing: span.style.letterSpacing,
   };
 }
 
 function equalStyle(a: StyleState, b: StyleState): boolean {
   return a.fontFamily === b.fontFamily && a.fontSize === b.fontSize &&
     a.fontWeight === b.fontWeight && a.color === b.color &&
-    a.fontStyle === b.fontStyle && a.decoration === b.decoration;
+    a.fontStyle === b.fontStyle && a.decoration === b.decoration &&
+    a.letterSpacing === b.letterSpacing;
 }
 
 /** Build style string for CSS mode */
@@ -308,6 +313,7 @@ function cssStyleString(s: StyleState): string {
   if (s.fontWeight !== 400) parts.push(`font-weight: ${s.fontWeight}`);
   if (s.fontStyle === 'italic') parts.push(`font-style: italic`);
   if (s.decoration) parts.push(`text-decoration: ${s.decoration}`);
+  if (s.letterSpacing !== undefined && s.letterSpacing !== 0) parts.push(`letter-spacing: ${fmt(s.letterSpacing)}px`);
   return parts.join('; ');
 }
 
@@ -316,42 +322,50 @@ function xmlStyleAttrs(s: StyleState): string {
   let attrs = `font-family="${s.fontFamily}" font-size="${fmt(s.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
   if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
   if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
+  if (s.letterSpacing !== undefined && s.letterSpacing !== 0) attrs += ` letter-spacing="${fmt(s.letterSpacing)}"`;
   return attrs;
 }
 
 /** Build attributes for <text> element */
-function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: string): string {
+function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: string): Record<string, string | number> {
   const x = line.x;
   const y = line.y + line.baseline;
   const s = defaultStyleState(span);
 
-  let attrs = ` x="${fmt(x)}" y="${fmt(y)}"`;
-  if (runId) attrs += ` id="${runId}"`;
+  const attrs: Record<string, string | number> = {
+    x: fmt(x),
+    y: fmt(y),
+  };
+  if (runId) attrs.id = runId;
 
   if (opts.style === 'css') {
     let css = cssStyleString(s);
     if (opts.spacing === 'preserve') css += '; white-space: pre';
-    attrs += ` style="${css}"`;
+    attrs.style = css;
   } else {
-    attrs += ` ${xmlStyleAttrs(s)}`;
-    if (opts.spacing === 'preserve') attrs += ' xml:space="preserve"';
+    // Flatten xmlStyleAttrs result into individual attrs
+    attrs['font-family'] = s.fontFamily;
+    attrs['font-size'] = fmt(s.fontSize);
+    attrs.fill = s.color;
+    attrs['font-weight'] = s.fontWeight;
+    if (s.fontStyle === 'italic') attrs['font-style'] = 'italic';
+    if (s.decoration) attrs['text-decoration'] = s.decoration;
+    if (opts.spacing === 'preserve') attrs['xml:space'] = 'preserve';
   }
 
-  // text-anchor is only meaningful for flat mode where text sits directly in <text>.
-  // For expanded/glyph modes, each <tspan> has explicit x="..." coordinates that already
-  // account for alignment — text-anchor on <text> would then double-shift the text.
-  if (opts.structure === 'flat') {
-    const anchor = line.alignment === 'center' ? 'middle' : line.alignment === 'right' ? 'end' : 'start';
-    if (anchor !== 'start') attrs += ` text-anchor="${anchor}"`;
-  }
+  // text-anchor is intentionally NOT used in flat mode.
+  // PositioningEngine already accounts for alignment by shifting line.x.
+  // Adding text-anchor would double-shift the text.
 
   return attrs;
 }
 
 /** Build attributes for <tspan> (expanded mode — only diff from current style) */
-function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null): { attrs: string; newStyle: StyleState } {
+function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null): { attrs: Record<string, string | number>; newStyle: StyleState } {
   const s = defaultStyleState(span);
-  let attrs = ` x="${fmt(x)}"`;
+  const attrs: Record<string, string | number> = {
+    x: fmt(x),
+  };
 
   if (currentStyle && equalStyle(s, currentStyle)) {
     return { attrs, newStyle: s };
@@ -360,13 +374,16 @@ function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null)
   // textLength is NOT added here — it is handled by buildFragFitAttr() separately
   // to avoid duplicate textLength when fit='frag'.
 
-  if (!currentStyle || s.fontWeight !== currentStyle.fontWeight) attrs += ` font-weight="${s.fontWeight}"`;
-  if (!currentStyle || s.fontStyle !== currentStyle.fontStyle) attrs += ` font-style="${s.fontStyle}"`;
-  if (!currentStyle || s.fontFamily !== currentStyle.fontFamily) attrs += ` font-family="${s.fontFamily}"`;
-  if (!currentStyle || s.fontSize !== currentStyle.fontSize) attrs += ` font-size="${fmt(s.fontSize)}"`;
-  if (!currentStyle || s.color !== currentStyle.color) attrs += ` fill="${s.color}"`;
+  if (!currentStyle || s.fontWeight !== currentStyle.fontWeight) attrs['font-weight'] = s.fontWeight;
+  if (!currentStyle || s.fontStyle !== currentStyle.fontStyle) attrs['font-style'] = s.fontStyle;
+  if (!currentStyle || s.fontFamily !== currentStyle.fontFamily) attrs['font-family'] = s.fontFamily;
+  if (!currentStyle || s.fontSize !== currentStyle.fontSize) attrs['font-size'] = fmt(s.fontSize);
+  if (!currentStyle || s.color !== currentStyle.color) attrs.fill = s.color;
   if (!currentStyle || s.decoration !== currentStyle.decoration) {
-    if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
+    if (s.decoration) attrs['text-decoration'] = s.decoration;
+  }
+  if (!currentStyle || s.letterSpacing !== currentStyle.letterSpacing) {
+    if (s.letterSpacing !== undefined && s.letterSpacing !== 0) attrs['letter-spacing'] = fmt(s.letterSpacing);
   }
 
   return { attrs, newStyle: s };
@@ -390,107 +407,242 @@ function buildGlyphPositions(span: Span, _lineX: number): string {
 }
 
 /** Build textLength attribute for a line */
-function buildFitAttr(line: Line, opts: ResolvedOptions): string {
+function buildFitAttr(line: Line, opts: ResolvedOptions): Record<string, string | number> | undefined {
   if (opts.fit === 'text') {
-    return ` textLength="${fmt(line.width)}" lengthAdjust="spacing"`;
+    return { textLength: fmt(line.width), lengthAdjust: 'spacing' };
   }
-  return '';
+  return undefined;
 }
 
 /** Build textLength for a span */
-function buildSpanFitAttr(span: Span, opts: ResolvedOptions): string {
+function buildSpanFitAttr(span: Span, opts: ResolvedOptions): Record<string, string | number> | undefined {
   if (opts.fit === 'frag') {
-    return ` textLength="${fmt(span.width)}"`;
+    return { textLength: fmt(span.width) };
   }
-  return '';
+  return undefined;
 }
 
-// ── SVG builder ──────────────────────────────────────────────────────────
+// ── SVG AST helpers ──────────────────────────────────────────────────────
 
-interface ViewBox {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
+/**
+ * Create an SVG element node.
+ */
+function el(tag: string, attrs: Record<string, string | number | undefined> = {}, children: SvgNode[] = []): SvgElement {
+  // Strip undefined values from attrs
+  const cleanAttrs: Record<string, string | number> = {};
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v !== undefined) {
+      cleanAttrs[k] = v;
+    }
+  }
+  return { type: 'element', tag, attrs: cleanAttrs, children };
 }
 
-class SvgBuilder {
-  private parts: string[] = [];
+/**
+ * Create an SVG text node (escaped on serialization).
+ */
+function textNode(value: string): SvgNode {
+  return { type: 'text', value };
+}
+
+/**
+ * Create an SVG raw node (output verbatim, no escaping).
+ */
+function rawNode(value: string): SvgNode {
+  return { type: 'raw', value };
+}
+
+// ── Serializer ───────────────────────────────────────────────────────────
+
+/**
+ * Serialize an SVG AST node to a string.
+ * Uses an indent level for pretty-printing.
+ */
+function serializeSvg(node: SvgNode, indent = 0): string {
+  const pad = '  '.repeat(indent);
+
+  switch (node.type) {
+    case 'text':
+      return escapeXml(node.value);
+
+    case 'raw':
+      return node.value;
+
+    case 'comment':
+      return `${pad}<!-- ${node.value} -->\n`;
+
+    case 'element': {
+      const tag = node.tag;
+      const attrsStr = Object.entries(node.attrs)
+        .map(([k, v]) => `${k}="${v}"`)
+        .join(' ');
+
+      if (node.children.length === 0) {
+        return `${pad}<${tag}${attrsStr ? ' ' + attrsStr : ''} />\n`;
+      }
+
+      // If all children are text nodes, render inline (same line as opening tag).
+      // This matches the old string-push behavior where <tspan>text</tspan>
+      // was emitted as a single string without extra newlines.
+      const allTextChildren = node.children.every(c => c.type === 'text');
+      if (allTextChildren) {
+        const text = node.children.map(c => (c as any).value).join('');
+        return `${pad}<${tag}${attrsStr ? ' ' + attrsStr : ''}>${escapeXml(text)}</${tag}>\n`;
+      }
+
+      const openTag = `${pad}<${tag}${attrsStr ? ' ' + attrsStr : ''}>\n`;
+      const childrenStr = node.children.map(c => serializeSvg(c, indent + 1)).join('');
+      const closeTag = `${pad}</${tag}>\n`;
+
+      return openTag + childrenStr + closeTag;
+    }
+  }
+}
+
+// ── SVG AST Builder ──────────────────────────────────────────────────────
+
+/**
+ * Builds an SVG AST tree. Unlike the old imperative SvgBuilder (which pushed
+ * strings and relied on manual open/close tracking), this builder maintains
+ * a tree of SvgElement nodes. The tree structure guarantees that:
+ *   - <tspan> nodes are always children of a <text> node
+ *   - No orphaned closing tags
+ *   - Correct nesting is enforced at the data level, not by call order
+ */
+class SvgAstBuilder {
+  /** The root <svg> element. */
+  readonly root: SvgElement;
+  /** Reference to the currently active <text> element (if any). */
+  private currentText: SvgElement | null = null;
   private opts: ResolvedOptions;
 
-  constructor(width: number, height: number, opts: ResolvedOptions, viewBox?: ViewBox) {
+  constructor(width: number, height: number, opts: ResolvedOptions, viewBox?: { x: number; y: number; w: number; h: number }) {
     this.opts = opts;
-    const className = opts.className ? ` class="${escapeXml(opts.className)}"` : '';
-    const vb = viewBox
-      ? `viewBox="${fmt(viewBox.x)} ${fmt(viewBox.y)} ${fmt(viewBox.w)} ${fmt(viewBox.h)}"`
-      : `viewBox="0 0 ${fmt(width)} ${fmt(height)}"`;
-    this.parts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${fmt(width)}" height="${fmt(height)}" ${vb}${className}>\n`);
+    const svgAttrs: Record<string, string | number | undefined> = {
+      xmlns: 'http://www.w3.org/2000/svg',
+      width: fmt(width),
+      height: fmt(height),
+      viewBox: viewBox
+        ? `${fmt(viewBox.x)} ${fmt(viewBox.y)} ${fmt(viewBox.w)} ${fmt(viewBox.h)}`
+        : `0 0 ${fmt(width)} ${fmt(height)}`,
+    };
+    if (opts.className) {
+      svgAttrs.class = opts.className;
+    }
+    this.root = el('svg', svgAttrs);
   }
 
-  addText(line: Line, baseSpan: Span, runId?: string, yOverride?: number, fontSizeOverride?: number): void {
-    let attrs: string;
+  /**
+   * Open a new <text> element.
+   * Closes any previously open <text> automatically.
+   */
+  openText(line: Line, baseSpan: Span, runId?: string, yOverride?: number, fontSizeOverride?: number): void {
+    // Close any open text first
+    this.closeText();
+
+    let textAttrs: Record<string, string | number>;
     if (yOverride !== undefined && fontSizeOverride !== undefined) {
       // For flat mode sub/superscript — override y and font-size
       const s = defaultStyleState(baseSpan);
       const x = line.x;
-      attrs = ` x="${fmt(x)}" y="${fmt(yOverride)}"`;
+      const attrs: Record<string, string | number> = {
+        x: fmt(x),
+        y: fmt(yOverride),
+      };
       if (this.opts.style === 'css') {
         let css = cssStyleString(s);
         if (this.opts.spacing === 'preserve') css += '; white-space: pre';
-        attrs += ` style="${css}"`;
+        attrs.style = css;
       } else {
-        let xml = ` font-family="${s.fontFamily}" font-size="${fmt(fontSizeOverride)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
-        if (s.fontStyle === 'italic') xml += ' font-style="italic"';
-        if (s.decoration) xml += ` text-decoration="${s.decoration}"`;
-        if (this.opts.spacing === 'preserve') xml += ' xml:space="preserve"';
-        attrs += xml;
+        attrs['font-family'] = s.fontFamily;
+        attrs['font-size'] = fmt(fontSizeOverride);
+        attrs.fill = s.color;
+        attrs['font-weight'] = s.fontWeight;
+        if (s.fontStyle === 'italic') attrs['font-style'] = 'italic';
+        if (s.decoration) attrs['text-decoration'] = s.decoration;
+        if (this.opts.spacing === 'preserve') attrs['xml:space'] = 'preserve';
       }
+      textAttrs = attrs;
     } else {
-      attrs = buildTextAttrs(line, baseSpan, this.opts, runId);
+      textAttrs = buildTextAttrs(line, baseSpan, this.opts, runId);
     }
-    const fit = buildFitAttr(line, this.opts);
-    this.parts.push(`  <text${attrs}${fit}>\n`);
+
+    const fitAttrs = buildFitAttr(line, this.opts);
+    if (fitAttrs) {
+      Object.assign(textAttrs, fitAttrs);
+    }
+
+    const textEl = el('text', textAttrs);
+    this.root.children.push(textEl);
+    this.currentText = textEl;
   }
 
-  addFlatSpan(text: string): void {
-    this.parts.push(`${escapeXml(text)}`);
+  /**
+   * Add raw SVG markup as a direct child of the root <svg>.
+   * Used for pre-rendered debug overlays.
+   */
+  addDebug(debugMarkup: string): void {
+    if (debugMarkup) {
+      this.root.children.push(rawNode(`<!-- debug overlay -->\n${debugMarkup}\n`));
+    }
   }
 
-  /** Write a raw SVG line (for flat mode where each span is its own <text>). */
-  pushLine(line: string): void {
-    this.parts.push(line);
+  /**
+   * Add text content (flat mode — no <tspan>).
+   * Text is escaped automatically on serialization.
+   */
+  addTextContent(text: string): void {
+    if (this.currentText) {
+      this.currentText.children.push(textNode(text));
+    }
   }
 
-  closeText(): void {
-    this.parts.push('</text>\n');
-  }
-
-  addExpandedSpan(span: Span, x: number, style: StyleState | null): StyleState {
+  /**
+   * Add an expanded <tspan> node to the current <text> element.
+   */
+  addTspan(span: Span, x: number, style: StyleState | null): StyleState {
     const { attrs, newStyle } = buildTspanAttrs(span, x, style);
-    const fit = buildSpanFitAttr(span, this.opts);
-    this.parts.push(`    <tspan${attrs}${fit}>${escapeXml(span.text)}</tspan>\n`);
+    const fitAttrs = buildSpanFitAttr(span, this.opts);
+    if (fitAttrs) {
+      Object.assign(attrs, fitAttrs);
+    }
+    const tspan = el('tspan', attrs, [textNode(span.text)]);
+    if (this.currentText) {
+      this.currentText.children.push(tspan);
+    }
     return newStyle;
   }
 
-  addGlyphSpan(span: Span, lineX: number): void {
+  /**
+   * Add a glyph-positioned <tspan> node to the current <text> element.
+   */
+  addGlyphTspan(span: Span, lineX: number): void {
     const positions = buildGlyphPositions(span, lineX);
+    const attrs: Record<string, string | number> = {};
     if (positions) {
-      this.parts.push(`    <tspan x="${positions}">${escapeXml(span.text)}</tspan>\n`);
-    } else {
-      this.parts.push(`    <tspan>${escapeXml(span.text)}</tspan>\n`);
+      attrs.x = positions;
+    }
+    const tspan = el('tspan', attrs, [textNode(span.text)]);
+    if (this.currentText) {
+      this.currentText.children.push(tspan);
     }
   }
 
-
-  addDebug(debugOverlay: string): void {
-    if (debugOverlay) {
-      this.parts.push(`<!-- debug overlay -->\n${debugOverlay}\n`);
-    }
+  /**
+   * Add a pre-rendered SVG line as a raw node directly under root.
+   * Used in flat mode when each span is its own <text>.
+   */
+  addRawLine(lineStr: string): void {
+    this.closeText();
+    this.root.children.push(rawNode(lineStr));
   }
 
-  build(): string {
-    this.parts.push('</svg>\n');
-    return this.parts.join('');
+  /**
+   * Close the currently open <text> element.
+   * Safe to call multiple times — no-op if no text is open.
+   */
+  closeText(): void {
+    this.currentText = null;
   }
 }
 
@@ -503,12 +655,13 @@ function renderDebugToSVG(
   contentSize?: { width: number; height: number },
 ): string {
   const parts: string[] = [];
+  const sw = flags.widthBorder ?? 1;
 
   // Frame container bounding box
   if ((flags.frameBox || flags.frame) && frameSize) {
     parts.push(
       `  <rect x="0" y="0" width="${fmt(frameSize.width)}" height="${fmt(frameSize.height)}"` +
-      ` fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1.5" stroke-dasharray="4,3" />`,
+      ` fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="${fmt(sw)}" stroke-dasharray="4,3" />`,
     );
     if (flags.labels) {
       parts.push(
@@ -522,7 +675,7 @@ function renderDebugToSVG(
     const bbox = computeBBox(lines);
     parts.push(
       `  <rect x="${fmt(bbox.x)}" y="${fmt(bbox.y)}" width="${fmt(bbox.width)}" height="${fmt(bbox.height)}"` +
-      ` fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1.5" stroke-dasharray="1,2" />`,
+      ` fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="${fmt(sw)}" stroke-dasharray="1,2" />`,
     );
     if (flags.labels) {
       const labelY = bbox.y + bbox.height + 14;
@@ -543,6 +696,33 @@ function renderDebugToSVG(
     }
   }
 
+  // Paragraph bounding boxes
+  if (flags.paragraphBox) {
+    const paraGroups = groupLinesByParagraph(lines);
+    const paraColors = [
+      'rgba(0,180,80,0.25)',
+      'rgba(180,0,80,0.25)',
+      'rgba(80,0,180,0.25)',
+      'rgba(180,180,0,0.25)',
+    ];
+    // Container right edge: use frame width, or content bbox, or max line extent
+    const containerRight = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
+    for (let i = 0; i < paraGroups.length; i++) {
+      const group = paraGroups[i];
+      if (group.lines.length === 0) continue;
+      const firstLine = group.lines[0];
+      const lastLine = group.lines[group.lines.length - 1];
+      const top = firstLine.y;
+      const bottom = lastLine.y + lastLine.height;
+      const color = paraColors[i % paraColors.length];
+      parts.push(`  <rect x="0" y="${fmt(top)}" width="${fmt(containerRight)}" height="${fmt(bottom - top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
+      const label = group.tag ? `#${group.pIdx} ${group.tag}` : `#${group.pIdx}`;
+      if (flags.labels) {
+        parts.push(`  <text x="4" y="${fmt(top - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
+      }
+    }
+  }
+
   for (const line of lines) {
     const bx = line.x, by = line.y, bw = line.width, bh = line.height;
     const baselineY = line.y + line.baseline;
@@ -551,14 +731,14 @@ function renderDebugToSVG(
       parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="rgba(0,150,255,0.10)" stroke="none" />`);
     }
     if (flags.box) {
-      parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="none" stroke="rgba(255,100,100,0.5)" stroke-width="1" />`);
+      parts.push(`  <rect x="${fmt(bx)}" y="${fmt(by)}" width="${fmt(bw)}" height="${fmt(bh)}" fill="none" stroke="rgba(255,100,100,0.5)" stroke-width="${fmt(sw)}" />`);
     }
     if (flags.baseline) {
-      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY)}" stroke="rgba(100,100,255,0.5)" stroke-width="1" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY)}" stroke="rgba(100,100,255,0.5)" stroke-width="${fmt(sw)}" />`);
     }
     if (flags.ascentDescent) {
-      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY - line.ascent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY - line.ascent)}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
-      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY + line.descent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY + line.descent)}" stroke="rgba(100,255,100,0.4)" stroke-width="0.5" stroke-dasharray="3,2" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY - line.ascent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY - line.ascent)}" stroke="rgba(100,255,100,0.4)" stroke-width="${fmt(sw)}" stroke-dasharray="3,2" />`);
+      parts.push(`  <line x1="${fmt(bx)}" y1="${fmt(baselineY + line.descent)}" x2="${fmt(bx + bw)}" y2="${fmt(baselineY + line.descent)}" stroke="rgba(100,255,100,0.4)" stroke-width="${fmt(sw)}" stroke-dasharray="3,2" />`);
     }
     if (flags.labels) {
       parts.push(`  <text x="${fmt(bx)}" y="${fmt(by - 2)}" font-size="9" fill="rgba(0,0,0,0.55)" font-family="monospace">y=${fmt(by)} x=${fmt(bx)} w=${fmt(bw)} h=${fmt(bh)} bl=${fmt(baselineY)}</text>`);
@@ -568,7 +748,7 @@ function renderDebugToSVG(
         if (span.width <= 0) continue;
         const rx = line.x + span.x;
         const ry = baselineY - span.fontMetrics.ascent;
-        parts.push(`  <rect x="${fmt(rx)}" y="${fmt(ry)}" width="${fmt(span.width)}" height="${fmt(span.fontMetrics.ascent + span.fontMetrics.descent)}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="0.5" />`);
+        parts.push(`  <rect x="${fmt(rx)}" y="${fmt(ry)}" width="${fmt(span.width)}" height="${fmt(span.fontMetrics.ascent + span.fontMetrics.descent)}" fill="none" stroke="rgba(200,100,255,0.4)" stroke-width="${fmt(sw)}" />`);
       }
     }
   }
@@ -591,7 +771,7 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
   // Determine canvas size and viewBox
   const { width: svgWidth, height: svgHeight, viewBox, frameWidth, frameHeight } = resolveSize(lines, opts);
 
-  const builder = new SvgBuilder(svgWidth, svgHeight, opts, viewBox);
+  const builder = new SvgAstBuilder(svgWidth, svgHeight, opts, viewBox);
 
   for (const line of lines) {
     if (opts.structure === 'glyph') {
@@ -601,18 +781,14 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         if (!span.text) continue;
         const runIdx = span.itemIndex;
         if (runIdx !== currentRunIdx) {
-          if (currentRunIdx !== -1) {
-            builder.closeText();
-          }
-          const runId = span.paragraphId ? `${span.paragraphId}-${runIdx}` : undefined;
-          builder.addText(line, span, runId);
+          builder.closeText();
+          const runId = span.tag ? `${span.tag}-${runIdx}` : undefined;
+          builder.openText(line, span, runId);
           currentRunIdx = runIdx;
         }
-        builder.addGlyphSpan(span, line.x);
+        builder.addGlyphTspan(span, line.x);
       }
-      if (currentRunIdx !== -1) {
-        builder.closeText();
-      }
+      builder.closeText();
     } else if (opts.structure === 'flat') {
       // flat mode: group spans by (baseline + offset). Each group → one <text>.
       const groups: { spans: Span[]; targetY: number; fontSize: number }[] = [];
@@ -638,14 +814,25 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         // For single-span groups: span.x = firstTextX → x = line.x (correct for padding & alignment).
         // For sub/super script: span.x differs from firstTextX → x = line.x + span.x - firstTextX.
         const groupX = line.x + (group.spans[0].x - firstTextX);
-        let attrs = ` x="${fmt(groupX)}" y="${fmt(group.targetY)}" font-family="${s.fontFamily}" font-size="${fmt(group.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
-        if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
-        if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
-        attrs += ' xml:space="preserve"';
-        // text-anchor for center/right alignment
-        if (line.alignment === 'center') attrs += ' text-anchor="middle"';
-        else if (line.alignment === 'right') attrs += ' text-anchor="end"';
-        builder.pushLine(`  <text${attrs}${fitAttr}>${text}</text>\n`);
+        const textAttrs: Record<string, string | number> = {
+          x: fmt(groupX),
+          y: fmt(group.targetY),
+          'font-family': s.fontFamily,
+          'font-size': fmt(group.fontSize),
+          fill: s.color,
+          'font-weight': s.fontWeight,
+        };
+        if (s.fontStyle === 'italic') textAttrs['font-style'] = 'italic';
+        if (s.decoration) textAttrs['text-decoration'] = s.decoration;
+        textAttrs['xml:space'] = 'preserve';
+        if (fitAttr) {
+          Object.assign(textAttrs, fitAttr);
+        }
+        // For flat mode, use addRawLine to skip text tracking
+        const attrsStr = Object.entries(textAttrs)
+          .map(([k, v]) => `${k}="${v}"`)
+          .join(' ');
+        builder.addRawLine(`  <text ${attrsStr}>${text}</text>\n`);
       }
     } else {
       // expanded: group spans by baseline offset (for sub/superscript).
@@ -677,14 +864,24 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
           const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
           const groupX = line.x + (group.spans[0].x - firstTextX);
           const fontSize = baseSpan.fontMetrics.fontSize;
-          let attrs = ` x="${fmt(groupX)}" y="${fmt(group.targetY)}" font-family="${s.fontFamily}" font-size="${fmt(fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
-          if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
-          if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
-          attrs += ' xml:space="preserve"';
+          const textAttrs: Record<string, string | number> = {
+            x: fmt(groupX),
+            y: fmt(group.targetY),
+            'font-family': s.fontFamily,
+            'font-size': fmt(fontSize),
+            fill: s.color,
+            'font-weight': s.fontWeight,
+          };
+          if (s.fontStyle === 'italic') textAttrs['font-style'] = 'italic';
+          if (s.decoration) textAttrs['text-decoration'] = s.decoration;
+          textAttrs['xml:space'] = 'preserve';
           const fit = buildFitAttr(line, opts);
-          builder.pushLine(`  <text${attrs}${fit}>\n`);
+          if (fit) {
+            Object.assign(textAttrs, fit);
+          }
+          builder.openText(line, baseSpan, undefined, group.targetY, fontSize);
         } else {
-          builder.addText(line, baseSpan);
+          builder.openText(line, baseSpan);
         }
 
         let currentStyle: StyleState | null = null;
@@ -694,7 +891,7 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
 
           const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
           if (shouldRender) {
-            const newStyle = builder.addExpandedSpan(span, x, currentStyle);
+            const newStyle = builder.addTspan(span, x, currentStyle);
             if (span.type !== 'space') {
               currentStyle = newStyle;
             }
@@ -716,7 +913,7 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
     builder.addDebug(debugSvg);
   }
 
-  return builder.build();
+  return serializeSvg(builder.root);
 }
 
 /**

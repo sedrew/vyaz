@@ -8,8 +8,9 @@
  * Simple JSON-serialisable format — does not depend on pretext directly.
  */
 
-import type { Paragraph, TextRun } from '../types/Document.js';
+import type { Paragraph, TextRun, TextTransform } from '../types/Document.js';
 import { DEFAULT_TEXT_STYLE } from '../types/Document.js';
+import { transformText } from '../utils/textTransform.js';
 
 // ── Font Weight normalization (matching react-pdf convention) ───────────
 
@@ -52,6 +53,8 @@ export interface PreparedRichInlineItem {
   letterSpacing?: number;
   extraWidth?: number;         // padding, border for inline-box
   break?: 'normal' | 'never';  // for atomic chips
+  /** Original text before text-transform (if transform was applied). Used for copy-paste / round-trip. */
+  originalText?: string;
   metadata: {
     originalRunIndex: number;
     baselineOffset: number;
@@ -88,7 +91,10 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
     }
 
     // Inline-box: text → \uFFFC
-    const text = run.type === 'inline-box' ? '\uFFFC' : run.text;
+    const rawText = run.type === 'inline-box' ? '\uFFFC' : run.text;
+    // Apply text-transform (only for text runs, not inline-box)
+    const textTransformValue: TextTransform | undefined = run.textTransform;
+    const text = transformText(rawText, textTransformValue);
 
     // Normalize fontWeight to numeric value
     const resolvedFontWeight = normalizeFontWeight(run.fontWeight ?? DEFAULT_TEXT_STYLE.fontWeight);
@@ -107,6 +113,8 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
       text,
       font: makeFontToken(run, effectiveFontSize),
       letterSpacing: run.letterSpacing,
+      // Save original text if transform was applied (for copy-paste / round-trip)
+      ...(text !== rawText ? { originalText: rawText } : {}),
       metadata: {
         originalRunIndex: i,
         baselineOffset,
