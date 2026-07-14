@@ -121,13 +121,13 @@
       "id": "letter-spacing",
       "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
       "children": [
-        { "type": "text", "text": "S p r e a d  o u t", "letterSpacing": 4, "color": "#000" },
+        { "type": "text", "text": "Spread out", "letterSpacing": 4, "color": "#000" },
         { "type": "text", "text": " | ", "color": "#000" },
         { "type": "text", "text": "condensed", "letterSpacing": -1, "color": "#000" },
         { "type": "text", "text": " | ", "color": "#000" },
-        { "type": "text", "text": "UPPERCASE TEXT", "color": "#000" },
+        { "type": "text", "text": "uppercase text", "textTransform": "uppercase", "color": "#000" },
         { "type": "text", "text": " | ", "color": "#000" },
-        { "type": "text", "text": "Capitalize Words", "color": "#000" }
+        { "type": "text", "text": "capitalize words", "textTransform": "capitalize", "color": "#000" }
       ]
     },
     {

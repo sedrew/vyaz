@@ -277,6 +277,7 @@ interface StyleState {
   color: string;
   fontStyle: string;
   decoration: string;
+  letterSpacing?: number;
 }
 
 function defaultStyleState(span: Span): StyleState {
@@ -291,13 +292,15 @@ function defaultStyleState(span: Span): StyleState {
     color: span.style.color || '#000000',
     fontStyle: span.style.fontStyle || 'normal',
     decoration: decorations.join(' '),
+    letterSpacing: span.style.letterSpacing,
   };
 }
 
 function equalStyle(a: StyleState, b: StyleState): boolean {
   return a.fontFamily === b.fontFamily && a.fontSize === b.fontSize &&
     a.fontWeight === b.fontWeight && a.color === b.color &&
-    a.fontStyle === b.fontStyle && a.decoration === b.decoration;
+    a.fontStyle === b.fontStyle && a.decoration === b.decoration &&
+    a.letterSpacing === b.letterSpacing;
 }
 
 /** Build style string for CSS mode */
@@ -309,6 +312,7 @@ function cssStyleString(s: StyleState): string {
   if (s.fontWeight !== 400) parts.push(`font-weight: ${s.fontWeight}`);
   if (s.fontStyle === 'italic') parts.push(`font-style: italic`);
   if (s.decoration) parts.push(`text-decoration: ${s.decoration}`);
+  if (s.letterSpacing !== undefined && s.letterSpacing !== 0) parts.push(`letter-spacing: ${fmt(s.letterSpacing)}px`);
   return parts.join('; ');
 }
 
@@ -317,6 +321,7 @@ function xmlStyleAttrs(s: StyleState): string {
   let attrs = `font-family="${s.fontFamily}" font-size="${fmt(s.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
   if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
   if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
+  if (s.letterSpacing !== undefined && s.letterSpacing !== 0) attrs += ` letter-spacing="${fmt(s.letterSpacing)}"`;
   return attrs;
 }
 
@@ -364,6 +369,9 @@ function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null)
   if (!currentStyle || s.color !== currentStyle.color) attrs += ` fill="${s.color}"`;
   if (!currentStyle || s.decoration !== currentStyle.decoration) {
     if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
+  }
+  if (!currentStyle || s.letterSpacing !== currentStyle.letterSpacing) {
+    if (s.letterSpacing !== undefined && s.letterSpacing !== 0) attrs += ` letter-spacing="${fmt(s.letterSpacing)}"`;
   }
 
   return { attrs, newStyle: s };

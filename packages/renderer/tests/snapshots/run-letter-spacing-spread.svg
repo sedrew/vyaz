@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="34" viewBox="-10 -10 120 34">
+  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" letter-spacing="4" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000000" letter-spacing="4" textLength="100">Spread out</tspan>
+</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="100" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

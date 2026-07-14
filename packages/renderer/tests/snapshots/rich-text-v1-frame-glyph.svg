@@ -127,16 +127,16 @@
     <tspan> </tspan>
     <tspan x="221.4 226.8 232.3 237.7 243.2 248.7 254.1 259.6 265 270.5 276 281.4 286.9 292.3 297.8 303.3">Highlight marker</tspan>
 </text>
-  <text x="0" y="291" id="letter-spacing-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
-    <tspan x="0 8.8 17.6 26.5 35.3 44.1 52.9 61.8 70.6 79.4 88.2 97.1 105.9 114.7 123.5 132.3 141.2">S p r e a d o u t</tspan>
+  <text x="0" y="291" id="letter-spacing-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="4" xml:space="preserve">
+    <tspan x="0 9.9 19.7 29.6 39.5 49.4 59.2 69.1 79 88.8">Spread out</tspan>
 </text>
   <text x="0" y="291" id="letter-spacing-1" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
     <tspan>|</tspan>
 </text>
-  <text x="0" y="291" id="letter-spacing-2" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+  <text x="0" y="291" id="letter-spacing-2" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="-1" xml:space="preserve">
     <tspan> </tspan>
-    <tspan x="159.8 165.3 170.8 176.3 181.8 187.4 192.9 198.4 203.9">condensed</tspan>
+    <tspan x="108.5 114 119.5 125 130.6 136.1 141.6 147.1 152.7">condensed</tspan>
 </text>
   <text x="0" y="291" id="letter-spacing-3" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
@@ -144,7 +144,7 @@
 </text>
   <text x="0" y="291" id="letter-spacing-4" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
-    <tspan x="219.2 226.9 234.7 242.4 250.1 257.8 265.5 273.2 281 288.7 296.4 304.1 311.8 319.5">UPPERCASE TEXT</tspan>
+    <tspan x="168 175.7 183.4 191.1 198.8 206.5 214.2 222 229.7 237.4 245.1 252.8 260.5 268.3">UPPERCASE TEXT</tspan>
 </text>
   <text x="0" y="291" id="letter-spacing-5" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
@@ -152,7 +152,7 @@
 </text>
   <text x="0" y="291" id="letter-spacing-6" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan> </tspan>
-    <tspan x="337 342.7 348.3 354 359.6 365.3 370.9 376.6 382.2 387.9 393.6 399.2 404.9 410.5 416.2 421.8">Capitalize Words</tspan>
+    <tspan x="285.7 291.4 297 302.7 308.3 314 319.7 325.3 331 336.6 342.3 347.9 353.6 359.2 364.9 370.5">Capitalize Words</tspan>
 </text>
   <text x="0" y="317" id="scripts-0" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="0 5.4 10.8 16.1 21.5 26.9 32.3 37.7 43 48.4">Small caps</tspan>

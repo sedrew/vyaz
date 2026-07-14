@@ -79,20 +79,20 @@
     <tspan x="218.05" textLength="3.32"> </tspan>
     <tspan x="221.37" textLength="87.36">Highlight marker</tspan>
 </text>
-  <text x="0" y="291" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000" textLength="149.99">S p r e a d o u t</tspan>
-    <tspan x="149.99" textLength="3.32"> </tspan>
-    <tspan x="153.31" textLength="3.12">|</tspan>
-    <tspan x="156.43" textLength="3.32"> </tspan>
-    <tspan x="159.75" textLength="49.72">condensed</tspan>
-    <tspan x="209.47" textLength="3.32"> </tspan>
-    <tspan x="212.79" textLength="3.12">|</tspan>
-    <tspan x="215.91" textLength="3.32"> </tspan>
-    <tspan x="219.23" textLength="108.02">UPPERCASE TEXT</tspan>
-    <tspan x="327.25" textLength="3.32"> </tspan>
-    <tspan x="330.57" textLength="3.12">|</tspan>
-    <tspan x="333.69" textLength="3.32"> </tspan>
-    <tspan x="337.01" textLength="90.47">Capitalize Words</tspan>
+  <text x="0" y="291" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="4" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000" letter-spacing="4" textLength="98.71">Spread out</tspan>
+    <tspan x="98.71" textLength="3.32"> </tspan>
+    <tspan x="102.03" textLength="3.12">|</tspan>
+    <tspan x="105.15" letter-spacing="-1" textLength="3.32"> </tspan>
+    <tspan x="108.47" letter-spacing="-1" textLength="49.72">condensed</tspan>
+    <tspan x="158.19" textLength="3.32"> </tspan>
+    <tspan x="161.51" textLength="3.12">|</tspan>
+    <tspan x="164.63" textLength="3.32"> </tspan>
+    <tspan x="167.95" textLength="108.02">UPPERCASE TEXT</tspan>
+    <tspan x="275.97" textLength="3.32"> </tspan>
+    <tspan x="279.29" textLength="3.12">|</tspan>
+    <tspan x="282.41" textLength="3.32"> </tspan>
+    <tspan x="285.73" textLength="90.47">Capitalize Words</tspan>
 </text>
   <text x="0" y="317" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="53.81">Small caps</tspan>

@@ -161,6 +161,22 @@ describe('Style properties in SVG (preset="preserve")', () => {
     getFirstTspanAttr('Hi', { fontSize: 24, script: 'sub' as any }, 'font-size', '15.6');
   });
 
+  test('run letterSpacing positive', () => {
+    getFirstTspanAttr('Hello', { letterSpacing: 4 } as any, 'letter-spacing', '4');
+  });
+
+  test('run letterSpacing negative', () => {
+    getFirstTspanAttr('Hello', { letterSpacing: -1 } as any, 'letter-spacing', '-1');
+  });
+
+  test('run letterSpacing zero omitted', () => {
+    const para = makeParagraph('Hello', { letterSpacing: 0 } as any);
+    const frame = makeTextFrame(para);
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve' });
+    // letter-spacing attribute should NOT appear when value is 0
+    expect(svg).not.toContain('letter-spacing');
+  });
+
   test('run snapshot with style attributes', () => {
     const para = makeParagraph('Bold Italic', { fontWeight: 'bold', fontStyle: 'italic' });
     const frame = makeTextFrame(para);
@@ -793,5 +809,37 @@ describe('Additional coverage', () => {
     const frame = makeTextFrame(para);
     const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
     matchSvgSnapshot('run-all-styles-snapshot', svg);
+  });
+
+  test('run textTransform uppercase', () => {
+    const para = makeParagraph('uppercase text', { textTransform: 'uppercase' as any });
+    const frame = makeTextFrame(para);
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
+    expect(svg).toContain('UPPERCASE TEXT');
+    matchSvgSnapshot('run-transform-uppercase', svg);
+  });
+
+  test('run textTransform capitalize', () => {
+    const para = makeParagraph('capitalize words', { textTransform: 'capitalize' as any });
+    const frame = makeTextFrame(para);
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
+    expect(svg).toContain('Capitalize Words');
+    matchSvgSnapshot('run-transform-capitalize', svg);
+  });
+
+  test('run letterSpacing spread', () => {
+    const para = makeParagraph('Spread out', { letterSpacing: 4 } as any);
+    const frame = makeTextFrame(para);
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
+    expect(svg).toContain('letter-spacing="4"');
+    matchSvgSnapshot('run-letter-spacing-spread', svg);
+  });
+
+  test('run letterSpacing condensed', () => {
+    const para = makeParagraph('condensed', { letterSpacing: -1 } as any);
+    const frame = makeTextFrame(para);
+    const { svg } = renderFrameToSVG(frame, { preset: 'preserve', debug: { frameBox: true, contentBox: true } });
+    expect(svg).toContain('letter-spacing="-1"');
+    matchSvgSnapshot('run-letter-spacing-condensed', svg);
   });
 });

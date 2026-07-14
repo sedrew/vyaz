@@ -53,14 +53,14 @@
     <tspan x="214.93">|</tspan>
     <tspan x="221.37">Highlight marker</tspan>
 </text>
-  <text x="0" y="291" font-family="Arial" font-size="12" fill="#000" font-weight="400">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000">S p r e a d o u t</tspan>
-    <tspan x="153.31">|</tspan>
-    <tspan x="159.75">condensed</tspan>
-    <tspan x="212.79">|</tspan>
-    <tspan x="219.23">UPPERCASE TEXT</tspan>
-    <tspan x="330.57">|</tspan>
-    <tspan x="337.01">Capitalize Words</tspan>
+  <text x="0" y="291" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="4">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000" letter-spacing="4">Spread out</tspan>
+    <tspan x="102.03">|</tspan>
+    <tspan x="108.47" letter-spacing="-1">condensed</tspan>
+    <tspan x="161.51">|</tspan>
+    <tspan x="167.95">UPPERCASE TEXT</tspan>
+    <tspan x="279.29">|</tspan>
+    <tspan x="285.73">Capitalize Words</tspan>
 </text>
   <text x="0" y="317" font-family="Arial" font-size="11" fill="#000" font-weight="400">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="11" fill="#000">Small caps</tspan>

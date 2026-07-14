@@ -69,6 +69,7 @@ export type { AutoFitOptions, AutoFitResult } from './layout/AutoFitEngine.js';
 // ── Utils ────────────────────────────────────────────────────────────────
 export { groupLinesByParagraph } from './utils/groupLinesByParagraph.js';
 export type { ParagraphGroup } from './utils/groupLinesByParagraph.js';
+export { transformText } from './utils/textTransform.js';
 
 // ── Compiler ────────────────────────────────────────────────────────────
 export { compileParagraph, getParagraphText, makeFontToken } from './compile/DocumentCompiler.js';
