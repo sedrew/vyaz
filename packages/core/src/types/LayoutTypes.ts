@@ -22,8 +22,8 @@ export interface Span {
   itemIndex: number;
   /** Paragraph index in TextFrame.paragraphs[]. Stable key for grouping & diff. */
   pIdx: number;
-  /** ID of the source paragraph (for SVG grouping). */
-  paragraphId?: string;
+  /** Optional paragraph tag (set by user via Paragraph.id). */
+  tag?: string;
 
   /** Physical font metrics for this span */
   fontMetrics: SpanFontMetrics;

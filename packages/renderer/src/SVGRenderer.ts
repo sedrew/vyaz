@@ -17,7 +17,8 @@
  *   const svg = renderToSVG(lines, { preset: 'preserve', style: 'css', fit: 'frag' })
  */
 
-import type { Line, Span, ParagraphLayoutResult } from '@vyaz/core';
+import type { Line, Span, ParagraphLayoutResult, ParagraphGroup } from '@vyaz/core';
+import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags } from './types.js';
 import { computeBBox, fmt } from './utils.js';
 
@@ -492,31 +493,6 @@ class SvgBuilder {
 
 // ── Debug overlay ────────────────────────────────────────────────────────
 
-/**
- * Group lines into paragraphs using pIdx (paragraph index) from spans.
- * Returns array sorted by index with paragraphId as optional label.
- */
-function groupLinesByParagraph(lines: Line[]): { lines: Line[]; pIdx: number; paragraphId: string | undefined }[] {
-  const groups: { lines: Line[]; pIdx: number; paragraphId: string | undefined }[] = [];
-  let currentIdx = -1;
-  let currentGroup: Line[] = [];
-
-  for (const line of lines) {
-    const span = line.spans[0];
-    const idx = span?.pIdx ?? -1;
-    if (idx !== currentIdx && currentGroup.length > 0) {
-      groups.push({ lines: currentGroup, pIdx: currentIdx, paragraphId: currentGroup[0].spans[0]?.paragraphId });
-      currentGroup = [];
-    }
-    currentIdx = idx;
-    currentGroup.push(line);
-  }
-  if (currentGroup.length > 0) {
-    groups.push({ lines: currentGroup, pIdx: currentIdx, paragraphId: currentGroup[0].spans[0]?.paragraphId });
-  }
-  return groups;
-}
-
 function renderDebugToSVG(
   lines: Line[],
   flags: DebugFlags,
@@ -574,20 +550,20 @@ function renderDebugToSVG(
       'rgba(80,0,180,0.25)',
       'rgba(180,180,0,0.25)',
     ];
+    // Container right edge: use frame width, or content bbox, or max line extent
+    const containerRight = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
     for (let i = 0; i < paraGroups.length; i++) {
       const group = paraGroups[i];
       if (group.lines.length === 0) continue;
       const firstLine = group.lines[0];
       const lastLine = group.lines[group.lines.length - 1];
-      const minX = Math.min(...group.lines.map(l => l.x));
-      const maxX = Math.max(...group.lines.map(l => l.x + l.width));
       const top = firstLine.y;
       const bottom = lastLine.y + lastLine.height;
       const color = paraColors[i % paraColors.length];
-      parts.push(`  <rect x="${fmt(minX)}" y="${fmt(top)}" width="${fmt(maxX - minX)}" height="${fmt(bottom - top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
-      const label = group.paragraphId ? `#${group.pIdx} ${group.paragraphId}` : `#${group.pIdx}`;
+      parts.push(`  <rect x="0" y="${fmt(top)}" width="${fmt(containerRight)}" height="${fmt(bottom - top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
+      const label = group.tag ? `#${group.pIdx} ${group.tag}` : `#${group.pIdx}`;
       if (flags.labels) {
-        parts.push(`  <text x="${fmt(minX)}" y="${fmt(top - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
+        parts.push(`  <text x="4" y="${fmt(top - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
       }
     }
   }
@@ -653,7 +629,7 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
           if (currentRunIdx !== -1) {
             builder.closeText();
           }
-          const runId = span.paragraphId ? `${span.paragraphId}-${runIdx}` : undefined;
+          const runId = span.tag ? `${span.tag}-${runIdx}` : undefined;
           builder.addText(line, span, runId);
           currentRunIdx = runIdx;
         }

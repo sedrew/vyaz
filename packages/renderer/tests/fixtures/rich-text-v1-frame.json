@@ -229,14 +229,11 @@
       "children": [
         { "type": "text", "text": "[left alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
         { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": " is ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "the art and technique", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
         { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
-        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text aligned to the left. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
-        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
-        { "type": "text", "text": " (note: left alignment is default)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+        { "type": "text", "text": " between form and function. (left)", "fontSize": 14, "fontWeight": "normal", "color": "#444" }
       ]
     },
     {
@@ -245,14 +242,11 @@
       "children": [
         { "type": "text", "text": "[center alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
         { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": " is ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "the art and technique", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
         { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
-        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text centered on the page. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
-        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
-        { "type": "text", "text": " (note: center alignment)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+        { "type": "text", "text": " between form and function. (center)", "fontSize": 14, "fontWeight": "normal", "color": "#444" }
       ]
     },
     {
@@ -261,14 +255,11 @@
       "children": [
         { "type": "text", "text": "[right alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
         { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": " is ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "the art and technique", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
         { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
-        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text aligned to the right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
-        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
-        { "type": "text", "text": " (note: right alignment)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+        { "type": "text", "text": " between form and function. (right)", "fontSize": 14, "fontWeight": "normal", "color": "#444" }
       ]
     },
     {
@@ -277,14 +268,11 @@
       "children": [
         { "type": "text", "text": "[justify alignment]\n", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
         { "type": "text", "text": "Typography", "fontSize": 20, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " is the art and technique of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Good design", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
-        { "type": "text", "text": " makes the reader feel nothing, because everything is just right. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": " is ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
+        { "type": "text", "text": "the art and technique", "fontSize": 14, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " of arranging type. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
         { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
-        { "type": "text", "text": " between form and function is the key. This paragraph shows how different weights, sizes and colors interact within a single block of text justified to both edges. ", "fontSize": 14, "fontWeight": "normal", "color": "#333" },
-        { "type": "text", "text": "Pay attention", "fontSize": 14, "fontWeight": "bold", "fontStyle": "italic", "color": "#b91c1c" },
-        { "type": "text", "text": " to the subtle shifts in style that guide your eye across the content. A well-crafted text block feels natural, even when many styles are mixed together.", "fontSize": 14, "fontWeight": "normal", "color": "#444" },
-        { "type": "text", "text": " (note: justify alignment)", "fontSize": 11, "fontWeight": "normal", "color": "#888" }
+        { "type": "text", "text": " between form and function. (justify)", "fontSize": 14, "fontWeight": "normal", "color": "#444" }
       ]
     }
   ]

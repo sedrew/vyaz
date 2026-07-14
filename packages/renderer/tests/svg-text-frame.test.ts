@@ -10,13 +10,16 @@ import { describe, test, expect, beforeAll } from 'bun:test';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parse } from 'svg-parser';
+import type { RootNode, ElementNode } from 'svg-parser';
 
 import {
   registerUnifont,
   registerArialVariants,
   makeParagraph,
+  makeMultiRunParagraph,
   makeTextFrame,
-  makeStyledParagraph,
+  RunInput,
 } from '../../core/tests/helpers.ts';
 import { layoutTextFrame } from '../../core/src/layout/TextFrameLayoutEngine.js';
 import { renderToSVG } from '../src/SVGRenderer.js';
@@ -47,6 +50,23 @@ beforeAll(async () => {
     mkdirSync(SNAPSHOT_DIR, { recursive: true });
   }
 });
+
+// ── SVG helpers ─────────────────────────────────────────────────────────
+
+function findElements(node: ElementNode | RootNode, tag: string): ElementNode[] {
+  const found: ElementNode[] = [];
+  if ('tagName' in node && node.tagName === tag) {
+    found.push(node);
+  }
+  if (node.children) {
+    for (const child of node.children) {
+      if (typeof child === 'object') {
+        found.push(...findElements(child as ElementNode | RootNode, tag));
+      }
+    }
+  }
+  return found;
+}
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
@@ -235,6 +255,45 @@ describe('TextFrame SVG snapshots', () => {
       { preset: 'flat' },
     );
     const name = 'textframe-padding-left.svg';
+    const expected = readSnapshot(name);
+    if (expected) {
+      expect(svg.trim()).toBe(expected.trim());
+    } else {
+      writeFileSync(snapshotPath(name), svg);
+      expect(svg).toBeTruthy();
+    }
+  });
+
+  test('textframe-4-alignment.svg: left/center/right/justify snapshots', () => {
+    // Shared multi-run content with varied styles
+    const content: RunInput[] = [
+      { text: 'Typography ', style: { fontSize: 18, fontWeight: 'bold', color: '#000' } },
+      { text: 'is the art and technique of arranging type to make written language legible, readable and appealing. ', style: { fontSize: 14, fontWeight: 'normal', color: '#333' } },
+      { text: 'Good design ', style: { fontSize: 14, fontWeight: 'bold', color: '#000' } },
+      { text: 'makes the reader feel nothing, because everything is just right. ', style: { fontSize: 14, fontWeight: 'normal', color: '#333' } },
+      { text: 'Balance ', style: { fontSize: 16, fontWeight: 'bold', fontStyle: 'italic', color: '#1e3a8a' } },
+      { text: 'between form and function is the key to beautiful text layout.', style: { fontSize: 14, fontWeight: 'normal', color: '#444' } },
+    ];
+
+    const leftP = makeMultiRunParagraph(content);
+    leftP.style.alignment = 'left';
+
+    const centerP = makeMultiRunParagraph(content);
+    centerP.style.alignment = 'center';
+
+    const rightP = makeMultiRunParagraph(content);
+    rightP.style.alignment = 'right';
+
+    const justifyP = makeMultiRunParagraph(content);
+    justifyP.style.alignment = 'justify';
+
+    const svg = renderTextFrameSVG(
+      [leftP, centerP, rightP, justifyP],
+      { width: 400 },
+      { preset: 'preserve', contentPadding: 10, debug: { frameBox: true, contentBox: true, paragraphBox: true, widthBorder: 2 } },
+    );
+
+    const name = 'textframe-4-alignment.svg';
     const expected = readSnapshot(name);
     if (expected) {
       expect(svg.trim()).toBe(expected.trim());
