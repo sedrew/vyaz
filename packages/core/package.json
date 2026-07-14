@@ -19,7 +19,6 @@
     }
   },
   "browser": {
-    "fontkit": false,
     "get-system-fonts": false,
     "fs": false,
     "module": false,

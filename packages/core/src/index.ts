@@ -75,11 +75,18 @@ export { transformText } from './utils/textTransform.js';
 export { compileParagraph, getParagraphText, makeFontToken } from './compile/DocumentCompiler.js';
 export type { PreparedRichInlineItem } from './compile/DocumentCompiler.js';
 
+// ── Font Engine ──────────────────────────────────────────────────────────
+export type { FontFace } from './measure/FontEngine.js';
+export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable } from './measure/FontEngine.js';
+
 // ── Font metrics ────────────────────────────────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
 
 // ── System font registry ────────────────────────────────────────────────
 export { SystemFontRegistry, systemFontRegistry } from './measure/SystemFontRegistry.js';
+
+// ── Font utilities ───────────────────────────────────────────────────────
+export { getFontBuffer } from './utils/font.js';
 
 // ── Errors ──────────────────────────────────────────────────────────────
 export { FontNotFoundError } from './measure/FontNotFoundError.js';

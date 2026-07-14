@@ -211,7 +211,7 @@ export class ParagraphLayoutEngine {
   }
 
   /**
-   * Compute per-character advance widths via fontkit.
+   * Compute per-character advance widths via FontEngine (fontkit).
    * Returns Float32Array for memory efficiency and faster iteration.
    *
    * Throws FontNotFoundError if the font is not registered.
@@ -241,9 +241,9 @@ export class ParagraphLayoutEngine {
 
     for (let i = 0; i < text.length; i++) {
       const codePoint = text.codePointAt(i)!;
-      const glyph = font.glyphForCodePoint(codePoint);
-      if (glyph) {
-        advances[i] = glyph.advanceWidth * scale;
+      const advance = font._raw.glyphForCodePoint(codePoint)?.advanceWidth;
+      if (advance != null) {
+        advances[i] = advance * scale;
       } else {
         advances[i] = fontSize * MISSING_GLYPH_FACTOR;
       }
