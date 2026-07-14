@@ -90,13 +90,16 @@ function mergeMarks(marks: PMark[] | undefined, base: Partial<TextRun>): Partial
         s.script = 'super'
         break
       case 'textStyle':
-        // can contain fontSize, color via attrs
+        // can contain fontSize, color, fontFamily via attrs
         if (mark.attrs) {
           if (typeof mark.attrs.fontSize === 'number') {
             s.fontSize = mark.attrs.fontSize
           }
           if (typeof mark.attrs.color === 'string') {
             s.color = mark.attrs.color
+          }
+          if (typeof mark.attrs.fontFamily === 'string') {
+            s.fontFamily = mark.attrs.fontFamily
           }
         }
         break

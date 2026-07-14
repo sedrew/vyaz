@@ -58,7 +58,11 @@
       </label>
     </div>
     <div class="preview-canvas" ref="canvasRef">
-      <div v-if="svgString" v-html="svgString" class="svg-output"></div>
+      <div v-if="loading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading fonts…</p>
+      </div>
+      <div v-else-if="svgString" v-html="svgString" class="svg-output"></div>
       <div v-else class="preview-empty">
         <p>No content to render</p>
       </div>
@@ -67,8 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
-import { layoutTextFrame } from '@vyaz/core'
+import { ref, computed, reactive, onMounted } from 'vue'
+import { layoutTextFrame, fontMetricsProvider } from '@vyaz/core'
 import { renderToSVG } from '@vyaz/renderer'
 import type { DebugFlags } from '@vyaz/renderer'
 import { proseMirrorToVyaz } from '../lib/proseMirrorToVyaz'
@@ -81,6 +85,7 @@ const canvasRef = ref<HTMLElement | null>(null)
 const frameWidth = ref(600)
 const frameHeight = ref(0)
 const alignment = ref<'left' | 'center' | 'right' | 'justify'>('left')
+const loading = ref(true)
 
 const debug = reactive<DebugFlags>({
   frameBox: true,
@@ -93,7 +98,146 @@ const debug = reactive<DebugFlags>({
   lineGap: false,
 })
 
+/** Google Fonts CSS URL for fonts used in this demo */
+const GOOGLE_FONTS_URL =
+  'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Lora:wght@400;700&family=Open+Sans:wght@400;700&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap'
+
+interface FontJob {
+  family: string
+  weight: string
+  style: string
+  url: string
+}
+
+interface LoadedFont {
+  family: string
+  weight: string
+  style: string
+  buffer: Uint8Array
+}
+
+/**
+ * Загружает Google Fonts CSS, парсит его силами самого браузера,
+ * скачивает файлы шрифтов и возвращает массив готовых объектов с буферами.
+ */
+async function fetchAndParseFonts(googleFontsUrl: string): Promise<LoadedFont[]> {
+  const cssResponse = await fetch(googleFontsUrl)
+  if (!cssResponse.ok) throw new Error(`CSS fetch failed: ${cssResponse.status}`)
+  const cssText = await cssResponse.text()
+
+  const sheet = new CSSStyleSheet()
+  await sheet.replace(cssText)
+
+  const fontJobs: FontJob[] = []
+
+  for (const rule of sheet.cssRules) {
+    if (rule.constructor.name === 'CSSFontFaceRule' || rule.type === 4) {
+      const style = (rule as CSSFontFaceRule).style
+
+      const family = style.getPropertyValue('font-family').replace(/['"]/g, '').trim()
+      let weight = style.getPropertyValue('font-weight').trim() || '400'
+      const fontStyle = style.getPropertyValue('font-style').trim() || 'normal'
+      const src = style.getPropertyValue('src')
+
+      // Нормализуем веса
+      if (weight === 'normal') weight = '400'
+      if (weight === 'bold') weight = '700'
+
+      const urlMatch = src.match(/url\(['"]?([^'"]+?)['"]?\)/)
+      if (urlMatch && urlMatch[1]) {
+        fontJobs.push({ family, weight, style: fontStyle, url: urlMatch[1] })
+      }
+    }
+  }
+
+  // Скачиваем бинарники параллельно
+  const loadedFonts = await Promise.all(
+    fontJobs.map(async (font) => {
+      try {
+        const res = await fetch(font.url)
+        if (!res.ok) throw new Error(`Font file fetch failed: ${res.status}`)
+        const arrayBuffer = await res.arrayBuffer()
+        return {
+          family: font.family,
+          weight: font.weight,
+          style: font.style,
+          buffer: new Uint8Array(arrayBuffer),
+        }
+      } catch {
+        return null
+      }
+    }),
+  )
+
+  return loadedFonts.filter(Boolean) as LoadedFont[]
+}
+
+/**
+ * Register a font under one family/weight/style key.
+ */
+async function register(family: string, weight: string, style: string, buffer: Uint8Array): Promise<void> {
+  await fontMetricsProvider.registerFont(family, { weight, style }, buffer)
+}
+
+onMounted(async () => {
+  try {
+    const loaded = await fetchAndParseFonts(GOOGLE_FONTS_URL)
+    console.log(`[vyaz demo] Downloaded ${loaded.length} fonts`)
+
+    const seenUrl = new Set<string>()
+
+    for (const f of loaded) {
+      const key = `${f.family}_${f.weight}_${f.style}`
+      if (seenUrl.has(key)) continue
+      seenUrl.add(key)
+
+      // Register under original family
+      await register(f.family, f.weight, f.style, f.buffer)
+
+      // Fallback weights & styles for browser
+      const allWeights = ['400', '700']
+      const allStyles = ['normal', 'italic']
+      const aliases = [
+        f.family,
+        'Arial',
+        'Helvetica',
+        'Times New Roman',
+        'Georgia',
+        'Courier New',
+        'Verdana',
+        'Trebuchet MS',
+        'Impact',
+      ]
+
+      for (const w of allWeights) {
+        for (const s of allStyles) {
+          for (const alias of aliases) {
+            await register(alias, w, s, f.buffer)
+          }
+        }
+      }
+
+      // JetBrains Mono → alias "monospace" for code blocks
+      if (f.family === 'JetBrains Mono') {
+        for (const w of allWeights) {
+          for (const s of allStyles) {
+            await register('monospace', w, s, f.buffer)
+          }
+        }
+      }
+    }
+
+    console.log('[vyaz demo] Fonts registered, engine ready')
+  } catch (err) {
+    console.warn('[vyaz demo] Font loading failed, fallback to Canvas:', err)
+  } finally {
+    loading.value = false
+  }
+})
+
 const svgString = computed(() => {
+  if (loading.value) return ''
+
   const doc = props.proseJson as any
   if (!doc || doc.type !== 'doc') return ''
 
@@ -235,6 +379,30 @@ const svgString = computed(() => {
   display: flex;
   align-items: flex-start;
   justify-content: center;
+}
+
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  color: #999;
+  font-size: 14px;
+  gap: 12px;
+}
+
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top: 3px solid #4a90d9;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .svg-output {
