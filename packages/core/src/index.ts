@@ -28,6 +28,10 @@ export type {
   OverflowWrap,
   TextDecorationStyle,
   TextTransform,
+  ListType,
+  NumberFormat,
+  ListStylePosition,
+  ListStyle,
 } from './types/Document.js';
 export {
   DEFAULT_PARAGRAPH_STYLE,
@@ -70,6 +74,7 @@ export type { AutoFitOptions, AutoFitResult } from './layout/AutoFitEngine.js';
 export { groupLinesByParagraph } from './utils/groupLinesByParagraph.js';
 export type { ParagraphGroup } from './utils/groupLinesByParagraph.js';
 export { transformText } from './utils/textTransform.js';
+export { formatListNumber, defaultBulletChar, BULLET_CHARACTERS } from './utils/list.js';
 
 // ── Compiler ────────────────────────────────────────────────────────────
 export { compileParagraph, getParagraphText, makeFontToken } from './compile/DocumentCompiler.js';

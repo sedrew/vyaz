@@ -16,7 +16,7 @@
 // Polyfill OffscreenCanvas for Node.js (node-canvas)
 import '../measure/canvas-polyfill.js';
 
-import type { Paragraph } from '../types/Document.js';
+import type { Paragraph, ListStyle } from '../types/Document.js';
 import type { FontMetrics } from '../types/FontTypes.js';
 import type { IFontMetricsProvider } from '../types/FontTypes.js';
 import type { ParagraphLayoutResult } from '../types/LayoutTypes.js';
@@ -72,6 +72,9 @@ export class ParagraphLayoutEngine {
     maxWidth: number,
     yOffset: number = 0,
     fontProvider?: IFontMetricsProvider,
+    listStyle?: ListStyle,
+    listIndex?: number,
+    listMarkerWidth?: number,
   ): ParagraphLayoutResult {
     const provider = fontProvider || fontMetricsProvider;
 
@@ -149,6 +152,9 @@ export class ParagraphLayoutEngine {
       renderMode,
       measureTextFn,
       paragraph.id,
+      paragraph.style.listStyle,
+      paragraph.style.listStyle ? (listIndex ?? 1) : undefined,
+      listMarkerWidth,
     );
 
     // Phase 4b: Fill per-glyph advances — pull from cache or compute if miss

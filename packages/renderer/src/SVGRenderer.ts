@@ -805,7 +805,8 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         }
       }
       // Find the first text span's x to use as baseline offset
-      const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
+      // Use first text or marker span's x for baseline offset
+      const firstTextX = line.spans.find(s => s.type === 'text' || s.type === 'marker')?.x ?? 0;
       const fitAttr = buildFitAttr(line, opts);
       for (const group of groups) {
         const s = defaultStyleState(group.spans[0]);

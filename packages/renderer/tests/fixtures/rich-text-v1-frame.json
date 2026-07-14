@@ -300,6 +300,156 @@
         { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
         { "type": "text", "text": " between form and function. (justify)", "fontSize": 14, "fontWeight": "normal", "color": "#444" }
       ]
+    },
+    {
+      "id": "lists-section",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 16, "spaceAfter": 4 },
+      "children": [
+        {
+          "type": "text",
+          "text": "5. Lists (bullet, nested, numbered)",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "fontWeight": "bold",
+          "color": "#000000"
+        }
+      ]
+    },
+    {
+      "id": "bullet-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 4,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 0, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Bullet item one — disc marker at level 0", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "bullet-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 0, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Bullet item two with ", "fontSize": 13, "color": "#000" },
+        { "type": "text", "text": "bold", "fontSize": 13, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " and ", "fontSize": 13, "color": "#000" },
+        { "type": "text", "text": "italic", "fontSize": 13, "fontStyle": "italic", "color": "#000" },
+        { "type": "text", "text": " runs", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "bullet-nested-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 1, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Nested bullet (level 1) — circle marker", "fontSize": 13, "color": "#333" }
+      ]
+    },
+    {
+      "id": "bullet-nested-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 2, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Deep nested bullet (level 2) — square marker", "fontSize": 13, "color": "#555" }
+      ]
+    },
+    {
+      "id": "bullet-3",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 6,
+        "listStyle": { "type": "bullet", "level": 0, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Back to level 0 after nesting", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 4,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "decimal", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "First numbered step", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "decimal", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Second numbered step with longer text that may wrap depending on frame width", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-3",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "decimal", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Third numbered step", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-roman-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 6,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "upper-roman", "position": "outside" },
+        "listRestart": true
+      },
+      "children": [
+        { "type": "text", "text": "Roman numeral list — item I", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-roman-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "upper-roman", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Roman numeral list — item II", "fontSize": 13, "color": "#000" }
+      ]
     }
   ]
 }
+

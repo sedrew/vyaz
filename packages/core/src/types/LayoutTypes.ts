@@ -40,8 +40,13 @@ export interface Span {
   /** Per-character advance widths (for selection/tracking) */
   glyphAdvances?: number[] | Float32Array;
 
-  /** Span type: 'text' — regular text, 'space' — whitespace span */
-  type: 'text' | 'space';
+  /**
+   * Span type:
+   * - `'text'` — regular text
+   * - `'space'` — whitespace span
+   * - `'marker'` — list marker (bullet / number), rendered like text
+   */
+  type: 'text' | 'space' | 'marker';
 
   /**
    * Trailing whitespace flag.
@@ -76,12 +81,19 @@ export interface SpanFontMetrics {
 // ── Line (single line, formerly LineBox) ─────────────────────────────────
 
 export interface Line {
-  /** Absolute X within container (alignment + indent) */
+  /**
+   * Absolute X of the line box left edge within the container.
+   * Includes outside list markers when present (marker may sit left of text).
+   */
   x: number;
   /** Absolute Y of line top edge */
   y: number;
-  /** Line content width (without alignment) */
+  /**
+   * Line box width covering all spans (text + outside markers).
+   * Equals max(span.x + span.width) − min(span.x).
+   */
   width: number;
+
   /** Full line height (max spans × lineHeight) */
   height: number;
 

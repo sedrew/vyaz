@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="104" height="74" viewBox="-17.2 -10 104 74">
+  <text x="8.8" y="14" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">I.First</text>
+  <text x="0.8" y="32" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">II.Second</text>
+  <text x="-7.2" y="50" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">III.Third</text>
+<!-- debug overlay -->
+  <rect x="-7.2" y="0" width="84" height="54" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>
