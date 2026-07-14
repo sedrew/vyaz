@@ -44,7 +44,7 @@
   </text>
   <text x="0" y="170" id="font-families-unifont-6" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="700" font-style="italic" xml:space="preserve">
     <tspan> </tspan>
-    <tspan x="284.4 291.2 297.9 304.7 311.5 318.3 325 331.8 338.6 345.4 352.2 358.9 365.7 372.5 379.3 386.1 392.8 399.6">Unifont BoldItalic</tspan>
+    <tspan x="284.4 291.2 297.9 304.7 311.5 318.3 325.1 331.8 338.6 345.4 352.2 359 365.7 372.5 379.3 386.1 392.9 399.6">Unifont BoldItalic</tspan>
   </text>
   <text x="0" y="195" id="font-families-0" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 9 13.6 16.6 24.1">Arial</tspan>

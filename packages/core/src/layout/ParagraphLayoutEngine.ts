@@ -30,6 +30,18 @@ import { assertLineInvariants } from './LineBoxValidator.js';
 // @ts-ignore
 import { prepareRichInline, materializeRichInlineLineRange, walkRichInlineLineRanges, type PreparedRichInline } from '@chenglou/pretext/rich-inline';
 
+// ── Cache key builder ─────────────────────────────────────────────────────
+
+function glyphCacheKey(
+  text: string,
+  fontSize: number,
+  fontFamily?: string,
+  fontWeight?: string,
+  fontStyle?: string,
+): string {
+  return `${fontSize}_${fontFamily || ''}_${fontWeight || ''}_${fontStyle || ''}_${text}`;
+}
+
 // ── Helpers ─────────────────────────────────────────────────────────────
 
 /** Get FontMetrics for a PreparedRichInlineItem */
@@ -48,7 +60,7 @@ export class ParagraphLayoutEngine {
   private preparedCache = new Map<string, PreparedRichInline>();
 
   /**
-   * Layout a single paragraph — basic variant, no per-glyph data.
+   * Layout a single paragraph — basic variant.
    *
    * @param paragraph — input paragraph
    * @param maxWidth — available container width (px)
@@ -75,7 +87,6 @@ export class ParagraphLayoutEngine {
     }
 
     // Phase 3: Layout — walk lines
-    // CSS white-space: nowrap → disable wrapping (infinite width)
     const effectiveMaxWidth = paragraph.style.whiteSpace === 'nowrap' ? Infinity : maxWidth;
     const pretextLines: any[] = [];
     walkRichInlineLineRanges(prepared, effectiveMaxWidth, (range: any) => {
@@ -91,14 +102,11 @@ export class ParagraphLayoutEngine {
     // Phase 4: Position
     const renderMode = provider.getMode();
 
-    // Build measureText callback: measure any text fragment accurately
-    // by summing glyph advances from fontkit. Same algorithm as computeGlyphAdvances.
-    // Accepts font parameters per-call so each fragment is measured with
-    // its actual font family/weight/style for multi-style lines.
-    // Uses fontMetricsProvider.getFont() directly (the concrete class) since
-    // IFontMetricsProvider doesn't expose getFont(). In browser environments
-    // where fonts aren't registered, it falls back to proportional distribution
-    // inside positionLines().
+    // Per-layout glyph cache: map<text+font+size, Float32Array>
+    // Lives only for the duration of one layout() call.
+    const glyphCache = new Map<string, Float32Array>();
+
+    // Build measureText callback: single fontkit pass, caches advances.
     const measureTextFn = (
       text: string,
       fontSize: number,
@@ -107,26 +115,17 @@ export class ParagraphLayoutEngine {
       fontStyle?: string,
     ): number => {
       if (!text) return 0;
-      const font = fontMetricsProvider.getFont(
-        fontFamily || 'Arial',
-        fontWeight || '400',
-        fontStyle || 'normal',
-      );
-      if (!font) {
-        throw new FontNotFoundError(fontFamily || 'Arial', fontWeight || '400', fontStyle || 'normal');
+      const key = glyphCacheKey(text, fontSize, fontFamily, fontWeight, fontStyle);
+
+      // Check cache first — same text+font may appear across multiple fragments
+      let advances = glyphCache.get(key);
+      if (!advances) {
+        advances = this.computeGlyphAdvances(text, fontSize, fontFamily, fontWeight, fontStyle);
+        glyphCache.set(key, advances);
       }
-      const scale = fontSize / font.unitsPerEm;
+
       let total = 0;
-      for (let i = 0; i < text.length; i++) {
-        const codePoint = text.codePointAt(i)!;
-        const glyph = font.glyphForCodePoint(codePoint);
-        if (glyph) {
-          total += glyph.advanceWidth * scale;
-        } else {
-          total += fontSize * MISSING_GLYPH_FACTOR;
-        }
-        if (codePoint > 0xffff) i++;
-      }
+      for (let i = 0; i < advances.length; i++) total += advances[i];
       return Math.round(total * 100) / 100;
     };
 
@@ -152,17 +151,31 @@ export class ParagraphLayoutEngine {
       paragraph.id,
     );
 
-    // Phase 4b: Fill per-glyph advances via fontkit
+    // Phase 4b: Fill per-glyph advances — pull from cache or compute if miss
     for (const line of lines) {
       for (const span of line.spans) {
         if (span.type === 'text' && span.text.length > 0 && !span.inlineWidget && !span.glyphAdvances) {
-          span.glyphAdvances = this.computeGlyphAdvances(
+          const key = glyphCacheKey(
             span.text,
-            span.style.fontFamily,
             span.fontMetrics.fontSize,
+            span.style.fontFamily,
             String(span.style.fontWeight || 400),
             span.style.fontStyle || 'normal',
           );
+          const cached = glyphCache.get(key);
+          if (cached) {
+            span.glyphAdvances = Array.from(cached);
+          } else {
+            // Cache miss (single-fragment spans skip resolveFragmentWidths),
+            // compute directly.
+            span.glyphAdvances = Array.from(this.computeGlyphAdvances(
+              span.text,
+              span.fontMetrics.fontSize,
+              span.style.fontFamily,
+              String(span.style.fontWeight || 400),
+              span.style.fontStyle || 'normal',
+            ));
+          }
         }
       }
     }
@@ -199,32 +212,41 @@ export class ParagraphLayoutEngine {
 
   /**
    * Compute per-character advance widths via fontkit.
+   * Returns Float32Array for memory efficiency and faster iteration.
+   *
+   * Throws FontNotFoundError if the font is not registered.
    */
   private computeGlyphAdvances(
     text: string,
-    fontFamily: string,
     fontSize: number,
-    weight: string,
-    style: string,
-  ): number[] {
-    const font = fontMetricsProvider.getFont(fontFamily, weight, style);
+    fontFamily?: string,
+    fontWeight?: string,
+    fontStyle?: string,
+  ): Float32Array {
+    const font = fontMetricsProvider.getFont(
+      fontFamily || 'Arial',
+      fontWeight || '400',
+      fontStyle || 'normal',
+    );
     if (!font) {
-      throw new FontNotFoundError(fontFamily, weight, style);
+      throw new FontNotFoundError(
+        fontFamily || 'Arial',
+        fontWeight || '400',
+        fontStyle || 'normal',
+      );
     }
 
     const scale = fontSize / font.unitsPerEm;
-    const advances: number[] = [];
+    const advances = new Float32Array(text.length);
 
     for (let i = 0; i < text.length; i++) {
       const codePoint = text.codePointAt(i)!;
       const glyph = font.glyphForCodePoint(codePoint);
       if (glyph) {
-        advances.push(glyph.advanceWidth * scale);
+        advances[i] = glyph.advanceWidth * scale;
       } else {
-        // Missing glyph
-        advances.push(fontSize * MISSING_GLYPH_FACTOR);
+        advances[i] = fontSize * MISSING_GLYPH_FACTOR;
       }
-      // Skip surrogate pair
       if (codePoint > 0xffff) i++;
     }
 
