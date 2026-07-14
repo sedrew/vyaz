@@ -16,6 +16,15 @@ import { enableOfficeTextMeasure, disableOfficeTextMeasure, registerCanvasFont }
 import { FontNotFoundError } from './FontNotFoundError.js';
 import { isNodeLike } from '../utils/env.js';
 
+// ── Reasonable default for missing glyphs ──────────────────────────────────
+
+/**
+ * Factor used when a glyph is not found in the font.
+ * Multiplied by fontSize to estimate the missing glyph width.
+ * Used across all measurement code paths (ParagraphLayoutEngine, canvas-polyfill).
+ */
+export const MISSING_GLYPH_FACTOR = 0.5;
+
 // ── Weight normalisation ─────────────────────────────────────────────────
 
 /**

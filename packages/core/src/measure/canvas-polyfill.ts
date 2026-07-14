@@ -164,7 +164,9 @@ function officeMeasureText(this: any, text: string): TextMetrics {
       if (originalMeasureText) {
         return originalMeasureText.call(this, text);
       }
-      totalWidth += parsed.size * 0.5; // rough estimate
+      // Uses the same MISSING_GLYPH_FACTOR (0.5) as FontMetricsProvider
+      // to avoid circular dependency. Keep in sync.
+      totalWidth += parsed.size * 0.5;
     }
     // Skip surrogate pairs
     if (codePoint > 0xffff) i++;

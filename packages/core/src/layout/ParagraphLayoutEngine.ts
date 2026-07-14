@@ -22,7 +22,7 @@ import type { IFontMetricsProvider } from '../types/FontTypes.js';
 import type { ParagraphLayoutResult } from '../types/LayoutTypes.js';
 import { compileParagraph, getParagraphText } from '../compile/DocumentCompiler.js';
 import type { PreparedRichInlineItem } from '../compile/DocumentCompiler.js';
-import { fontMetricsProvider } from '../measure/FontMetricsProvider.js';
+import { fontMetricsProvider, MISSING_GLYPH_FACTOR } from '../measure/FontMetricsProvider.js';
 import { FontNotFoundError } from '../measure/FontNotFoundError.js';
 import { positionLines } from './PositioningEngine.js';
 import { assertLineInvariants } from './LineBoxValidator.js';
@@ -123,7 +123,7 @@ export class ParagraphLayoutEngine {
         if (glyph) {
           total += glyph.advanceWidth * scale;
         } else {
-          total += fontSize * 0.5;
+          total += fontSize * MISSING_GLYPH_FACTOR;
         }
         if (codePoint > 0xffff) i++;
       }
@@ -222,7 +222,7 @@ export class ParagraphLayoutEngine {
         advances.push(glyph.advanceWidth * scale);
       } else {
         // Missing glyph
-        advances.push(fontSize * 0.5);
+        advances.push(fontSize * MISSING_GLYPH_FACTOR);
       }
       // Skip surrogate pair
       if (codePoint > 0xffff) i++;
