@@ -66,6 +66,19 @@
       ]
     },
     {
+      "id": "font-families-unifont",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "Unifont", "fontFamily": "Unifont", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": " | ", "fontFamily": "Unifont", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": "Unifont Bold", "fontFamily": "Unifont", "fontSize": 13.56, "fontWeight": "bold", "color": "#000000" },
+        { "type": "text", "text": " | ", "fontFamily": "Unifont", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": "Unifont Italic", "fontFamily": "Unifont", "fontSize": 13.56, "fontStyle": "italic", "color": "#000000" },
+        { "type": "text", "text": " | ", "fontFamily": "Unifont", "fontSize": 13.56, "color": "#000000" },
+        { "type": "text", "text": "Unifont BoldItalic", "fontFamily": "Unifont", "fontSize": 13.56, "fontWeight": "bold", "fontStyle": "italic", "color": "#000000" }
+      ]
+    },
+    {
       "id": "font-families",
       "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
       "children": [
@@ -92,6 +105,19 @@
       ]
     },
     {
+      "id": "font-sizes-unifont",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
+      "children": [
+        { "type": "text", "text": "12px", "fontFamily": "Unifont", "fontSize": 12, "color": "#000" },
+        { "type": "text", "text": " | ", "fontFamily": "Unifont", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "18px", "fontFamily": "Unifont", "fontSize": 18, "color": "#000" },
+        { "type": "text", "text": " | ", "fontFamily": "Unifont", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "28px Bold", "fontFamily": "Unifont", "fontSize": 28, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " | ", "fontFamily": "Unifont", "fontSize": 13.56, "color": "#000" },
+        { "type": "text", "text": "34px", "fontFamily": "Unifont", "fontSize": 34, "color": "#000" }
+      ]
+    },
+    {
       "id": "colors",
       "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
       "children": [
@@ -108,11 +134,11 @@
       "id": "effects",
       "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 0, "spaceAfter": 4 },
       "children": [
-        { "type": "text", "text": "Shadow text", "color": "#000" },
+        { "type": "text", "text": "Shadow text", "underline": true, "color": "#000" },
         { "type": "text", "text": " | ", "color": "#000" },
-        { "type": "text", "text": "Gradient text", "color": "#000" },
+        { "type": "text", "text": "Gradient text", "overline": true, "color": "#000" },
         { "type": "text", "text": " | ", "color": "#000" },
-        { "type": "text", "text": "Stroke text", "color": "#000" },
+        { "type": "text", "text": "Stroke text", "strikethrough": true, "color": "#000" },
         { "type": "text", "text": " | ", "color": "#000" },
         { "type": "text", "text": "Highlight marker", "color": "#000", "backgroundColor": "#ffff00" }
       ]

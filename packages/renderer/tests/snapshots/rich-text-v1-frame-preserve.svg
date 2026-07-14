@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="817" viewBox="-10 -10 620 817">
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="896" viewBox="-10 -10 620 896">
   <text x="0" y="18" font-family="Arial" font-size="20" fill="#000000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="20" fill="#000000" textLength="569.41">All Text Manipulations + Text Wrap (7 types, fixed) + Autofit +</tspan>
     <tspan x="569.41" textLength="9.04"> </tspan>
@@ -19,7 +19,22 @@
   <text x="0" y="147" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="13.56" fill="#000000" textLength="322.94">1. Fonts, sizes, colors, shadows, gradients, stroke</tspan>
 </text>
-  <text x="0" y="171" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="170" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="13.56" fill="#000000" textLength="47.41">Unifont</tspan>
+    <tspan x="47.41" textLength="6.76"> </tspan>
+    <tspan x="54.17" textLength="6.77">|</tspan>
+    <tspan x="60.94" font-weight="700" textLength="6.76"> </tspan>
+    <tspan x="67.7" font-weight="700" textLength="81.27">Unifont Bold</tspan>
+    <tspan x="148.97" font-weight="400" textLength="6.76"> </tspan>
+    <tspan x="155.73" font-weight="400" textLength="6.77">|</tspan>
+    <tspan x="162.5" font-style="italic" textLength="6.76"> </tspan>
+    <tspan x="169.26" font-style="italic" textLength="94.82">Unifont Italic</tspan>
+    <tspan x="264.08" font-style="normal" textLength="6.76"> </tspan>
+    <tspan x="270.84" font-style="normal" textLength="6.77">|</tspan>
+    <tspan x="277.61" font-weight="700" font-style="italic" textLength="6.76"> </tspan>
+    <tspan x="284.37" font-weight="700" font-style="italic" textLength="121.91">Unifont BoldItalic</tspan>
+</text>
+  <text x="0" y="195" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#000000" textLength="27.1">Arial</tspan>
     <tspan x="27.1" textLength="3.77"> </tspan>
     <tspan x="30.87" textLength="3.52">|</tspan>
@@ -34,7 +49,7 @@
     <tspan x="179.2" font-family="Arial Black" textLength="3.77"> </tspan>
     <tspan x="182.97" font-family="Arial Black" textLength="81.05">Arial Black</tspan>
 </text>
-  <text x="0" y="217" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+  <text x="0" y="241" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000" textLength="26.02">12px</tspan>
     <tspan x="26.02" font-size="13.56" textLength="3.77"> </tspan>
     <tspan x="29.79" font-size="13.56" textLength="3.52">|</tspan>
@@ -49,7 +64,22 @@
     <tspan x="228.27" font-size="34" textLength="3.77"> </tspan>
     <tspan x="232.04" font-size="34" textLength="73.73">34px</tspan>
 </text>
-  <text x="0" y="247" font-family="Arial" font-size="12" fill="#b91c1c" font-weight="400" xml:space="preserve">
+  <text x="0" y="297" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000" textLength="24">12px</tspan>
+    <tspan x="24" font-size="13.56" textLength="6.76"> </tspan>
+    <tspan x="30.76" font-size="13.56" textLength="6.77">|</tspan>
+    <tspan x="37.53" font-size="18" textLength="6.76"> </tspan>
+    <tspan x="44.29" font-size="18" textLength="36">18px</tspan>
+    <tspan x="80.29" font-size="13.56" textLength="6.76"> </tspan>
+    <tspan x="87.05" font-size="13.56" textLength="6.77">|</tspan>
+    <tspan x="93.82" font-weight="700" font-size="28" textLength="6.76"> </tspan>
+    <tspan x="100.58" font-weight="700" font-size="28" textLength="126">28px Bold</tspan>
+    <tspan x="226.58" font-weight="400" font-size="13.56" textLength="6.76"> </tspan>
+    <tspan x="233.34" font-weight="400" font-size="13.56" textLength="6.77">|</tspan>
+    <tspan x="240.11" font-size="34" textLength="6.76"> </tspan>
+    <tspan x="246.87" font-size="34" textLength="68">34px</tspan>
+</text>
+  <text x="0" y="326" font-family="Arial" font-size="12" fill="#b91c1c" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#b91c1c" textLength="41.35">Red tint</tspan>
     <tspan x="41.35" fill="#000000" textLength="3.32"> </tspan>
     <tspan x="44.67" fill="#000000" textLength="3.12">|</tspan>
@@ -64,22 +94,22 @@
     <tspan x="186.7" fill="#6c757d" textLength="3.32"> </tspan>
     <tspan x="190.02" fill="#6c757d" textLength="48.67">Gray text</tspan>
 </text>
-  <text x="0" y="269" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000" textLength="66.04">Shadow text</tspan>
+  <text x="0" y="348" font-family="Arial" font-size="12" fill="#000" font-weight="400" text-decoration="underline" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000" text-decoration="underline" textLength="66.04">Shadow text</tspan>
     <tspan x="66.04" textLength="3.32"> </tspan>
     <tspan x="69.36" textLength="3.12">|</tspan>
     <tspan x="72.48" textLength="3.32"> </tspan>
     <tspan x="75.8" textLength="68.7">Gradient text</tspan>
     <tspan x="144.5" textLength="3.32"> </tspan>
     <tspan x="147.82" textLength="3.12">|</tspan>
-    <tspan x="150.94" textLength="3.32"> </tspan>
-    <tspan x="154.26" textLength="57.35">Stroke text</tspan>
+    <tspan x="150.94" text-decoration="line-through" textLength="3.32"> </tspan>
+    <tspan x="154.26" text-decoration="line-through" textLength="57.35">Stroke text</tspan>
     <tspan x="211.61" textLength="3.32"> </tspan>
     <tspan x="214.93" textLength="3.12">|</tspan>
     <tspan x="218.05" textLength="3.32"> </tspan>
     <tspan x="221.37" textLength="87.36">Highlight marker</tspan>
 </text>
-  <text x="0" y="291" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="4" xml:space="preserve">
+  <text x="0" y="370" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="4" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000" letter-spacing="4" textLength="98.71">Spread out</tspan>
     <tspan x="98.71" textLength="3.32"> </tspan>
     <tspan x="102.03" textLength="3.12">|</tspan>
@@ -94,7 +124,7 @@
     <tspan x="282.41" textLength="3.32"> </tspan>
     <tspan x="285.73" textLength="90.47">Capitalize Words</tspan>
 </text>
-  <text x="0" y="317" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+  <text x="0" y="396" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="53.81">Small caps</tspan>
     <tspan x="53.81" font-size="13.56" textLength="3.77"> </tspan>
     <tspan x="57.58" font-size="13.56" textLength="3.52">|</tspan>
@@ -103,54 +133,54 @@
     <tspan x="138.66" textLength="3.77"> </tspan>
     <tspan x="142.43" textLength="3.52">|</tspan>
 </text>
-  <text x="145.95" y="313.4" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
+  <text x="145.95" y="392.4" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="145.95" font-weight="400" font-style="normal" font-family="Arial" font-size="5.85" fill="#000" textLength="3.77"> </tspan>
     <tspan x="149.72" font-weight="400" font-style="normal" font-family="Arial" font-size="5.85" fill="#000" textLength="28.58">superscript</tspan>
 </text>
-  <text x="0" y="317" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+  <text x="0" y="396" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="178.3" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#000" textLength="3.77"> </tspan>
     <tspan x="182.07" font-weight="400" font-style="normal" font-family="Arial" font-size="13.56" fill="#000" textLength="41.41">normal</tspan>
 </text>
-  <text x="223.48" y="319.25" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
+  <text x="223.48" y="398.25" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
     <tspan x="223.48" font-weight="400" font-style="normal" font-family="Arial" font-size="5.85" fill="#000" textLength="3.77"> </tspan>
     <tspan x="227.25" font-weight="400" font-style="normal" font-family="Arial" font-size="5.85" fill="#000" textLength="23.38">subscript</tspan>
 </text>
-  <text x="0" y="358" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
+  <text x="0" y="437" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="13.56" fill="#000000" textLength="118.16">4. Multilingual text</tspan>
 </text>
-  <text x="0" y="386" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="465" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="44.45">Русский</tspan>
     <tspan x="44.45" font-weight="400" textLength="289.91">: Привет, мир! Это демонстрация поддержки кириллицы.</tspan>
 </text>
-  <text x="0" y="407" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="486" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="39.72">English</tspan>
     <tspan x="39.72" font-weight="400" textLength="359.94">: This is an English text example. It shows Latin script with different styles.</tspan>
 </text>
-  <text x="0" y="428" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="507" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="16.5">中文</tspan>
     <tspan x="16.5" font-weight="400" textLength="195.87">: 这是一个中文示例。本软件支持汉字。你好，世界！</tspan>
 </text>
-  <text x="0" y="449" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="528" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="24.22">العربية</tspan>
     <tspan x="24.22" font-weight="400" textLength="231.44">: هذا نص عربي. اللغة العربية تكتب من اليمين إلى اليسار. مرحبا!</tspan>
 </text>
-  <text x="0" y="470" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="549" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="49.5">हिन्दी</tspan>
     <tspan x="49.5" font-weight="400" textLength="258.54">: यह हिन्दी पाठ का उदाहरण है। नमस्ते!</tspan>
 </text>
-  <text x="0" y="491" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="570" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="48">Ελληνικά</tspan>
     <tspan x="48" font-weight="400" textLength="318.61">: Αυτό είναι ένα παράδειγμα ελληνικής γλώσσας. Γειά σου Κόσμε!</tspan>
 </text>
-  <text x="0" y="512" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="591" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="43.4">Deutsch</tspan>
     <tspan x="43.4" font-weight="400" textLength="248.87">: Dies ist ein deutscher Text. Zeigt Umlaute: ä, ö, ü.</tspan>
 </text>
-  <text x="0" y="533" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+  <text x="0" y="612" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="11" fill="#000" textLength="45.25">Français</tspan>
     <tspan x="45.25" font-weight="400" textLength="251.35">: Exemple de texte français avec accents: é, è, ç, à.</tspan>
 </text>
-  <text x="0" y="572" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+  <text x="0" y="651" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a" textLength="86">[left alignment]</tspan>
     <tspan x="86" font-size="20" fill="#000" textLength="3.34"> </tspan>
     <tspan x="89.34" font-size="20" fill="#000" textLength="112.97">Typography</tspan>
@@ -166,10 +196,10 @@
     <tspan x="543.78" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="46.31">between</tspan>
     <tspan x="590.09" textLength="6.62"> </tspan>
 </text>
-  <text x="0" y="596" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+  <text x="0" y="675" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="143.95">form and function. (left)</tspan>
 </text>
-  <text x="21.05" y="637" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+  <text x="21.05" y="716" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
     <tspan x="21.05" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a" textLength="104.01">[center alignment]</tspan>
     <tspan x="125.06" font-size="20" fill="#000" textLength="3.34"> </tspan>
     <tspan x="128.4" font-size="20" fill="#000" textLength="112.97">Typography</tspan>
@@ -182,10 +212,10 @@
     <tspan x="513.69" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
     <tspan x="517.58" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
 </text>
-  <text x="189.5" y="661" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+  <text x="189.5" y="740" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
     <tspan x="189.5" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="221">between form and function. (center)</tspan>
 </text>
-  <text x="51.45" y="702" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+  <text x="51.45" y="781" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
     <tspan x="51.45" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a" textLength="94.66">[right alignment]</tspan>
     <tspan x="146.11" font-size="20" fill="#000" textLength="3.34"> </tspan>
     <tspan x="149.45" font-size="20" fill="#000" textLength="112.97">Typography</tspan>
@@ -198,10 +228,10 @@
     <tspan x="534.74" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
     <tspan x="538.63" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
 </text>
-  <text x="390.67" y="726" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+  <text x="390.67" y="805" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
     <tspan x="390.67" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="209.33">between form and function. (right)</tspan>
 </text>
-  <text x="0" y="767" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+  <text x="0" y="846" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="12" fill="#1e3a8a" textLength="103.33">[justify alignment]</tspan>
     <tspan x="103.33" font-size="20" fill="#000" textLength="11.9"> </tspan>
     <tspan x="115.23" font-size="20" fill="#000" textLength="112.97">Typography</tspan>
@@ -214,7 +244,7 @@
     <tspan x="526.18" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="12.45"> </tspan>
     <tspan x="538.63" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
 </text>
-  <text x="0" y="791" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+  <text x="0" y="870" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="217.88">between form and function. (justify)</tspan>
 </text>
 </svg>
