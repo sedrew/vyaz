@@ -286,6 +286,7 @@ interface StyleState {
   fontStyle: string;
   decoration: string;
   letterSpacing?: number;
+  backgroundColor?: string;
 }
 
 function defaultStyleState(span: Span): StyleState {
@@ -301,6 +302,7 @@ function defaultStyleState(span: Span): StyleState {
     fontStyle: span.style.fontStyle || 'normal',
     decoration: decorations.join(' '),
     letterSpacing: span.style.letterSpacing,
+    backgroundColor: span.style.backgroundColor,
   };
 }
 
@@ -308,7 +310,8 @@ function equalStyle(a: StyleState, b: StyleState): boolean {
   return a.fontFamily === b.fontFamily && a.fontSize === b.fontSize &&
     a.fontWeight === b.fontWeight && a.color === b.color &&
     a.fontStyle === b.fontStyle && a.decoration === b.decoration &&
-    a.letterSpacing === b.letterSpacing;
+    a.letterSpacing === b.letterSpacing &&
+    a.backgroundColor === b.backgroundColor;
 }
 
 /**
@@ -317,7 +320,7 @@ function equalStyle(a: StyleState, b: StyleState): boolean {
  */
 function styleSignature(span: Span): string {
   const s = defaultStyleState(span);
-  return `${s.fontFamily}|${s.fontSize}|${s.fontWeight}|${s.color}|${s.fontStyle}|${s.decoration}|${s.letterSpacing ?? ''}`;
+  return `${s.fontFamily}|${s.fontSize}|${s.fontWeight}|${s.color}|${s.fontStyle}|${s.decoration}|${s.letterSpacing ?? ''}|${s.backgroundColor ?? ''}`;
 }
 
 /** Build style string for CSS mode */
@@ -664,6 +667,23 @@ class SvgAstBuilder {
   }
 
   /**
+   * Add a background rect as a direct child of the root <svg>.
+   * Used for highlight marker (backgroundColor on spans).
+   * The rect is placed before any <text> elements so it renders underneath.
+   */
+  addBackgroundRect(x: number, y: number, width: number, height: number, color: string): void {
+    this.closeText();
+    const rect = el('rect', {
+      x: fmt(x),
+      y: fmt(y),
+      width: fmt(width),
+      height: fmt(height),
+      fill: color,
+    });
+    this.root.children.push(rect);
+  }
+
+  /**
    * Add a pre-rendered SVG line as a raw node directly under root.
    * Used in flat mode when each span is its own <text>.
    */
@@ -841,6 +861,21 @@ function renderDebugToSVG(
   return parts.join('\n');
 }
 
+// ── Background rect helper ───────────────────────────────────────────────
+
+/**
+ * Compute background rect coordinates for a span.
+ * Returns null if the span has no backgroundColor.
+ */
+function getSpanBackgroundAttrs(span: Span, baselineY: number): { x: number; y: number; w: number; h: number; fill: string } | null {
+  if (!span.style.backgroundColor) return null;
+  const x = span.x;
+  const y = baselineY - span.fontMetrics.ascent;
+  const w = span.width;
+  const h = span.fontMetrics.ascent + span.fontMetrics.descent;
+  return { x, y, w, h, fill: span.style.backgroundColor };
+}
+
 // ── Main render logic ────────────────────────────────────────────────────
 
 /**
@@ -859,6 +894,18 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
   const builder = new SvgAstBuilder(svgWidth, svgHeight, opts, viewBox);
 
   for (const line of lines) {
+    const baselineY = line.y + line.baseline;
+
+    // First pass: render background rects for all highlighted spans
+    for (const span of line.spans) {
+      if (!span.text || !span.style.backgroundColor) continue;
+      const bg = getSpanBackgroundAttrs(span, baselineY);
+      if (bg) {
+        const rx = line.x + bg.x;
+        builder.addBackgroundRect(rx, bg.y, bg.w, bg.h, bg.fill);
+      }
+    }
+
     if (opts.structure === 'glyph') {
       // Per-glyph positioning with run-based <text> grouping
       let currentRunIdx = -1;

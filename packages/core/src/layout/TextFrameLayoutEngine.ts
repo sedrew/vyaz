@@ -234,6 +234,14 @@ export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
       listMarkerWidth,
     );
 
+    // Apply paragraph-level spaceBefore (CSS margin-top equivalent).
+    // positionLines() already offsets Y by spaceBefore internally, but
+    // line.y is overwritten below with the global Y from currentColY.
+    // So we must add spaceBefore to currentColY before placing lines.
+    if (!hasColumns) {
+      currentColY[0] += p.style.spaceBefore;
+    }
+
     for (const line of result.lines) {
       if (!hasColumns) {
         // Non-column: simple accumulation (existing behavior)
@@ -308,6 +316,13 @@ export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
         }
         allLines.push(line);
       }
+    }
+
+    // Apply paragraph-level spaceAfter (CSS margin-bottom equivalent).
+    // positionLines() in PositioningEngine applies spaceBefore but does NOT
+    // add spaceAfter — it is the caller's responsibility.
+    if (!hasColumns) {
+      currentColY[0] += p.style.spaceAfter;
     }
   }
 
