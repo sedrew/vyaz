@@ -137,10 +137,15 @@ export type ScriptType = 'normal' | 'sub' | 'super';
  * CSS `white-space` equivalent.
  *
  * Controls how whitespace and line breaks are handled inside a paragraph.
+ * - `'normal'`: collapse whitespace, auto-wrap.
+ * - `'nowrap'`: collapse whitespace, no wrap.
+ * - `'pre'`: preserve whitespace, wrap on newline only.
+ * - `'pre-line'`: collapse whitespace, wrap on newline and auto-wrap.
+ * - `'pre-wrap'`: preserve whitespace, wrap on newline and auto-wrap.
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#white-space-property | CSS Text: white-space}
  */
-export type WhiteSpace = 'normal' | 'nowrap' | 'pre';
+export type WhiteSpace = 'normal' | 'nowrap' | 'pre' | 'pre-line' | 'pre-wrap';
 
 /**
  * Type of list marker.
@@ -457,6 +462,7 @@ export interface ParagraphStyle {
    * - `'normal'`: collapse whitespace, auto-wrap.
    * - `'nowrap'`: collapse whitespace, no wrap.
    * - `'pre'`: preserve whitespace, wrap on newline only.
+   * - `'pre-line'`: collapse whitespace, wrap on newline and auto-wrap.
    */
   whiteSpace?: WhiteSpace;
 

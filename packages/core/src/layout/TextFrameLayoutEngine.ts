@@ -20,9 +20,10 @@
  *   4. If frame.height is set, lines overflow to next column when colHeight exceeded
  *   5. If no frame.height, columns are infinite (all lines stay in column 0)
  */
-import type { TextFrame, ListStyle, VerticalAlignment } from '../types/Document.js';
+import type { TextFrame, ListStyle, VerticalAlignment, Paragraph } from '../types/Document.js';
 import type { Line } from '../types/LayoutTypes.js';
 import { paragraphLayoutEngine } from './ParagraphLayoutEngine.js';
+import { splitParagraphByHardBreaks } from '../compile/DocumentCompiler.js';
 import { formatListNumber, defaultBulletChar } from '../utils/list.js';
 
 /**
@@ -197,12 +198,65 @@ export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
   const allLines: Line[] = [];
   let contentWidth = 0;
 
-  // Helper: push a line and update position
   const currentColY: number[] = new Array(colCount).fill(topPad);
+
+  /**
+   * Layout a single paragraph (may be virtual from splitParagraphByHardBreaks).
+   * Returns { lines, contentWidth, height }.
+   */
+  function layoutSingleParagraph(
+    p: Paragraph,
+    maxWidth: number,
+    pIdx: number,
+    listIndex?: number,
+    listMarkerWidth?: number,
+  ): { lines: Line[]; height: number; contentWidth: number } {
+    const listStyle = p.style.listStyle;
+
+    // Fast path: empty paragraph → hard-break line (from \n separator)
+    if (p.children.length === 0) {
+      // Use the paragraph's own style or fallback to default font metrics
+      const fontSize = 12;
+      const lineHeight = p.style.lineHeight;
+      const lineHeightPx = Math.round(fontSize * lineHeight);
+      return {
+        lines: [{
+          x: 0, y: 0, width: 0, height: lineHeightPx,
+          baseline: Math.round(fontSize * 0.8),
+          ascent: Math.round(fontSize * 0.8),
+          descent: Math.round(fontSize * 0.2),
+          startIndex: 0, endIndex: 0,
+          isHardBreak: true,
+          spans: [],
+        }],
+        height: lineHeightPx,
+        contentWidth: 0,
+      };
+    }
+
+    const result = paragraphLayoutEngine.layout(
+      p,
+      maxWidth,
+      0, // relative yOffset — we position lines in the caller
+      undefined,
+      listStyle,
+      listIndex,
+      listMarkerWidth,
+    );
+
+    return {
+      lines: result.lines,
+      height: result.contentHeight,
+      contentWidth: result.contentWidth,
+    };
+  }
 
   // For non-column layout, we use a single "virtual column" approach
   for (let i = 0; i < frame.paragraphs.length; i++) {
     const p = frame.paragraphs[i];
+
+    // Zero phase: split `pre`/`pre-line`/`pre-wrap` paragraphs on \n
+    const subParagraphs = splitParagraphByHardBreaks(p);
 
     // Available width: colWidth if columns, otherwise frame.width minus padding
     const maxWidth = hasColumns
@@ -218,112 +272,91 @@ export function layoutTextFrame(frame: TextFrame): TextFrameLayoutResult {
 
     const listIndex = listIndices[i];
     const listMarkerWidth = listMarkerWidths[i];
-    const listStyle = p.style.listStyle;
 
-    // Start paragraph on current column (column 0 initially, or current active column)
-    // We layout the paragraph with the full maxWidth — the paragraph's own
-    // line-breaking handles wrapping.
-    // For multi-column, we use a relative yOffset = 0, then position lines below.
-    const result = paragraphLayoutEngine.layout(
-      p,
-      maxWidth,
-      0, // relative yOffset — we'll position lines ourselves
-      undefined,
-      listStyle,
-      listIndex,
-      listMarkerWidth,
-    );
+    // Layout each sub-paragraph
+    for (let subIdx = 0; subIdx < subParagraphs.length; subIdx++) {
+      const subPara = subParagraphs[subIdx];
 
-    // Apply paragraph-level spaceBefore (CSS margin-top equivalent).
-    // positionLines() already offsets Y by spaceBefore internally, but
-    // line.y is overwritten below with the global Y from currentColY.
-    // So we must add spaceBefore to currentColY before placing lines.
-    if (!hasColumns) {
-      currentColY[0] += p.style.spaceBefore;
-    }
-
-    for (const line of result.lines) {
-      if (!hasColumns) {
-        // Non-column: simple accumulation (existing behavior)
-        line.x += leftPad;
-        for (const span of line.spans) {
-          span.pIdx = i;
-        }
-        allLines.push(line);
-        contentWidth = Math.max(contentWidth, result.contentWidth);
-        // Result height already includes the passed yOffset (0), so this is relative.
-        // We accumulate absolute y from result.height (which is total paragraph height).
-        line.y = currentColY[0];
-        currentColY[0] += line.height;
-        continue;
+      // Add spaceBefore only for the first sub-paragraph of each original paragraph
+      if (!hasColumns && subIdx === 0) {
+        currentColY[0] += p.style.spaceBefore;
       }
+      const subResult = layoutSingleParagraph(
+        subPara,
+        maxWidth,
+        i,
+        listIndex,
+        listMarkerWidth,
+      );
 
-      // ── Multi-column: distribute lines across columns ──────────
-      // Try to place the current line in the current column.
-      // If it doesn't fit — move to next column.
-      let colIdx = 0;
-      for (let c = 0; c < colCount; c++) {
-        if (currentColY[c] < currentColY[colIdx]) colIdx = c;
-      }
-
-      // Try current column; if line doesn't fit, advance to next.
-      // For auto fill: each column fills completely before moving to next.
-      // We use a greedy column selection: find the column with smallest Y
-      // that has room for this line.
-      let placed = false;
-      for (let attempt = 0; attempt < colCount; attempt++) {
-        if (currentColY[colIdx] + line.height <= colHeight) {
-          // Fits in this column
-          line.x = colIdx * (colWidth! + colGap) + leftPad;
-          line.y = currentColY[colIdx];
-          line.columnIndex = colIdx;
-          currentColY[colIdx] += line.height;
+      for (const line of subResult.lines) {
+        if (!hasColumns) {
+          // Non-column: simple accumulation
+          line.x += leftPad;
           for (const span of line.spans) {
             span.pIdx = i;
           }
           allLines.push(line);
-          contentWidth = Math.max(contentWidth, line.x + line.width + rightPad);
-          placed = true;
-          break;
+          contentWidth = Math.max(contentWidth, subResult.contentWidth);
+          line.y = currentColY[0];
+          currentColY[0] += line.height;
+          continue;
         }
-        // Advance to next column
-        colIdx = (colIdx + 1) % colCount;
 
-        // If we've wrapped around, all columns are full — overflow stays in last column
-        if (attempt === colCount - 1) {
-          // Place in last attempted column even if it overflows
-          line.x = colIdx * (colWidth! + colGap) + leftPad;
-          line.y = currentColY[colIdx];
-          line.columnIndex = colIdx;
-          currentColY[colIdx] += line.height;
+        // ── Multi-column: distribute lines across columns ──────────
+        let colIdx = 0;
+        for (let c = 0; c < colCount; c++) {
+          if (currentColY[c] < currentColY[colIdx]) colIdx = c;
+        }
+
+        let placed = false;
+        for (let attempt = 0; attempt < colCount; attempt++) {
+          if (currentColY[colIdx] + line.height <= colHeight) {
+            line.x = colIdx * (colWidth! + colGap) + leftPad;
+            line.y = currentColY[colIdx];
+            line.columnIndex = colIdx;
+            currentColY[colIdx] += line.height;
+            for (const span of line.spans) {
+              span.pIdx = i;
+            }
+            allLines.push(line);
+            contentWidth = Math.max(contentWidth, line.x + line.width + rightPad);
+            placed = true;
+            break;
+          }
+          colIdx = (colIdx + 1) % colCount;
+
+          if (attempt === colCount - 1) {
+            line.x = colIdx * (colWidth! + colGap) + leftPad;
+            line.y = currentColY[colIdx];
+            line.columnIndex = colIdx;
+            currentColY[colIdx] += line.height;
+            for (const span of line.spans) {
+              span.pIdx = i;
+            }
+            allLines.push(line);
+            contentWidth = Math.max(contentWidth, line.x + line.width + rightPad);
+            placed = true;
+          }
+        }
+
+        if (!placed) {
+          line.x = leftPad;
+          line.y = currentColY[0];
+          line.columnIndex = 0;
+          currentColY[0] += line.height;
           for (const span of line.spans) {
             span.pIdx = i;
           }
           allLines.push(line);
-          contentWidth = Math.max(contentWidth, line.x + line.width + rightPad);
-          placed = true;
         }
       }
 
-      if (!placed) {
-        // Fallback: place in column 0 (shouldn't happen)
-        line.x = leftPad;
-        line.y = currentColY[0];
-        line.columnIndex = 0;
-        currentColY[0] += line.height;
-        for (const span of line.spans) {
-          span.pIdx = i;
-        }
-        allLines.push(line);
+      // Apply spaceAfter after the LAST sub-paragraph of the original paragraph
+      if (!hasColumns && subPara === subParagraphs[subParagraphs.length - 1]) {
+        currentColY[0] += p.style.spaceAfter;
       }
-    }
-
-    // Apply paragraph-level spaceAfter (CSS margin-bottom equivalent).
-    // positionLines() in PositioningEngine applies spaceBefore but does NOT
-    // add spaceAfter — it is the caller's responsibility.
-    if (!hasColumns) {
-      currentColY[0] += p.style.spaceAfter;
-    }
+    } // end for each paragraph
   }
 
   // ── Apply vertical alignment per column ──────────────────────────

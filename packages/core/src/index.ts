@@ -77,7 +77,7 @@ export { transformText } from './utils/textTransform.js';
 export { formatListNumber, defaultBulletChar, BULLET_CHARACTERS } from './utils/list.js';
 
 // ── Compiler ────────────────────────────────────────────────────────────
-export { compileParagraph, getParagraphText, makeFontToken } from './compile/DocumentCompiler.js';
+export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, collapseSegmentWhitespace } from './compile/DocumentCompiler.js';
 export type { PreparedRichInlineItem } from './compile/DocumentCompiler.js';
 
 // ── Font Engine ──────────────────────────────────────────────────────────

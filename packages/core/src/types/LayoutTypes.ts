@@ -115,6 +115,16 @@ export interface Line {
   /** Column index (0-based) when frame has multi-column layout. */
   columnIndex?: number;
 
+  /**
+   * True when this line was created by a forced hard break (\n),
+   * as opposed to a soft wrap from line width exceeding maxWidth.
+   *
+   * Used by the editor to distinguish user-inserted line breaks
+   * from automatic wrapping (affects Home/End, arrow up/down,
+   * Backspace merging behaviour).
+   */
+  isHardBreak?: boolean;
+
   spans: Span[];
 }
 

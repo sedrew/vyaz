@@ -5,6 +5,9 @@
  * inline-box: text → \uFFFC, dimensions in metadata.inlineWidget.
  * super/sub: fontSize *= 0.65, baselineOffset in metadata.
  *
+ * splitParagraphByHardBreaks() — zero phase: splits a Paragraph into
+ * virtual Paragraph[] on \n boundaries (for pre, pre-line, pre-wrap).
+ *
  * Simple JSON-serialisable format — does not depend on pretext directly.
  */
 
@@ -67,6 +70,43 @@ export interface PreparedRichInlineItem {
 const SUPER_SUB_SCALE = 0.65;
 const SUPER_OFFSET_RATIO = -0.4;
 const SUB_OFFSET_RATIO = 0.25;
+
+/**
+ * Collapsible whitespace (CSS Text §4.1.1): space (U+0020), tab (U+0009),
+ * form feed (U+000C), carriage return (U+000D).
+ *
+ * Notably NOT included: NBSP (U+00A0), ZWSP (U+200B), BOM (U+FEFF).
+ */
+const COLLAPSIBLE_WS_RE = /[ \t\f\r]+/g;
+
+/**
+ * Collapse consecutive collapsible whitespace → single space.
+ * Trim leading/trailing. CSS Text §4.1.1.
+ *
+ * Uses native regex (C++ in V8) instead of a manual JS loop.
+ */
+export function collapseSegmentWhitespace(segment: string): string {
+  return segment
+    .replace(COLLAPSIBLE_WS_RE, ' ')  // collapse runs to single space
+    .trim();                           // trim leading/trailing
+}
+
+/**
+ * Split text on \n, collapse whitespace per segment (pre-line).
+ * Empty segments preserved (for \n\n → empty line).
+ *
+ * Three native calls: replace → split → map (trim).
+ * CSS Text §4.1.1 (pre-line): collapsing + segment break transformation.
+ */
+export function splitAndCollapseByHardBreaks(text: string): string[] {
+  if (text.length === 0) return [''];
+  return text
+    .replace(COLLAPSIBLE_WS_RE, ' ')  // collapse whitespace runs, preserve \n
+    .split('\n')                       // cut on hard breaks
+    .map(s => s.trim());               // trim segment boundaries
+}
+
+// ── Main compile ────────────────────────────────────────────────────────
 
 /**
  * Compile a paragraph into PreparedRichInlineItem[].
@@ -134,6 +174,92 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
   }
 
   return items;
+}
+
+/**
+ * Zero phase: split a Paragraph into virtual Paragraph[] on \n boundaries.
+ *
+ * For `pre-line`: whitespace is collapsed per segment.
+ * For `pre`/`pre-wrap`: whitespace is preserved.
+ * For `normal`/`nowrap`/`undefined`: returns [paragraph] unchanged.
+ *
+ * Each \n produces an empty Paragraph (children: []) which the layout engine
+ * can fast-path as a hard-break line.
+ *
+ * Supports multi-run: when a run contains \n, the text after \n starts
+ * a new virtual paragraph. Runs after the split run belong to the new
+ * paragraph.
+ *
+ * @example
+ *   "Hello\nWorld" (pre-line)
+ *     → [{ children: [{ text: "Hello" }] }, { children: [{ text: "World" }] }]
+ *
+ *   "Hello\n\nWorld" (pre-line)
+ *     → [{ children: [{ text: "Hello" }] }, { children: [] }, { children: [{ text: "World" }] }]
+ *
+ *   ["Hello Bold", "\n", "World"] (pre)
+ *     → [{ children: [{ text: "Hello Bold" }] }, { children: [] }, { children: [{ text: "World" }] }]
+ */
+export function splitParagraphByHardBreaks(paragraph: Paragraph): Paragraph[] {
+  const ws = paragraph.style.whiteSpace;
+  if (ws !== 'pre-line' && ws !== 'pre' && ws !== 'pre-wrap') {
+    return [paragraph];
+  }
+
+  const result: Paragraph[] = [];
+  let currentRuns: TextRun[] = [];
+
+  for (const run of paragraph.children) {
+    const nlIndex = run.text.indexOf('\n');
+    if (nlIndex === -1) {
+      // No \n — entire run goes to current virtual paragraph
+      currentRuns.push({ ...run });
+      continue;
+    }
+
+    // There's a \n in this run — split it
+    const before = run.text.slice(0, nlIndex);
+    const after = run.text.slice(nlIndex + 1);
+
+    const textTransform = run.textTransform;
+    const effectiveFontSize = computeEffFs(run);
+
+    // Part before \n → current paragraph
+    if (before.length > 0) {
+      const text = ws === 'pre-line' ? collapseSegmentWhitespace(before) : before;
+      currentRuns.push({ ...run, text: transformText(text, textTransform) });
+    }
+
+    // Finalize current paragraph
+    result.push({ style: paragraph.style, children: currentRuns });
+
+    // Check for additional \n immediately after (e.g., "Hello\n\nWorld")
+    // Count consecutive \n — each produces an empty paragraph
+    let afterIdx = nlIndex + 1;
+    while (afterIdx < run.text.length && run.text[afterIdx] === '\n') {
+      result.push({ style: paragraph.style, children: [] });
+      afterIdx++;
+    }
+
+    // Remaining text after all \n → start new paragraph
+    const remaining = run.text.slice(afterIdx);
+    if (remaining.length > 0) {
+      const text = ws === 'pre-line' ? collapseSegmentWhitespace(remaining) : remaining;
+      currentRuns = [{ ...run, text: transformText(text, textTransform) }];
+    } else {
+      currentRuns = [];
+    }
+  }
+
+  // Finalize last paragraph
+  result.push({ style: paragraph.style, children: currentRuns });
+
+  return result;
+}
+
+function computeEffFs(run: TextRun): number {
+  const base = run.fontSize ?? DEFAULT_TEXT_STYLE.fontSize ?? 12;
+  return run.script === 'super' || run.script === 'sub' ? base * SUPER_SUB_SCALE : base;
 }
 
 /**
