@@ -37,4 +37,4 @@ jobs:
           path: 'docs/.vitepress/dist'
 
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages
+        uses: actions/deploy-pages@v4
