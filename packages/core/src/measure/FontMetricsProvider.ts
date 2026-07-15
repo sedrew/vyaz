@@ -97,26 +97,41 @@ function nearestWeight(
   return best;
 }
 
+/**
+ * Font metrics provider — registers, resolves, and measures fonts.
+ *
+ * Public API (stable):
+ *   - `registerFont()`
+ *   - `getMetrics()`
+ *   - `getFont()`
+ *   - `setMode()` / `getMode()`
+ *
+ * Semi-stable (@beta — may change with notice):
+ *   - `waitForPendingRegistrations()`
+ *   - `getRegisteredFamilies()`
+ *   - `getFamilyVariants()`
+ *
+ * Everything else is internal.
+ */
 export class FontMetricsProvider implements IFontMetricsProvider {
-  /**
-   * Nested registry: family → variantKey → FontFace.
-   * Example:
-   *   "Roboto" → { "400_normal": FontFace, "700_normal": FontFace, "400_italic": FontFace }
-   */
+  /** @internal Nested registry: family → variantKey → FontFace */
   private registry = new Map<string, Map<string, FontFace>>();
 
-  /** Metrics cache keyed by variantKey_fontSize_mode */
+  /** @internal Metrics cache keyed by variantKey_fontSize_mode */
   private metricsCache = new Map<string, FontMetrics>();
 
+  /** @internal */
   private mode: 'browser' | 'office' = 'browser';
 
-  // ── Pending registration tracking ───────────────────────────────
+  /** @internal Set of in-flight registerFont() promises for race-condition guarding */
   private pendingRegistrations = new Set<Promise<void>>();
 
-  // ── Reusable off-screen canvas for Canvas TextMetrics fallback ──
+  /** @internal Reusable off-screen canvas for Canvas TextMetrics fallback */
   private _measureCanvas: HTMLCanvasElement | OffscreenCanvas | null = null;
+  /** @internal */
   private _measureCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null = null;
 
+  /** @internal Get or create a reusable canvas context */
   private _getMeasureContext(): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D {
     if (!this._measureCtx) {
       if (typeof OffscreenCanvas !== 'undefined') {
@@ -132,6 +147,11 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 
   // ── Mode ──────────────────────────────────────────────────────────
 
+  /**
+   * Set measurement mode.
+   * - `'browser'` — hhea.ascender/descender (default)
+   * - `'office'`  — OS/2.usWinAscent/usWinDescent
+   */
   setMode(mode: 'browser' | 'office'): void {
     if (this.mode === mode) return;
     this.mode = mode;
@@ -143,13 +163,13 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     }
   }
 
+  /** Get current measurement mode. */
   getMode(): 'browser' | 'office' {
     return this.mode;
   }
 
   /**
-   * Flatten the nested registry into a single map for office mode.
-   * Office mode needs key → FontFace lookup by family_weight_style.
+   * @internal Flatten the nested registry for office mode.
    */
   private _flattenCache(): Map<string, FontFace> {
     const flat = new Map<string, FontFace>();
@@ -163,6 +183,16 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 
   // ── FontRegistry ──────────────────────────────────────────────────
 
+  /**
+   * Register a binary font for use with fontkit.
+   *
+   * In both Node.js and browser the font is loaded via FontEngine.
+   * In the browser the caller must provide font bytes (e.g. fetched via
+   * `getFontBuffer()` from `../utils/font.js`).
+   *
+   * @param source      Font file bytes (ArrayBuffer / Uint8Array), or a URL string
+   * @param sourcePath  Optional filesystem path (used for @napi-rs/canvas in Node.js)
+   */
   async registerFont(
     family: string,
     options: { weight?: string; style?: string },
@@ -178,6 +208,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     }
   }
 
+  /** @internal Internal registration logic */
   private async _registerFontInternal(
     family: string,
     options: { weight?: string; style?: string },
@@ -197,13 +228,11 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     const s = options.style || 'normal';
     const vKey = variantKey(w, s);
 
-    // Ensure family entry exists
     if (!this.registry.has(family)) {
       this.registry.set(family, new Map());
     }
     this.registry.get(family)!.set(vKey, font);
 
-    // Invalidate metrics for this family
     for (const key of this.metricsCache.keys()) {
       if (key.startsWith(family)) {
         this.metricsCache.delete(key);
@@ -215,6 +244,12 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     }
   }
 
+  /**
+   * Wait for all in-flight font registrations to complete.
+   * Useful after a batch of registerFont() calls before layout.
+   *
+   * @beta — may change with notice
+   */
   async waitForPendingRegistrations(): Promise<void> {
     await Promise.all(this.pendingRegistrations);
   }
@@ -223,6 +258,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 
   /**
    * List all families registered in the provider.
+   *
+   * @beta — may change with notice
    */
   getRegisteredFamilies(): string[] {
     return Array.from(this.registry.keys());
@@ -231,6 +268,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   /**
    * Get all variant keys registered for a given family.
    * Returns empty array if family not found.
+   *
+   * @beta — may change with notice
    */
   getFamilyVariants(family: string): string[] {
     const variants = this.registry.get(family);
@@ -254,7 +293,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   }
 
   /**
-   * Resolve a font request with fallback.
+   * @internal Resolve a font request with fallback.
    * Returns { font, resolvedWeight, resolvedStyle } or null.
    */
   private _resolveFont(
@@ -327,6 +366,15 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 
   // ── Metrics retrieval ─────────────────────────────────────────────
 
+  /**
+   * Get pixel-scale metrics for a given font family, size, weight, and style.
+   *
+   * Resolution order:
+   * 1. FontEngine (fontkit) from registry — with smart weight/style fallback
+   * 2. Canvas TextMetrics (browser fallback when fontkit unavailable)
+   *
+   * @throws FontNotFoundError when font is neither registered nor available via Canvas
+   */
   getMetrics(
     fontFamily: string,
     fontSize: number,

@@ -32,14 +32,22 @@ test:
 lint:
 	@echo "No linter configured yet — skipping"
 
-# ── Smoke test: verify built dist/ is valid Node.js ESM ──────────
+# ── Smoke test: verify built dist/ is valid ESM ──────────
 smoke: build
 	@for pkg in $(PACKAGES); do \
-		echo "→ Smoke-testing @vyaz/$$pkg in Node.js"; \
+		echo "→ Smoke-testing @vyaz/$$pkg (Node bundle)"; \
 		node --input-type=module -e " \
 			import('./packages/$$pkg/dist/index.js') \
-				.then(m => console.log('  ✅ @vyaz/$$pkg imported:', Object.keys(m).length, 'exports')) \
-				.catch(err => { console.error('  ❌ @vyaz/$$pkg failed:', err.message); process.exit(1); }); \
+				.then(m => console.log('  ✅ @vyaz/$$pkg Node:', Object.keys(m).length, 'exports')) \
+				.catch(err => { console.error('  ❌ @vyaz/$$pkg Node failed:', err.message); process.exit(1); }); \
+		" || exit 1; \
+	done
+	@for pkg in $(PACKAGES); do \
+		echo "→ Smoke-testing @vyaz/$$pkg (Browser bundle)"; \
+		node --input-type=module -e " \
+			import('./packages/$$pkg/dist/index.browser.js') \
+				.then(m => console.log('  ✅ @vyaz/$$pkg browser:', Object.keys(m).length, 'exports')) \
+				.catch(err => { console.error('  ❌ @vyaz/$$pkg browser failed:', err.message); process.exit(1); }); \
 		" || exit 1; \
 	done
 

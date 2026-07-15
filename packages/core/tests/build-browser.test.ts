@@ -64,6 +64,7 @@ const EXPECTED_EXPORTS = {
 
   // Utils
   transformText: 'function',
+  groupLinesByParagraph: 'function',
   formatListNumber: 'function',
   defaultBulletChar: 'function',
   BULLET_CHARACTERS: 'object',

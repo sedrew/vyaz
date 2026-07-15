@@ -1,11 +1,19 @@
 /**
  * @vyaz/core — Public API.
  *
- * Exports input types (Logical level), output types (Physical Box Model),
- * layout engines, font metric providers, renderers, and utilities.
+ * ## Stability
+ *
+ * - **Stable**: types, layout engines, font metrics provider, compiler
+ * - **@beta** — may change with reasonable notice
+ * - **@internal** — implementation details, not for external use
+ *
+ * ## Environments
+ *
+ * - `index.ts` (Node.js / Bun) — full API including SystemFontRegistry
+ * - `index.browser.ts` (browser) — browser-safe subset (no node:fs)
  */
 
-// ── Input types (Logical level) ─────────────────────────────────────────
+// ── Input types (Logical level) — stable ───────────────────────────────
 export type {
   TextFrame,
   Paragraph,
@@ -37,10 +45,12 @@ export type {
 //    limitation as `--target browser`. Using object spread forces the bundler
 //    to embed actual values in the output bundle.
 import { DEFAULT_PARAGRAPH_STYLE as _DPS2, DEFAULT_TEXT_STYLE as _DTS2 } from './types/Document.js';
+/** @internal */
 export const DEFAULT_PARAGRAPH_STYLE = { ..._DPS2 };
+/** @internal */
 export const DEFAULT_TEXT_STYLE = { ..._DTS2 };
 
-// ── Output types (Physical Box Model) ───────────────────────────────────
+// ── Output types (Physical Box Model) — stable ─────────────────────────
 export type {
   ParagraphLayoutResult,
   Line,
@@ -51,54 +61,70 @@ export type {
   SemanticFragment,
 } from './types/LayoutTypes.js';
 
-// ── Font types ──────────────────────────────────────────────────────────
+// ── Font types — stable ────────────────────────────────────────────────
 export type {
   FontMetrics,
   IFontMetricsProvider,
   GlyphData,
 } from './types/FontTypes.js';
 
-// ── Layout Engine ───────────────────────────────────────────────────────
+// ── Layout Engine — stable ─────────────────────────────────────────────
 export { ParagraphLayoutEngine, paragraphLayoutEngine } from './layout/ParagraphLayoutEngine.js';
+
+/**
+ * @internal List layout positions lines within a paragraph box.
+ * Used internally by ParagraphLayoutEngine.
+ */
 export { positionLines } from './layout/PositioningEngine.js';
+
+/**
+ * @internal Line box invariant checks for debugging.
+ */
 export { assertLineInvariants, linesToYAML } from './layout/LineBoxValidator.js';
 export type { InvariantError } from './layout/LineBoxValidator.js';
 
-// ── TextFrame Layout Engine ──────────────────────────────────────────────
+// ── TextFrame Layout Engine — stable ────────────────────────────────────
 export { layoutTextFrame } from './layout/TextFrameLayoutEngine.js';
 export type { TextFrameLayoutResult } from './layout/TextFrameLayoutEngine.js';
 
-// ── Autofit ─────────────────────────────────────────────────────────────
+// ── Autofit — stable ───────────────────────────────────────────────────
 export { applyScale, findScale } from './layout/AutoFitEngine.js';
 export type { AutoFitOptions, AutoFitResult } from './layout/AutoFitEngine.js';
 
-// ── Utils ────────────────────────────────────────────────────────────────
+// ── Utils — stable ──────────────────────────────────────────────────────
 export { groupLinesByParagraph } from './utils/groupLinesByParagraph.js';
 export type { ParagraphGroup } from './utils/groupLinesByParagraph.js';
+
+/**
+ * @internal Text transformation (uppercase, lowercase, capitalize).
+ */
 export { transformText } from './utils/textTransform.js';
 // Same workaround for BULLET_CHARACTERS (object constant) — Bun's bun build
 // does not inline const objects with `export { X } from 'module'`.
 import { formatListNumber as _fln, defaultBulletChar as _dbc, BULLET_CHARACTERS as _BC2 } from './utils/list.js';
+/** @internal */
 export const formatListNumber = _fln;
+/** @internal */
 export const defaultBulletChar = _dbc;
+/** @internal */
 export const BULLET_CHARACTERS = { ..._BC2 };
 
-// ── Compiler ────────────────────────────────────────────────────────────
+// ── Compiler — stable ──────────────────────────────────────────────────
 export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, collapseSegmentWhitespace } from './compile/DocumentCompiler.js';
 export type { PreparedRichInlineItem } from './compile/DocumentCompiler.js';
 
-// ── Font Engine ──────────────────────────────────────────────────────────
+// ── Font Engine — stable ────────────────────────────────────────────────
 export type { FontFace } from './measure/FontEngine.js';
 export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable } from './measure/FontEngine.js';
 
-// ── Font metrics ────────────────────────────────────────────────────────
+// ── Font metrics — stable ──────────────────────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
 
-// ── System font registry ────────────────────────────────────────────────
+// ── System font registry — stable (Node.js only) ────────────────────────
 export { SystemFontRegistry, systemFontRegistry } from './measure/SystemFontRegistry.js';
 
-// ── Font utilities ───────────────────────────────────────────────────────
+// ── Font utilities — stable ─────────────────────────────────────────────
 export { getFontBuffer } from './utils/font.js';
 
-// ── Errors ──────────────────────────────────────────────────────────────
+// ── Errors — stable ────────────────────────────────────────────────────
 export { FontNotFoundError } from './measure/FontNotFoundError.js';
