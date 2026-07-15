@@ -1,6 +1,6 @@
 {
   "name": "@vyaz/renderer",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,7 +12,7 @@
     "build": "bun build ./src/index.ts --outdir ./dist --target bun && tsc --project tsconfig.json --emitDeclarationOnly"
   },
   "dependencies": {
-    "@vyaz/core": "^0.0.5"
+    "@vyaz/core": "^0.0.7"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
