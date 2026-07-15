@@ -4,7 +4,7 @@
 
 > **NumberFormat** = `"decimal"` \| `"upper-roman"` \| `"lower-roman"` \| `"upper-alpha"` \| `"lower-alpha"`
 
-Defined in: [core/src/types/Document.ts:165](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L165)
+Defined in: [core/src/types/Document.ts:170](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L170)
 
 Numbering format for ordered lists.
 

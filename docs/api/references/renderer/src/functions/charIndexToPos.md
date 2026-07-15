@@ -17,7 +17,7 @@ Returns `null` if the index is out of range.
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 ### charIndex
 

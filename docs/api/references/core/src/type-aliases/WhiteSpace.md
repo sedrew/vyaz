@@ -2,13 +2,18 @@
 
 # Type Alias: WhiteSpace
 
-> **WhiteSpace** = `"normal"` \| `"nowrap"` \| `"pre"`
+> **WhiteSpace** = `"normal"` \| `"nowrap"` \| `"pre"` \| `"pre-line"` \| `"pre-wrap"`
 
-Defined in: [core/src/types/Document.ts:143](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L143)
+Defined in: [core/src/types/Document.ts:148](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L148)
 
 CSS `white-space` equivalent.
 
 Controls how whitespace and line breaks are handled inside a paragraph.
+- `'normal'`: collapse whitespace, auto-wrap.
+- `'nowrap'`: collapse whitespace, no wrap.
+- `'pre'`: preserve whitespace, wrap on newline only.
+- `'pre-line'`: collapse whitespace, wrap on newline and auto-wrap.
+- `'pre-wrap'`: preserve whitespace, wrap on newline and auto-wrap.
 
 ## See
 

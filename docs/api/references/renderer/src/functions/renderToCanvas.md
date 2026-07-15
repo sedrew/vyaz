@@ -18,7 +18,7 @@ Render Line[] array to Canvas.
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 — ready Line[] with absolute coordinates
 

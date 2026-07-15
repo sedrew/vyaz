@@ -8,7 +8,7 @@
     "packages/demo"
   ],
   "scripts": {
-    "build": "bun run build -w packages/core && bun run build -w packages/renderer",
+    "build": "(cd packages/core && bun run build) && (cd packages/renderer && bun run build)",
     "docs:dev": "cd docs && bunx vitepress dev",
     "docs:build": "npm run docs:gen && cd docs && bunx vitepress build",
     "docs:gen": "npx typedoc --options typedoc.json --tsconfig tsconfig.typedoc.json --skipErrorChecking packages/core/src/index.ts packages/renderer/src/index.ts --out docs/api/references"

@@ -23,7 +23,7 @@ Index of the character within the span text (0-based).
 
 ### line
 
-> **line**: [`Line`](../../../core/src/interfaces/Line.md)
+> **line**: `Line`
 
 Defined in: [renderer/src/interactive.ts:37](https://github.com/sedrew/vyaz/blob/main/packages/renderer/src/interactive.ts#L37)
 
@@ -53,7 +53,7 @@ Paragraph index (from Span.pIdx).
 
 ### span
 
-> **span**: [`Span`](../../../core/src/interfaces/Span.md)
+> **span**: `Span`
 
 Defined in: [renderer/src/interactive.ts:39](https://github.com/sedrew/vyaz/blob/main/packages/renderer/src/interactive.ts#L39)
 

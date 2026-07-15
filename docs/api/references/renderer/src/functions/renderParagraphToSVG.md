@@ -12,7 +12,7 @@ Render one ParagraphLayoutResult to SVG (convenience wrapper).
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 ### paragraphWidth
 

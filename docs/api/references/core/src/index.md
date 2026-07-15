@@ -70,6 +70,7 @@
 
 - [applyScale](functions/applyScale.md)
 - [assertLineInvariants](functions/assertLineInvariants.md)
+- [collapseSegmentWhitespace](functions/collapseSegmentWhitespace.md)
 - [compileParagraph](functions/compileParagraph.md)
 - [computePixelMetrics](functions/computePixelMetrics.md)
 - [createFontFace](functions/createFontFace.md)
@@ -85,4 +86,5 @@
 - [linesToYAML](functions/linesToYAML.md)
 - [makeFontToken](functions/makeFontToken.md)
 - [positionLines](functions/positionLines.md)
+- [splitParagraphByHardBreaks](functions/splitParagraphByHardBreaks.md)
 - [transformText](functions/transformText.md)

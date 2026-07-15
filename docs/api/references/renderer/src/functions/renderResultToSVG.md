@@ -16,7 +16,7 @@ and want `sizing: 'frame'` with correct dimensions.
 
 ### result
 
-[`ParagraphLayoutResult`](../../../core/src/interfaces/ParagraphLayoutResult.md)
+`ParagraphLayoutResult`
 
 — layout result from ParagraphLayoutEngine.layout()
 

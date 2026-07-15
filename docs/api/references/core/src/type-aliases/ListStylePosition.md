@@ -4,7 +4,7 @@
 
 > **ListStylePosition** = `"outside"` \| `"inside"`
 
-Defined in: [core/src/types/Document.ts:177](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L177)
+Defined in: [core/src/types/Document.ts:182](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L182)
 
 Position of the list marker relative to the text.
 

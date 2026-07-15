@@ -24,7 +24,7 @@ of intermediate lines is highlighted.
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 — layout lines
 

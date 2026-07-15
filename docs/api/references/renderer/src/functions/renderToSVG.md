@@ -12,7 +12,7 @@ Render Line[] into SVG string.
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 — layout lines with spans
 

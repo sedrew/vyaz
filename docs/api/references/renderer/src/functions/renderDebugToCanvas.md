@@ -31,7 +31,7 @@ Supported flags:
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 ### \_width
 

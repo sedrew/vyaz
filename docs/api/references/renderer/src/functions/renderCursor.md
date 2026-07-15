@@ -21,7 +21,7 @@ The caller is responsible for cursor blink timing.
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 — layout lines
 

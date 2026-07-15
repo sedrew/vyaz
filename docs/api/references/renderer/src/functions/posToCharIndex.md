@@ -15,7 +15,7 @@ the absolute index in the full text.
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 ### pos
 

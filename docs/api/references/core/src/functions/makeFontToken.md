@@ -4,7 +4,7 @@
 
 > **makeFontToken**(`run`, `effectiveFontSize`): `string`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:42](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L42)
+Defined in: [core/src/compile/DocumentCompiler.ts:45](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L45)
 
 Font token for pretext: "${style}_${weight}_${fontSize}_${family}"
 

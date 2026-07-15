@@ -76,11 +76,26 @@ Full line height (max spans × lineHeight)
 
 ***
 
+### isHardBreak?
+
+> `optional` **isHardBreak?**: `boolean`
+
+Defined in: [core/src/types/LayoutTypes.ts:126](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L126)
+
+True when this line was created by a forced hard break (\n),
+as opposed to a soft wrap from line width exceeding maxWidth.
+
+Used by the editor to distinguish user-inserted line breaks
+from automatic wrapping (affects Home/End, arrow up/down,
+Backspace merging behaviour).
+
+***
+
 ### spans
 
 > **spans**: [`Span`](Span.md)[]
 
-Defined in: [core/src/types/LayoutTypes.ts:118](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L118)
+Defined in: [core/src/types/LayoutTypes.ts:128](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L128)
 
 ***
 

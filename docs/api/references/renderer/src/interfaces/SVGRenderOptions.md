@@ -18,7 +18,7 @@ CSS class for `<svg>`.
 
 ### columns?
 
-> `optional` **columns?**: [`MultiColumnConfig`](../../../core/src/interfaces/MultiColumnConfig.md)
+> `optional` **columns?**: `MultiColumnConfig`
 
 Defined in: [renderer/src/SVGRenderer.ts:71](https://github.com/sedrew/vyaz/blob/main/packages/renderer/src/SVGRenderer.ts#L71)
 

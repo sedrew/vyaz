@@ -19,7 +19,7 @@ Returns `null` if `lines` is empty.
 
 ### lines
 
-[`Line`](../../../core/src/interfaces/Line.md)[]
+`Line`[]
 
 ### px
 
