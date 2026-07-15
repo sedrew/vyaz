@@ -37,9 +37,6 @@ jobs:
       - name: Install dependencies
         run: cd docs && bun install
 
-      - name: Generate API references
-        run: bunx typedoc --options typedoc.json --tsconfig tsconfig.typedoc.json --skipErrorChecking packages/core/src/index.ts packages/renderer/src/index.ts --out docs/api/references
-
       - name: Build docs
         run: cd docs && bunx --bun vitepress build
 
