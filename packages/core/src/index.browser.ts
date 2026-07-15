@@ -30,9 +30,14 @@ export { getFontBuffer } from './utils/font.js';
 export { FontNotFoundError } from './measure/FontNotFoundError.js';
 
 // ── Types (re-exported as values for inline, but imported as types) ─────
-export {
-  DEFAULT_PARAGRAPH_STYLE,
-  DEFAULT_TEXT_STYLE,
-} from './types/Document.js';
+// ⚠️ Bun's `bun build --target browser` does NOT inline object/array constants
+//    when using `export { X } from 'module'` (known limitation — ConstValueInliningBundle is todo).
+//    Using object spread forces the bundler to embed the actual values in the output.
+import { DEFAULT_PARAGRAPH_STYLE as _DPS, DEFAULT_TEXT_STYLE as _DTS } from './types/Document.js';
+export const DEFAULT_PARAGRAPH_STYLE = { ..._DPS };
+export const DEFAULT_TEXT_STYLE = { ..._DTS };
 export { transformText } from './utils/textTransform.js';
-export { formatListNumber, defaultBulletChar, BULLET_CHARACTERS } from './utils/list.js';
+// Same workaround for BULLET_CHARACTERS (object constant)
+import { BULLET_CHARACTERS as _BC } from './utils/list.js';
+export const BULLET_CHARACTERS = { ..._BC };
+export { formatListNumber, defaultBulletChar } from './utils/list.js';
