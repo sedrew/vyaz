@@ -34,6 +34,10 @@ export type {
   OverflowWrap,
   TextDecorationStyle,
   TextTransform,
+  ListType,
+  NumberFormat,
+  ListStylePosition,
+  ListStyle,
 } from './types/Document.js';
 export {
   DEFAULT_PARAGRAPH_STYLE,

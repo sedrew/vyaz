@@ -18,7 +18,7 @@
  *   const svg = renderToSVG(lines, { preset: 'preserve', style: 'css', fit: 'frag' })
  */
 
-import type { Line, Span, ParagraphLayoutResult, ParagraphGroup } from '@vyaz/core';
+import type { Line, Span, ParagraphLayoutResult, ParagraphGroup, MultiColumnConfig } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
 import { computeBBox, fmt } from './utils.js';
@@ -64,6 +64,13 @@ export interface SVGRenderOptions {
   contentPadding?: number;
   /** Debug overlays. */
   debug?: DebugFlags;
+  /**
+   * Multi-column layout configuration for debug overlays.
+   * When set, paragraph and column boxes are rendered per-column.
+   */
+  columns?: MultiColumnConfig;
+  /** Left padding from frame (needed for column debug rendering). */
+  paddingLeft?: number;
 }
 
 type SpacingMode = 'browser' | 'preserve';
@@ -279,6 +286,7 @@ interface StyleState {
   fontStyle: string;
   decoration: string;
   letterSpacing?: number;
+  backgroundColor?: string;
 }
 
 function defaultStyleState(span: Span): StyleState {
@@ -294,6 +302,7 @@ function defaultStyleState(span: Span): StyleState {
     fontStyle: span.style.fontStyle || 'normal',
     decoration: decorations.join(' '),
     letterSpacing: span.style.letterSpacing,
+    backgroundColor: span.style.backgroundColor,
   };
 }
 
@@ -301,7 +310,17 @@ function equalStyle(a: StyleState, b: StyleState): boolean {
   return a.fontFamily === b.fontFamily && a.fontSize === b.fontSize &&
     a.fontWeight === b.fontWeight && a.color === b.color &&
     a.fontStyle === b.fontStyle && a.decoration === b.decoration &&
-    a.letterSpacing === b.letterSpacing;
+    a.letterSpacing === b.letterSpacing &&
+    a.backgroundColor === b.backgroundColor;
+}
+
+/**
+ * Compute a deterministic string key for a span's style.
+ * Used to group spans by identical style when building <text> elements.
+ */
+function styleSignature(span: Span): string {
+  const s = defaultStyleState(span);
+  return `${s.fontFamily}|${s.fontSize}|${s.fontWeight}|${s.color}|${s.fontStyle}|${s.decoration}|${s.letterSpacing ?? ''}|${s.backgroundColor ?? ''}`;
 }
 
 /** Build style string for CSS mode */
@@ -326,7 +345,16 @@ function xmlStyleAttrs(s: StyleState): string {
   return attrs;
 }
 
-/** Build attributes for <text> element */
+/** Build attributes for <text> element.
+ *
+ * NOTE: `text-decoration` and `letter-spacing` are intentionally NOT added
+ * here because they would be inherited by all child `<tspan>` elements.
+ * SVG text-decoration on `<text>` cascades to ALL `<tspan>` descendants,
+ * even those that should NOT have decoration. These attributes are set
+ * on `<tspan>` level by `buildTspanAttrs()` instead.
+ *
+ * Flat mode (no `<tspan>`) adds them separately in the flat render path.
+ */
 function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: string): Record<string, string | number> {
   const x = line.x;
   const y = line.y + line.baseline;
@@ -339,7 +367,10 @@ function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: s
   if (runId) attrs.id = runId;
 
   if (opts.style === 'css') {
-    let css = cssStyleString(s);
+    // text-decoration and letter-spacing are intentionally excluded
+    // from <text> to prevent inheritance by child <tspan> elements.
+    let css = `font-family: '${s.fontFamily}', sans-serif; font-size: ${fmt(s.fontSize)}px; fill: ${colorToRGB(s.color)}; font-weight: ${s.fontWeight}`;
+    if (s.fontStyle === 'italic') css += `; font-style: italic`;
     if (opts.spacing === 'preserve') css += '; white-space: pre';
     attrs.style = css;
   } else {
@@ -349,7 +380,6 @@ function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: s
     attrs.fill = s.color;
     attrs['font-weight'] = s.fontWeight;
     if (s.fontStyle === 'italic') attrs['font-style'] = 'italic';
-    if (s.decoration) attrs['text-decoration'] = s.decoration;
     if (opts.spacing === 'preserve') attrs['xml:space'] = 'preserve';
   }
 
@@ -389,18 +419,24 @@ function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null)
   return { attrs, newStyle: s };
 }
 
-/** Build per-glyph x positions for glyph mode */
+/** Build per-glyph x positions for glyph mode.
+ *
+ * Accounts for letterSpacing by adding it to each glyph advance.
+ * The `letter-spacing` attribute should NOT be set on `<tspan>` when
+ * using glyph mode, because the spacing is already baked into the x positions.
+ */
 function buildGlyphPositions(span: Span, _lineX: number): string {
   if (!span.glyphAdvances || span.glyphAdvances.length === 0) {
     return '';
   }
   // span.x is already absolute — computed by PositioningEngine.
   // lineX is NOT added because that would double-shift.
+  const ls = span.style.letterSpacing || 0;
   const spanX = span.x;
   let xPos = spanX;
   const positions: string[] = [fmt(xPos, 1)];
   for (let i = 0; i < span.glyphAdvances.length - 1; i++) {
-    xPos += span.glyphAdvances[i];
+    xPos += span.glyphAdvances[i] + ls;
     positions.push(fmt(xPos, 1));
   }
   return positions.join(' ');
@@ -542,7 +578,9 @@ class SvgAstBuilder {
 
     let textAttrs: Record<string, string | number>;
     if (yOverride !== undefined && fontSizeOverride !== undefined) {
-      // For flat mode sub/superscript — override y and font-size
+      // For sub/superscript — override y and font-size.
+      // text-decoration and letter-spacing intentionally excluded from <text>
+      // to prevent inheritance by child <tspan> elements (expanded mode).
       const s = defaultStyleState(baseSpan);
       const x = line.x;
       const attrs: Record<string, string | number> = {
@@ -550,7 +588,8 @@ class SvgAstBuilder {
         y: fmt(yOverride),
       };
       if (this.opts.style === 'css') {
-        let css = cssStyleString(s);
+        let css = `font-family: '${s.fontFamily}', sans-serif; font-size: ${fmt(fontSizeOverride)}px; fill: ${colorToRGB(s.color)}; font-weight: ${s.fontWeight}`;
+        if (s.fontStyle === 'italic') css += `; font-style: italic`;
         if (this.opts.spacing === 'preserve') css += '; white-space: pre';
         attrs.style = css;
       } else {
@@ -559,7 +598,6 @@ class SvgAstBuilder {
         attrs.fill = s.color;
         attrs['font-weight'] = s.fontWeight;
         if (s.fontStyle === 'italic') attrs['font-style'] = 'italic';
-        if (s.decoration) attrs['text-decoration'] = s.decoration;
         if (this.opts.spacing === 'preserve') attrs['xml:space'] = 'preserve';
       }
       textAttrs = attrs;
@@ -629,6 +667,23 @@ class SvgAstBuilder {
   }
 
   /**
+   * Add a background rect as a direct child of the root <svg>.
+   * Used for highlight marker (backgroundColor on spans).
+   * The rect is placed before any <text> elements so it renders underneath.
+   */
+  addBackgroundRect(x: number, y: number, width: number, height: number, color: string): void {
+    this.closeText();
+    const rect = el('rect', {
+      x: fmt(x),
+      y: fmt(y),
+      width: fmt(width),
+      height: fmt(height),
+      fill: color,
+    });
+    this.root.children.push(rect);
+  }
+
+  /**
    * Add a pre-rendered SVG line as a raw node directly under root.
    * Used in flat mode when each span is its own <text>.
    */
@@ -653,6 +708,9 @@ function renderDebugToSVG(
   flags: DebugFlags,
   frameSize?: { width: number; height: number },
   contentSize?: { width: number; height: number },
+  columns?: MultiColumnConfig,
+  leftPad?: number,
+  rightPad?: number,
 ): string {
   const parts: string[] = [];
   const sw = flags.widthBorder ?? 1;
@@ -696,7 +754,25 @@ function renderDebugToSVG(
     }
   }
 
-  // Paragraph bounding boxes
+  // ── Column separators ────────────────────────────────────────────
+  if (columns && columns.count > 1 && (flags.paragraphBox || flags.columnBox)) {
+    const colCount = columns.count;
+    const colGap = columns.gap;
+    const lp = leftPad ?? 0;
+    // Calculate colWidth from frame or content
+    const totalHorizontalSpace = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
+    const usableWidth = totalHorizontalSpace - lp - (rightPad ?? 0);
+    const colWidth = (usableWidth - (colCount - 1) * colGap) / colCount;
+    for (let c = 1; c < colCount; c++) {
+      const sepX = lp + c * (colWidth + colGap) - colGap / 2;
+      parts.push(
+        `  <line x1="${fmt(sepX)}" y1="0" x2="${fmt(sepX)}" y2="${fmt(frameSize?.height ?? 9999)}"` +
+        ` stroke="rgba(100,100,100,0.15)" stroke-width="1" stroke-dasharray="2,2" />`,
+      );
+    }
+  }
+
+  // Paragraph bounding boxes — per-column
   if (flags.paragraphBox) {
     const paraGroups = groupLinesByParagraph(lines);
     const paraColors = [
@@ -705,20 +781,49 @@ function renderDebugToSVG(
       'rgba(80,0,180,0.25)',
       'rgba(180,180,0,0.25)',
     ];
-    // Container right edge: use frame width, or content bbox, or max line extent
-    const containerRight = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
+
     for (let i = 0; i < paraGroups.length; i++) {
       const group = paraGroups[i];
       if (group.lines.length === 0) continue;
-      const firstLine = group.lines[0];
-      const lastLine = group.lines[group.lines.length - 1];
-      const top = firstLine.y;
-      const bottom = lastLine.y + lastLine.height;
+
+      // Group lines within this paragraph by columnIndex
+      const colMap = new Map<number, { top: number; bottom: number }>();
+      for (const line of group.lines) {
+        const ci = line.columnIndex ?? 0;
+        const existing = colMap.get(ci);
+        const lineTop = line.y;
+        const lineBottom = line.y + line.height;
+        if (existing) {
+          existing.top = Math.min(existing.top, lineTop);
+          existing.bottom = Math.max(existing.bottom, lineBottom);
+        } else {
+          colMap.set(ci, { top: lineTop, bottom: lineBottom });
+        }
+      }
+
+      // For non-column layout, colX = 0, colW = containerRight
+      // For column layout, calculate per-column position
+      const lp = leftPad ?? 0;
+      const rp = rightPad ?? 0;
+      const totalW = frameSize?.width ?? (lines.length > 0 ? Math.max(...lines.map(l => l.x + l.width)) : 0);
+      const usableW = totalW - lp - rp;
+      const colCount = columns?.count ?? 1;
+      const colGap = columns?.gap ?? 0;
+      const colW = (usableW - (colCount - 1) * colGap) / colCount;
+
       const color = paraColors[i % paraColors.length];
-      parts.push(`  <rect x="0" y="${fmt(top)}" width="${fmt(containerRight)}" height="${fmt(bottom - top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
+      for (const [ci, rect] of colMap) {
+        const colX = lp + ci * (colW + colGap);
+        parts.push(`  <rect x="${fmt(colX)}" y="${fmt(rect.top)}" width="${fmt(colW)}" height="${fmt(rect.bottom - rect.top)}" fill="none" stroke="${color}" stroke-width="${fmt(sw)}" />`);
+      }
+
       const label = group.tag ? `#${group.pIdx} ${group.tag}` : `#${group.pIdx}`;
       if (flags.labels) {
-        parts.push(`  <text x="4" y="${fmt(top - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
+        // Place label at top-left of the first column for this paragraph
+        const firstColIdx = Math.min(...Array.from(colMap.keys()));
+        const firstColX = lp + firstColIdx * (colW + colGap);
+        const firstTop = colMap.get(firstColIdx)!.top;
+        parts.push(`  <text x="${fmt(firstColX + 4)}" y="${fmt(firstTop - 2)}" font-size="9" fill="rgba(0,0,0,0.6)" font-family="monospace">¶ ${label}</text>`);
       }
     }
   }
@@ -756,6 +861,21 @@ function renderDebugToSVG(
   return parts.join('\n');
 }
 
+// ── Background rect helper ───────────────────────────────────────────────
+
+/**
+ * Compute background rect coordinates for a span.
+ * Returns null if the span has no backgroundColor.
+ */
+function getSpanBackgroundAttrs(span: Span, baselineY: number): { x: number; y: number; w: number; h: number; fill: string } | null {
+  if (!span.style.backgroundColor) return null;
+  const x = span.x;
+  const y = baselineY - span.fontMetrics.ascent;
+  const w = span.width;
+  const h = span.fontMetrics.ascent + span.fontMetrics.descent;
+  return { x, y, w, h, fill: span.style.backgroundColor };
+}
+
 // ── Main render logic ────────────────────────────────────────────────────
 
 /**
@@ -774,6 +894,18 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
   const builder = new SvgAstBuilder(svgWidth, svgHeight, opts, viewBox);
 
   for (const line of lines) {
+    const baselineY = line.y + line.baseline;
+
+    // First pass: render background rects for all highlighted spans
+    for (const span of line.spans) {
+      if (!span.text || !span.style.backgroundColor) continue;
+      const bg = getSpanBackgroundAttrs(span, baselineY);
+      if (bg) {
+        const rx = line.x + bg.x;
+        builder.addBackgroundRect(rx, bg.y, bg.w, bg.h, bg.fill);
+      }
+    }
+
     if (opts.structure === 'glyph') {
       // Per-glyph positioning with run-based <text> grouping
       let currentRunIdx = -1;
@@ -790,22 +922,27 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
       }
       builder.closeText();
     } else if (opts.structure === 'flat') {
-      // flat mode: group spans by (baseline + offset). Each group → one <text>.
-      const groups: { spans: Span[]; targetY: number; fontSize: number }[] = [];
+      // flat mode: each unique style → separate <text> element.
+      // Group spans by (targetY + styleSignature) so bold/normal/italic
+      // each get their own <text>. Never merge spans with different styles.
+      interface FlatGroup { spans: Span[]; targetY: number; signature: string; fontSize: number }
+      const groups: FlatGroup[] = [];
       for (const span of line.spans) {
         if (!span.text) continue;
         const offset = span.fontMetrics.baselineOffset || 0;
         const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+        const sig = styleSignature(span);
         const fontSize = span.fontMetrics.fontSize;
         const last = groups[groups.length - 1];
-        if (last && last.targetY === targetY && last.fontSize === fontSize) {
+        if (last && last.targetY === targetY && last.signature === sig) {
           last.spans.push(span);
         } else {
-          groups.push({ spans: [span], targetY, fontSize });
+          groups.push({ spans: [span], targetY, signature: sig, fontSize });
         }
       }
       // Find the first text span's x to use as baseline offset
-      const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
+      // Use first text or marker span's x for baseline offset
+      const firstTextX = line.spans.find(s => s.type === 'text' || s.type === 'marker')?.x ?? 0;
       const fitAttr = buildFitAttr(line, opts);
       for (const group of groups) {
         const s = defaultStyleState(group.spans[0]);
@@ -824,6 +961,7 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         };
         if (s.fontStyle === 'italic') textAttrs['font-style'] = 'italic';
         if (s.decoration) textAttrs['text-decoration'] = s.decoration;
+        if (s.letterSpacing !== undefined && s.letterSpacing !== 0) textAttrs['letter-spacing'] = fmt(s.letterSpacing);
         textAttrs['xml:space'] = 'preserve';
         if (fitAttr) {
           Object.assign(textAttrs, fitAttr);
@@ -835,19 +973,21 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         builder.addRawLine(`  <text ${attrsStr}>${text}</text>\n`);
       }
     } else {
-      // expanded: group spans by baseline offset (for sub/superscript).
-      // Each group becomes a separate <text> element at the correct y.
-      type TspanGroup = { targetY: number; spans: Span[] };
+      // expanded: group spans by (targetY + styleSignature) so each
+      // unique style combination gets its own <text> element.
+      // Inside each group, <tspan> is used per span with diff attributes.
+      type TspanGroup = { targetY: number; spans: Span[]; signature: string };
       const groups: TspanGroup[] = [];
       for (const span of line.spans) {
         if (!span.text) continue;
         const offset = span.fontMetrics.baselineOffset || 0;
         const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+        const sig = styleSignature(span);
         const last = groups[groups.length - 1];
-        if (last && last.targetY === targetY) {
+        if (last && last.targetY === targetY && last.signature === sig) {
           last.spans.push(span);
         } else {
-          groups.push({ targetY, spans: [span] });
+          groups.push({ targetY, spans: [span], signature: sig });
         }
       }
 
@@ -859,7 +999,9 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
         const lineBaseY = Math.round((line.y + line.baseline) * 100) / 100;
         const needsOffset = group.targetY !== lineBaseY;
         if (needsOffset) {
-          // For offset groups (sub/superscript), override y and font-size from first span
+          // For offset groups (sub/superscript), override y and font-size from first span.
+          // text-decoration and letter-spacing intentionally excluded from <text>
+          // to prevent inheritance by child <tspan> elements.
           const s = defaultStyleState(baseSpan);
           const firstTextX = line.spans.find(s => s.type === 'text')?.x ?? 0;
           const groupX = line.x + (group.spans[0].x - firstTextX);
@@ -873,7 +1015,6 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
             'font-weight': s.fontWeight,
           };
           if (s.fontStyle === 'italic') textAttrs['font-style'] = 'italic';
-          if (s.decoration) textAttrs['text-decoration'] = s.decoration;
           textAttrs['xml:space'] = 'preserve';
           const fit = buildFitAttr(line, opts);
           if (fit) {
@@ -909,7 +1050,15 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
       : undefined;
     const contentBbox = computeBBox(lines);
     const contentSize = { width: contentBbox.width, height: contentBbox.height };
-    const debugSvg = renderDebugToSVG(lines, opts.debug, frameSize, contentSize);
+    const debugSvg = renderDebugToSVG(
+      lines,
+      opts.debug,
+      frameSize,
+      contentSize,
+      options.columns,
+      options.paddingLeft,
+      0, // rightPad — not tracked in options yet
+    );
     builder.addDebug(debugSvg);
   }
 

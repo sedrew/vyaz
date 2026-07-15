@@ -132,16 +132,26 @@ describe('FontMetricsProvider — FontNotFoundError', () => {
   });
 });
 
-// ── 5. registerFont() runtime guard ──────────────────────────────────
+// ── 5. registerFont() — works both in Node and browser ──────────────
 
-describe('FontMetricsProvider — registerFont() runtime guard', () => {
-  it('registerFont() should not crash in browser-like environment', async () => {
-    // On Bun registerFont succeeds, which is fine —
-    // the important thing is that it doesn't crash.
-    // In a real browser isNodeLike === false and registerFont
-    // returns early with a warning.
+describe('FontMetricsProvider — registerFont() cross-environment', () => {
+  it('registerFont() should work with a valid font buffer', async () => {
+    // registerFont now actually loads via FontEngine everywhere.
+    // Using Unifont fixture which is valid.
+    const { readFileSync, existsSync } = await import('node:fs');
+    const { resolve, dirname } = await import('node:path');
+    const { fileURLToPath } = await import('node:url');
+
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const fontPath = resolve(__dirname, 'fixtures', 'unifont-17.0.05.otf');
+    if (!existsSync(fontPath)) {
+      // If fixture is missing (e.g. running outside core dir), skip
+      console.warn('Unifont fixture not found, skipping valid font test');
+      return;
+    }
+    const data = readFileSync(fontPath);
     await expect(
-      fontMetricsProvider.registerFont('TestFont', {}, Buffer.from('dummy')),
+      fontMetricsProvider.registerFont('TestUnifont', {}, data),
     ).resolves.toBeUndefined();
   });
 });

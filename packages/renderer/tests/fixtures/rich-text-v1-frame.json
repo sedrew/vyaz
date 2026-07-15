@@ -53,7 +53,7 @@
     },
     {
       "id": "section-1-header",
-      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 16, "spaceAfter": 4 },
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 24, "spaceAfter": 6 },
       "children": [
         {
           "type": "text",
@@ -173,7 +173,7 @@
     },
     {
       "id": "languages-section",
-      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 16, "spaceAfter": 4 },
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 24, "spaceAfter": 6 },
       "children": [
         {
           "type": "text",
@@ -300,6 +300,210 @@
         { "type": "text", "text": "Balance", "fontSize": 16, "fontWeight": "bold", "fontStyle": "italic", "color": "#1e3a8a" },
         { "type": "text", "text": " between form and function. (justify)", "fontSize": 14, "fontWeight": "normal", "color": "#444" }
       ]
+    },
+    {
+      "id": "lineheight-section",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 24, "spaceAfter": 6 },
+      "children": [
+        {
+          "type": "text",
+          "text": "6. Line spacing (lineHeight)",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "fontWeight": "bold",
+          "color": "#000000"
+        }
+      ]
+    },
+    {
+      "id": "lineheight-1-0",
+      "style": { "alignment": "left", "lineHeight": 1.0, "spaceBefore": 4, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[1.0] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Tight spacing with no extra leading.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-1-15",
+      "style": { "alignment": "left", "lineHeight": 1.15, "spaceBefore": 2, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[1.15] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Default line spacing in text layout.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-1-5",
+      "style": { "alignment": "left", "lineHeight": 1.5, "spaceBefore": 2, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[1.5] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Comfortable reading spacing.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-2-0",
+      "style": { "alignment": "left", "lineHeight": 2.0, "spaceBefore": 2, "spaceAfter": 2 },
+      "children": [
+        { "type": "text", "text": "[2.0] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Double spacing — easy for annotations.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lineheight-3-0",
+      "style": { "alignment": "left", "lineHeight": 3.0, "spaceBefore": 2, "spaceAfter": 6 },
+      "children": [
+        { "type": "text", "text": "[3.0] ", "fontSize": 12, "fontWeight": "bold", "color": "#1e3a8a" },
+        { "type": "text", "text": "The quick brown fox jumps over the lazy dog. Very loose spacing.", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "lists-section",
+      "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 24, "spaceAfter": 6 },
+      "children": [
+        {
+          "type": "text",
+          "text": "7. Lists (bullet, nested, numbered)",
+          "fontFamily": "Arial",
+          "fontSize": 13.56,
+          "fontWeight": "bold",
+          "color": "#000000"
+        }
+      ]
+    },
+    {
+      "id": "bullet-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 4,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 0, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Bullet item one — disc marker at level 0", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "bullet-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 0, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Bullet item two with ", "fontSize": 13, "color": "#000" },
+        { "type": "text", "text": "bold", "fontSize": 13, "fontWeight": "bold", "color": "#000" },
+        { "type": "text", "text": " and ", "fontSize": 13, "color": "#000" },
+        { "type": "text", "text": "italic", "fontSize": 13, "fontStyle": "italic", "color": "#000" },
+        { "type": "text", "text": " runs", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "bullet-nested-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 1, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Nested bullet (level 1) — circle marker", "fontSize": 13, "color": "#333" }
+      ]
+    },
+    {
+      "id": "bullet-nested-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "bullet", "level": 2, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Deep nested bullet (level 2) — square marker", "fontSize": 13, "color": "#555" }
+      ]
+    },
+    {
+      "id": "bullet-3",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 6,
+        "listStyle": { "type": "bullet", "level": 0, "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Back to level 0 after nesting", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 4,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "decimal", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "First numbered step", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "decimal", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Second numbered step with longer text that may wrap depending on frame width", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-3",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "decimal", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Third numbered step", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-roman-1",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 6,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "upper-roman", "position": "outside" },
+        "listRestart": true
+      },
+      "children": [
+        { "type": "text", "text": "Roman numeral list — item I", "fontSize": 13, "color": "#000" }
+      ]
+    },
+    {
+      "id": "number-roman-2",
+      "style": {
+        "alignment": "left",
+        "lineHeight": 1.4,
+        "spaceBefore": 0,
+        "spaceAfter": 2,
+        "listStyle": { "type": "number", "numberFormat": "upper-roman", "position": "outside" }
+      },
+      "children": [
+        { "type": "text", "text": "Roman numeral list — item II", "fontSize": 13, "color": "#000" }
+      ]
     }
   ]
 }
+

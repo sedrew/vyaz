@@ -145,18 +145,43 @@ renderDebugToCanvas(ctx, result.lines, {
 });
 ```
 
-### Font Metrics
+### Font Registration & Metrics
 
 ```ts
-import { FontMetricsProvider, SystemFontRegistry } from '@vyaz/core';
-import type { FontMetrics, IFontMetricsProvider } from '@vyaz/core';
+import {
+  FontMetricsProvider,
+  SystemFontRegistry,
+  createFontFace,
+  getFontBuffer,
+} from '@vyaz/core';
+import type { FontMetrics, IFontMetricsProvider, FontFace } from '@vyaz/core';
 
 const provider = new FontMetricsProvider();
-const metrics: FontMetrics = provider.getMetrics('Arial', 16, 'normal', 400);
 
-// System font discovery
-const registry = new SystemFontRegistry();
-const fontPaths = registry.findFont('Arial');
+// Node.js — register from a local file
+import { readFileSync } from 'node:fs';
+const buffer = readFileSync('/path/to/font.ttf');
+await provider.registerFont('MyFont', { weight: 'bold', style: 'normal' }, buffer);
+
+// Browser — register from a URL
+await provider.registerFont('MyFont', {}, 'https://example.com/font.woff2');
+
+// Or download manually for re-use
+const fontBuffer = await getFontBuffer('https://example.com/font.woff2');
+const fontFace: FontFace = await createFontFace(fontBuffer);
+console.log(fontFace.unitsPerEm, fontFace.ascent, fontFace.descent);
+
+// Get pixel metrics
+const metrics: FontMetrics = provider.getMetrics('MyFont', 16);
+// → { ascent, descent, capHeight, unitsPerEm, sourceTable }
+
+// Per-glyph advance width
+const advance = fontFace._raw.glyphForCodePoint('A'.codePointAt(0)!)?.advanceWidth;
+
+// System font discovery (Node.js only)
+const registry = SystemFontRegistry.instance;
+const stats = await registry.scan();
+console.log(`Registered ${stats.registered} of ${stats.total} fonts`);
 ```
 
 ### Compiler

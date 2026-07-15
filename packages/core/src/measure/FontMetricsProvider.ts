@@ -2,19 +2,18 @@
  * FontMetricsProvider.ts — isomorphic font metrics provider.
  *
  * Strategy (priority):
- *   1. fontkit (Node.js) — from registered buffer
- *      - 'browser' mode: font.hhea.ascent / font.hhea.descent
- *      - 'office'  mode:  font['OS/2'].usWinAscent / font['OS/2'].usWinDescent
- *   2. Canvas TextMetrics (browser)
- *   3. Fallback (fontSize * 0.85 / 0.15)
+ *   1. FontEngine (fontkit) — from registered buffer
+ *      - 'browser' mode: hhea.ascender / hhea.descender
+ *      - 'office'  mode: OS/2.usWinAscent / OS/2.usWinDescent
+ *   2. Canvas TextMetrics (browser fallback when fontkit unavailable)
  *
- * Uses FontRegistry for font registration.
+ * Uses FontEngine as the single entry point for all fontkit operations.
  */
 
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
-import { enableOfficeTextMeasure, disableOfficeTextMeasure, registerCanvasFont } from './canvas-polyfill.js';
+import type { FontFace } from './FontEngine.js';
+import { enableOfficeTextMeasure, disableOfficeTextMeasure } from './canvas-polyfill.js';
 import { FontNotFoundError } from './FontNotFoundError.js';
-import { isNodeLike } from '../utils/env.js';
 
 // ── Reasonable default for missing glyphs ──────────────────────────────────
 
@@ -62,7 +61,8 @@ function cacheKey(family: string, weight: string, style: string): string {
 }
 
 export class FontMetricsProvider implements IFontMetricsProvider {
-  private cache = new Map<string, any>();   // fontkit.Font | undefined
+  /** Map<string, FontFace> — font engine font face cache */
+  private cache = new Map<string, FontFace>();
   private metricsCache = new Map<string, FontMetrics>();
   private mode: 'browser' | 'office' = 'browser';
 
@@ -90,56 +90,52 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 
   /**
    * Register a binary font for use with fontkit.
-   * In browser — no-op (fonts are registered via CSS @font-face).
    *
-   * @param sourcePath — if provided, also registers with @napi-rs/canvas for Node.js canvas measureText
+   * In both Node.js and browser the font is loaded via FontEngine.
+   * In the browser the caller must provide font bytes (e.g. fetched via
+   * `getFontBuffer()` from `../utils/font.js`).
+   *
+   * @param source      Font file bytes (ArrayBuffer / Uint8Array), or a URL string
+   * @param sourcePath  Optional filesystem path (used for @napi-rs/canvas in Node.js)
    */
   async registerFont(
     family: string,
     options: { weight?: string; style?: string },
-    source: string | Buffer,
+    source: string | ArrayBuffer | Uint8Array,
     sourcePath?: string,
   ): Promise<void> {
-    // fontkit is a Node.js native addon — skip in browser
-    if (!isNodeLike) {
-      console.warn(`[vyaz] registerFont("${family}") недоступен в браузере, используется Canvas TextMetrics fallback`);
-      return;
+    const { createFontFace } = await import('./FontEngine.js');
+    const { registerCanvasFont } = await import('./canvas-polyfill.js');
+
+    // Convert string (URL) to buffer — works in browser via fetch
+    if (typeof source === 'string') {
+      const { getFontBuffer } = await import('../utils/font.js');
+      source = await getFontBuffer(source);
     }
 
-    try {
-      // Dynamic ESM import — fontkit may not be available in browser
-      const fontkit = await import('fontkit');
-      // @ts-ignore Buffer — not typed with moduleResolution:bundler but available at runtime
-      const buffer = typeof source === 'string' ? Buffer.from(source) : source;
-      // @ts-ignore fontkit CJS/ESM compatibility
-      const fk = fontkit.default || fontkit;
-      const font = fk.create(buffer);
-      const key = cacheKey(
-        family,
-        options.weight || 'normal',
-        options.style || 'normal',
-      );
-      this.cache.set(key, font);
-      // Invalidate metrics for this font
-      this.metricsCache.delete(key);
+    const font = await createFontFace(source);
+    const key = cacheKey(
+      family,
+      options.weight || 'normal',
+      options.style || 'normal',
+    );
+    this.cache.set(key, font);
+    // Invalidate metrics for this font
+    this.metricsCache.delete(key);
 
-      // Also register with @napi-rs/canvas so ctx.measureText() uses real fonts
-      if (sourcePath) {
-        registerCanvasFont(sourcePath, family);
-      }
-    } catch {
-      // fontkit not available (browser) — no-op
+    // Also register with @napi-rs/canvas so ctx.measureText() uses real fonts
+    if (sourcePath) {
+      registerCanvasFont(sourcePath, family);
     }
-    return Promise.resolve();
   }
 
   // ── Font object access (for per-glyph advance) ────────────────────
 
   /**
-   * Get fontkit font object for per-character calculations.
-   * Returns undefined if font is not registered or fontkit unavailable.
+   * Get font engine FontFace object for per-character calculations.
+   * Returns undefined if font is not registered.
    */
-  getFont(family: string, weight = 'normal', style = 'normal'): any | undefined {
+  getFont(family: string, weight = 'normal', style = 'normal'): FontFace | undefined {
     const key = cacheKey(family, weight, style);
     return this.cache.get(key);
   }
@@ -159,55 +155,40 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     const cached = this.metricsCache.get(metricsKey);
     if (cached) return cached;
 
-    let metrics: FontMetrics;
-
-    // Strategy 1: fontkit
+    // Strategy 1: FontEngine (fontkit)
     const font = this.cache.get(key);
 
     if (font) {
+      // Inline computePixelMetrics to avoid circular ESM import
       const scale = fontSize / font.unitsPerEm;
 
-      if (this.mode === 'office') {
-        // Office mode: OS/2.usWinAscent + usWinDescent
-        const os2 = font['OS/2'];
-        let ascent: number;
-        let descent: number;
-        let sourceTable: 'OS/2' | 'hhea';
+      let ascent: number;
+      let descent: number;
+      let sourceTable: 'hhea' | 'OS/2';
 
-        if (os2 && os2.winAscent != null && os2.winDescent != null) {
-          ascent = os2.winAscent * scale  * 1.078;
-          descent = Math.abs(os2.winDescent) * scale * 1.078;
-          sourceTable = 'OS/2';
-        } else {
-          // Fallback to hhea if OS/2 is absent
-          ascent = font.ascent * scale;
-          descent = Math.abs(font.descent) * scale;
-          sourceTable = 'hhea';
-        }
-
-        metrics = {
-          ascent,
-          descent,
-          capHeight: (font.capHeight ?? ascent) * scale,
-          unitsPerEm: font.unitsPerEm,
-          sourceTable,
-        };
+      if (this.mode === 'office' && font.winAscent != null && font.winDescent != null) {
+        ascent = font.winAscent * scale * 1.078;
+        descent = Math.abs(font.winDescent) * scale * 1.078;
+        sourceTable = 'OS/2';
       } else {
-        // Browser mode: hhea.ascender/descender
-        metrics = {
-          ascent: font.ascent * scale,
-          descent: Math.abs(font.descent) * scale,
-          capHeight: (font.capHeight ?? font.ascent) * scale,
-          unitsPerEm: font.unitsPerEm,
-          sourceTable: 'hhea',
-        };
+        ascent = font.ascent * scale;
+        descent = Math.abs(font.descent) * scale;
+        sourceTable = 'hhea';
       }
+
+      const metrics: FontMetrics = {
+        ascent,
+        descent,
+        capHeight: (font.capHeight ?? font.ascent) * scale,
+        unitsPerEm: font.unitsPerEm,
+        sourceTable,
+      };
 
       this.metricsCache.set(metricsKey, metrics);
       return metrics;
     }
 
-    // Strategy 2: If fontkit cache is non-empty, fontkit is available but font not found → throw
+    // Strategy 2: If font cache is non-empty, fontkit is available but font not found → throw
     if (this.cache.size > 0) {
       throw new FontNotFoundError(fontFamily, weight, style);
     }
@@ -220,7 +201,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         ctx.font = `${style} ${weight} ${fontSize}px ${fontFamily}`;
         const m = ctx.measureText('M');
 
-        metrics = {
+        const metrics: FontMetrics = {
           ascent: m.fontBoundingBoxAscent || fontSize * 0.85,
           descent: m.fontBoundingBoxDescent || fontSize * 0.15,
           capHeight: m.actualBoundingBoxAscent || fontSize * 0.7,
@@ -230,7 +211,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         this.metricsCache.set(metricsKey, metrics);
         return metrics;
       } catch {
-        // Fall through to fallback
+        // Fall through to throw
       }
     }
 

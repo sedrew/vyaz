@@ -28,6 +28,10 @@ export type {
   OverflowWrap,
   TextDecorationStyle,
   TextTransform,
+  ListType,
+  NumberFormat,
+  ListStylePosition,
+  ListStyle,
 } from './types/Document.js';
 export {
   DEFAULT_PARAGRAPH_STYLE,
@@ -70,16 +74,24 @@ export type { AutoFitOptions, AutoFitResult } from './layout/AutoFitEngine.js';
 export { groupLinesByParagraph } from './utils/groupLinesByParagraph.js';
 export type { ParagraphGroup } from './utils/groupLinesByParagraph.js';
 export { transformText } from './utils/textTransform.js';
+export { formatListNumber, defaultBulletChar, BULLET_CHARACTERS } from './utils/list.js';
 
 // ── Compiler ────────────────────────────────────────────────────────────
 export { compileParagraph, getParagraphText, makeFontToken } from './compile/DocumentCompiler.js';
 export type { PreparedRichInlineItem } from './compile/DocumentCompiler.js';
+
+// ── Font Engine ──────────────────────────────────────────────────────────
+export type { FontFace } from './measure/FontEngine.js';
+export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable } from './measure/FontEngine.js';
 
 // ── Font metrics ────────────────────────────────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
 
 // ── System font registry ────────────────────────────────────────────────
 export { SystemFontRegistry, systemFontRegistry } from './measure/SystemFontRegistry.js';
+
+// ── Font utilities ───────────────────────────────────────────────────────
+export { getFontBuffer } from './utils/font.js';
 
 // ── Errors ──────────────────────────────────────────────────────────────
 export { FontNotFoundError } from './measure/FontNotFoundError.js';

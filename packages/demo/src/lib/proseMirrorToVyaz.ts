@@ -6,10 +6,11 @@
  *   - text nodes → TextRun
  *   - marks: bold, italic, underline, strike, code, link
  *   - headings → fontSize bump
+ *   - bulletList / orderedList → listStyle
  *   - horizontalRule, hardBreak → placeholder
  */
 
-import type { TextFrame, Paragraph, TextRun, TextAlignment } from '@vyaz/core'
+import type { TextFrame, Paragraph, TextRun, TextAlignment, ListStyle, ListStylePosition } from '@vyaz/core'
 
 // ── ProseMirror JSON types ─────────────────────────────────────────────
 
@@ -90,13 +91,16 @@ function mergeMarks(marks: PMark[] | undefined, base: Partial<TextRun>): Partial
         s.script = 'super'
         break
       case 'textStyle':
-        // can contain fontSize, color via attrs
+        // can contain fontSize, color, fontFamily via attrs
         if (mark.attrs) {
           if (typeof mark.attrs.fontSize === 'number') {
             s.fontSize = mark.attrs.fontSize
           }
           if (typeof mark.attrs.color === 'string') {
             s.color = mark.attrs.color
+          }
+          if (typeof mark.attrs.fontFamily === 'string') {
+            s.fontFamily = mark.attrs.fontFamily
           }
         }
         break
@@ -177,7 +181,7 @@ function marksSignature(marks: PMark[] | undefined): string {
 
 // ── Node → Paragraph converter ─────────────────────────────────────────
 
-function pmNodeToParagraph(node: PMNode): Paragraph | null {
+function pmNodeToParagraph(node: PMNode, listLevel: number = 0): Paragraph | null {
   switch (node.type) {
     case 'paragraph':
     case 'heading': {
@@ -234,10 +238,152 @@ function pmNodeToParagraph(node: PMNode): Paragraph | null {
       }
     }
 
+    case 'bulletList': {
+      // Tiptap uses bulletList → listItem → paragraph
+      // Each listItem becomes a paragraph with listStyle
+      const items: Paragraph[] = []
+      if (node.content) {
+        for (const item of node.content) {
+          if (item.type === 'listItem') {
+            // Flatten listItem content (could be one or more paragraphs)
+            for (const child of item.content ?? []) {
+              if (child.type === 'paragraph') {
+                const p = pmNodeToParagraph(child, listLevel)
+                if (p) {
+                  p.style.listStyle = {
+                    type: 'bullet',
+                    level: listLevel,
+                    position: 'outside' as ListStylePosition,
+                  }
+                  items.push(p)
+                }
+              }
+            }
+          }
+        }
+      }
+      // Return the first item (others will be collected in proseMirrorToVyaz)
+      // We handle this by collecting all items from list wrappers
+      return items.length > 0 ? items[0] : null
+    }
+
+    case 'orderedList': {
+      const items: Paragraph[] = []
+      if (node.content) {
+        for (const item of node.content) {
+          if (item.type === 'listItem') {
+            for (const child of item.content ?? []) {
+              if (child.type === 'paragraph') {
+                const p = pmNodeToParagraph(child, listLevel)
+                if (p) {
+                  p.style.listStyle = {
+                    type: 'number',
+                    numberFormat: 'decimal',
+                    level: listLevel,
+                    position: 'outside' as ListStylePosition,
+                    startNumber: ((node.attrs?.start as number) ?? 1),
+                  }
+                  items.push(p)
+                }
+              }
+            }
+          }
+        }
+      }
+      return items.length > 0 ? items[0] : null
+    }
+
     default:
-      // skip unknown nodes (bulletList, listItem, etc.)
+      // skip unknown nodes
       return null
   }
+}
+
+// ── Flatten list wrappers ──────────────────────────────────────────────
+
+/**
+ * Walk ProseMirror doc content and flatten bulletList/orderedList wrappers
+ * into individual paragraphs. Each list item becomes a paragraph with listStyle.
+ */
+function flattenDoc(doc: PMDoc): Paragraph[] {
+  const paragraphs: Paragraph[] = []
+
+  for (const node of doc.content ?? []) {
+    if (node.type === 'bulletList' || node.type === 'orderedList') {
+      const isOrdered = node.type === 'orderedList'
+      const startNumber = (node.attrs?.start as number) ?? 1
+
+      // Determine nesting level by checking if we're already inside a list
+      // (ProseMirror doesn't pass level in the JSON, we track it via recursion)
+      const listLevel = 0 // top-level list
+
+      for (const item of node.content ?? []) {
+        if (item.type === 'listItem') {
+          for (const child of item.content ?? []) {
+            if (child.type === 'paragraph') {
+              const p = pmNodeToParagraph(child, listLevel)
+              if (p) {
+                p.style.listStyle = {
+                  type: isOrdered ? 'number' : 'bullet',
+                  numberFormat: 'decimal',
+                  level: listLevel,
+                  position: 'outside' as ListStylePosition,
+                  ...(isOrdered ? { startNumber } : {}),
+                }
+                paragraphs.push(p)
+              }
+            } else if (child.type === 'bulletList') {
+              // Nested bullet list
+              for (const nestedItem of child.content ?? []) {
+                if (nestedItem.type === 'listItem') {
+                  for (const nestedChild of nestedItem.content ?? []) {
+                    if (nestedChild.type === 'paragraph') {
+                      const p = pmNodeToParagraph(nestedChild, 1)
+                      if (p) {
+                        p.style.listStyle = {
+                          type: 'bullet',
+                          level: 1,
+                          position: 'outside' as ListStylePosition,
+                        }
+                        paragraphs.push(p)
+                      }
+                    }
+                  }
+                }
+              }
+            } else if (child.type === 'orderedList') {
+              // Nested ordered list
+              for (const nestedItem of child.content ?? []) {
+                if (nestedItem.type === 'listItem') {
+                  for (const nestedChild of nestedItem.content ?? []) {
+                    if (nestedChild.type === 'paragraph') {
+                      const p = pmNodeToParagraph(nestedChild, 1)
+                      if (p) {
+                        p.style.listStyle = {
+                          type: 'number',
+                          numberFormat: 'decimal',
+                          level: 1,
+                          position: 'outside' as ListStylePosition,
+                        }
+                        paragraphs.push(p)
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    } else {
+      const p = pmNodeToParagraph(node)
+      if (p) {
+        paragraphs.push(p)
+      }
+    }
+  }
+
+  return paragraphs
 }
 
 // ── Main converter ─────────────────────────────────────────────────────
@@ -253,16 +399,12 @@ export function proseMirrorToVyaz(
     alignment?: TextAlignment
   },
 ): TextFrame {
-  const paragraphs: Paragraph[] = []
+  const paragraphs = flattenDoc(doc)
 
-  for (const node of doc.content ?? []) {
-    const p = pmNodeToParagraph(node)
-    if (p) {
-      // Apply global alignment override
-      if (options?.alignment) {
-        p.style.alignment = options.alignment
-      }
-      paragraphs.push(p)
+  // Apply global alignment override
+  if (options?.alignment) {
+    for (const p of paragraphs) {
+      p.style.alignment = options.alignment
     }
   }
 

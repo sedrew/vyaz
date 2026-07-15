@@ -23,6 +23,8 @@ export interface DebugFlags {
   labels?: boolean;
   /** Run rectangles */
   runs?: boolean;
+  /** Column separators (only rendered when multi-column config is set). */
+  columnBox?: boolean;
   /** @deprecated Use frameBox instead */
   frame?: boolean;
 }

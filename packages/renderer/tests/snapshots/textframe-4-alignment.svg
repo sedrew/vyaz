@@ -1,28 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="420" height="368" viewBox="-10 -10 420 368">
   <text x="0" y="16" font-family="Arial" font-size="18" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="18" fill="#000" textLength="101.67">Typography</tspan>
-    <tspan x="101.67" font-weight="400" font-size="14" fill="#333" textLength="5"> </tspan>
-    <tspan x="106.67" font-weight="400" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
+  </text>
+  <text x="0" y="16" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="101.67" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="5"> </tspan>
+    <tspan x="106.67" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
     <tspan x="372.92" textLength="3.83"> </tspan>
   </text>
   <text x="0" y="34" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="343.24">make written language legible, readable and appealing.</tspan>
-    <tspan x="343.24" font-weight="700" fill="#000" textLength="3.89"> </tspan>
-    <tspan x="347.13" font-weight="700" fill="#000" textLength="33.02">Good</tspan>
+  </text>
+  <text x="0" y="34" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="343.24" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="3.89"> </tspan>
+    <tspan x="347.13" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="33.02">Good</tspan>
     <tspan x="380.15" textLength="3.52"> </tspan>
   </text>
   <text x="0" y="50" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="45.12">design</tspan>
-    <tspan x="45.12" font-weight="400" fill="#333" textLength="3.89"> </tspan>
-    <tspan x="49.01" font-weight="400" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
+  </text>
+  <text x="0" y="50" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="45.12" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="3.89"> </tspan>
+    <tspan x="49.01" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
     <tspan x="373.58" textLength="3.84"> </tspan>
   </text>
   <text x="0" y="67" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="56.8">just right.</tspan>
-    <tspan x="56.8" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
-    <tspan x="60.69" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
-    <tspan x="122.06" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="4.44"> </tspan>
-    <tspan x="126.5" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
+  </text>
+  <text x="0" y="67" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="56.8" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
+    <tspan x="60.69" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
+  </text>
+  <text x="0" y="67" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="122.06" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="4.44"> </tspan>
+    <tspan x="126.5" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
     <tspan x="366.26" textLength="3.83"> </tspan>
   </text>
   <text x="0" y="84" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
@@ -30,28 +40,38 @@
   </text>
   <text x="13.54" y="103" font-family="Arial" font-size="18" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="13.54" font-weight="700" font-style="normal" font-family="Arial" font-size="18" fill="#000" textLength="101.67">Typography</tspan>
-    <tspan x="115.21" font-weight="400" font-size="14" fill="#333" textLength="5"> </tspan>
-    <tspan x="120.21" font-weight="400" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
+  </text>
+  <text x="13.54" y="103" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="115.21" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="5"> </tspan>
+    <tspan x="120.21" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
     <tspan x="386.46" textLength="3.83"> </tspan>
   </text>
   <text x="9.92" y="121" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="9.92" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="343.24">make written language legible, readable and appealing.</tspan>
-    <tspan x="353.16" font-weight="700" fill="#000" textLength="3.89"> </tspan>
-    <tspan x="357.05" font-weight="700" fill="#000" textLength="33.02">Good</tspan>
+  </text>
+  <text x="9.92" y="121" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="353.16" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="3.89"> </tspan>
+    <tspan x="357.05" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="33.02">Good</tspan>
     <tspan x="390.08" textLength="3.52"> </tspan>
   </text>
   <text x="13.21" y="137" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="13.21" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="45.12">design</tspan>
-    <tspan x="58.33" font-weight="400" fill="#333" textLength="3.89"> </tspan>
-    <tspan x="62.22" font-weight="400" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
+  </text>
+  <text x="13.21" y="137" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="58.33" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="3.89"> </tspan>
+    <tspan x="62.22" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
     <tspan x="386.79" textLength="3.84"> </tspan>
   </text>
   <text x="16.87" y="154" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="16.87" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="56.8">just right.</tspan>
-    <tspan x="73.67" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
-    <tspan x="77.56" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
-    <tspan x="138.93" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="4.44"> </tspan>
-    <tspan x="143.37" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
+  </text>
+  <text x="16.87" y="154" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="73.67" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
+    <tspan x="77.56" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
+  </text>
+  <text x="16.87" y="154" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="138.93" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="4.44"> </tspan>
+    <tspan x="143.37" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
     <tspan x="383.13" textLength="3.83"> </tspan>
   </text>
   <text x="137.73" y="171" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
@@ -59,28 +79,38 @@
   </text>
   <text x="27.08" y="190" font-family="Arial" font-size="18" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="27.08" font-weight="700" font-style="normal" font-family="Arial" font-size="18" fill="#000" textLength="101.67">Typography</tspan>
-    <tspan x="128.75" font-weight="400" font-size="14" fill="#333" textLength="5"> </tspan>
-    <tspan x="133.75" font-weight="400" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
+  </text>
+  <text x="27.08" y="190" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="128.75" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="5"> </tspan>
+    <tspan x="133.75" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
     <tspan x="400" textLength="3.83"> </tspan>
   </text>
   <text x="19.85" y="208" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="19.85" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="343.24">make written language legible, readable and appealing.</tspan>
-    <tspan x="363.09" font-weight="700" fill="#000" textLength="3.89"> </tspan>
-    <tspan x="366.98" font-weight="700" fill="#000" textLength="33.02">Good</tspan>
+  </text>
+  <text x="19.85" y="208" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="363.09" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="3.89"> </tspan>
+    <tspan x="366.98" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="33.02">Good</tspan>
     <tspan x="400" textLength="3.52"> </tspan>
   </text>
   <text x="26.42" y="224" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="26.42" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="45.12">design</tspan>
-    <tspan x="71.54" font-weight="400" fill="#333" textLength="3.89"> </tspan>
-    <tspan x="75.43" font-weight="400" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
+  </text>
+  <text x="26.42" y="224" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="71.54" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="3.89"> </tspan>
+    <tspan x="75.43" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
     <tspan x="400" textLength="3.84"> </tspan>
   </text>
   <text x="33.74" y="241" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="33.74" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="56.8">just right.</tspan>
-    <tspan x="90.54" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
-    <tspan x="94.43" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
-    <tspan x="155.8" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="4.44"> </tspan>
-    <tspan x="160.24" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
+  </text>
+  <text x="33.74" y="241" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="90.54" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="3.89"> </tspan>
+    <tspan x="94.43" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
+  </text>
+  <text x="33.74" y="241" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="155.8" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="4.44"> </tspan>
+    <tspan x="160.24" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
     <tspan x="400" textLength="3.83"> </tspan>
   </text>
   <text x="275.47" y="258" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
@@ -88,28 +118,38 @@
   </text>
   <text x="0" y="277" font-family="Arial" font-size="18" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="18" fill="#000" textLength="101.67">Typography</tspan>
-    <tspan x="101.67" font-weight="400" font-size="14" fill="#333" textLength="32.08"> </tspan>
-    <tspan x="133.75" font-weight="400" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
+  </text>
+  <text x="0" y="277" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="101.67" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="32.08"> </tspan>
+    <tspan x="133.75" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="266.25">is the art and technique of arranging type to</tspan>
     <tspan x="400" textLength="3.83"> </tspan>
   </text>
   <text x="0" y="295" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="343.24">make written language legible, readable and appealing.</tspan>
-    <tspan x="343.24" font-weight="700" fill="#000" textLength="23.74"> </tspan>
-    <tspan x="366.98" font-weight="700" fill="#000" textLength="33.02">Good</tspan>
+  </text>
+  <text x="0" y="295" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="343.24" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="23.74"> </tspan>
+    <tspan x="366.98" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="33.02">Good</tspan>
     <tspan x="400" textLength="3.52"> </tspan>
   </text>
   <text x="0" y="311" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000" textLength="45.12">design</tspan>
-    <tspan x="45.12" font-weight="400" fill="#333" textLength="30.31"> </tspan>
-    <tspan x="75.43" font-weight="400" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
+  </text>
+  <text x="0" y="311" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="45.12" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="30.31"> </tspan>
+    <tspan x="75.43" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="324.57">makes the reader feel nothing, because everything is</tspan>
     <tspan x="400" textLength="3.84"> </tspan>
   </text>
   <text x="0" y="328" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333" textLength="56.8">just right.</tspan>
-    <tspan x="56.8" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="20.76"> </tspan>
-    <tspan x="77.56" font-weight="700" font-style="italic" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
-    <tspan x="138.93" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="21.31"> </tspan>
-    <tspan x="160.24" font-weight="400" font-style="normal" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
+  </text>
+  <text x="0" y="328" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="56.8" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="20.76"> </tspan>
+    <tspan x="77.56" font-weight="700" font-style="italic" font-family="Arial" font-size="16" fill="#1e3a8a" textLength="61.37">Balance</tspan>
+  </text>
+  <text x="0" y="328" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="138.93" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="21.31"> </tspan>
+    <tspan x="160.24" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#444" textLength="239.76">between form and function is the key to</tspan>
     <tspan x="400" textLength="3.83"> </tspan>
   </text>
   <text x="0" y="345" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">

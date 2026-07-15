@@ -110,22 +110,16 @@ export class SystemFontRegistry {
       try {
         const buffer = readFileSync(fontPath);
 
-        // Dynamic import — fontkit may not be available in browser
-        let fontkit: any;
-        try {
-          fontkit = await import('fontkit');
-          // @ts-ignore fontkit CJS/ESM compatibility
-          fontkit = fontkit.default || fontkit;
-        } catch {
-          // fontkit not available — skip font registration
-          continue;
-        }
-
-        const font = fontkit.create(buffer);
-        const family = font.familyName;
+        // Use FontEngine to extract family name — avoids direct fontkit import
+        const { createFontFace } = await import('./FontEngine.js');
+        const font = await createFontFace(buffer);
+        // Access raw fontkit object for familyName — FontFace doesn't expose it directly
+        // but we need it to know the family before calling registerFont
+        const fontkit = (font as any)._raw;
+        const family = fontkit.familyName;
         if (!family) continue;
 
-        const { weight, style } = parseSubfamily(font.subfamilyName || 'Regular');
+        const { weight, style } = parseSubfamily(fontkit.subfamilyName || 'Regular');
 
         await fontMetricsProvider.registerFont(family, { weight, style }, buffer, fontPath);
         this.registered.set(family, true);

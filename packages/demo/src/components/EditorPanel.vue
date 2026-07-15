@@ -254,19 +254,16 @@ function setColor(e: Event) {
 }
 
 const fontFamilies = [
-  'Arial',
-  'Helvetica',
-  'Times New Roman',
-  'Georgia',
-  'Courier New',
-  'Verdana',
-  'Trebuchet MS',
-  'Impact',
+  'Roboto',
+  'Lora',
+  'Open Sans',
+  'Merriweather',
+  'JetBrains Mono',
 ]
 
 const fontSizes = [8, 10, 12, 14, 16, 18, 20, 24, 28, 32, 36, 48, 64, 72]
 
-const currentFontFamily = ref('Arial')
+const currentFontFamily = ref('Roboto')
 const currentFontSize = ref(16)
 
 function setFontFamily(family: string) {

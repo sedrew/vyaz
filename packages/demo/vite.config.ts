@@ -20,10 +20,6 @@ export class SystemFontRegistry {
 export const systemFontRegistry = new SystemFontRegistry();
 `
         }
-        // fontkit — not needed in browser
-        if (id.includes('fontkit') && !id.includes('stubs')) {
-          return `export default {}; export const create = () => ({});`
-        }
         // @napi-rs/canvas — native addon
         if (id.includes('@napi-rs/canvas')) {
           return `export const createCanvas = () => ({ getContext: () => null, toBuffer: () => Buffer.from([]) });`
@@ -46,7 +42,6 @@ export const systemFontRegistry = new SystemFontRegistry();
     exclude: [
       '@vyaz/core',
       '@vyaz/renderer',
-      'fontkit',
       'get-system-fonts',
       '@napi-rs/canvas',
       '@chenglou/pretext',

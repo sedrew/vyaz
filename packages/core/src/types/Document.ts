@@ -96,7 +96,6 @@ export type TextDecorationStyle = 'solid' | 'double' | 'dotted' | 'dashed' | 'wa
  * Text case transform.
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#text-transform-property | CSS Text: text-transform}
- * @todo Not yet implemented in the layout engine.
  */
 export type TextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 
@@ -142,6 +141,40 @@ export type ScriptType = 'normal' | 'sub' | 'super';
  * @see {@link https://www.w3.org/TR/css-text-3/#white-space-property | CSS Text: white-space}
  */
 export type WhiteSpace = 'normal' | 'nowrap' | 'pre';
+
+/**
+ * Type of list marker.
+ *
+ * - `'bullet'`: unordered list (disc, circle, square).
+ * - `'number'`: ordered list (decimal, roman, alpha).
+ * - `'none'`: no list marker.
+ */
+export type ListType = 'bullet' | 'number' | 'none';
+
+/**
+ * Numbering format for ordered lists.
+ *
+ * - `'decimal'`: 1, 2, 3, ...
+ * - `'upper-roman'`: I, II, III, ...
+ * - `'lower-roman'`: i, ii, iii, ...
+ * - `'upper-alpha'`: A, B, C, ...
+ * - `'lower-alpha'`: a, b, c, ...
+ *
+ * @see {@link https://www.w3.org/TR/css-lists-3/#counter-format | CSS Lists: counter-format}
+ */
+export type NumberFormat = 'decimal' | 'upper-roman' | 'lower-roman' | 'upper-alpha' | 'lower-alpha';
+
+/**
+ * Position of the list marker relative to the text.
+ *
+ * - `'outside'`: marker hangs to the left of the text block (default). All lines
+ *   share the same indent — the marker sits inside the indent zone.
+ * - `'inside'`: marker is the first inline element in the text flow, on the first
+ *   line only.
+ *
+ * @see {@link https://www.w3.org/TR/css-lists-3/#list-style-position-property | CSS Lists: list-style-position}
+ */
+export type ListStylePosition = 'outside' | 'inside';
 
 // ── Autofit ─────────────────────────────────────────────────────────────
 
@@ -248,7 +281,7 @@ export interface TextRun {
 
   // ── Text transform ────────────────────────────────────────────────
 
-  /** Case transform (uppercase, lowercase, capitalize). @todo Not yet implemented. */
+  /** Case transform (uppercase, lowercase, capitalize). */
   textTransform?: TextTransform;
   /** Force full-width characters (CJK). @todo Not yet implemented. */
   fullWidth?: boolean;
@@ -279,6 +312,75 @@ export interface InlineWidget {
    * Negative = widget ascends above the baseline.
    */
   baselineOffset?: number;
+}
+
+// ── ListStyle (block-level list configuration) ──────────────────────────
+
+/**
+ * Configuration for list markers (bullet or numbered).
+ *
+ * Applies to the paragraph via `ParagraphStyle.listStyle`.
+ * Nested lists are supported via the `level` field (0-based).
+ *
+ * **Width consistency:**
+ * For `position: 'outside'`, all lines share the same indent regardless of
+ * marker width. Paragraph indentation = `bulletIndent` (or default `fontSize * 1.5`).
+ * The marker is positioned inside that zone. If the marker text is wider than
+ * the indent zone, `bulletIndent` is expanded to fit the **widest marker**
+ * across the entire list group during layout.
+ *
+ * @see {@link https://www.w3.org/TR/css-lists-3/ | CSS Lists and Counters Module Level 3}
+ *
+ * @example
+ * ```ts
+ * // Simple bullet list
+ * { type: 'bullet', position: 'outside', bulletChar: '•' }
+ *
+ * // Numbered list starting at 5
+ * { type: 'number', numberFormat: 'decimal', startNumber: 5 }
+ * ```
+ */
+export interface ListStyle {
+  /** List type. */
+  type: ListType;
+
+  /** List nesting level (0-based). 0 = top-level. */
+  level?: number;
+
+  /** Marker position. Defaults to `'outside'`. */
+  position?: ListStylePosition;
+
+  /**
+   * Override marker character for bullet lists.
+   * If not set, defaults depend on `level`:
+   * - level 0: `'•'` (U+2022 BULLET)
+   * - level 1: `'○'` (U+25CB WHITE CIRCLE)
+   * - level 2: `'▪'` (U+25AA BLACK SMALL SQUARE)
+   */
+  bulletChar?: string;
+
+  /** Numbering format (only used when `type === 'number'`). Defaults to `'decimal'`. */
+  numberFormat?: NumberFormat;
+
+  /** Starting number for numbered lists. Defaults to 1. */
+  startNumber?: number;
+
+  /**
+   * Indent in px for the marker zone.
+   * All lines of the paragraph share this indent (for `outside` position).
+   * Default: `fontSize * 1.5` (from the paragraph-level font size).
+   *
+   * For numbered lists, the engine expands this to fit the widest marker
+   * across the entire list group.
+   */
+  bulletIndent?: number;
+
+  /**
+   * Per-level indent overrides (indexed by nesting level).
+   * E.g. `indents[1]` is the indent for level 1 (first nested).
+   * Falls back to `bulletIndent * (level + 1)` if not specified.
+   */
+  indents?: number[];
 }
 
 // ── Paragraph (block-level) ─────────────────────────────────────────────
@@ -357,6 +459,20 @@ export interface ParagraphStyle {
    * - `'pre'`: preserve whitespace, wrap on newline only.
    */
   whiteSpace?: WhiteSpace;
+
+  /**
+   * List marker configuration (bullet or numbered).
+   * When set, the paragraph is treated as a list item.
+   */
+  listStyle?: ListStyle;
+
+  /**
+   * Whether to restart numbering for this paragraph.
+   * Only has effect when `listStyle.type === 'number'`.
+   * When `true`, the auto-numbering counter resets to `listStyle.startNumber || 1`
+   * for this paragraph and subsequent ones in the same sequence.
+   */
+  listRestart?: boolean;
 }
 
 /**
@@ -400,13 +516,23 @@ export interface Paragraph {
  * use multiple `TextFrame` instances placed side-by-side.
  *
  * @see {@link https://www.w3.org/TR/css-multicol-1/ | CSS Multi-column Layout Level 1}
- * @todo Not yet implemented in the layout engine.
  */
 export interface MultiColumnConfig {
   /** Number of columns (like CSS `column-count`). */
   count: number;
   /** Gap between columns in px (like CSS `column-gap`). */
   gap: number;
+  /**
+   * Column fill strategy:
+   * - `'auto'`: fill columns sequentially (top-to-bottom, then next column).
+   * - `'balance'`: distribute lines evenly across columns.
+   *
+   * Defaults to `'auto'` when absent.
+   *
+   * @see {@link https://www.w3.org/TR/css-multicol-1/#cf | CSS Multi-column: column-fill}
+   * @todo `'balance'` not yet implemented.
+   */
+  fill?: 'auto' | 'balance';
 }
 
 // ── TextFrame (root container) ──────────────────────────────────────────

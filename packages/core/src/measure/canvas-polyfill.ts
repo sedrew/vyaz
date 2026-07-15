@@ -1,5 +1,6 @@
 /**
  * Canvas API polyfill for Bun/Node.js via @napi-rs/canvas.
+ *
  * Required by @chenglou/pretext in server environments (Bun/Node.js without DOM).
  *
  * Two levels of polyfill:
@@ -8,7 +9,7 @@
  *   2. OffscreenCanvas — for some libraries and early versions.
  *
  * Exports enableOfficeTextMeasure / disableOfficeTextMeasure —
- * ctx.measureText override for fontkit-based measurements in Office mode.
+ * ctx.measureText override for FontEngine-based measurements in Office mode.
  *
  * ⚠️ All Node.js built-in module imports are dynamic (lazy) to avoid
  * Vite/Webpack externalization errors in browser builds.
@@ -110,7 +111,10 @@ const originalMeasureText = (globalThis as any).CanvasRenderingContext2D
   | ((text: string) => TextMetrics)
   | undefined;
 
-/** fontCache: Map<family_weight_style, fontkit.Font> */
+/**
+ * fontCache: Map<family_weight_style, FontFace> where FontFace._raw holds the
+ * raw fontkit font object.  Used by enableOfficeTextMeasure.
+ */
 let officeFontCache: Map<string, any> | null = null;
 let officeEnabled = false;
 
@@ -146,17 +150,19 @@ function officeMeasureText(this: any, text: string): TextMetrics {
   }
 
   const key = cacheKey(parsed.family, parsed.weight);
-  const font = officeFontCache.get(key);
-  if (!font) {
+  const fontFace = officeFontCache.get(key);
+  if (!fontFace) {
     return originalMeasureText?.call(this, text) ?? createEmptyMetrics();
   }
 
-  const scale = parsed.size / font.unitsPerEm;
+  // FontFace._raw holds the raw fontkit font object
+  const raw: any = fontFace._raw;
+  const scale = parsed.size / fontFace.unitsPerEm;
   let totalWidth = 0;
 
   for (let i = 0; i < text.length; i++) {
     const codePoint = text.codePointAt(i)!;
-    const glyph = font.glyphForCodePoint(codePoint);
+    const glyph = raw.glyphForCodePoint(codePoint);
     if (glyph) {
       totalWidth += glyph.advanceWidth * scale;
     } else {
@@ -208,8 +214,8 @@ export function registerCanvasFont(fontPath: string, family: string): void {
 }
 
 /**
- * Enable Office measurement: replaces ctx.measureText with fontkit-based version.
- * @param fontCache — Map key->font from FontMetricsProvider
+ * Enable Office measurement: replaces ctx.measureText with FontEngine-based version.
+ * @param fontCache — Map<family_weight_style, FontFace> from FontMetricsProvider
  */
 export function enableOfficeTextMeasure(fontCache: Map<string, any>): void {
   if (officeEnabled) return;

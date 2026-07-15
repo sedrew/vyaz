@@ -1,62 +1,134 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="896" viewBox="-10 -10 620 896">
+<svg xmlns="http://www.w3.org/2000/svg" width="620" height="1371" viewBox="-10 -10 620 1371">
   <text x="0" y="18" font-family="Arial" font-size="20" fill="#000000" font-weight="700" xml:space="preserve">All Text Manipulations + Text Wrap (7 types, fixed) + Autofit + </text>
   <text x="0" y="42" font-family="Arial" font-size="20" fill="#000000" font-weight="700" xml:space="preserve">Languages</text>
   <text x="0" y="69" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400" xml:space="preserve">Strict style: minimal colored borders, only black and gray outlines.</text>
   <text x="0" y="87" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400" xml:space="preserve">Merged: fonts, sizes, effects, spacing, columns, drop caps, lists, text wrap (7 types), autofit (5 </text>
   <text x="0" y="105" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400" xml:space="preserve">types), world languages, vertical text.</text>
-  <text x="0" y="147" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">1. Fonts, sizes, colors, shadows, gradients, stroke</text>
-  <text x="0" y="170" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">Unifont | Unifont Bold | Unifont Italic | Unifont BoldItalic</text>
-  <text x="0" y="195" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">Arial | Arial Bold | Arial Italic | Arial Black</text>
-  <text x="0" y="241" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">12px</text>
-  <text x="26.02" y="241" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
-  <text x="33.31" y="241" font-family="Arial" font-size="18" fill="#000" font-weight="400" xml:space="preserve"> 18px</text>
-  <text x="76.11" y="241" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
-  <text x="83.4" y="241" font-family="Arial" font-size="28" fill="#000" font-weight="700" xml:space="preserve"> 28px Bold</text>
-  <text x="220.98" y="241" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
-  <text x="228.27" y="241" font-family="Arial" font-size="34" fill="#000" font-weight="400" xml:space="preserve"> 34px</text>
-  <text x="0" y="297" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">12px</text>
-  <text x="24" y="297" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
-  <text x="37.53" y="297" font-family="Unifont" font-size="18" fill="#000" font-weight="400" xml:space="preserve"> 18px</text>
-  <text x="80.29" y="297" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
-  <text x="93.82" y="297" font-family="Unifont" font-size="28" fill="#000" font-weight="700" xml:space="preserve"> 28px Bold</text>
-  <text x="226.58" y="297" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
-  <text x="240.11" y="297" font-family="Unifont" font-size="34" fill="#000" font-weight="400" xml:space="preserve"> 34px</text>
-  <text x="0" y="326" font-family="Arial" font-size="12" fill="#b91c1c" font-weight="400" xml:space="preserve">Red tint | Dark blue | Forest green | Gray text</text>
-  <text x="0" y="348" font-family="Arial" font-size="12" fill="#000" font-weight="400" text-decoration="underline" xml:space="preserve">Shadow text | Gradient text | Stroke text | Highlight marker</text>
-  <text x="0" y="370" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">Spread out | condensed | UPPERCASE TEXT | Capitalize Words</text>
-  <text x="0" y="396" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">Small caps</text>
-  <text x="53.81" y="396" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> | light rotation |</text>
-  <text x="145.95" y="392.4" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve"> superscript</text>
-  <text x="178.3" y="396" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> normal</text>
-  <text x="223.48" y="398.25" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve"> subscript</text>
-  <text x="0" y="437" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">4. Multilingual text</text>
-  <text x="0" y="465" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Русский: Привет, мир! Это демонстрация поддержки кириллицы.</text>
-  <text x="0" y="486" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">English: This is an English text example. It shows Latin script with different styles.</text>
-  <text x="0" y="507" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">中文: 这是一个中文示例。本软件支持汉字。你好，世界！</text>
-  <text x="0" y="528" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">العربية: هذا نص عربي. اللغة العربية تكتب من اليمين إلى اليسار. مرحبا!</text>
-  <text x="0" y="549" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">हिन्दी: यह हिन्दी पाठ का उदाहरण है। नमस्ते!</text>
-  <text x="0" y="570" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Ελληνικά: Αυτό είναι ένα παράδειγμα ελληνικής γλώσσας. Γειά σου Κόσμε!</text>
-  <text x="0" y="591" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Deutsch: Dies ist ein deutscher Text. Zeigt Umlaute: ä, ö, ü.</text>
-  <text x="0" y="612" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Français: Exemple de texte français avec accents: é, è, ç, à.</text>
-  <text x="0" y="651" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[left alignment]</text>
-  <text x="86" y="651" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
-  <text x="202.31" y="651" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is the art and technique of arranging type.</text>
-  <text x="474.63" y="651" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
-  <text x="539.89" y="651" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve"> between </text>
-  <text x="0" y="675" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">form and function. (left)</text>
-  <text x="21.05" y="716" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[center alignment]</text>
-  <text x="125.06" y="716" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
-  <text x="241.37" y="716" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is the art and technique of arranging type.</text>
-  <text x="513.69" y="716" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
-  <text x="189.5" y="740" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">between form and function. (center)</text>
-  <text x="51.45" y="781" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[right alignment]</text>
-  <text x="146.11" y="781" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
-  <text x="262.42" y="781" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is the art and technique of arranging type.</text>
-  <text x="534.74" y="781" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
-  <text x="390.67" y="805" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">between form and function. (right)</text>
-  <text x="0" y="846" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[justify alignment]</text>
-  <text x="103.33" y="846" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
-  <text x="228.2" y="846" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is the art and technique of arranging type.</text>
-  <text x="526.18" y="846" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
-  <text x="0" y="870" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">between form and function. (justify)</text>
+  <text x="0" y="155" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">1. Fonts, sizes, colors, shadows, gradients, stroke</text>
+  <text x="0" y="180" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">Unifont |</text>
+  <text x="60.94" y="180" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve"> Unifont Bold</text>
+  <text x="148.97" y="180" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="162.5" y="180" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" font-style="italic" xml:space="preserve"> Unifont Italic</text>
+  <text x="264.08" y="180" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="277.61" y="180" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="700" font-style="italic" xml:space="preserve"> Unifont BoldItalic</text>
+  <text x="0" y="205" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">Arial |</text>
+  <text x="34.39" y="205" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve"> Arial Bold</text>
+  <text x="102.14" y="205" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="109.43" y="205" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" font-style="italic" xml:space="preserve"> Arial Italic</text>
+  <text x="171.91" y="205" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="179.2" y="205" font-family="Arial Black" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve"> Arial Black</text>
+  <text x="0" y="251" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">12px</text>
+  <text x="26.02" y="251" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="33.31" y="251" font-family="Arial" font-size="18" fill="#000" font-weight="400" xml:space="preserve"> 18px</text>
+  <text x="76.11" y="251" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="83.4" y="251" font-family="Arial" font-size="28" fill="#000" font-weight="700" xml:space="preserve"> 28px Bold</text>
+  <text x="220.98" y="251" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="228.27" y="251" font-family="Arial" font-size="34" fill="#000" font-weight="400" xml:space="preserve"> 34px</text>
+  <text x="0" y="307" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">12px</text>
+  <text x="24" y="307" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="37.53" y="307" font-family="Unifont" font-size="18" fill="#000" font-weight="400" xml:space="preserve"> 18px</text>
+  <text x="80.29" y="307" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="93.82" y="307" font-family="Unifont" font-size="28" fill="#000" font-weight="700" xml:space="preserve"> 28px Bold</text>
+  <text x="226.58" y="307" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="240.11" y="307" font-family="Unifont" font-size="34" fill="#000" font-weight="400" xml:space="preserve"> 34px</text>
+  <text x="0" y="336" font-family="Arial" font-size="12" fill="#b91c1c" font-weight="400" xml:space="preserve">Red tint</text>
+  <text x="41.35" y="336" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="47.79" y="336" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="400" xml:space="preserve"> Dark blue</text>
+  <text x="102.47" y="336" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="108.91" y="336" font-family="Arial" font-size="12" fill="#2d6a4f" font-weight="400" xml:space="preserve"> Forest green</text>
+  <text x="180.26" y="336" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="186.7" y="336" font-family="Arial" font-size="12" fill="#6c757d" font-weight="400" xml:space="preserve"> Gray text</text>
+  <rect x="218.05" y="347.14" width="3.32" height="13.41" fill="#ffff00" />
+  <rect x="221.37" y="347.14" width="87.36" height="13.41" fill="#ffff00" />
+  <text x="0" y="358" font-family="Arial" font-size="12" fill="#000" font-weight="400" text-decoration="underline" xml:space="preserve">Shadow text</text>
+  <text x="66.04" y="358" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> | Gradient text |</text>
+  <text x="150.94" y="358" font-family="Arial" font-size="12" fill="#000" font-weight="400" text-decoration="line-through" xml:space="preserve"> Stroke text</text>
+  <text x="211.61" y="358" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="218.05" y="358" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> Highlight marker</text>
+  <text x="0" y="380" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="4" xml:space="preserve">Spread out</text>
+  <text x="98.71" y="380" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> |</text>
+  <text x="105.15" y="380" font-family="Arial" font-size="12" fill="#000" font-weight="400" letter-spacing="-1" xml:space="preserve"> condensed</text>
+  <text x="158.19" y="380" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve"> | UPPERCASE TEXT | Capitalize Words</text>
+  <text x="0" y="406" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">Small caps</text>
+  <text x="53.81" y="406" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> | light rotation |</text>
+  <text x="145.95" y="402.4" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve"> superscript</text>
+  <text x="178.3" y="406" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve"> normal</text>
+  <text x="223.48" y="408.25" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve"> subscript</text>
+  <text x="0" y="455" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">4. Multilingual text</text>
+  <text x="0" y="485" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Русский</text>
+  <text x="44.45" y="485" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: Привет, мир! Это демонстрация поддержки кириллицы.</text>
+  <text x="0" y="506" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">English</text>
+  <text x="39.72" y="506" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: This is an English text example. It shows Latin script with different styles.</text>
+  <text x="0" y="527" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">中文</text>
+  <text x="16.5" y="527" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: 这是一个中文示例。本软件支持汉字。你好，世界！</text>
+  <text x="0" y="548" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">العربية</text>
+  <text x="24.22" y="548" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: هذا نص عربي. اللغة العربية تكتب من اليمين إلى اليسار. مرحبا!</text>
+  <text x="0" y="569" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">हिन्दी</text>
+  <text x="49.5" y="569" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: यह हिन्दी पाठ का उदाहरण है। नमस्ते!</text>
+  <text x="0" y="590" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Ελληνικά</text>
+  <text x="48" y="590" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: Αυτό είναι ένα παράδειγμα ελληνικής γλώσσας. Γειά σου Κόσμε!</text>
+  <text x="0" y="611" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Deutsch</text>
+  <text x="43.4" y="611" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: Dies ist ein deutscher Text. Zeigt Umlaute: ä, ö, ü.</text>
+  <text x="0" y="632" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">Français</text>
+  <text x="45.25" y="632" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">: Exemple de texte français avec accents: é, è, ç, à.</text>
+  <text x="0" y="671" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[left alignment]</text>
+  <text x="86" y="671" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
+  <text x="202.31" y="671" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is</text>
+  <text x="216.31" y="671" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve"> the art and technique</text>
+  <text x="361.78" y="671" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> of arranging type.</text>
+  <text x="474.63" y="671" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
+  <text x="539.89" y="671" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve"> between </text>
+  <text x="0" y="695" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">form and function. (left)</text>
+  <text x="21.05" y="736" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[center alignment]</text>
+  <text x="125.06" y="736" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
+  <text x="241.37" y="736" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is</text>
+  <text x="255.37" y="736" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve"> the art and technique</text>
+  <text x="400.84" y="736" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> of arranging type.</text>
+  <text x="513.69" y="736" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
+  <text x="189.5" y="760" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">between form and function. (center)</text>
+  <text x="51.45" y="801" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[right alignment]</text>
+  <text x="146.11" y="801" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
+  <text x="262.42" y="801" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is</text>
+  <text x="276.42" y="801" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve"> the art and technique</text>
+  <text x="421.89" y="801" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> of arranging type.</text>
+  <text x="534.74" y="801" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
+  <text x="390.67" y="825" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">between form and function. (right)</text>
+  <text x="0" y="866" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[justify alignment]</text>
+  <text x="103.33" y="866" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve"> Typography</text>
+  <text x="228.2" y="866" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> is</text>
+  <text x="250.75" y="866" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve"> the art and technique</text>
+  <text x="404.78" y="866" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve"> of arranging type.</text>
+  <text x="526.18" y="866" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve"> Balance</text>
+  <text x="0" y="890" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">between form and function. (justify)</text>
+  <text x="0" y="935" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">6. Line spacing (lineHeight)</text>
+  <text x="0" y="962" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[1.0]</text>
+  <text x="24.67" y="962" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve"> The quick brown fox jumps over the lazy dog. Tight spacing with no extra leading.</text>
+  <text x="0" y="981" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[1.15]</text>
+  <text x="31.35" y="981" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve"> The quick brown fox jumps over the lazy dog. Default line spacing in text layout.</text>
+  <text x="0" y="1002" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[1.5]</text>
+  <text x="24.67" y="1002" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve"> The quick brown fox jumps over the lazy dog. Comfortable reading spacing.</text>
+  <text x="0" y="1029" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[2.0]</text>
+  <text x="24.67" y="1029" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve"> The quick brown fox jumps over the lazy dog. Double spacing — easy for annotations.</text>
+  <text x="0" y="1065" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">[3.0]</text>
+  <text x="24.67" y="1065" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve"> The quick brown fox jumps over the lazy dog. Very loose spacing.</text>
+  <text x="0" y="1124" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">7. Lists (bullet, nested, numbered)</text>
+  <text x="12.48" y="1152" font-family="Arial" font-size="11.7" fill="#000" font-weight="400" xml:space="preserve">•</text>
+  <text x="19.5" y="1152" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">Bullet item one — disc marker at level 0</text>
+  <text x="12.48" y="1172" font-family="Arial" font-size="11.7" fill="#000" font-weight="400" xml:space="preserve">•</text>
+  <text x="19.5" y="1172" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">Bullet item two with</text>
+  <text x="130.76" y="1172" font-family="Arial" font-size="13" fill="#000" font-weight="700" xml:space="preserve"> bold</text>
+  <text x="161.8" y="1172" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve"> and</text>
+  <text x="187.1" y="1172" font-family="Arial" font-size="13" fill="#000" font-weight="400" font-style="italic" xml:space="preserve"> italic</text>
+  <text x="216.72" y="1172" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve"> runs</text>
+  <text x="29.01" y="1192" font-family="Arial" font-size="11.7" fill="#333" font-weight="400" xml:space="preserve">○</text>
+  <text x="39" y="1192" font-family="Arial" font-size="13" fill="#333" font-weight="400" xml:space="preserve">Nested bullet (level 1) — circle marker</text>
+  <text x="51.43" y="1212" font-family="Arial" font-size="11.7" fill="#555" font-weight="400" xml:space="preserve">▪</text>
+  <text x="58.5" y="1212" font-family="Arial" font-size="13" fill="#555" font-weight="400" xml:space="preserve">Deep nested bullet (level 2) — square marker</text>
+  <text x="12.48" y="1232" font-family="Arial" font-size="11.7" fill="#000" font-weight="400" xml:space="preserve">•</text>
+  <text x="19.5" y="1232" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">Back to level 0 after nesting</text>
+  <text x="5.41" y="1260" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">1.First numbered step</text>
+  <text x="5.41" y="1280" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">2.Second numbered step with longer text that may wrap depending on frame width</text>
+  <text x="5.41" y="1300" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">3.Third numbered step</text>
+  <text x="11.13" y="1326" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">I.Roman numeral list — item I</text>
+  <text x="7.51" y="1346" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">II.Roman numeral list — item II</text>
 </svg>
