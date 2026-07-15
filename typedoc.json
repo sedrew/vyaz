@@ -1,0 +1,7 @@
+{
+  "plugin": ["typedoc-plugin-markdown", "typedoc-vitepress-theme"],
+  "gitRevision": "main",
+  "readme": "none",
+  "cleanOutputDir": true,
+  "exclude": ["**/tests/**", "**/node_modules/**", "**/*.test.ts", "**/*.skip.ts"]
+}

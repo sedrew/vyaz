@@ -8,9 +8,15 @@
     "packages/demo"
   ],
   "scripts": {
-    "build": "bun run build -w packages/core && bun run build -w packages/renderer"
+    "build": "bun run build -w packages/core && bun run build -w packages/renderer",
+    "docs:dev": "cd docs && bunx vitepress dev",
+    "docs:build": "npm run docs:gen && cd docs && bunx vitepress build",
+    "docs:gen": "npx typedoc --options typedoc.json --tsconfig tsconfig.typedoc.json --skipErrorChecking packages/core/src/index.ts packages/renderer/src/index.ts --out docs/api/references"
   },
   "devDependencies": {
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-markdown": "^4.12.0",
+    "typedoc-vitepress-theme": "^1.1.3",
     "typescript": "^5.4.0"
   }
 }
