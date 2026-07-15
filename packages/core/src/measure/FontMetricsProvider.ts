@@ -2,12 +2,15 @@
  * FontMetricsProvider.ts — isomorphic font metrics provider.
  *
  * Strategy (priority):
- *   1. FontEngine (fontkit) — from registered buffer
- *      - 'browser' mode: hhea.ascender / hhea.descender
- *      - 'office'  mode: OS/2.usWinAscent / OS/2.usWinDescent
+ *   1. FontEngine (fontkit) — from registered buffer, with smart weight fallback
  *   2. Canvas TextMetrics (browser fallback when fontkit unavailable)
  *
- * Uses FontEngine as the single entry point for all fontkit operations.
+ * Key features:
+ *   - Nested registry: family → variants (weight + style)
+ *   - Smart weight fallback: if exact weight not found, picks closest
+ *   - Style fallback: if exact style not found, falls back to 'normal'
+ *   - Tracks pending registrations to warn about race conditions
+ *   - Reusable off-screen canvas for Canvas TextMetrics fallback
  */
 
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
@@ -20,7 +23,6 @@ import { FontNotFoundError } from './FontNotFoundError.js';
 /**
  * Factor used when a glyph is not found in the font.
  * Multiplied by fontSize to estimate the missing glyph width.
- * Used across all measurement code paths (ParagraphLayoutEngine, canvas-polyfill).
  */
 export const MISSING_GLYPH_FACTOR = 0.5;
 
@@ -28,7 +30,6 @@ export const MISSING_GLYPH_FACTOR = 0.5;
 
 /**
  * Map named font weights to numeric strings.
- * Both directions work: 'bold' → '700', 700 → '700', '700' → '700'.
  */
 const WEIGHT_TO_NUM: Record<string, string> = {
   thin: '100',
@@ -55,30 +56,90 @@ function normaliseWeight(weight: string): string {
   return weight; // already numeric or unrecognised — pass through
 }
 
-/** Cache key: "${family}_${weight}_${style}" with normalised weight. */
-function cacheKey(family: string, weight: string, style: string): string {
-  return `${family}_${normaliseWeight(weight)}_${style}`;
+/** Parse a weight string to integer. Returns NaN if unparseable. */
+function weightToNumber(weight: string): number {
+  const num = parseInt(weight, 10);
+  return isNaN(num) ? 400 : num;
+}
+
+/** Build a variant key: "400_normal", "700_italic". */
+function variantKey(weight: string, style: string): string {
+  return `${normaliseWeight(weight)}_${style}`;
+}
+
+/**
+ * Find the nearest registered weight to the requested weight.
+ * When two weights are equally close, picks the heavier (CSS spec convention).
+ *
+ * @returns the registered weight string, or null if no variants registered.
+ */
+function nearestWeight(
+  registeredWeights: number[],
+  requested: number,
+): number | null {
+  if (registeredWeights.length === 0) return null;
+
+  let best = registeredWeights[0];
+  let bestDist = Math.abs(best - requested);
+
+  for (let i = 1; i < registeredWeights.length; i++) {
+    const w = registeredWeights[i];
+    const dist = Math.abs(w - requested);
+    if (
+      dist < bestDist ||
+      (dist === bestDist && w > best) // equal distance → heavier wins
+    ) {
+      best = w;
+      bestDist = dist;
+    }
+  }
+
+  return best;
 }
 
 export class FontMetricsProvider implements IFontMetricsProvider {
-  /** Map<string, FontFace> — font engine font face cache */
-  private cache = new Map<string, FontFace>();
+  /**
+   * Nested registry: family → variantKey → FontFace.
+   * Example:
+   *   "Roboto" → { "400_normal": FontFace, "700_normal": FontFace, "400_italic": FontFace }
+   */
+  private registry = new Map<string, Map<string, FontFace>>();
+
+  /** Metrics cache keyed by variantKey_fontSize_mode */
   private metricsCache = new Map<string, FontMetrics>();
+
   private mode: 'browser' | 'office' = 'browser';
+
+  // ── Pending registration tracking ───────────────────────────────
+  private pendingRegistrations = new Set<Promise<void>>();
+
+  // ── Reusable off-screen canvas for Canvas TextMetrics fallback ──
+  private _measureCanvas: HTMLCanvasElement | OffscreenCanvas | null = null;
+  private _measureCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null = null;
+
+  private _getMeasureContext(): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D {
+    if (!this._measureCtx) {
+      if (typeof OffscreenCanvas !== 'undefined') {
+        this._measureCanvas = new OffscreenCanvas(1, 1);
+        this._measureCtx = this._measureCanvas.getContext('2d')!;
+      } else {
+        this._measureCanvas = document.createElement('canvas');
+        this._measureCtx = this._measureCanvas.getContext('2d')!;
+      }
+    }
+    return this._measureCtx;
+  }
 
   // ── Mode ──────────────────────────────────────────────────────────
 
   setMode(mode: 'browser' | 'office'): void {
     if (this.mode === mode) return;
     this.mode = mode;
-    // Invalidate metrics cache on mode change
     this.metricsCache.clear();
-
-    // Toggle ctx.measureText for pretext (canvas-based line breaking)
     if (mode === 'office') {
-      enableOfficeTextMeasure(this.cache); // fontkit-based hmtx advance widths
+      enableOfficeTextMeasure(this._flattenCache());
     } else {
-      disableOfficeTextMeasure(); // original Canvas 2D measureText
+      disableOfficeTextMeasure();
     }
   }
 
@@ -86,19 +147,38 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     return this.mode;
   }
 
+  /**
+   * Flatten the nested registry into a single map for office mode.
+   * Office mode needs key → FontFace lookup by family_weight_style.
+   */
+  private _flattenCache(): Map<string, FontFace> {
+    const flat = new Map<string, FontFace>();
+    for (const [family, variants] of this.registry) {
+      for (const [vKey, font] of variants) {
+        flat.set(`${family}_${vKey}`, font);
+      }
+    }
+    return flat;
+  }
+
   // ── FontRegistry ──────────────────────────────────────────────────
 
-  /**
-   * Register a binary font for use with fontkit.
-   *
-   * In both Node.js and browser the font is loaded via FontEngine.
-   * In the browser the caller must provide font bytes (e.g. fetched via
-   * `getFontBuffer()` from `../utils/font.js`).
-   *
-   * @param source      Font file bytes (ArrayBuffer / Uint8Array), or a URL string
-   * @param sourcePath  Optional filesystem path (used for @napi-rs/canvas in Node.js)
-   */
   async registerFont(
+    family: string,
+    options: { weight?: string; style?: string },
+    source: string | ArrayBuffer | Uint8Array,
+    sourcePath?: string,
+  ): Promise<void> {
+    const promise = this._registerFontInternal(family, options, source, sourcePath);
+    this.pendingRegistrations.add(promise);
+    try {
+      await promise;
+    } finally {
+      this.pendingRegistrations.delete(promise);
+    }
+  }
+
+  private async _registerFontInternal(
     family: string,
     options: { weight?: string; style?: string },
     source: string | ArrayBuffer | Uint8Array,
@@ -107,37 +187,142 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     const { createFontFace } = await import('./FontEngine.js');
     const { registerCanvasFont } = await import('./canvas-polyfill.js');
 
-    // Convert string (URL) to buffer — works in browser via fetch
     if (typeof source === 'string') {
       const { getFontBuffer } = await import('../utils/font.js');
       source = await getFontBuffer(source);
     }
 
     const font = await createFontFace(source);
-    const key = cacheKey(
-      family,
-      options.weight || 'normal',
-      options.style || 'normal',
-    );
-    this.cache.set(key, font);
-    // Invalidate metrics for this font
-    this.metricsCache.delete(key);
+    const w = options.weight || 'normal';
+    const s = options.style || 'normal';
+    const vKey = variantKey(w, s);
 
-    // Also register with @napi-rs/canvas so ctx.measureText() uses real fonts
+    // Ensure family entry exists
+    if (!this.registry.has(family)) {
+      this.registry.set(family, new Map());
+    }
+    this.registry.get(family)!.set(vKey, font);
+
+    // Invalidate metrics for this family
+    for (const key of this.metricsCache.keys()) {
+      if (key.startsWith(family)) {
+        this.metricsCache.delete(key);
+      }
+    }
+
     if (sourcePath) {
       registerCanvasFont(sourcePath, family);
     }
   }
 
-  // ── Font object access (for per-glyph advance) ────────────────────
+  async waitForPendingRegistrations(): Promise<void> {
+    await Promise.all(this.pendingRegistrations);
+  }
+
+  // ── Get registered family/variant info ───────────────────────────
 
   /**
-   * Get font engine FontFace object for per-character calculations.
-   * Returns undefined if font is not registered.
+   * List all families registered in the provider.
    */
-  getFont(family: string, weight = 'normal', style = 'normal'): FontFace | undefined {
-    const key = cacheKey(family, weight, style);
-    return this.cache.get(key);
+  getRegisteredFamilies(): string[] {
+    return Array.from(this.registry.keys());
+  }
+
+  /**
+   * Get all variant keys registered for a given family.
+   * Returns empty array if family not found.
+   */
+  getFamilyVariants(family: string): string[] {
+    const variants = this.registry.get(family);
+    return variants ? Array.from(variants.keys()) : [];
+  }
+
+  // ── Font object access (with fallback) ───────────────────────────
+
+  /**
+   * Get font engine FontFace for per-character calculations.
+   * Uses the same smart fallback logic as getMetrics().
+   */
+  getFont(
+    family: string,
+    weight = 'normal',
+    style = 'normal',
+  ): FontFace | undefined {
+    const resolved = this._resolveFont(family, weight, style);
+    if (!resolved) return undefined;
+    return resolved.font;
+  }
+
+  /**
+   * Resolve a font request with fallback.
+   * Returns { font, resolvedWeight, resolvedStyle } or null.
+   */
+  private _resolveFont(
+    family: string,
+    weight: string,
+    style: string,
+  ): { font: FontFace; resolvedWeight: string; resolvedStyle: string } | null {
+    const variants = this.registry.get(family);
+    if (!variants || variants.size === 0) return null;
+
+    const normalisedW = normaliseWeight(weight);
+    const normalisedS = style;
+
+    // 1) Exact match
+    let key = variantKey(normalisedW, normalisedS);
+    let font = variants.get(key);
+    if (font) return { font, resolvedWeight: normalisedW, resolvedStyle: normalisedS };
+
+    // 2) Try same weight, normal style (if requested style is italic)
+    if (normalisedS === 'italic') {
+      key = variantKey(normalisedW, 'normal');
+      font = variants.get(key);
+      if (font) return { font, resolvedWeight: normalisedW, resolvedStyle: 'normal' };
+    }
+
+    // 3) Nearest weight, same style
+    const sameStyleWeights: number[] = [];
+    for (const vKey of variants.keys()) {
+      const [_w, _s] = vKey.split('_');
+      if (_s === normalisedS) {
+        sameStyleWeights.push(weightToNumber(_w));
+      }
+    }
+    const sameStyleNearest = nearestWeight(sameStyleWeights, weightToNumber(normalisedW));
+    if (sameStyleNearest !== null) {
+      key = variantKey(String(sameStyleNearest), normalisedS);
+      font = variants.get(key);
+      if (font) return { font, resolvedWeight: String(sameStyleNearest), resolvedStyle: normalisedS };
+    }
+
+    // 4) Nearest weight, normal style (fallback from italic)
+    if (normalisedS === 'italic') {
+      const normalWeights: number[] = [];
+      for (const vKey of variants.keys()) {
+        const [_w, _s] = vKey.split('_');
+        if (_s === 'normal') {
+          normalWeights.push(weightToNumber(_w));
+        }
+      }
+      const normalNearest = nearestWeight(normalWeights, weightToNumber(normalisedW));
+      if (normalNearest !== null) {
+        key = variantKey(String(normalNearest), 'normal');
+        font = variants.get(key);
+        if (font) return { font, resolvedWeight: String(normalNearest), resolvedStyle: 'normal' };
+      }
+    }
+
+    // 5) Any variant in family (desperate fallback)
+    const firstKey = variants.keys().next().value as string | undefined;
+    if (firstKey) {
+      font = variants.get(firstKey);
+      if (font) {
+        const [_w, _s] = firstKey.split('_');
+        return { font, resolvedWeight: _w, resolvedStyle: _s };
+      }
+    }
+
+    return null;
   }
 
   // ── Metrics retrieval ─────────────────────────────────────────────
@@ -148,23 +333,31 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     weight = 'normal',
     style = 'normal',
   ): FontMetrics {
-    const key = cacheKey(fontFamily, weight, style);
+    // Dev warning for pending registrations
+    const _process: any = typeof globalThis !== 'undefined' ? (globalThis as any).process : undefined;
+    if (this.pendingRegistrations.size > 0 && _process?.env?.NODE_ENV !== 'production') {
+      console.warn(
+        '[vyaz] getMetrics() called while registerFont() promises are still pending. ' +
+        'Wait for registerFont() to resolve before layout to avoid inaccurate metrics. ' +
+        'Use fontMetricsProvider.waitForPendingRegistrations() if needed.'
+      );
+    }
 
-    // Metrics cache (depends on fontSize, so include in key)
-    const metricsKey = `${key}_${fontSize}_${this.mode}`;
+    // Check metrics cache first
+    const normalisedW = normaliseWeight(weight);
+    const metricsKey = `${fontFamily}_${normalisedW}_${style}_${fontSize}_${this.mode}`;
     const cached = this.metricsCache.get(metricsKey);
     if (cached) return cached;
 
-    // Strategy 1: FontEngine (fontkit)
-    const font = this.cache.get(key);
-
-    if (font) {
-      // Inline computePixelMetrics to avoid circular ESM import
+    // Strategy 1: FontEngine (fontkit) with smart fallback
+    const resolved = this._resolveFont(fontFamily, weight, style);
+    if (resolved) {
+      const font = resolved.font;
       const scale = fontSize / font.unitsPerEm;
 
       let ascent: number;
       let descent: number;
-      let sourceTable: 'hhea' | 'OS/2';
+      let sourceTable: 'hhea' | 'OS/2' | 'fallback';
 
       if (this.mode === 'office' && font.winAscent != null && font.winDescent != null) {
         ascent = font.winAscent * scale * 1.078;
@@ -188,16 +381,15 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       return metrics;
     }
 
-    // Strategy 2: If font cache is non-empty, fontkit is available but font not found → throw
-    if (this.cache.size > 0) {
+    // Strategy 2: If any font is registered for this family, fontkit available but no match
+    if (this.registry.has(fontFamily)) {
       throw new FontNotFoundError(fontFamily, weight, style);
     }
 
     // Strategy 3: Canvas TextMetrics (browser, fallback when fontkit unavailable)
     if (typeof document !== 'undefined') {
       try {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
+        const ctx = this._getMeasureContext();
         ctx.font = `${style} ${weight} ${fontSize}px ${fontFamily}`;
         const m = ctx.measureText('M');
 
@@ -215,7 +407,6 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       }
     }
 
-    // Font not found — throw error with clear message
     throw new FontNotFoundError(fontFamily, weight, style);
   }
 }

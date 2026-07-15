@@ -33,10 +33,12 @@ export type {
   ListStylePosition,
   ListStyle,
 } from './types/Document.js';
-export {
-  DEFAULT_PARAGRAPH_STYLE,
-  DEFAULT_TEXT_STYLE,
-} from './types/Document.js';
+// ⚠️ Bun's `bun build --target bun` (and `--target node`) has the same const-inlining
+//    limitation as `--target browser`. Using object spread forces the bundler
+//    to embed actual values in the output bundle.
+import { DEFAULT_PARAGRAPH_STYLE as _DPS2, DEFAULT_TEXT_STYLE as _DTS2 } from './types/Document.js';
+export const DEFAULT_PARAGRAPH_STYLE = { ..._DPS2 };
+export const DEFAULT_TEXT_STYLE = { ..._DTS2 };
 
 // ── Output types (Physical Box Model) ───────────────────────────────────
 export type {
@@ -74,7 +76,12 @@ export type { AutoFitOptions, AutoFitResult } from './layout/AutoFitEngine.js';
 export { groupLinesByParagraph } from './utils/groupLinesByParagraph.js';
 export type { ParagraphGroup } from './utils/groupLinesByParagraph.js';
 export { transformText } from './utils/textTransform.js';
-export { formatListNumber, defaultBulletChar, BULLET_CHARACTERS } from './utils/list.js';
+// Same workaround for BULLET_CHARACTERS (object constant) — Bun's bun build
+// does not inline const objects with `export { X } from 'module'`.
+import { formatListNumber as _fln, defaultBulletChar as _dbc, BULLET_CHARACTERS as _BC2 } from './utils/list.js';
+export const formatListNumber = _fln;
+export const defaultBulletChar = _dbc;
+export const BULLET_CHARACTERS = { ..._BC2 };
 
 // ── Compiler ────────────────────────────────────────────────────────────
 export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, collapseSegmentWhitespace } from './compile/DocumentCompiler.js';
