@@ -2,9 +2,9 @@
   "name": "@vyaz/core",
   "version": "0.0.5",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "files": ["dist", "src"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -12,10 +12,10 @@
   "exports": {
     ".": {
       "bun": "./src/index.ts",
-      "node": "./src/index.ts",
-      "browser": "./src/index.browser.ts",
-      "types": "./src/index.ts",
-      "default": "./src/index.ts"
+      "node": "./dist/index.js",
+      "browser": "./dist/index.browser.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "browser": {
@@ -26,14 +26,12 @@
     "child_process": false
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser && tsc --project tsconfig.json --emitDeclarationOnly",
     "test": "bun test"
   },
   "dependencies": {
     "@chenglou/pretext": "^0.0.8",
-    "@clean-jsdoc-theme/typedoc": "^5.0.6",
-    "js-yaml": "^5.0.0",
-    "typedoc": "^0.28.19"
+    "js-yaml": "^5.0.0"
   },
   "optionalDependencies": {
     "@napi-rs/canvas": "^1.0.2",
@@ -41,6 +39,8 @@
     "get-system-fonts": "^2.0.2"
   },
   "devDependencies": {
-    "@types/node": "^26.0.0"
+    "@types/node": "^26.0.0",
+    "@clean-jsdoc-theme/typedoc": "^5.0.6",
+    "typedoc": "^0.28.19"
   }
 }

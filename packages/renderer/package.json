@@ -2,17 +2,17 @@
   "name": "@vyaz/renderer",
   "version": "0.0.3",
   "type": "module",
-  "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "files": ["dist", "src"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun"
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun && tsc --project tsconfig.json --emitDeclarationOnly"
   },
   "dependencies": {
-    "@vyaz/core": "*"
+    "@vyaz/core": "^0.0.5"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
