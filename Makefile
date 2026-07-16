@@ -1,4 +1,4 @@
-.PHONY: help install build test smoke pack-test lint check publish-core publish-renderer clean
+.PHONY: help install build test smoke pack-test lint check-decls check publish-core publish-renderer clean
 
 PACKAGES := core renderer
 DIST_TMP := /tmp/vyaz-pack-test
@@ -11,6 +11,7 @@ help:
 	@echo "  make smoke           — Verify dist/ imports in Node"
 	@echo "  make pack-test       — npm pack + clean install + import"
 	@echo "  make browser-check   — Validate browser bundle exports"
+	@echo "  make check-decls     — Verify .d.ts files exist in dist/"
 	@echo "  make check           — Full pre-publish pipeline"
 	@echo "  make publish-core PART=patch     — Publish @vyaz/core"
 	@echo "  make publish-renderer PART=patch — Publish @vyaz/renderer"
@@ -32,8 +33,20 @@ test:
 lint:
 	@echo "No linter configured yet — skipping"
 
+# ── Declaration file check: ensure tsc generated .d.ts ──────────────────
+check-decls:
+	@echo "→ Checking .d.ts files..."
+	@for pkg in $(PACKAGES); do \
+		if [ ! -f packages/$$pkg/dist/index.d.ts ]; then \
+			echo "  ❌ packages/$$pkg/dist/index.d.ts — MISSING (run 'make build' first or check tsc output)"; \
+			exit 1; \
+		fi; \
+		echo "  ✅ @vyaz/$$pkg: dist/index.d.ts"; \
+	done
+	@echo "✅ check-decls passed"
+
 # ── Smoke test: verify built dist/ is valid ESM ──────────
-smoke: build
+smoke: build check-decls
 	@for pkg in $(PACKAGES); do \
 		echo "→ Smoke-testing @vyaz/$$pkg (Node bundle)"; \
 		node --input-type=module -e " \
@@ -50,6 +63,7 @@ smoke: build
 				.catch(err => { console.error('  ❌ @vyaz/$$pkg browser failed:', err.message); process.exit(1); }); \
 		" || exit 1; \
 	done
+	@echo "✅ smoke passed"
 
 # ── Pack test: simulate what npm install actually delivers ──────
 pack-test: build
@@ -68,6 +82,17 @@ pack-test: build
 		import('@vyaz/core').then(m => console.log('  ✅ @vyaz/core:', Object.keys(m).length, 'exports')); \
 		import('@vyaz/renderer').then(m => console.log('  ✅ @vyaz/renderer:', Object.keys(m).length, 'exports')); \
 	"
+	@# Also verify .d.ts shipped in the pack
+	@echo "→ Checking .d.ts in packed tarballs..."
+	@for tgz in $(DIST_TMP)/vyaz-core-*.tgz $(DIST_TMP)/vyaz-renderer-*.tgz; do \
+		pkg=$$(basename $$tgz); \
+		if tar -tzf $$tgz | grep -q 'package/dist/index.d.ts'; then \
+			echo "  ✅ $$pkg: contains dist/index.d.ts"; \
+		else \
+			echo "  ❌ $$pkg: dist/index.d.ts MISSING from tarball!"; \
+			exit 1; \
+		fi; \
+	done
 	@rm -rf $(DIST_TMP)
 	@echo "✅ pack-test passed"
 

@@ -45,10 +45,11 @@ export type {
 //    limitation as `--target browser`. Using object spread forces the bundler
 //    to embed actual values in the output bundle.
 import { DEFAULT_PARAGRAPH_STYLE as _DPS2, DEFAULT_TEXT_STYLE as _DTS2 } from './types/Document.js';
+import type { ParagraphStyle } from './types/Document.js';
 /** @internal */
-export const DEFAULT_PARAGRAPH_STYLE = { ..._DPS2 };
+export const DEFAULT_PARAGRAPH_STYLE: ParagraphStyle = { ..._DPS2 };
 /** @internal */
-export const DEFAULT_TEXT_STYLE = { ..._DTS2 };
+export const DEFAULT_TEXT_STYLE: Partial<import('./types/Document.js').TextRun> = { ..._DTS2 };
 
 // ── Output types (Physical Box Model) — stable ─────────────────────────
 export type {
@@ -102,12 +103,13 @@ export { transformText } from './utils/textTransform.js';
 // Same workaround for BULLET_CHARACTERS (object constant) — Bun's bun build
 // does not inline const objects with `export { X } from 'module'`.
 import { formatListNumber as _fln, defaultBulletChar as _dbc, BULLET_CHARACTERS as _BC2 } from './utils/list.js';
+import type { NumberFormat } from './types/Document.js';
 /** @internal */
-export const formatListNumber = _fln;
+export const formatListNumber: (n: number, format: NumberFormat) => string = _fln;
 /** @internal */
-export const defaultBulletChar = _dbc;
+export const defaultBulletChar: (level: number) => string = _dbc;
 /** @internal */
-export const BULLET_CHARACTERS = { ..._BC2 };
+export const BULLET_CHARACTERS: Record<number, string> = { ..._BC2 };
 
 // ── Compiler — stable ──────────────────────────────────────────────────
 export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, collapseSegmentWhitespace } from './compile/DocumentCompiler.js';

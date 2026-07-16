@@ -1,6 +1,6 @@
 {
   "name": "@vyaz/core",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,8 @@
     "child_process": false
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @chenglou/pretext --external js-yaml --external @napi-rs/canvas --external fontkit --external get-system-fonts && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser && tsc --project tsconfig.json --emitDeclarationOnly",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @chenglou/pretext --external js-yaml --external @napi-rs/canvas --external fontkit --external get-system-fonts && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser && tsc -b",
+    "prepublishOnly": "bun run build",
     "test": "bun test"
   },
   "dependencies": {

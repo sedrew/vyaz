@@ -1,10 +1,12 @@
 {
   "name": "@vyaz/renderer",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -18,10 +20,11 @@
     }
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core && tsc --project tsconfig.json --emitDeclarationOnly"
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core && tsc -b",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@vyaz/core": "^0.0.13"
+    "@vyaz/core": "^0.0.14"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

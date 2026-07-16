@@ -149,4 +149,4 @@ export class SystemFontRegistry {
 }
 
 /** Singleton instance */
-export const systemFontRegistry = SystemFontRegistry.instance;
+export const systemFontRegistry: SystemFontRegistry = SystemFontRegistry.instance;

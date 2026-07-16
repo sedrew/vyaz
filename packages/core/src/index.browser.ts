@@ -46,16 +46,17 @@ export { FontNotFoundError } from './measure/FontNotFoundError.js';
 //    when using `export { X } from 'module'` (known limitation — ConstValueInliningBundle is todo).
 //    Using object spread forces the bundler to embed the actual values in the output.
 import { DEFAULT_PARAGRAPH_STYLE as _DPS, DEFAULT_TEXT_STYLE as _DTS } from './types/Document.js';
+import type { ParagraphStyle, TextRun } from './types/Document.js';
 /** @internal */
-export const DEFAULT_PARAGRAPH_STYLE = { ..._DPS };
+export const DEFAULT_PARAGRAPH_STYLE: ParagraphStyle = { ..._DPS };
 /** @internal */
-export const DEFAULT_TEXT_STYLE = { ..._DTS };
+export const DEFAULT_TEXT_STYLE: Partial<TextRun> = { ..._DTS };
 
 /** @internal */
 export { transformText } from './utils/textTransform.js';
 // Same workaround for BULLET_CHARACTERS (object constant)
 import { BULLET_CHARACTERS as _BC } from './utils/list.js';
 /** @internal */
-export const BULLET_CHARACTERS = { ..._BC };
+export const BULLET_CHARACTERS: Record<number, string> = { ..._BC };
 /** @internal */
 export { formatListNumber, defaultBulletChar } from './utils/list.js';

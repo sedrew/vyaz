@@ -460,4 +460,4 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 }
 
 /** Singleton */
-export const fontMetricsProvider = new FontMetricsProvider();
+export const fontMetricsProvider: FontMetricsProvider = new FontMetricsProvider();

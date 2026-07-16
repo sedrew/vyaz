@@ -261,4 +261,4 @@ export class ParagraphLayoutEngine {
 }
 
 /** Singleton */
-export const paragraphLayoutEngine = new ParagraphLayoutEngine();
+export const paragraphLayoutEngine: ParagraphLayoutEngine = new ParagraphLayoutEngine();
