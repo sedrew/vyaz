@@ -456,3 +456,35 @@ describe('Invariants', () => {
     }
   });
 });
+
+// ── 9. pre-line with hard breaks ───────────────────────────────────────
+
+describe('pre-line with hard breaks', () => {
+  test('three lines from \\n in single run', () => {
+    const p = makeParagraph('Hello World\nПривет Мир\nWorld of Text');
+    p.style.whiteSpace = 'pre-line';
+    p.style.lineHeight = 1.4;
+    const result = layoutTextFrame(makeTextFrame([p], { width: 400 }));
+
+    // Should produce exactly 3 lines (one per \n-separated segment)
+    expect(result.lines.length).toBe(3);
+
+    // Each line should have non-zero height
+    for (const line of result.lines) {
+      expect(line.height).toBeGreaterThan(0);
+      expect(line.spans.length).toBeGreaterThan(0);
+    }
+
+    // Lines should be stacked vertically without overlap
+    for (let i = 1; i < result.lines.length; i++) {
+      const prev = result.lines[i - 1];
+      const curr = result.lines[i];
+      expect(curr.y).toBeGreaterThanOrEqual(prev.y + prev.height - 0.5);
+    }
+
+    // Each line should contain the correct text
+    expect(result.lines[0].spans.map(s => s.text).join('')).toBe('Hello World');
+    expect(result.lines[1].spans.map(s => s.text).join('')).toBe('Привет Мир');
+    expect(result.lines[2].spans.map(s => s.text).join('')).toBe('World of Text');
+  });
+});

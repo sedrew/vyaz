@@ -148,6 +148,25 @@ describe('TextFrame SVG snapshots', () => {
     }
   });
 
+  test('textframe-pre-line-multiline.svg: three lines with pre-line', () => {
+    const p = makeParagraph('Hello World\nПривет Мир\nWorld of Text');
+    p.style.whiteSpace = 'pre-line';
+    p.style.lineHeight = 1.4;
+    const svg = renderTextFrameSVG(
+      [p],
+      { width: 400 },
+      { preset: 'browser', contentPadding: 10, debug: { frameBox: true, contentBox: true, widthBorder: 1 } },
+    );
+    const name = 'textframe-pre-line-multiline.svg';
+    const expected = readSnapshot(name);
+    if (expected) {
+      expect(svg.trim()).toBe(expected.trim());
+    } else {
+      writeFileSync(snapshotPath(name), svg);
+      expect(svg).toBeTruthy();
+    }
+  });
+
   test('textframe-padding.svg: padding, flat preset', () => {
     const svg = renderTextFrameSVG(
       [makeParagraph('Hello')],

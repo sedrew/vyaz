@@ -210,44 +210,41 @@ export function splitParagraphByHardBreaks(paragraph: Paragraph): Paragraph[] {
   let currentRuns: TextRun[] = [];
 
   for (const run of paragraph.children) {
-    const nlIndex = run.text.indexOf('\n');
-    if (nlIndex === -1) {
+    const segments = run.text.split('\n');
+
+    if (segments.length === 1) {
       // No \n — entire run goes to current virtual paragraph
       currentRuns.push({ ...run });
       continue;
     }
 
-    // There's a \n in this run — split it
-    const before = run.text.slice(0, nlIndex);
-    const after = run.text.slice(nlIndex + 1);
+    // Text has \n — process each segment
+    for (let i = 0; i < segments.length; i++) {
+      const seg = segments[i];
+      const textTransform = run.textTransform;
+      const effectiveFontSize = computeEffFs(run);
 
-    const textTransform = run.textTransform;
-    const effectiveFontSize = computeEffFs(run);
+      if (i === 0) {
+        // First segment → append to current paragraph
+        if (seg.length > 0) {
+          const text = ws === 'pre-line' ? collapseSegmentWhitespace(seg) : seg;
+          currentRuns.push({ ...run, text: transformText(text, textTransform) });
+        }
+        // First segment empty (leading \n) — still finalize current paragraph below
+      } else {
+        // Subsequent segment → finalize previous paragraph first
+        result.push({ style: paragraph.style, children: currentRuns });
 
-    // Part before \n → current paragraph
-    if (before.length > 0) {
-      const text = ws === 'pre-line' ? collapseSegmentWhitespace(before) : before;
-      currentRuns.push({ ...run, text: transformText(text, textTransform) });
-    }
-
-    // Finalize current paragraph
-    result.push({ style: paragraph.style, children: currentRuns });
-
-    // Check for additional \n immediately after (e.g., "Hello\n\nWorld")
-    // Count consecutive \n — each produces an empty paragraph
-    let afterIdx = nlIndex + 1;
-    while (afterIdx < run.text.length && run.text[afterIdx] === '\n') {
-      result.push({ style: paragraph.style, children: [] });
-      afterIdx++;
-    }
-
-    // Remaining text after all \n → start new paragraph
-    const remaining = run.text.slice(afterIdx);
-    if (remaining.length > 0) {
-      const text = ws === 'pre-line' ? collapseSegmentWhitespace(remaining) : remaining;
-      currentRuns = [{ ...run, text: transformText(text, textTransform) }];
-    } else {
-      currentRuns = [];
+        if (seg.length > 0) {
+          // Non-empty segment → start new paragraph with this run
+          const text = ws === 'pre-line' ? collapseSegmentWhitespace(seg) : seg;
+          currentRuns = [{ ...run, text: transformText(text, textTransform) }];
+        } else {
+          // Empty segment (consecutive \n) → empty paragraph
+          result.push({ style: paragraph.style, children: [] });
+          currentRuns = [];
+        }
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20" height="48" viewBox="-10 -10 20 48">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="62" viewBox="-10 -10 20 62">
 <!-- debug overlay -->
-  <rect x="0" y="0" width="0" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="0" height="42" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>
