@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="200" viewBox="0 0 500 200">
+  <text x="0" y="13" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000">Typography</tspan>
+  </text>
+  <text x="0" y="13" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="80.12" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333"> </tspan>
+    <tspan x="84.01" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">is the art and technique</tspan>
+    <tspan x="229.55"> </tspan>
+  </text>
+  <text x="0" y="29" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">of arranging type to make written</tspan>
+    <tspan x="203.88"> </tspan>
+  </text>
+  <text x="0" y="45" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">language legible, readable and</tspan>
+    <tspan x="191.5"> </tspan>
+  </text>
+  <text x="0" y="61" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">appealing.</tspan>
+  </text>
+  <text x="0" y="61" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="64.61" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000"> </tspan>
+    <tspan x="68.5" font-weight="700" font-style="normal" font-family="Arial" font-size="14" fill="#000">Layout</tspan>
+  </text>
+  <text x="0" y="61" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="114.39" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333"> </tspan>
+    <tspan x="118.28" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">engine processes</tspan>
+    <tspan x="228.02"> </tspan>
+  </text>
+  <text x="0" y="77" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">text through multiple stages:</tspan>
+    <tspan x="175.1"> </tspan>
+  </text>
+  <text x="260" y="13" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="260" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">compilation, preparation, line</tspan>
+    <tspan x="438.99"> </tspan>
+  </text>
+  <text x="260" y="29" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="260" font-weight="400" font-style="normal" font-family="Arial" font-size="14" fill="#333">breaking, positioning, and validation.</tspan>
+  </text>
+  <text x="260" y="52" font-family="Arial" font-size="13" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="260" font-weight="400" font-style="normal" font-family="Arial" font-size="13" fill="#444">Second paragraph</tspan>
+  </text>
+  <text x="260" y="52" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">
+    <tspan x="366.97" font-weight="400" font-style="normal" font-family="Arial" font-size="13" fill="#666"> </tspan>
+    <tspan x="370.58" font-weight="400" font-style="normal" font-family="Arial" font-size="13" fill="#666">with multi-column</tspan>
+    <tspan x="470.99"> </tspan>
+  </text>
+  <text x="260" y="67" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">
+    <tspan x="260" font-weight="400" font-style="normal" font-family="Arial" font-size="13" fill="#666">layout enabled. Text flows from one</tspan>
+    <tspan x="465.22"> </tspan>
+  </text>
+  <text x="260" y="82" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">
+    <tspan x="260" font-weight="400" font-style="normal" font-family="Arial" font-size="13" fill="#666">column to the next.</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="500" height="200" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="500" height="80" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="500" y="0" width="500" height="32" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="500" y="40" width="500" height="45" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+</svg>

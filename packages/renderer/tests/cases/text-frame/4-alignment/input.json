@@ -1,0 +1,268 @@
+{
+  "env": "arial",
+  "profile": "frame-fit",
+  "frame": {
+    "wrap": true,
+    "width": 400,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Typography "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "is the art and technique of arranging type to make written language legible, readable and appealing. "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Good design "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "makes the reader feel nothing, because everything is just right. "
+          },
+          {
+            "type": "text",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fontStyle": "italic",
+            "color": "#1e3a8a",
+            "text": "Balance "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#444",
+            "text": "between form and function is the key to beautiful text layout."
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Typography "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "is the art and technique of arranging type to make written language legible, readable and appealing. "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Good design "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "makes the reader feel nothing, because everything is just right. "
+          },
+          {
+            "type": "text",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fontStyle": "italic",
+            "color": "#1e3a8a",
+            "text": "Balance "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#444",
+            "text": "between form and function is the key to beautiful text layout."
+          }
+        ],
+        "style": {
+          "alignment": "center",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Typography "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "is the art and technique of arranging type to make written language legible, readable and appealing. "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Good design "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "makes the reader feel nothing, because everything is just right. "
+          },
+          {
+            "type": "text",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fontStyle": "italic",
+            "color": "#1e3a8a",
+            "text": "Balance "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#444",
+            "text": "between form and function is the key to beautiful text layout."
+          }
+        ],
+        "style": {
+          "alignment": "right",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontSize": 18,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Typography "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "is the art and technique of arranging type to make written language legible, readable and appealing. "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Good design "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "makes the reader feel nothing, because everything is just right. "
+          },
+          {
+            "type": "text",
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "fontStyle": "italic",
+            "color": "#1e3a8a",
+            "text": "Balance "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#444",
+            "text": "between form and function is the key to beautiful text layout."
+          }
+        ],
+        "style": {
+          "alignment": "justify",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "paragraphBox": true,
+        "widthBorder": 2
+      },
+      "contentPadding": 10,
+      "preset": "flat"
+    },
+    "browser": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "paragraphBox": true,
+        "widthBorder": 2
+      },
+      "contentPadding": 10,
+      "preset": "browser"
+    },
+    "preserve": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "paragraphBox": true,
+        "widthBorder": 2
+      },
+      "contentPadding": 10,
+      "preset": "preserve"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "paragraphBox": true,
+        "widthBorder": 2
+      },
+      "contentPadding": 10,
+      "preset": "glyph"
+    }
+  }
+}

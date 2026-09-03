@@ -1,0 +1,1670 @@
+[
+  {
+    "case": "highlight/partial",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "highlight-partial-flat"
+  },
+  {
+    "case": "highlight/partial",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "highlight-partial-browser"
+  },
+  {
+    "case": "highlight/partial",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "highlight-partial-preserve"
+  },
+  {
+    "case": "highlight/partial",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": "highlight-partial-glyph"
+  },
+  {
+    "case": "highlight/two-colors",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "highlight-two-colors-flat"
+  },
+  {
+    "case": "highlight/two-colors",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "highlight-two-colors-browser"
+  },
+  {
+    "case": "highlight/two-colors",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "highlight-two-colors-preserve"
+  },
+  {
+    "case": "highlight/two-colors",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": "highlight-two-colors-glyph"
+  },
+  {
+    "case": "highlight/underline",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "highlight/underline",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "highlight/underline",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "highlight-underline"
+  },
+  {
+    "case": "highlight/underline",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "list-bullet-browser"
+  },
+  {
+    "case": "list/bullet",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-basic",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-bullet-basic"
+  },
+  {
+    "case": "list/bullet-basic",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-basic",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-basic",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-custom",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-bullet-custom"
+  },
+  {
+    "case": "list/bullet-custom",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-custom",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-custom",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-nested",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-bullet-nested"
+  },
+  {
+    "case": "list/bullet-nested",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-nested",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/bullet-nested",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/mixed-content",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-mixed-content"
+  },
+  {
+    "case": "list/mixed-content",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/mixed-content",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/mixed-content",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-alpha",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-number-alpha"
+  },
+  {
+    "case": "list/number-alpha",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-alpha",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-alpha",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-decimal",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-number-decimal"
+  },
+  {
+    "case": "list/number-decimal",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-decimal",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-decimal",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-restart",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-number-restart"
+  },
+  {
+    "case": "list/number-restart",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-restart",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-restart",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-roman",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-number-roman"
+  },
+  {
+    "case": "list/number-roman",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-roman",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-roman",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-start",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-number-start"
+  },
+  {
+    "case": "list/number-start",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-start",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/number-start",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/position-inside",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-position-inside"
+  },
+  {
+    "case": "list/position-inside",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/position-inside",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/position-inside",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/position-outside",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "list-position-outside"
+  },
+  {
+    "case": "list/position-outside",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/position-outside",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "list/position-outside",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/collapse-newline-pre-line",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/collapse-newline-pre-line",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/collapse-newline-pre-line",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-double-newline-pre-line"
+  },
+  {
+    "case": "newline/collapse-newline-pre-line",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/cross-run-newline",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/cross-run-newline",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/cross-run-newline",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-cross-run-newline"
+  },
+  {
+    "case": "newline/cross-run-newline",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/double-newline",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/double-newline",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/double-newline",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-double-newline"
+  },
+  {
+    "case": "newline/double-newline",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/double-newline-pre-line",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/double-newline-pre-line",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/double-newline-pre-line",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-double-newline-pre-line"
+  },
+  {
+    "case": "newline/double-newline-pre-line",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-normal",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-normal",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-normal",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-double-newline"
+  },
+  {
+    "case": "newline/inline-newline-normal",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-inline-newline-pre"
+  },
+  {
+    "case": "newline/inline-newline-pre",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre-line",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre-line",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre-line",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-inline-newline-pre"
+  },
+  {
+    "case": "newline/inline-newline-pre-line",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre-wrap",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre-wrap",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/inline-newline-pre-wrap",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-inline-newline-pre"
+  },
+  {
+    "case": "newline/inline-newline-pre-wrap",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/leading-newline-pre-line",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/leading-newline-pre-line",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/leading-newline-pre-line",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-leading-newline-pre-line"
+  },
+  {
+    "case": "newline/leading-newline-pre-line",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/multi-run-newline",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/multi-run-newline",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/multi-run-newline",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-multi-run-newline"
+  },
+  {
+    "case": "newline/multi-run-newline",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-only-newline"
+  },
+  {
+    "case": "newline/only-newline",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline-normal",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline-normal",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline-normal",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-only-newline-normal"
+  },
+  {
+    "case": "newline/only-newline-normal",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline-pre-line",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline-pre-line",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/only-newline-pre-line",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-only-newline"
+  },
+  {
+    "case": "newline/only-newline-pre-line",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/spaced-newline-pre-line",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/spaced-newline-pre-line",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/spaced-newline-pre-line",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-spaced-newline-pre-line"
+  },
+  {
+    "case": "newline/spaced-newline-pre-line",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/trailing-newline-pre-line",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/trailing-newline-pre-line",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "newline/trailing-newline-pre-line",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-trailing-newline-pre-line"
+  },
+  {
+    "case": "newline/trailing-newline-pre-line",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "rich-text-v1/frame",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "rich-text-v1-frame-flat"
+  },
+  {
+    "case": "rich-text-v1/frame",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "rich-text-v1-frame-browser"
+  },
+  {
+    "case": "rich-text-v1/frame",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "rich-text-v1-frame-preserve"
+  },
+  {
+    "case": "rich-text-v1/frame",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": "rich-text-v1-frame-glyph"
+  },
+  {
+    "case": "rich-text-v1/frame",
+    "variant": "debug",
+    "svg": "debug.svg",
+    "oldSnapshot": "rich-text-v1-frame"
+  },
+  {
+    "case": "run/all-styles-snapshot",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/all-styles-snapshot",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/all-styles-snapshot",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-all-styles-snapshot"
+  },
+  {
+    "case": "run/all-styles-snapshot",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/basic-plain-text",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/basic-plain-text",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/basic-plain-text",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/basic-plain-text",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/basic-plain-text",
+    "variant": "default",
+    "svg": "default.svg",
+    "oldSnapshot": "run-basic-plain-text"
+  },
+  {
+    "case": "run/caffeine-c8h10n4o2",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/caffeine-c8h10n4o2",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/caffeine-c8h10n4o2",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-caffeine-c8h10n4o2"
+  },
+  {
+    "case": "run/caffeine-c8h10n4o2",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": "run-glyph-hello"
+  },
+  {
+    "case": "run/hello-arial",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-arial",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-arial",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-arial",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": "run-glyph-hello-arial"
+  },
+  {
+    "case": "run/hello-world",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-world",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-world",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-multi-run-hello-world"
+  },
+  {
+    "case": "run/hello-world",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-world-2",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "run-flat-hello-world"
+  },
+  {
+    "case": "run/hello-world-2",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-world-2",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hello-world-2",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hindi-namaste",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hindi-namaste",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hindi-namaste",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-hindi-namaste"
+  },
+  {
+    "case": "run/hindi-namaste",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hindi-pranam",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "run-hindi-pranam"
+  },
+  {
+    "case": "run/hindi-pranam",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hindi-pranam",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/hindi-pranam",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/justify-multi-run",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/justify-multi-run",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/justify-multi-run",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-justify-multi-run"
+  },
+  {
+    "case": "run/justify-multi-run",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/letter-spacing-condensed",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/letter-spacing-condensed",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/letter-spacing-condensed",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-letter-spacing-condensed"
+  },
+  {
+    "case": "run/letter-spacing-condensed",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/letter-spacing-spread",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/letter-spacing-spread",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/letter-spacing-spread",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-letter-spacing-spread"
+  },
+  {
+    "case": "run/letter-spacing-spread",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/long-text-single-run",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/long-text-single-run",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/long-text-single-run",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-long-text-single-run"
+  },
+  {
+    "case": "run/long-text-single-run",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/multi-run-hello-world",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/multi-run-hello-world",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/multi-run-hello-world",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-multi-run-hello-world"
+  },
+  {
+    "case": "run/multi-run-hello-world",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/nbsp-hello-world",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/nbsp-hello-world",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/nbsp-hello-world",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-nbsp-hello-world"
+  },
+  {
+    "case": "run/nbsp-hello-world",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/normal-super-normal",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/normal-super-normal",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/normal-super-normal",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-normal-super-normal"
+  },
+  {
+    "case": "run/normal-super-normal",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/style-properties",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/style-properties",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/style-properties",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-style-properties"
+  },
+  {
+    "case": "run/style-properties",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/subscript",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "run-flat-subscript"
+  },
+  {
+    "case": "run/subscript",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/subscript",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/subscript",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/superscript",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "run-flat-superscript"
+  },
+  {
+    "case": "run/superscript",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/superscript",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/superscript",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/superscript-c2",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/superscript-c2",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/superscript-c2",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-superscript-c2"
+  },
+  {
+    "case": "run/superscript-c2",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/thai-khobkhun",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "run-thai-khobkhun"
+  },
+  {
+    "case": "run/thai-khobkhun",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/thai-khobkhun",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/thai-khobkhun",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/thai-sawatdee",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/thai-sawatdee",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/thai-sawatdee",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-thai-sawatdee"
+  },
+  {
+    "case": "run/thai-sawatdee",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/transform-capitalize",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/transform-capitalize",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/transform-capitalize",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-transform-capitalize"
+  },
+  {
+    "case": "run/transform-capitalize",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/transform-uppercase",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/transform-uppercase",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/transform-uppercase",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-transform-uppercase"
+  },
+  {
+    "case": "run/transform-uppercase",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/xmlspace-snapshot",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/xmlspace-snapshot",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/xmlspace-snapshot",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "newline-double-newline"
+  },
+  {
+    "case": "run/xmlspace-snapshot",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/zwsp-hello-world",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/zwsp-hello-world",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "run/zwsp-hello-world",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "run-zwsp-hello-world"
+  },
+  {
+    "case": "run/zwsp-hello-world",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/4-alignment",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/4-alignment",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/4-alignment",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": "textframe-4-alignment"
+  },
+  {
+    "case": "text-frame/4-alignment",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/alignment-center",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-alignment-center"
+  },
+  {
+    "case": "text-frame/alignment-center",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/alignment-center",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/alignment-center",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/alignment-right",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-alignment-right"
+  },
+  {
+    "case": "text-frame/alignment-right",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/alignment-right",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/alignment-right",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/basic",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-basic-flat"
+  },
+  {
+    "case": "text-frame/basic",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/basic",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/basic",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/frame-size",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/frame-size",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "textframe-frame-size-browser"
+  },
+  {
+    "case": "text-frame/frame-size",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/frame-size",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/frame-width",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/frame-width",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "textframe-frame-width-browser"
+  },
+  {
+    "case": "text-frame/frame-width",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/frame-width",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/multi-column",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-multi-column"
+  },
+  {
+    "case": "text-frame/multi-column",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/multi-column",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/multi-column",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/padding",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-padding"
+  },
+  {
+    "case": "text-frame/padding",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/padding",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/padding",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/padding-left",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-padding-left"
+  },
+  {
+    "case": "text-frame/padding-left",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/padding-left",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/padding-left",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/pre-line-multiline",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/pre-line-multiline",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "textframe-pre-line-multiline"
+  },
+  {
+    "case": "text-frame/pre-line-multiline",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/pre-line-multiline",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/two-paragraphs",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-two-paragraphs"
+  },
+  {
+    "case": "text-frame/two-paragraphs",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": "textframe-two-paragraphs-browser"
+  },
+  {
+    "case": "text-frame/two-paragraphs",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/two-paragraphs",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/wrap",
+    "variant": "flat",
+    "svg": "flat.svg",
+    "oldSnapshot": "textframe-wrap"
+  },
+  {
+    "case": "text-frame/wrap",
+    "variant": "browser",
+    "svg": "browser.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/wrap",
+    "variant": "preserve",
+    "svg": "preserve.svg",
+    "oldSnapshot": null
+  },
+  {
+    "case": "text-frame/wrap",
+    "variant": "glyph",
+    "svg": "glyph.svg",
+    "oldSnapshot": null
+  }
+]

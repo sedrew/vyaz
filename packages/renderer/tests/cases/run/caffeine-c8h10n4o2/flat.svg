@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="107" height="49" viewBox="-10 -10 107 49">
+  <text x="0" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">C</text>
+  <text x="12" y="27" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">8</text>
+  <text x="19.8" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">H</text>
+  <text x="31.8" y="27" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">10</text>
+  <text x="47.4" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">N</text>
+  <text x="59.4" y="27" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">4</text>
+  <text x="67.2" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">O</text>
+  <text x="79.2" y="27" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">2</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="87" height="29" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

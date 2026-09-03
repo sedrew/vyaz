@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="71" viewBox="-10 -10 420 71">
+  <text x="0" y="12" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 8.7 15.3 18 20.7 27.3 30.7 42 48.7 52.7 55.3">Hello World</tspan>
+  </text>
+  <text x="0" y="29" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 8.6 15.3 22 28.4 35.1 40.5 43.9 53.9 60.6">Привет Мир</tspan>
+  </text>
+  <text x="0" y="46" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 11.3 18 22 24.7 31.3 34.7 41.3 44.7 48 55.3 62 68">World of Text</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="400" height="51" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="71.35" height="51" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

@@ -176,7 +176,7 @@ export function renderFrameToSVG(
   frame: TextFrame,
   options?: Partial<import('../src/SVGRenderer.js').SVGRenderOptions>,
 ): { result: TextFrameLayoutResult; svg: string } {
-  const result = layoutTextFrame(frame);
+  const result = layoutTextFrame(frame, { glyphAdvances: options?.preset === 'glyph' });
   const svg = renderToSVG(result.lines, {
     sizing: 'content',
     contentPadding: 10,

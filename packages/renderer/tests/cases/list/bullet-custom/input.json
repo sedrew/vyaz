@@ -1,0 +1,97 @@
+{
+  "profile": "raw",
+  "frame": {
+    "width": 400,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Star item",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "fontWeight": "normal",
+            "fontStyle": "normal",
+            "color": "#000000"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 0,
+            "bulletChar": "★"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Another star",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "fontWeight": "normal",
+            "fontStyle": "normal",
+            "color": "#000000"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 0,
+            "bulletChar": "★"
+          }
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

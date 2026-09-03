@@ -1,0 +1,507 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="622.06" height="1371" viewBox="-10 -10 622.06 1371">
+  <text x="0" y="18" id="title-0" font-family="Arial" font-size="20" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="0 14.4 20 25.6 31.1 43.3 54.5 65.6 72.2 77.8 94.5 105.6 117.8 123.3 135.6 147.8 153.3 164.5 171.1 176.7 188.9 201.1 212.2 217.8 229.5 235 247.2 258.4 269.5 276.2 281.7 300.6 308.4 319.5 331.7 337.3 343.9 355 360.6 367.3 378.4 390.6 401.7 412.9 418.4 424 430.6 436.2 447.3 458.4 470.6 477.3 482.9 494.5 500.1 514.5 526.8 533.4 545.6 552.3 557.9 564.5 570.1">All Text Manipulations + Text Wrap (7 types, fixed) + Autofit +</tspan>
+    <tspan x="581.8"> </tspan>
+  </text>
+  <text x="0" y="42" id="title-0" font-family="Arial" font-size="20" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="0 12.2 23.3 35.6 47.8 60 71.1 83.3 94.5">Languages</tspan>
+  </text>
+  <text x="0" y="69" id="subtitle-1-0" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400" xml:space="preserve">
+    <tspan x="0 9 12.8 17.3 20.3 27.1 30.9 34.7 41.4 45.2 52 55 62.5 66.3 70.1 81.4 84.4 91.9 94.9 106.2 113.8 116.8 120.6 127.3 134.9 137.9 145.4 149.9 157.5 165 168.8 176.3 183.9 188.4 195.9 203.5 208 214.8 218.5 222.3 229.8 237.4 240.4 247.2 250.9 258.5 261.5 269 275.8 282.6 286.4 293.9 301.5 309 312.8 320.3 324.8 332.4 339.1 342.9 350.4 358 361.8 364.8 367.8 375.3 382.9 389.6">Strict style: minimal colored borders, only black and gray outlines.</tspan>
+  </text>
+  <text x="0" y="87" id="subtitle-2-0" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400" xml:space="preserve">
+    <tspan x="0 11.3 18.8 23.4 30.9 38.4 46 49.7 53.5 57.3 64.8 72.4 76.1 82.9 86.7 90.4 97.2 100.2 107 114.6 121.3 125.1 128.9 136.4 140.2 143.9 151.5 158.3 162 168.8 172.6 176.4 183.1 190.7 198.2 205 208 215.5 223.1 226.9 230.6 237.4 244.9 248 255.5 266.8 274.3 281.1 284.9 288.7 296.2 300.7 308.3 315.8 319.6 326.3 333.9 341.4 348.2 352 355.7 358.8 361.8 368.5 372.3 379.1 382.9 386.6 390.4 397.9 404.7 408.5 412.2 422 426.6 434.1 441.6 445.4 449.9 457.5 461.2 465 471.8 479.3 486.9 493.6 498.2 501.9 505.7 513.2 520.8 524.5 532.1 535.9 538.9 542.6 546.4 550.9">Merged: fonts, sizes, effects, spacing, columns, drop caps, lists, text wrap (7 types), autofit (5</tspan>
+    <tspan x="558.5"> </tspan>
+  </text>
+  <text x="0" y="105" id="subtitle-2-0" font-family="Arial" font-size="13.56" fill="#444444" font-weight="400" xml:space="preserve">
+    <tspan x="0 3.8 10.5 18.1 25.6 32.4 36.9 40.7 44.5 54.3 61.8 66.3 69.3 76.9 80.6 83.6 91.2 98.7 106.3 113.8 121.4 128.9 136.4 143.2 147 150.7 157.5 165.1 169.6 173.4 176.4 183.1 190.7 193.7 197.5 201.2 208.8 215.6 219.3">types), world languages, vertical text.</tspan>
+  </text>
+  <text x="0" y="155" id="section-1-header-0" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.5 11.3 15.1 23.4 31.6 39.9 44.4 52 55.7 59.5 67.1 70.8 77.6 85.1 92.7 96.5 100.2 107.8 116 119.8 128.1 133.4 140.9 144.7 148.5 156 164.3 171.8 180.1 188.4 198.9 206.5 210.2 214 222.3 227.6 235.1 243.4 247.2 254.7 263 267.5 275 278.8 282.6 290.1 294.6 299.9 308.2 315.7">1. Fonts, sizes, colors, shadows, gradients, stroke</tspan>
+  </text>
+  <text x="0" y="180" id="font-families-unifont-0" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 6.8 13.6 20.3 27.1 33.9 40.7">Unifont</tspan>
+  </text>
+  <text x="0" y="180" id="font-families-unifont-1" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="47.5"> </tspan>
+    <tspan x="54.2">|</tspan>
+  </text>
+  <text x="0" y="180" id="font-families-unifont-2" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="61"> </tspan>
+    <tspan x="67.8 74.6 81.4 88.1 94.9 101.7 108.5 115.3 122 128.8 135.6 142.4">Unifont Bold</tspan>
+  </text>
+  <text x="0" y="180" id="font-families-unifont-3" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="149.2"> </tspan>
+    <tspan x="155.9">|</tspan>
+  </text>
+  <text x="0" y="180" id="font-families-unifont-4" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="162.7"> </tspan>
+    <tspan x="169.5 176.3 183.1 189.8 196.6 203.4 210.2 217 223.7 230.5 237.3 244.1 250.9 257.6">Unifont Italic</tspan>
+  </text>
+  <text x="0" y="180" id="font-families-unifont-5" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="264.4"> </tspan>
+    <tspan x="271.2">|</tspan>
+  </text>
+  <text x="0" y="180" id="font-families-unifont-6" font-family="Unifont" font-size="13.56" fill="#000000" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="278"> </tspan>
+    <tspan x="284.8 291.5 298.3 305.1 311.9 318.7 325.4 332.2 339 345.8 352.6 359.3 366.1 372.9 379.7 386.5 393.2 400">Unifont BoldItalic</tspan>
+  </text>
+  <text x="0" y="205" id="font-families-0" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 9 13.6 16.6 24.1">Arial</tspan>
+  </text>
+  <text x="0" y="205" id="font-families-1" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="27.1"> </tspan>
+    <tspan x="30.9">|</tspan>
+  </text>
+  <text x="0" y="205" id="font-families-2" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="34.4"> </tspan>
+    <tspan x="38.2 48 53.2 57 64.6 68.3 72.1 81.9 90.2 93.9">Arial Bold</tspan>
+  </text>
+  <text x="0" y="205" id="font-families-3" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="102.2"> </tspan>
+    <tspan x="106">|</tspan>
+  </text>
+  <text x="0" y="205" id="font-families-4" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="109.5"> </tspan>
+    <tspan x="113.3 122.3 126.8 129.9 137.4 140.4 144.2 147.9 151.7 159.3 162.3 165.3">Arial Italic</tspan>
+  </text>
+  <text x="0" y="205" id="font-families-5" font-family="Arial" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="172.1"> </tspan>
+    <tspan x="175.8">|</tspan>
+  </text>
+  <text x="0" y="205" id="font-families-6" font-family="Arial Black" font-size="13.56" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="179.4"> </tspan>
+    <tspan x="183.1 193.7 199.7 204.2 213.2 217.8 222.3 232.8 237.3 246.4 255.4">Arial Black</tspan>
+  </text>
+  <text x="0" y="251" id="font-sizes-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="0 6.7 13.3 20">12px</tspan>
+  </text>
+  <text x="0" y="251" id="font-sizes-1" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="26"> </tspan>
+    <tspan x="29.8">|</tspan>
+  </text>
+  <text x="0" y="251" id="font-sizes-2" font-family="Arial" font-size="18" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="33.3"> </tspan>
+    <tspan x="37.1 47.1 57.1 67.1">18px</tspan>
+  </text>
+  <text x="0" y="251" id="font-sizes-3" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="76.1"> </tspan>
+    <tspan x="79.9">|</tspan>
+  </text>
+  <text x="0" y="251" id="font-sizes-4" font-family="Arial" font-size="28" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="83.4"> </tspan>
+    <tspan x="87.2 102.7 118.3 135.4 151 158.8 179 196.1 203.9">28px Bold</tspan>
+  </text>
+  <text x="0" y="251" id="font-sizes-5" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="221"> </tspan>
+    <tspan x="224.7">|</tspan>
+  </text>
+  <text x="0" y="251" id="font-sizes-6" font-family="Arial" font-size="34" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="228.3"> </tspan>
+    <tspan x="232 250.9 269.8 288.8">34px</tspan>
+  </text>
+  <text x="0" y="307" id="font-sizes-unifont-0" font-family="Unifont" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="0 6 12 18">12px</tspan>
+  </text>
+  <text x="0" y="307" id="font-sizes-unifont-1" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="24"> </tspan>
+    <tspan x="30.8">|</tspan>
+  </text>
+  <text x="0" y="307" id="font-sizes-unifont-2" font-family="Unifont" font-size="18" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="37.6"> </tspan>
+    <tspan x="44.3 53.3 62.3 71.3">18px</tspan>
+  </text>
+  <text x="0" y="307" id="font-sizes-unifont-3" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="80.3"> </tspan>
+    <tspan x="87.1">|</tspan>
+  </text>
+  <text x="0" y="307" id="font-sizes-unifont-4" font-family="Unifont" font-size="28" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="93.9"> </tspan>
+    <tspan x="100.7 114.7 128.7 142.7 156.7 170.7 184.7 198.7 212.7">28px Bold</tspan>
+  </text>
+  <text x="0" y="307" id="font-sizes-unifont-5" font-family="Unifont" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="226.7"> </tspan>
+    <tspan x="233.5">|</tspan>
+  </text>
+  <text x="0" y="307" id="font-sizes-unifont-6" font-family="Unifont" font-size="34" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="240.2"> </tspan>
+    <tspan x="247 264 281 298">34px</tspan>
+  </text>
+  <text x="0" y="336" id="colors-0" font-family="Arial" font-size="12" fill="#b91c1c" font-weight="400" xml:space="preserve">
+    <tspan x="0 8.7 15.3 22 25.3 28.7 31.3 38">Red tint</tspan>
+  </text>
+  <text x="0" y="336" id="colors-1" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="41.4"> </tspan>
+    <tspan x="44.7">|</tspan>
+  </text>
+  <text x="0" y="336" id="colors-2" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="400" xml:space="preserve">
+    <tspan x="47.8"> </tspan>
+    <tspan x="51.1 59.8 66.5 70.5 76.5 79.8 86.5 89.1 95.8">Dark blue</tspan>
+  </text>
+  <text x="0" y="336" id="colors-3" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="102.5"> </tspan>
+    <tspan x="105.8">|</tspan>
+  </text>
+  <text x="0" y="336" id="colors-4" font-family="Arial" font-size="12" fill="#2d6a4f" font-weight="400" xml:space="preserve">
+    <tspan x="109"> </tspan>
+    <tspan x="112.3 119.6 126.3 130.3 137 143 146.3 149.6 156.3 160.3 167 173.6">Forest green</tspan>
+  </text>
+  <text x="0" y="336" id="colors-5" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="180.3"> </tspan>
+    <tspan x="183.7">|</tspan>
+  </text>
+  <text x="0" y="336" id="colors-6" font-family="Arial" font-size="12" fill="#6c757d" font-weight="400" xml:space="preserve">
+    <tspan x="186.8"> </tspan>
+    <tspan x="190.1 199.4 203.4 210.1 216.1 219.4 222.8 229.4 235.4">Gray text</tspan>
+  </text>
+  <rect x="218.12" y="347.14" width="3.33" height="13.41" fill="#ffff00" />
+  <rect x="221.46" y="347.14" width="87.36" height="13.41" fill="#ffff00" />
+  <text x="0" y="358" id="effects-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="0 8 14.7 21.4 28 34.7 43.4 46.7 50 56.7 62.7">Shadow text</tspan>
+  </text>
+  <text x="0" y="358" id="effects-1" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="66"> </tspan>
+    <tspan x="69.4">|</tspan>
+  </text>
+  <text x="0" y="358" id="effects-2" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="72.5"> </tspan>
+    <tspan x="75.8 85.2 89.2 95.8 102.5 105.2 111.8 118.5 121.9 125.2 128.5 135.2 141.2">Gradient text</tspan>
+  </text>
+  <text x="0" y="358" id="effects-3" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="144.5"> </tspan>
+    <tspan x="147.9">|</tspan>
+  </text>
+  <text x="0" y="358" id="effects-4" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="151"> </tspan>
+    <tspan x="154.3 162.3 165.6 169.6 176.3 182.3 189 192.3 195.7 202.3 208.3">Stroke text</tspan>
+  </text>
+  <text x="0" y="358" id="effects-5" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="211.7"> </tspan>
+    <tspan x="215">|</tspan>
+  </text>
+  <text x="0" y="358" id="effects-6" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="218.1"> </tspan>
+    <tspan x="221.5 230.1 232.8 239.5 246.1 248.8 251.5 258.1 264.8 268.2 271.5 281.5 288.2 292.2 298.2 304.8">Highlight marker</tspan>
+  </text>
+  <text x="0" y="380" id="letter-spacing-0" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="0 12 22.7 30.7 41.3 52 62.7 70 80.7 91.4">Spread out</tspan>
+  </text>
+  <text x="0" y="380" id="letter-spacing-1" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="98.7"> </tspan>
+    <tspan x="102">|</tspan>
+  </text>
+  <text x="0" y="380" id="letter-spacing-2" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="105.2"> </tspan>
+    <tspan x="108.5 113.5 119.2 124.8 130.5 136.2 141.9 146.9 152.5">condensed</tspan>
+  </text>
+  <text x="0" y="380" id="letter-spacing-3" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="158.2"> </tspan>
+    <tspan x="161.6">|</tspan>
+  </text>
+  <text x="0" y="380" id="letter-spacing-4" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="164.7"> </tspan>
+    <tspan x="168 176.7 184.7 192.7 200.7 209.3 218 226 234 242 245.4 252.7 260.7 268.7">UPPERCASE TEXT</tspan>
+  </text>
+  <text x="0" y="380" id="letter-spacing-5" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="276"> </tspan>
+    <tspan x="279.4">|</tspan>
+  </text>
+  <text x="0" y="380" id="letter-spacing-6" font-family="Arial" font-size="12" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="282.5"> </tspan>
+    <tspan x="285.8 294.5 301.1 307.8 310.5 313.8 320.5 323.2 325.8 331.8 338.5 341.8 353.2 359.8 363.8 370.5">Capitalize Words</tspan>
+  </text>
+  <text x="0" y="406" id="scripts-0" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="0 7.3 16.5 22.6 25.1 27.5 30.6 36.1 42.2 48.3">Small caps</tspan>
+  </text>
+  <text x="0" y="406" id="scripts-1" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="53.8"> </tspan>
+    <tspan x="57.6">|</tspan>
+  </text>
+  <text x="0" y="406" id="scripts-2" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="61.1"> </tspan>
+    <tspan x="64.9 67.9 70.9 78.4 86 89.7 93.5 98 105.5 109.3 116.9 120.6 123.6 131.2">light rotation</tspan>
+  </text>
+  <text x="0" y="406" id="scripts-3" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="138.7"> </tspan>
+    <tspan x="142.5">|</tspan>
+  </text>
+  <text x="0" y="406" id="scripts-4" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="146"> </tspan>
+    <tspan x="149.8 152.7 156 159.2 162.5 164.4 167.3 170.3 172.2 173.5 176.8">superscript</tspan>
+  </text>
+  <text x="0" y="406" id="scripts-6" font-family="Arial" font-size="13.56" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="178.4"> </tspan>
+    <tspan x="182.2 189.7 197.2 201.8 213.1 220.6">normal</tspan>
+  </text>
+  <text x="0" y="406" id="scripts-8" font-family="Arial" font-size="5.85" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="223.6"> </tspan>
+    <tspan x="227.4 230.3 233.6 236.8 239.7 242.7 244.6 245.9 249.2">subscript</tspan>
+  </text>
+  <text x="0" y="455" id="languages-section-0" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.5 11.3 15.1 26.4 34.7 38.4 42.9 46.7 50.5 54.2 62.5 70.8 79.1 86.6 90.4 94.2 98.7 106.2 113.8">4. Multilingual text</tspan>
+  </text>
+  <text x="0" y="485" id="russian-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.3 13.5 19.6 25.7 31.2 38">Русский</tspan>
+  </text>
+  <text x="0" y="485" id="russian-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="44.7 47.8 50.8 58.7 64.9 71 76.8 83 88 91.1 94.1 101.7 107.8 113.9 117 120 128 133 139.1 142.2 148.6 154.7 162.3 168.4 174.5 180 185 191.1 197.2 203.5 209.7 215.6 218.7 224.6 230.8 237.2 243.6 249.7 255.8 263.2 268 274.2 277.2 282 288.2 294.3 300.4 306.8 313.3 319.4 325.7 333.6">: Привет, мир! Это демонстрация поддержки кириллицы.</tspan>
+  </text>
+  <text x="0" y="506" id="english-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.3 14.1 20.8 23.8 26.9 33">English</tspan>
+  </text>
+  <text x="0" y="506" id="english-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="39.7 42.8 45.8 52.6 58.7 61.1 66.6 69.7 72.1 77.6 80.7 86.8 92.9 96 103.3 109.4 115.5 118 120.4 125.9 132 135.1 138.2 144.3 149.8 152.8 155.9 162 167.5 173.6 182.8 188.9 191.3 197.5 200.5 203.6 206.6 209.7 212.7 218.2 224.4 230.5 238.4 243.9 247 253.1 259.2 262.3 264.7 270.8 273.9 279.4 284.9 288.5 291 297.1 300.2 303.2 311.2 313.6 316.7 322.8 325.8 332 334.4 337.5 340.5 346.6 350.3 356.4 362.5 365.6 368.6 374.1 377.2 382.7 385.1 391.3 396.8">: This is an English text example. It shows Latin script with different styles.</tspan>
+  </text>
+  <text x="0" y="527" id="chinese-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 8.3">中文</tspan>
+  </text>
+  <text x="0" y="527" id="chinese-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="16.5 19.6 22.6 30.9 39.1 47.4 55.6 63.9 72.1 80.4 88.6 96.9 105.1 113.4 121.6 129.9 138.1 146.4 154.6 162.9 171.1 179.4 187.6 195.9 204.1">: 这是一个中文示例。本软件支持汉字。你好，世界！</tspan>
+  </text>
+  <text x="0" y="548" id="arabic-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 2.4 7.3 13.3 18.1 25.2 32.3">العربية</tspan>
+  </text>
+  <text x="0" y="548" id="arabic-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="36.1 39.1 42.2 45.3 49 51.3 54.3 60.1 72.2 75.2 81.2 86.6 94.4 101.5 104.5 107.6 109.9 115.4 121 127 130.1 133.1 135.4 141 147 152.3 160.2 167.2 170.3 173.4 181.2 187.8 195.7 203.5 206.6 210.3 216.1 219.1 221.4 227 234 237.7 244.7 250.5 253.6 255.9 261.4 268.5 271.5 273.8 279.4 286.4 295.4 297.7 303.1 306.1 309.2 312.9 318.3 324.5 332.3 334.6">: هذا نص عربي. اللغة العربية تكتب من اليمين إلى اليسار. مرحبا!</tspan>
+  </text>
+  <text x="0" y="569" id="hindi-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 8.3 16.5 24.8 33 41.3">हिन्दी</tspan>
+  </text>
+  <text x="0" y="569" id="hindi-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="49.5 52.6 55.6 63.9 72.1 75.2 83.4 91.7 99.9 108.2 116.4 124.7 127.7 136 144.2 152.5 155.5 163.8 172 175.1 183.3 191.6 199.8 208.1 216.3 224.6 227.6 235.9 244.1 252.4 255.4 263.7 271.9 280.2 288.4 296.7 304.9">: यह हिन्दी पाठ का उदाहरण है। नमस्ते!</tspan>
+  </text>
+  <text x="0" y="590" id="greek-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.3 13.5 19.6 26.3 32.4 35.5 41.6">Ελληνικά</tspan>
+  </text>
+  <text x="0" y="590" id="greek-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="48.4 51.4 54.5 61.8 67.8 72.2 78.3 81.3 86.2 88.7 94.2 100.6 103 106.1 111 116.5 122.8 125.9 133.5 139.8 146.1 152.4 158.6 163.5 165.9 171.4 177.7 184.1 187.2 192.1 197.6 203.1 209.2 214.7 217.1 222.6 228.7 234 237.1 242.6 248.1 256.7 263.5 270.3 276.6 281.9 285 288 294.1 299 301.4 307.8 310.9 317.7 323.8 329.8 332.8 340.2 346.3 353.1 359.4 364.3">: Αυτό είναι ένα παράδειγμα ελληνικής γλώσσας. Γειά σου Κόσμε!</tspan>
+  </text>
+  <text x="0" y="611" id="german-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.9 14.1 20.8 24.4 30.6 36.7">Deutsch</tspan>
+  </text>
+  <text x="0" y="611" id="german-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="43.4 46.5 49.5 57.5 59.9 66 71.5 74.6 77 82.5 85.6 88.6 94.7 97.2 103.3 106.4 112.5 118.6 124.7 127.8 133.3 138.8 144.9 151 154.7 157.7 164.4 170.6 176.1 179.1 182.2 185.2 192 198.1 200.5 206.6 209.7 212.7 220.7 229.9 232.3 238.4 244.5 247.6 253.7 256.8 259.8 265.9 269 272 278.2 281.2 284.3 290.4">: Dies ist ein deutscher Text. Zeigt Umlaute: ä, ö, ü.</tspan>
+  </text>
+  <text x="0" y="632" id="french-0" font-family="Arial" font-size="11" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 6.7 11 17.1 23.8 30 36.1 39.1">Français</tspan>
+  </text>
+  <text x="0" y="632" id="french-1" font-family="Arial" font-size="11" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="45.3 48.3 51.4 58.7 64.2 70.3 79.5 85.6 88 94.2 97.2 103.3 109.5 112.5 115.6 121.7 127.2 130.2 136.4 139.4 142.5 146.1 152.2 158.4 163.9 170 172.4 177.9 181 187.1 192.6 198.7 204.2 207.3 213.4 218.9 224.4 230.5 236.6 239.7 245.2 248.2 251.3 257.4 260.5 263.5 269.6 272.7 275.8 281.3 284.3 287.4 293.5">: Exemple de texte français avec accents: é, è, ç, à.</tspan>
+  </text>
+  <text x="0" y="671" id="align-left-text-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="0 4 7.3 14 18 22 25.3 32 35.3 38.7 46 53.3 64 70.7 78 82">[left alignment]</tspan>
+  </text>
+  <text x="0" y="671" id="align-left-text-1" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="86"> </tspan>
+    <tspan x="89.3 101.5 112.7 124.9 137.1 149.3 157.1 168.2 180.4 192.7">Typography</tspan>
+  </text>
+  <text x="0" y="671" id="align-left-text-2" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="203.8"> </tspan>
+    <tspan x="207.7 210.8">is</tspan>
+  </text>
+  <text x="0" y="671" id="align-left-text-3" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="217.8"> </tspan>
+    <tspan x="221.7 226.3 234.9 242.7 246.6 254.3 259.8 264.5 268.3 276.1 284.7 293.2 297.1 301.8 309.6 317.4 325.9 334.5 338.4 346.9 355.5">the art and technique</tspan>
+  </text>
+  <text x="0" y="671" id="align-left-text-4" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="363.3"> </tspan>
+    <tspan x="367.1 374.9 378.8 382.7 390.5 395.2 399.8 407.6 415.4 423.2 426.3 434.1 441.9 445.7 449.6 456.6 464.4 472.2">of arranging type.</tspan>
+  </text>
+  <text x="0" y="671" id="align-left-text-5" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="476.1"> </tspan>
+    <tspan x="480 491.5 500.4 504.9 513.8 523.6 532.4">Balance</tspan>
+  </text>
+  <text x="0" y="671" id="align-left-text-6" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="541.4"> </tspan>
+    <tspan x="545.2 553 560.8 564.7 574.8 582.6 590.4">between</tspan>
+    <tspan x="598.2"> </tspan>
+  </text>
+  <text x="0" y="695" id="align-left-text-6" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="0 3.9 11.7 16.3 28 31.9 39.7 47.5 55.2 59.1 63 70.8 78.6 85.6 89.5 92.6 100.4 108.2 112.1 116 120.6 123.7 131.5 135.4 139.3">form and function. (left)</tspan>
+  </text>
+  <text x="20.32" y="736" id="align-center-text-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="20.3 24.3 31 37.7 45 49 55.7 60.3 63.7 70.3 73.7 77 84.3 91.7 102.3 109 116.3 120.3">[center alignment]</tspan>
+  </text>
+  <text x="20.32" y="736" id="align-center-text-1" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="124.3"> </tspan>
+    <tspan x="127.7 139.9 151 163.2 175.4 187.7 195.4 206.6 218.8 231">Typography</tspan>
+  </text>
+  <text x="20.32" y="736" id="align-center-text-2" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="242.1"> </tspan>
+    <tspan x="246 249.1">is</tspan>
+  </text>
+  <text x="20.32" y="736" id="align-center-text-3" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="256.1"> </tspan>
+    <tspan x="260 264.7 273.2 281 284.9 292.7 298.1 302.8 306.7 314.5 323 331.6 335.5 340.1 347.9 355.7 364.3 372.8 376.7 385.2 393.8">the art and technique</tspan>
+  </text>
+  <text x="20.32" y="736" id="align-center-text-4" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="401.6"> </tspan>
+    <tspan x="405.5 413.3 417.1 421 428.8 433.5 438.1 445.9 453.7 461.5 464.6 472.4 480.2 484.1 488 495 502.8 510.5">of arranging type.</tspan>
+  </text>
+  <text x="20.32" y="736" id="align-center-text-5" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="514.4"> </tspan>
+    <tspan x="518.3 529.9 538.8 543.2 552.1 561.9 570.8">Balance</tspan>
+  </text>
+  <text x="189.5" y="760" id="align-center-text-6" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="189.5 197.3 205.1 209 219.1 226.9 234.6 242.4 246.3 250.2 258 262.7 274.3 278.2 286 293.8 301.6 305.5 309.3 317.1 324.9 331.9 335.8 338.9 346.7 354.5 358.4 362.3 366.9 373.9 381.7 389.5 393.4 401.2 405.8">between form and function. (center)</tspan>
+  </text>
+  <text x="49.99" y="801" id="align-right-text-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="50 54 58.7 62 69.3 76.7 80.6 84 90.7 94 97.3 104.7 112 122.7 129.3 136.7 140.7">[right alignment]</tspan>
+  </text>
+  <text x="49.99" y="801" id="align-right-text-1" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="144.7"> </tspan>
+    <tspan x="148 160.2 171.3 183.5 195.8 208 215.8 226.9 239.1 251.3">Typography</tspan>
+  </text>
+  <text x="49.99" y="801" id="align-right-text-2" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="262.4"> </tspan>
+    <tspan x="266.3 269.4">is</tspan>
+  </text>
+  <text x="49.99" y="801" id="align-right-text-3" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="276.4"> </tspan>
+    <tspan x="280.3 285 293.5 301.3 305.2 313 318.4 323.1 327 334.8 343.3 351.9 355.8 360.4 368.2 376 384.6 393.1 397 405.6 414.1">the art and technique</tspan>
+  </text>
+  <text x="49.99" y="801" id="align-right-text-4" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="421.9"> </tspan>
+    <tspan x="425.8 433.6 437.5 441.4 449.1 453.8 458.5 466.3 474 481.8 484.9 492.7 500.5 504.4 508.3 515.3 523.1 530.9">of arranging type.</tspan>
+  </text>
+  <text x="49.99" y="801" id="align-right-text-5" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="534.7"> </tspan>
+    <tspan x="538.6 550.2 559.1 563.5 572.4 582.2 591.1">Balance</tspan>
+  </text>
+  <text x="390.67" y="825" id="align-right-text-6" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="390.7 398.5 406.2 410.1 420.2 428 435.8 443.6 447.5 451.4 459.2 463.8 475.5 479.4 487.2 495 502.7 506.6 510.5 518.3 526.1 533.1 537 540.1 547.9 555.7 559.6 563.4 568.1 572.8 575.9 583.7 591.4 595.3">between form and function. (right)</tspan>
+  </text>
+  <text x="0" y="866" id="align-justify-text-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="0 4 7.3 14.7 21.3 25.3 28.7 32.7 39.3 42.7 49.3 52.7 56 63.3 70.7 81.3 88 95.3 99.3">[justify alignment]</tspan>
+  </text>
+  <text x="0" y="866" id="align-justify-text-1" font-family="Arial" font-size="20" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="103.3"> </tspan>
+    <tspan x="114.9 127.1 138.3 150.5 162.7 174.9 182.7 193.8 206 218.3">Typography</tspan>
+  </text>
+  <text x="0" y="866" id="align-justify-text-2" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="229.4"> </tspan>
+    <tspan x="241.5 244.7">is</tspan>
+  </text>
+  <text x="0" y="866" id="align-justify-text-3" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="251.7"> </tspan>
+    <tspan x="263.8 268.5 277 284.8 288.7 296.5 301.9 306.6 310.5 318.3 326.8 335.4 339.3 343.9 351.7 359.5 368 376.6 380.5 389 397.6">the art and technique</tspan>
+  </text>
+  <text x="0" y="866" id="align-justify-text-4" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="405.4"> </tspan>
+    <tspan x="417.5 425.3 429.2 433.1 440.9 445.5 450.2 458 465.8 473.6 476.7 484.5 492.2 496.1 500 507 514.8 522.6">of arranging type.</tspan>
+  </text>
+  <text x="0" y="866" id="align-justify-text-5" font-family="Arial" font-size="16" fill="#1e3a8a" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="526.5"> </tspan>
+    <tspan x="538.6 550.2 559.1 563.5 572.4 582.2 591.1">Balance</tspan>
+  </text>
+  <text x="0" y="890" id="align-justify-text-6" font-family="Arial" font-size="14" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="0 7.8 15.6 19.5 29.6 37.4 45.1 52.9 56.8 60.7 68.5 73.2 84.8 88.7 96.5 104.3 112.1 116 119.8 127.6 135.4 142.4 146.3 149.4 157.2 165 168.9 172.8 177.4 180.5 188.3 195.3 199.2 202.3 206.2 213.2">between form and function. (justify)</tspan>
+  </text>
+  <text x="0" y="935" id="lineheight-section-0" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.5 11.3 15.1 23.4 27.1 35.4 43 46.7 54.3 62.5 70.1 77.6 81.4 89.7 98 101.7 106.2 110 113.8 122.1 129.6 139.4 146.9 150.7 159 167.3 171.8">6. Line spacing (lineHeight)</tspan>
+  </text>
+  <text x="0" y="962" id="lineheight-1-0-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="0 4 10.7 14 20.7">[1.0]</tspan>
+  </text>
+  <text x="0" y="962" id="lineheight-1-0-1" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="24.7"> </tspan>
+    <tspan x="28 36 43.2 50.4 54 61.3 68.5 71.4 77.9 84.4 88 95.2 99.5 106.8 116.2 123.4 127 130.6 137.8 144.3 148 150.8 158.1 168.9 176.1 182.6 186.2 193.5 200 207.2 211.5 215.1 218.8 226 233.2 236.8 239.7 246.9 253.4 259.9 263.6 270.8 278 285.2 288.9 292.5 300.4 303.3 310.5 317.8 321.4 325 331.5 338.7 345.9 352.4 355.3 362.6 369.8 373.4 382.8 385.7 389.3 396.5 400.1 407.4 414.6 418.2 425.4 431.9 435.5 439.9 447.1 450.7 453.6 460.8 468.1 475.3 478.2 485.4 492.6">The quick brown fox jumps over the lazy dog. Tight spacing with no extra leading.</tspan>
+  </text>
+  <text x="0" y="981" id="lineheight-1-15-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="0 4 10.7 14 20.7 27.4">[1.15]</tspan>
+  </text>
+  <text x="0" y="981" id="lineheight-1-15-1" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="31.4"> </tspan>
+    <tspan x="34.7 42.6 49.9 57.1 60.7 67.9 75.2 78 84.5 91 94.7 101.9 106.2 113.4 122.8 130.1 133.7 137.3 144.5 151 154.6 157.5 164.7 175.6 182.8 189.3 192.9 200.1 206.6 213.9 218.2 221.8 225.4 232.7 239.9 243.5 246.4 253.6 260.1 266.6 270.2 277.5 284.7 291.9 295.5 299.1 308.5 315.8 319.4 326.6 333.8 336.7 340.3 343.9 346.8 349.7 357 364.2 367.8 374.3 381.5 388.8 395.3 398.1 405.4 412.6 416.2 419.1 426.3 429.9 433.6 440.8 447.3 450.9 454.5 457.4 464.6 471.1 478.4 485.6 489.2">The quick brown fox jumps over the lazy dog. Default line spacing in text layout.</tspan>
+  </text>
+  <text x="0" y="1002" id="lineheight-1-5-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="0 4 10.7 14 20.7">[1.5]</tspan>
+  </text>
+  <text x="0" y="1002" id="lineheight-1-5-1" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="24.7"> </tspan>
+    <tspan x="28 36 43.2 50.4 54 61.3 68.5 71.4 77.9 84.4 88 95.2 99.5 106.8 116.2 123.4 127 130.6 137.8 144.3 148 150.8 158.1 168.9 176.1 182.6 186.2 193.5 200 207.2 211.5 215.1 218.8 226 233.2 236.8 239.7 246.9 253.4 259.9 263.6 270.8 278 285.2 288.9 292.5 301.9 309.1 319.9 323.5 330.8 335.1 338.7 345.9 353.2 356.1 363.3 366.9 371.2 378.5 385.7 392.9 395.8 403 410.3 413.9 420.4 427.6 434.8 441.3 444.2 451.4 458.7">The quick brown fox jumps over the lazy dog. Comfortable reading spacing.</tspan>
+  </text>
+  <text x="0" y="1029" id="lineheight-2-0-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="0 4 10.7 14 20.7">[2.0]</tspan>
+  </text>
+  <text x="0" y="1029" id="lineheight-2-0-1" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="24.7"> </tspan>
+    <tspan x="28 36 43.2 50.4 54 61.3 68.5 71.4 77.9 84.4 88 95.2 99.5 106.8 116.2 123.4 127 130.6 137.8 144.3 148 150.8 158.1 168.9 176.1 182.6 186.2 193.5 200 207.2 211.5 215.1 218.8 226 233.2 236.8 239.7 246.9 253.4 259.9 263.6 270.8 278 285.2 288.9 292.5 301.9 309.1 316.3 323.6 326.4 333.7 337.3 343.8 351 358.2 364.7 367.6 374.9 382.1 385.7 398.7 402.3 409.5 416.8 423.3 429.8 433.4 437 444.2 448.6 452.2 459.4 466.6 473.9 481.1 484.7 491.9 495.5 498.4 505.7 512.9 519.4">The quick brown fox jumps over the lazy dog. Double spacing — easy for annotations.</tspan>
+  </text>
+  <text x="0" y="1065" id="lineheight-3-0-0" font-family="Arial" font-size="12" fill="#1e3a8a" font-weight="700" xml:space="preserve">
+    <tspan x="0 4 10.7 14 20.7">[3.0]</tspan>
+  </text>
+  <text x="0" y="1065" id="lineheight-3-0-1" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="24.7"> </tspan>
+    <tspan x="28 36 43.2 50.4 54 61.3 68.5 71.4 77.9 84.4 88 95.2 99.5 106.8 116.2 123.4 127 130.6 137.8 144.3 148 150.8 158.1 168.9 176.1 182.6 186.2 193.5 200 207.2 211.5 215.1 218.8 226 233.2 236.8 239.7 246.9 253.4 259.9 263.6 270.8 278 285.2 288.9 292.5 301.1 308.4 312.7 319.2 322.8 325.7 332.9 340.2 346.7 353.9 357.5 364 371.2 378.5 385 387.9 395.1 402.3">The quick brown fox jumps over the lazy dog. Very loose spacing.</tspan>
+  </text>
+  <text x="0" y="1124" id="lists-section-0" font-family="Arial" font-size="13.56" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="0 7.5 11.3 15.1 23.4 27.1 34.7 39.2 46.7 50.5 55 63.3 71.6 75.3 79.1 86.7 91.2 94.9 98.7 107 114.5 122.1 126.6 134.1 142.4 146.2 149.9 158.2 166.5 178.6 186.8 194.4 199.7 207.2 215.5">7. Lists (bullet, nested, numbered)</tspan>
+  </text>
+  <text x="12.48" y="1152" id="bullet-1-0" font-family="Arial" font-size="11.7" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="12.5">•</tspan>
+  </text>
+  <text x="12.48" y="1152" id="bullet-1-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="19.5 28.2 35.4 38.3 41.2 48.4 52 55.6 58.5 62.1 69.4 80.2 83.8 91 98.3 105.5 109.1 122.1 125.7 132.9 135.8 142.3 148.8 152.4 163.3 170.5 174.8 181.3 188.6 192.9 196.5 203.7 207.3 211 213.8 221.1 227.6 234.8 237.7 241.3">Bullet item one — disc marker at level 0</tspan>
+  </text>
+  <text x="12.48" y="1172" id="bullet-2-0" font-family="Arial" font-size="11.7" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="12.5">•</tspan>
+  </text>
+  <text x="12.48" y="1172" id="bullet-2-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="19.5 28.2 35.4 38.3 41.2 48.4 52 55.6 58.5 62.1 69.4 80.2 83.8 87.4 96.8 104 107.6 117 119.9 123.5">Bullet item two with</tspan>
+  </text>
+  <text x="12.48" y="1172" id="bullet-2-1" font-family="Arial" font-size="13" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="130.8"> </tspan>
+    <tspan x="134.4 142.3 150.3 153.9">bold</tspan>
+  </text>
+  <text x="12.48" y="1172" id="bullet-2-2" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="161.8"> </tspan>
+    <tspan x="165.4 172.6 179.9">and</tspan>
+  </text>
+  <text x="12.48" y="1172" id="bullet-2-3" font-family="Arial" font-size="13" fill="#000" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="187.1"> </tspan>
+    <tspan x="190.7 193.6 197.2 204.4 207.3 210.2">italic</tspan>
+  </text>
+  <text x="12.48" y="1172" id="bullet-2-4" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="216.7"> </tspan>
+    <tspan x="220.3 224.7 231.9 239.1">runs</tspan>
+  </text>
+  <text x="29.01" y="1192" id="bullet-nested-1-0" font-family="Arial" font-size="11.7" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="29">○</tspan>
+  </text>
+  <text x="29.01" y="1192" id="bullet-nested-1-0" font-family="Arial" font-size="13" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="39 48.4 55.6 62.1 65.7 73 80.2 83.8 91 98.3 101.1 104 111.3 114.9 118.5 122.8 125.7 132.9 139.4 146.7 149.6 153.2 160.4 164.7 168.3 181.3 185 191.5 194.3 198.7 205.2 208.1 215.3 218.9 229.7 237 241.3 247.8 255">Nested bullet (level 1) — circle marker</tspan>
+  </text>
+  <text x="51.43" y="1212" id="bullet-nested-2-0" font-family="Arial" font-size="11.7" fill="#555" font-weight="400" xml:space="preserve">
+    <tspan x="51.4">▪</tspan>
+  </text>
+  <text x="51.43" y="1212" id="bullet-nested-2-0" font-family="Arial" font-size="13" fill="#555" font-weight="400" xml:space="preserve">
+    <tspan x="58.5 67.9 75.1 82.3 89.6 93.2 100.4 107.6 114.1 117.8 125 132.2 135.8 143.1 150.3 153.2 156.1 163.3 166.9 170.5 174.9 177.7 185 191.5 198.7 201.6 205.2 212.4 216.8 220.4 233.4 237 243.5 250.7 257.9 265.2 269.5 276.7 280.3 291.2 298.4 302.7 309.2 316.5">Deep nested bullet (level 2) — square marker</tspan>
+  </text>
+  <text x="12.48" y="1232" id="bullet-3-0" font-family="Arial" font-size="11.7" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="12.5">•</tspan>
+  </text>
+  <text x="12.48" y="1232" id="bullet-3-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="19.5 28.2 35.4 41.9 48.4 52 55.6 62.9 66.5 69.4 76.6 83.1 90.3 93.2 96.8 104 107.7 114.9 118.5 122.1 129.3 133.7 137.3 144.5 151.7 158.2 161.9 164.7 172">Back to level 0 after nesting</tspan>
+  </text>
+  <text x="5.41" y="1260" id="number-1-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="5.4">1.</tspan>
+    <tspan x="19.5 27.4 30.3 34.7 41.2 44.8 48.4 55.6 62.8 73.7 80.9 88.1 92.5 99.7 106.9 110.5 117 120.6 127.9">First numbered step</tspan>
+  </text>
+  <text x="5.41" y="1280" id="number-2-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="5.4">2.</tspan>
+    <tspan x="19.5 28.2 35.4 41.9 49.1 56.4 63.6 67.2 74.4 81.7 92.5 99.7 107 111.3 118.5 125.7 129.4 135.9 139.5 146.7 153.9 157.5 166.9 169.8 173.4 180.7 184.3 187.2 194.4 201.6 208.8 216.1 220.4 224 227.6 234.9 241.4 245 248.6 252.2 259.4 266.7 270.3 273.9 284.7 291.9 298.4 302 311.4 315.8 323 330.2 333.8 341.1 348.3 355.5 362.8 370 377.2 380.1 387.3 394.6 398.2 405.4 412.6 416.2 419.9 424.2 431.4 442.2 449.5 453.1 462.5 465.4 472.6 476.2">Second numbered step with longer text that may wrap depending on frame width</tspan>
+  </text>
+  <text x="5.41" y="1300" id="number-3-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="5.4">3.</tspan>
+    <tspan x="19.5 27.4 34.7 37.6 41.9 49.1 52.7 60 67.2 78 85.2 92.5 96.8 104 111.3 114.9 121.4 125 132.2">Third numbered step</tspan>
+  </text>
+  <text x="11.13" y="1326" id="number-roman-1-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="11.1">I.</tspan>
+    <tspan x="21.6 31 38.2 49 56.3 63.5 67.1 74.3 81.6 92.4 99.6 104 111.2 114.1 117.7 120.6 123.5 130 133.6 137.2 150.2 153.8 156.7 160.3 167.5 178.4 182">Roman numeral list — item I</tspan>
+  </text>
+  <text x="7.51" y="1346" id="number-roman-2-0" font-family="Arial" font-size="13" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="7.5">II.</tspan>
+    <tspan x="21.6 31 38.2 49 56.3 63.5 67.1 74.3 81.6 92.4 99.6 104 111.2 114.1 117.7 120.6 123.5 130 133.6 137.2 150.2 153.8 156.7 160.3 167.5 178.4 182 185.6">Roman numeral list — item II</tspan>
+  </text>
+</svg>

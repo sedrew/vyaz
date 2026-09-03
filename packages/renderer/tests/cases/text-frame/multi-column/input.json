@@ -1,0 +1,113 @@
+{
+  "env": "arial",
+  "profile": "frame-fit",
+  "frame": {
+    "wrap": true,
+    "width": 500,
+    "height": 200,
+    "columns": {
+      "count": 2,
+      "gap": 20
+    },
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Typography "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "is the art and technique of arranging type to make written language legible, readable and appealing. "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#000",
+            "text": "Layout "
+          },
+          {
+            "type": "text",
+            "fontSize": 14,
+            "fontWeight": "normal",
+            "color": "#333",
+            "text": "engine processes text through multiple stages: compilation, preparation, line breaking, positioning, and validation."
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 8,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontSize": 13,
+            "fontWeight": "normal",
+            "color": "#444",
+            "text": "Second paragraph "
+          },
+          {
+            "type": "text",
+            "fontSize": 13,
+            "fontWeight": "normal",
+            "color": "#666",
+            "text": "with multi-column layout enabled. Text flows from one column to the next."
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "glyph"
+    }
+  }
+}

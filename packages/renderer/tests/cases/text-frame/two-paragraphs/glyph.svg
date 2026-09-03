@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="98.74" height="28" viewBox="0 0 98.74 28">
+  <text x="0" y="11" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 7.3 10 14 20 23.3 26.7 33.3 40 44 50.7 57.4 61.3 68 74.7">First paragraph</tspan>
+  </text>
+  <text x="0" y="25" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 8 14.7 20.7 27.4 34 40.7 44 50.7 57.4 61.4 68.1 74.7 78.7 85.4 92.1">Second paragraph</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="98.74" height="28" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="98.74" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

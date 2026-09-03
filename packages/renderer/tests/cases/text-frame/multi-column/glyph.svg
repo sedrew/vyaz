@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="200" viewBox="0 0 500 200">
+  <text x="0" y="13" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="0 8.6 16.3 24.9 33.4 42 47.4 55.2 63.8 72.3">Typography</tspan>
+  </text>
+  <text x="0" y="13" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="80.1"> </tspan>
+    <tspan x="84 87.1 94.1 98 101.9 109.7 117.5 121.4 129.1 133.8 137.7 141.6 149.4 157.2 164.9 168.8 172.7 180.5 187.5 195.3 203.1 206.2 214 221.8">is the art and technique</tspan>
+    <tspan x="229.6"> </tspan>
+  </text>
+  <text x="0" y="29" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0 7.8 11.7 15.6 23.4 28 32.7 40.5 48.2 56 59.1 66.9 74.7 78.6 82.5 89.5 97.3 105.1 109 112.8 120.6 124.5 136.2 144 151 158.8 162.6 172.8 177.4 180.5 184.4 188.3 196.1">of arranging type to make written</tspan>
+    <tspan x="203.9"> </tspan>
+  </text>
+  <text x="0" y="45" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0 3.1 10.9 18.7 26.5 34.3 42 49.8 57.6 61.5 64.6 72.4 80.2 83.3 91.1 94.2 102 105.9 109.8 114.4 122.2 130 137.8 145.6 153.4 156.5 164.2 168.1 175.9 183.7">language legible, readable and</tspan>
+    <tspan x="191.5"> </tspan>
+  </text>
+  <text x="0" y="61" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0 7.8 15.6 23.4 31.1 38.9 42 45.2 52.9 60.7">appealing.</tspan>
+  </text>
+  <text x="0" y="61" font-family="Arial" font-size="14" fill="#000" font-weight="700" xml:space="preserve">
+    <tspan x="64.6"> </tspan>
+    <tspan x="68.5 77.1 84.8 92.6 101.2 109.7">Layout</tspan>
+  </text>
+  <text x="0" y="61" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="114.4"> </tspan>
+    <tspan x="118.3 126.1 133.9 141.6 144.7 152.5 160.3 164.2 172 176.7 184.4 191.4 199.2 206.2 213.2 221">engine processes</tspan>
+    <tspan x="228"> </tspan>
+  </text>
+  <text x="0" y="77" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="0 3.9 11.7 18.7 22.6 26.5 30.3 38.1 42.8 50.6 58.4 66.2 73.9 77.8 89.5 97.3 100.4 104.3 107.4 115.2 118.3 126.1 130 137 140.8 148.6 156.4 164.2 171.2">text through multiple stages:</tspan>
+    <tspan x="175.1"> </tspan>
+  </text>
+  <text x="260" y="13" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="260 267 274.8 286.4 294.2 297.3 300.5 308.2 312.1 315.2 323 330.8 334.7 338.6 346.4 351 358.8 366.6 374.4 379.1 386.8 390.7 393.8 401.6 409.4 413.3 417.2 420.3 423.4 431.2">compilation, preparation, line</tspan>
+    <tspan x="439"> </tspan>
+  </text>
+  <text x="260" y="29" font-family="Arial" font-size="14" fill="#333" font-weight="400" xml:space="preserve">
+    <tspan x="260 267.8 272.4 280.2 288 295 298.1 305.9 313.7 317.6 321.5 329.3 337.1 344.1 347.2 351.1 354.2 362 369.7 372.8 380.6 388.4 392.3 396.2 404 411.8 419.6 423.4 430.4 438.2 441.3 444.5 452.2 460 463.9 467 474.8 482.6">breaking, positioning, and validation.</tspan>
+  </text>
+  <text x="260" y="52" font-family="Arial" font-size="13" fill="#444" font-weight="400" xml:space="preserve">
+    <tspan x="260 268.7 275.9 282.4 289.6 296.9 304.1 307.7 314.9 322.2 326.5 333.7 341 345.3 352.5 359.7">Second paragraph</tspan>
+  </text>
+  <text x="260" y="52" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">
+    <tspan x="367"> </tspan>
+    <tspan x="370.6 380 382.9 386.5 393.7 397.3 408.1 415.4 418.3 421.9 424.8 429.1 435.6 442.8 445.7 452.9 463.8">with multi-column</tspan>
+    <tspan x="471"> </tspan>
+  </text>
+  <text x="260" y="67" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">
+    <tspan x="260 262.9 270.1 276.6 283.8 291.1 294.7 298.3 305.5 312.8 320 327.2 330.1 337.3 344.6 348.2 351.8 359.7 367 373.5 377.1 380.7 384.3 387.2 394.4 403.8 410.3 413.9 417.5 421.9 429.1 439.9 443.5 450.8 458">layout enabled. Text flows from one</tspan>
+    <tspan x="465.2"> </tspan>
+  </text>
+  <text x="260" y="82" font-family="Arial" font-size="13" fill="#666" font-weight="400" xml:space="preserve">
+    <tspan x="260 266.5 273.7 276.6 283.8 294.7 301.9 305.5 309.1 316.4 320 323.6 330.8 338 341.7 348.9 356.1 362.6 366.2">column to the next.</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="500" height="200" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="500" height="80" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="500" y="0" width="500" height="32" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="500" y="40" width="500" height="45" fill="none" stroke="rgba(180,0,80,0.25)" stroke-width="1" />
+</svg>

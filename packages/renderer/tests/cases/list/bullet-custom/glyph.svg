@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="134" height="56" viewBox="-4 -10 134 56">
+  <text x="6" y="14" font-family="Unifont" font-size="14.4" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="6">★</tspan>
+  </text>
+  <text x="6" y="14" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="24 32 40 48 56 64 72 80 88">Star item</tspan>
+  </text>
+  <text x="6" y="32" font-family="Unifont" font-size="14.4" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="6">★</tspan>
+  </text>
+  <text x="6" y="32" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="24 32 40 48 56 64 72 80 88 96 104 112">Another star</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="6" y="0" width="114" height="36" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="42" viewBox="0 0 80 42">
+  <text x="0" y="11" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000000" textLength="62.02">Hello World</tspan>
+    <tspan x="62.02" textLength="3.33"> </tspan>
+  </text>
+  <text x="0" y="25" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000000" textLength="70.7">How Are You</tspan>
+    <tspan x="70.7" textLength="3.33"> </tspan>
+  </text>
+  <text x="0" y="39" font-family="Arial" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Arial" font-size="12" fill="#000000" textLength="33.35">Today</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="80" height="42" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="74.03" height="42" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

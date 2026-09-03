@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="34" viewBox="-10 -10 80 34">
+  <rect x="0" y="0.5" width="36" height="12" fill="#FFFF00" />
+  <rect x="36" y="0.5" width="6" height="12" fill="#FF0000" />
+  <rect x="42" y="0.5" width="18" height="12" fill="#FF0000" />
+  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#000000" textLength="36">Yellow</tspan>
+  </text>
+  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#FFFFFF" font-weight="400" xml:space="preserve">
+    <tspan x="36" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#FFFFFF" textLength="6"> </tspan>
+    <tspan x="42" font-weight="400" font-style="normal" font-family="Unifont" font-size="12" fill="#FFFFFF" textLength="18">Red</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="60" height="14" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

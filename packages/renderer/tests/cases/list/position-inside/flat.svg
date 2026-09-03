@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="122.4" height="38" viewBox="-10 -10 122.4 38">
+  <text x="0" y="14" font-family="Unifont" font-size="14.4" fill="#000000" font-weight="400" xml:space="preserve">• </text>
+  <text x="14.4" y="14" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">Inside item</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="102.4" height="18" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

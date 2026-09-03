@@ -1,0 +1,63 @@
+{
+  "env": "arial",
+  "profile": "frame-fit",
+  "frame": {
+    "wrap": true,
+    "width": 400,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "Hello World\n\u041f\u0440\u0438\u0432\u0435\u0442 \u041c\u0438\u0440\nWorld of Text",
+            "type": "text"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "pre-line"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "widthBorder": 1
+      },
+      "contentPadding": 10,
+      "preset": "flat"
+    },
+    "browser": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "widthBorder": 1
+      },
+      "contentPadding": 10,
+      "preset": "browser"
+    },
+    "preserve": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "widthBorder": 1
+      },
+      "contentPadding": 10,
+      "preset": "preserve"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true,
+        "widthBorder": 1
+      },
+      "contentPadding": 10,
+      "preset": "glyph"
+    }
+  }
+}
