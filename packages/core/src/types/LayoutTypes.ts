@@ -7,7 +7,7 @@
  * Based on plan.md §2.5 (Output — Physical Box Model / Layout Tree)
  */
 
-import type { TextRun, InlineWidget, TextAlignment } from './Document.js';
+import type { TextRun, ResolvedTextRun, InlineWidget, TextAlignment } from './Document.js';
 
 // ── Span (render atom, formerly FragmentBox) ─────────────────────────────
 
@@ -32,7 +32,7 @@ export interface Span {
    * A snapshot of the source run's style at layout time.
    * Copied from the corresponding `TextRun` in the paragraph's `children` array.
    */
-  style: TextRun;
+  style: ResolvedTextRun;
 
   /** InlineWidget data (if span is an inline-box) */
   inlineWidget?: InlineWidget;
@@ -138,6 +138,24 @@ export interface ParagraphLayoutResult {
   contentWidth: number;
   /** Actual content height (text bbox) */
   contentHeight: number;
+  /** Non-fatal issues (e.g. font fallback/substitution). */
+  warnings?: LayoutWarning[];
+}
+
+/** A non-fatal issue found while laying out. */
+export interface LayoutWarning {
+  /**
+   * - `font-fallback` — a later entry in a `fontFamily` fallback list was used.
+   * - `font-missing`  — no requested family was registered; a substitute was
+   *   used (only under `onMissingFont: 'substitute'`).
+   */
+  type: 'font-fallback' | 'font-missing';
+  /** The first (preferred) family the run asked for. */
+  requested: string;
+  /** The family actually used. */
+  used: string;
+  /** Index of the source run in its paragraph's `children`. */
+  runIndex: number;
 }
 
 // ── Text region for YAML snapshots ───────────────────────────────────────

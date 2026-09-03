@@ -29,8 +29,7 @@ const EXPECTED_EXPORTS = {
   ParagraphLayoutEngine: 'function',
   paragraphLayoutEngine: 'object',
   positionLines: 'function',
-  assertLineInvariants: 'function',
-  linesToYAML: 'function',
+  // assertLineInvariants / linesToYAML moved to the `@vyaz/core/debug` entry.
 
   // TextFrame Layout Engine
   layoutTextFrame: 'function',

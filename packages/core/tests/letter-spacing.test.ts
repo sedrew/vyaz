@@ -42,7 +42,8 @@ function layoutSpan(text: string, letterSpacing?: number, paragraphLetterSpacing
     ],
   };
 
-  const result = paragraphLayoutEngine.layout(para, 500);
+  // request per-glyph advances — several assertions in this file inspect them
+  const result = paragraphLayoutEngine.layout(para, 500, 0, undefined, undefined, undefined, undefined, true);
   expect(result.lines.length).toBeGreaterThanOrEqual(1);
   return result.lines[0].spans[0];
 }
@@ -115,7 +116,7 @@ describe('letterSpacing — width impact', () => {
 
 describe('letterSpacing — integration with compileParagraph', () => {
   test('letterSpacing is preserved in compiled item', async () => {
-    const { compileParagraph } = await import('../src/compile/DocumentCompiler.js');
+    const { compileParagraph } = await import('../src/compile/ParagraphCompiler.js');
 
     const para: Paragraph = {
       style: { alignment: 'left', lineHeight: 1.15, spaceBefore: 0, spaceAfter: 0 },

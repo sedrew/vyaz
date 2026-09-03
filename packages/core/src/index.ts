@@ -40,6 +40,7 @@ export type {
   NumberFormat,
   ListStylePosition,
   ListStyle,
+  ResolvedTextRun,
 } from './types/Document.js';
 // ⚠️ Bun's `bun build --target bun` (and `--target node`) has the same const-inlining
 //    limitation as `--target browser`. Using object spread forces the bundler
@@ -57,6 +58,7 @@ export type {
   Line,
   Span,
   SpanFontMetrics,
+  LayoutWarning,
   SemanticParagraph,
   SemanticLine,
   SemanticFragment,
@@ -78,15 +80,15 @@ export { ParagraphLayoutEngine, paragraphLayoutEngine } from './layout/Paragraph
  */
 export { positionLines } from './layout/PositioningEngine.js';
 
-/**
- * @internal Line box invariant checks for debugging.
- */
-export { assertLineInvariants, linesToYAML } from './layout/LineBoxValidator.js';
-export type { InvariantError } from './layout/LineBoxValidator.js';
+// Line-box invariant checks and YAML snapshots moved to the `@vyaz/core/debug`
+// entry so `js-yaml` and the debug code stay out of the production bundle.
 
 // ── TextFrame Layout Engine — stable ────────────────────────────────────
 export { layoutTextFrame } from './layout/TextFrameLayoutEngine.js';
-export type { TextFrameLayoutResult } from './layout/TextFrameLayoutEngine.js';
+export { createLayoutEngine } from './layout/create-engine.js';
+export type { LayoutEngine, LayoutEngineOptions } from './layout/create-engine.js';
+export type { TextFrameLayoutResult, LayoutOptions, AutofitOutcome } from './layout/TextFrameLayoutEngine.js';
+export type { OnMissingFont } from './layout/resolve-font.js';
 
 // ── Autofit — stable ───────────────────────────────────────────────────
 export { applyScale, findScale } from './layout/AutoFitEngine.js';
@@ -112,8 +114,8 @@ export const defaultBulletChar: (level: number) => string = _dbc;
 export const BULLET_CHARACTERS: Record<number, string> = { ..._BC2 };
 
 // ── Compiler — stable ──────────────────────────────────────────────────
-export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, collapseSegmentWhitespace } from './compile/DocumentCompiler.js';
-export type { PreparedRichInlineItem } from './compile/DocumentCompiler.js';
+export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, collapseSegmentWhitespace } from './compile/ParagraphCompiler.js';
+export type { PreparedRichInlineItem } from './compile/ParagraphCompiler.js';
 
 // ── Font Engine — stable ────────────────────────────────────────────────
 export type { FontFace } from './measure/FontEngine.js';

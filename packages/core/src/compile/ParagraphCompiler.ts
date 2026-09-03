@@ -1,5 +1,5 @@
 /**
- * DocumentCompiler.ts — compile Paragraph → PreparedRichInlineItem[].
+ * ParagraphCompiler.ts — compile Paragraph → PreparedRichInlineItem[].
  *
  * Each TextRun becomes a RichInlineItem for pretext.
  * inline-box: text → \uFFFC, dimensions in metadata.inlineWidget.
@@ -11,7 +11,7 @@
  * Simple JSON-serialisable format — does not depend on pretext directly.
  */
 
-import type { Paragraph, TextRun, TextTransform } from '../types/Document.js';
+import type { Paragraph, TextRun, ResolvedTextRun, TextTransform } from '../types/Document.js';
 import { DEFAULT_TEXT_STYLE } from '../types/Document.js';
 import { transformText } from '../utils/textTransform.js';
 
@@ -62,7 +62,7 @@ export interface PreparedRichInlineItem {
     originalRunIndex: number;
     baselineOffset: number;
     effectiveFontSize: number;
-    style: TextRun;
+    style: ResolvedTextRun;
     inlineWidget?: TextRun['inlineWidget'];
   };
 }
@@ -139,15 +139,18 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
     // Normalize fontWeight to numeric value
     const resolvedFontWeight = normalizeFontWeight(run.fontWeight ?? DEFAULT_TEXT_STYLE.fontWeight);
 
-    // Fill missing style fields from DEFAULT_TEXT_STYLE
-    const resolvedStyle: TextRun = {
+    // Fill missing style fields from DEFAULT_TEXT_STYLE. `fontFamily` may still
+    // be a fallback list here — ParagraphLayoutEngine resolves it to one
+    // concrete family before positioning, which is what makes this a
+    // ResolvedTextRun.
+    const resolvedStyle = {
       ...DEFAULT_TEXT_STYLE,
       ...run,
       fontSize: effectiveFontSize,
       fontWeight: resolvedFontWeight,
       text: run.text,
       type: run.type,
-    } as TextRun;
+    } as unknown as ResolvedTextRun;
 
     const item: PreparedRichInlineItem = {
       text,

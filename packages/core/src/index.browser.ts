@@ -18,20 +18,23 @@ export { ParagraphLayoutEngine, paragraphLayoutEngine } from './layout/Paragraph
 
 /** @internal */
 export { positionLines } from './layout/PositioningEngine.js';
-/** @internal */
-export { assertLineInvariants, linesToYAML } from './layout/LineBoxValidator.js';
+// Invariant checks / YAML snapshots live in the `@vyaz/core/debug` entry.
 
 // ── Utils — stable ─────────────────────────────────────
 export { groupLinesByParagraph } from './utils/groupLinesByParagraph.js';
 
 // ── TextFrame Layout Engine — stable ────────────────────
 export { layoutTextFrame } from './layout/TextFrameLayoutEngine.js';
+export { createLayoutEngine } from './layout/create-engine.js';
+export type { LayoutEngine, LayoutEngineOptions } from './layout/create-engine.js';
+export type { LayoutOptions, TextFrameLayoutResult, AutofitOutcome } from './layout/TextFrameLayoutEngine.js';
+export type { OnMissingFont } from './layout/resolve-font.js';
 
 // ── Autofit — stable ────────────────────────────────────
 export { applyScale, findScale } from './layout/AutoFitEngine.js';
 
 // ── Compiler — stable ───────────────────────────────────
-export { compileParagraph, getParagraphText, makeFontToken, collapseSegmentWhitespace, splitParagraphByHardBreaks } from './compile/DocumentCompiler.js';
+export { compileParagraph, getParagraphText, makeFontToken, collapseSegmentWhitespace, splitParagraphByHardBreaks } from './compile/ParagraphCompiler.js';
 
 // ── Font metrics — stable ───────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';

@@ -1,14 +1,14 @@
 /**
- * LineBoxValidator.ts — invariant checks and YAML serialization.
+ * LineBoxValidator.ts — Parley-inspired line-box invariant checks.
  *
- * Parley-inspired invariant checks:
- *   NO_OVERLAP, MONOTONIC_Y, INDEX_CONSIST, WIDTH_FIT, BASELINE_EQ
+ * Invariants: NO_OVERLAP, MONOTONIC_Y, INDEX_CONSIST, WIDTH_FIT, BASELINE_EQ.
  *
- * YAML snapshots: semantic data only (no metric noise).
+ * YAML snapshot serialization lives in `../debug/lines-to-yaml.ts` (pulled in
+ * only through the `@vyaz/core/debug` entry, so `js-yaml` stays out of the
+ * production bundle).
  */
 
-import { dump } from 'js-yaml';
-import type { Line, Span, SemanticParagraph } from '../types/LayoutTypes.js';
+import type { Line } from '../types/LayoutTypes.js';
 
 const EPSILON = 0.5; // subpixel tolerance
 
@@ -114,49 +114,3 @@ export function assertLineInvariants(
   //   throw new Error(`LineBox invariants violated:\n${msg}`);
   // }
 }
-
-// ── YAML serialization ─────────────────────────────────────────────────
-
-/** Span style label for snapshot */
-function spanStyleLabel(span: Span): 'bold' | 'italic' | 'normal' {
-  if (span.style.fontStyle === 'italic') return 'italic';
-  const w = span.style.fontWeight;
-  if (w === 'bold' || w === 700) return 'bold';
-  return 'normal';
-}
-
-/**
- * Convert Line[] to YAML string for snapshots.
- * Only semantic data: text, x, width, style.
- * No glyphAdvances, fontMetrics (noise), inlineWidget.
- */
-export function linesToYAML(
-  lines: Line[],
-  paragraphWidth: number,
-  paragraphHeight: number,
-): string {
-  const obj: SemanticParagraph = {
-    width: paragraphWidth,
-    height: paragraphHeight,
-    lines: lines.map(line => ({
-      y: Math.round(line.y * 100) / 100,
-      width: Math.round(line.width * 100) / 100,
-      height: Math.round(line.height * 100) / 100,
-      baseline: Math.round(line.baseline * 100) / 100,
-      fragments: line.spans.map(span => ({
-        text: span.text,
-        x: Math.round(span.x * 100) / 100,
-        width: Math.round(span.width * 100) / 100,
-        ...(spanStyleLabel(span) !== 'normal' ? { style: spanStyleLabel(span) } : {}),
-      })),
-    })),
-  };
-
-  return dump(obj, {
-    indent: 2,
-    lineWidth: 120,
-    noRefs: true,
-    sortKeys: false,
-  });
-}
-

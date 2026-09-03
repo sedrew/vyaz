@@ -42,7 +42,7 @@ import {
   lastSpan,
 } from './helpers.ts';
 import { FontNotFoundError } from '../src/measure/FontNotFoundError.js';
-import { compileParagraph } from '../src/compile/DocumentCompiler.js';
+import { compileParagraph } from '../src/compile/ParagraphCompiler.js';
 
 beforeAll(async () => {
   await registerUnifont();

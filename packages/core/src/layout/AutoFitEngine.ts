@@ -38,7 +38,9 @@ export function applyScale(
 
   for (const paragraph of clone.paragraphs) {
     for (const run of paragraph.children) {
-      run.fontSize = Math.round(run.fontSize * scale * 100) / 100;
+      if (typeof run.fontSize === 'number') {
+        run.fontSize = Math.round(run.fontSize * scale * 100) / 100;
+      }
     }
   }
 

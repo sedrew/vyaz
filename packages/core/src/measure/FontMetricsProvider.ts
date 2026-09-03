@@ -15,16 +15,14 @@
 
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
 import type { FontFace } from './FontEngine.js';
-import { enableOfficeTextMeasure, disableOfficeTextMeasure } from './canvas-polyfill.js';
 import { FontNotFoundError } from './FontNotFoundError.js';
 
 // ── Reasonable default for missing glyphs ──────────────────────────────────
 
-/**
- * Factor used when a glyph is not found in the font.
- * Multiplied by fontSize to estimate the missing glyph width.
- */
-export const MISSING_GLYPH_FACTOR = 0.5;
+// Defined in FontEngine (the fontkit facade) so the measure-context path can
+// share it without pulling this module in. Re-exported here for callers that
+// already import it from FontMetricsProvider.
+export { MISSING_GLYPH_FACTOR } from './FontEngine.js';
 
 // ── Weight normalisation ─────────────────────────────────────────────────
 
@@ -155,30 +153,15 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   setMode(mode: 'browser' | 'office'): void {
     if (this.mode === mode) return;
     this.mode = mode;
+    // Office vs browser only changes ascent/descent — resolved from fontkit
+    // OS/2 in getMetrics(). Advance widths (the measure path) are identical in
+    // both modes, so no canvas prototype patching is needed.
     this.metricsCache.clear();
-    if (mode === 'office') {
-      enableOfficeTextMeasure(this._flattenCache());
-    } else {
-      disableOfficeTextMeasure();
-    }
   }
 
   /** Get current measurement mode. */
   getMode(): 'browser' | 'office' {
     return this.mode;
-  }
-
-  /**
-   * @internal Flatten the nested registry for office mode.
-   */
-  private _flattenCache(): Map<string, FontFace> {
-    const flat = new Map<string, FontFace>();
-    for (const [family, variants] of this.registry) {
-      for (const [vKey, font] of variants) {
-        flat.set(`${family}_${vKey}`, font);
-      }
-    }
-    return flat;
   }
 
   // ── FontRegistry ──────────────────────────────────────────────────
@@ -213,10 +196,9 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     family: string,
     options: { weight?: string; style?: string },
     source: string | ArrayBuffer | Uint8Array,
-    sourcePath?: string,
+    _sourcePath?: string,
   ): Promise<void> {
     const { createFontFace } = await import('./FontEngine.js');
-    const { registerCanvasFont } = await import('./canvas-polyfill.js');
 
     if (typeof source === 'string') {
       const { getFontBuffer } = await import('../utils/font.js');
@@ -238,10 +220,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         this.metricsCache.delete(key);
       }
     }
-
-    if (sourcePath) {
-      registerCanvasFont(sourcePath, family);
-    }
+    // `_sourcePath` was used to register the file with @napi-rs/canvas so
+    // `ctx.measureText` worked; measurement is fontkit-only now, so it's ignored.
   }
 
   /**
@@ -380,7 +360,11 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     fontSize: number,
     weight = 'normal',
     style = 'normal',
+    mode?: 'browser' | 'office',
   ): FontMetrics {
+    // Per-call `mode` overrides the provider's global mode (set via setMode).
+    // Office vs browser only changes ascent/descent (OS/2 vs hhea).
+    const m = mode ?? this.mode;
     // Dev warning for pending registrations
     const _process: any = typeof globalThis !== 'undefined' ? (globalThis as any).process : undefined;
     if (this.pendingRegistrations.size > 0 && _process?.env?.NODE_ENV !== 'production') {
@@ -393,7 +377,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
 
     // Check metrics cache first
     const normalisedW = normaliseWeight(weight);
-    const metricsKey = `${fontFamily}_${normalisedW}_${style}_${fontSize}_${this.mode}`;
+    const metricsKey = `${fontFamily}_${normalisedW}_${style}_${fontSize}_${m}`;
     const cached = this.metricsCache.get(metricsKey);
     if (cached) return cached;
 
@@ -407,7 +391,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       let descent: number;
       let sourceTable: 'hhea' | 'OS/2' | 'fallback';
 
-      if (this.mode === 'office' && font.winAscent != null && font.winDescent != null) {
+      if (m === 'office' && font.winAscent != null && font.winDescent != null) {
         ascent = font.winAscent * scale * 1.078;
         descent = Math.abs(font.winDescent) * scale * 1.078;
         sourceTable = 'OS/2';

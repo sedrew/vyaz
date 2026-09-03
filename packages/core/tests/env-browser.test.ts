@@ -51,6 +51,16 @@ describe('index.browser.ts — browser entry', () => {
   it('should export layout utilities', async () => {
     const mod = await import('../src/index.browser.js');
     expect(typeof mod.positionLines).toBe('function');
+  });
+
+  it('should NOT export debug tooling from the main entry', async () => {
+    const mod = await import('../src/index.browser.js') as any;
+    expect(mod.assertLineInvariants).toBeUndefined();
+    expect(mod.linesToYAML).toBeUndefined();
+  });
+
+  it('should expose debug tooling via the /debug entry', async () => {
+    const mod = await import('../src/debug.js');
     expect(typeof mod.assertLineInvariants).toBe('function');
     expect(typeof mod.linesToYAML).toBe('function');
   });

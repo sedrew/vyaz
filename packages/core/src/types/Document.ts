@@ -56,7 +56,7 @@ export type TextAlignment = 'left' | 'center' | 'right' | 'justify';
  * Alignment of the **last** line in a justified paragraph.
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#text-align-last-property | CSS Text: text-align-last}
- * @todo Not yet implemented in the layout engine.
+ * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type TextAlignLast = 'auto' | 'start' | 'end' | 'left' | 'right' | 'center' | 'justify';
 
@@ -64,7 +64,7 @@ export type TextAlignLast = 'auto' | 'start' | 'end' | 'left' | 'right' | 'cente
  * Word-break rules (how to break lines within words).
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#word-break-property | CSS Text: word-break}
- * @todo Not yet implemented in the layout engine.
+ * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type WordBreak = 'normal' | 'break-all' | 'keep-all' | 'break-word';
 
@@ -72,7 +72,7 @@ export type WordBreak = 'normal' | 'break-all' | 'keep-all' | 'break-word';
  * Strictness of line-break rules (mainly for CJK).
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#line-break-property | CSS Text: line-break}
- * @todo Not yet implemented in the layout engine.
+ * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type LineBreak = 'auto' | 'loose' | 'normal' | 'strict' | 'anywhere';
 
@@ -80,7 +80,7 @@ export type LineBreak = 'auto' | 'loose' | 'normal' | 'strict' | 'anywhere';
  * Overflow wrap behavior (whether long words can break).
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#overflow-wrap-property | CSS Text: overflow-wrap}
- * @todo Not yet implemented in the layout engine.
+ * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type OverflowWrap = 'normal' | 'break-word' | 'anywhere';
 
@@ -88,7 +88,7 @@ export type OverflowWrap = 'normal' | 'break-word' | 'anywhere';
  * Text decoration line style.
  *
  * @see {@link https://www.w3.org/TR/css-text-decor-3/#text-decoration-style-property | CSS Text Decoration: text-decoration-style}
- * @todo Not yet implemented in the layout engine.
+ * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type TextDecorationStyle = 'solid' | 'double' | 'dotted' | 'dashed' | 'wavy';
 
@@ -103,7 +103,7 @@ export type TextTransform = 'none' | 'uppercase' | 'lowercase' | 'capitalize';
  * Dominant baseline used for vertical alignment within a line.
  *
  * @see {@link https://www.w3.org/TR/css-inline-3/#dominant-baseline-property | CSS Inline Layout: dominant-baseline}
- * @todo Not yet implemented in the layout engine.
+ * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type DominantBaseline = 'auto' | 'text-bottom' | 'alphabetic' | 'ideographic' | 'middle' | 'central' | 'mathematical' | 'hanging' | 'text-top';
 
@@ -111,7 +111,7 @@ export type DominantBaseline = 'auto' | 'text-bottom' | 'alphabetic' | 'ideograp
  * Edge used to measure the line box height (font metric edge).
  *
  * @see {@link https://www.w3.org/TR/css-inline-3/#line-fit-edge | CSS Inline Layout: line-fit-edge}
- * @todo Not yet implemented in the layout engine.
+ * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type LineFitEdge = 'leading' | 'text' | 'cap' | 'ex' | 'ideographic' | 'ideographic-ink' | 'alphabetic';
 
@@ -254,8 +254,13 @@ export interface TextRun {
 
   // ── Flattened style ───────────────────────────────────────────────
 
-  /** Font family name (e.g. `"Arial"`, `"Times New Roman"`). */
-  fontFamily: string;
+  /**
+   * Font family name, or a CSS-style fallback list tried in order
+   * (e.g. `"Arial"` or `["Inter", "Arial", "sans-serif"]`). The layout result
+   * always reports the concrete family that was used; see
+   * `LayoutOptions.onMissingFont`.
+   */
+  fontFamily: string | string[];
   /** Font size in px. */
   fontSize: number;
   /** Font weight: `'normal'`, `'bold'`, or a numeric CSS weight (100–900). */
@@ -277,22 +282,29 @@ export interface TextRun {
   underline?: boolean;
   /** Strikethrough decoration. */
   strikethrough?: boolean;
-  /** Overline decoration. @todo Not yet implemented. */
+  /** Overline decoration. @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */
   overline?: boolean;
-  /** Underline / overline / strikethrough line style. @todo Not yet implemented. */
+  /** Underline / overline / strikethrough line style. @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */
   textDecorationStyle?: TextDecorationStyle;
-  /** Underline / overline / strikethrough line color. @todo Not yet implemented. */
+  /** Underline / overline / strikethrough line color. @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */
   textDecorationColor?: string;
 
   // ── Text transform ────────────────────────────────────────────────
 
   /** Case transform (uppercase, lowercase, capitalize). */
   textTransform?: TextTransform;
-  /** Force full-width characters (CJK). @todo Not yet implemented. */
+  /** Force full-width characters (CJK). @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */
   fullWidth?: boolean;
-  /** Convert small kana to full-size kana. @todo Not yet implemented. */
+  /** Convert small kana to full-size kana. @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */
   fullSizeKana?: boolean;
 }
+
+/**
+ * A `TextRun` after the layout engine has resolved its `fontFamily` fallback
+ * list down to one concrete registered family. This is what `Span.style` and
+ * the compiled items carry — never a `string[]`.
+ */
+export type ResolvedTextRun = Omit<TextRun, 'fontFamily'> & { fontFamily: string };
 
 /**
  * Data for an inline widget (embedded object inside text flow).
@@ -427,34 +439,34 @@ export interface ParagraphStyle {
    * Indentation of the first line in px.
    * If set, overrides the generic `indent` for the first line.
    *
-   * @todo Not yet implemented in the layout engine.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   textIndent?: number;
   /** Letter-spacing (tracking) for the whole paragraph in px. */
   letterSpacing?: number;
   /**
    * Alignment of the **last** line of a justified paragraph.
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   textAlignLast?: TextAlignLast;
   /**
    * Word-break rules (CJK / non-CJK).
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   wordBreak?: WordBreak;
   /**
    * Line-break strictness (CJK).
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   lineBreak?: LineBreak;
   /**
    * Overflow-wrap / word-wrap behaviour.
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   overflowWrap?: OverflowWrap;
   /**
    * Whether hyphenation is allowed.
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   hyphens?: boolean;
   /**
@@ -609,12 +621,12 @@ export interface TextFrame {
   verticalAlignment?: VerticalAlignment;
   /**
    * Dominant baseline for inline alignment.
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   dominantBaseline?: DominantBaseline;
   /**
    * Font metric edge used for line box height.
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   lineFitEdge?: LineFitEdge;
   /**
@@ -634,7 +646,7 @@ export interface TextFrame {
   /**
    * Multi-column layout configuration.
    * When set, paragraphs are automatically broken into columns.
-   * @todo Not yet implemented.
+   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   columns?: MultiColumnConfig;
   /** Paragraphs forming the text content. */
@@ -651,22 +663,22 @@ export interface TextFrame {
 /**
  * Default paragraph style used when a `Paragraph` omits its `style` field.
  */
-export const DEFAULT_PARAGRAPH_STYLE: ParagraphStyle = {
+export const DEFAULT_PARAGRAPH_STYLE: ParagraphStyle = Object.freeze({
   alignment: 'left',
   lineHeight: 1.15,
   spaceBefore: 0,
   spaceAfter: 0,
   whiteSpace: 'normal',
-};
+});
 
 /**
  * Default text style used when a `TextRun` omits style fields
  * and no `defaultStyle` is set on the `TextFrame`.
  */
-export const DEFAULT_TEXT_STYLE: Partial<TextRun> = {
+export const DEFAULT_TEXT_STYLE: Partial<TextRun> = Object.freeze({
   fontFamily: 'Arial',
   fontSize: 12,
   fontWeight: 'normal',
   fontStyle: 'normal',
   color: '#000000',
-};
+});

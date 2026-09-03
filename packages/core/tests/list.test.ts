@@ -370,7 +370,7 @@ describe('list-style-position', () => {
     // Line width covers marker → text
     expect(line.width).toBeCloseTo(maxSpanRight - minSpanX, 2);
     // contentWidth is absolute right edge so canvas sizing does not clip
-    expect(result.contentWidth).toBeGreaterThanOrEqual(maxSpanRight - 0.01);
+    expect(result.content.width).toBeGreaterThanOrEqual(maxSpanRight - 0.01);
   });
 
 

@@ -43,12 +43,14 @@ describe('Basic structure', () => {
     const result = layoutTextFrame(makeTextFrame([makeParagraph('Hello')]));
 
     expect(result).toHaveProperty('lines');
-    expect(result).toHaveProperty('contentWidth');
-    expect(result).toHaveProperty('contentHeight');
-    expect(result).toHaveProperty('fitHorizontal');
-    expect(result).toHaveProperty('fitVertical');
-    expect(result.contentWidth).toBeGreaterThan(0);
-    expect(result.contentHeight).toBeGreaterThan(0);
+    expect(result).toHaveProperty('content');
+    expect(result).toHaveProperty('frame');
+    expect(result).toHaveProperty('overflow');
+    expect(result).toHaveProperty('fit');
+    expect(result.content.width).toBeGreaterThan(0);
+    expect(result.content.height).toBeGreaterThan(0);
+    expect(result.fit.horizontal).toBe('content');
+    expect(result.overflow.horizontal).toBe(false);
   });
 
   test('two paragraphs → all lines from both are present', () => {
@@ -66,8 +68,8 @@ describe('Basic structure', () => {
     const result = layoutTextFrame(makeTextFrame([]));
 
     expect(result.lines).toEqual([]);
-    expect(result.contentWidth).toBe(0);
-    expect(result.contentHeight).toBe(0);
+    expect(result.content.width).toBe(0);
+    expect(result.content.height).toBe(0);
   });
 });
 
@@ -216,15 +218,15 @@ describe('frame.width / wrap', () => {
   test('frame.width set → frameWidth in result, fitHorizontal === "frame"', () => {
     const result = layoutTextFrame(makeTextFrame([makeParagraph('Hello')], { width: 400 }));
 
-    expect(result.frameWidth).toBe(400);
-    expect(result.fitHorizontal).toBe('frame');
+    expect(result.frame.width).toBe(400);
+    expect(result.fit.horizontal).toBe('frame');
   });
 
   test('frame.width undefined → no frameWidth, fitHorizontal === "content"', () => {
     const result = layoutTextFrame(makeTextFrame([makeParagraph('Hello')]));
 
-    expect(result.frameWidth).toBeUndefined();
-    expect(result.fitHorizontal).toBe('content');
+    expect(result.frame.width).toBeUndefined();
+    expect(result.fit.horizontal).toBe('content');
   });
 
   test('frame.width + wrap=true → lines wrap', () => {
@@ -247,7 +249,7 @@ describe('frame.width / wrap', () => {
 
     expect(result.lines.length).toBe(1);
     // With wrap=false, the line stays on one line and overflows
-    expect(result.contentWidth).toBeGreaterThan(50);
+    expect(result.content.width).toBeGreaterThan(50);
   });
 
   test('no width + wrap=true → no constraint, single line', () => {
@@ -266,15 +268,15 @@ describe('frame.height', () => {
   test('frame.height set → frameHeight in result, fitVertical === "frame"', () => {
     const result = layoutTextFrame(makeTextFrame([makeParagraph('Hello')], { height: 300 }));
 
-    expect(result.frameHeight).toBe(300);
-    expect(result.fitVertical).toBe('frame');
+    expect(result.frame.height).toBe(300);
+    expect(result.fit.vertical).toBe('frame');
   });
 
   test('frame.height undefined → no frameHeight, fitVertical === "content"', () => {
     const result = layoutTextFrame(makeTextFrame([makeParagraph('Hello')]));
 
-    expect(result.frameHeight).toBeUndefined();
-    expect(result.fitVertical).toBe('content');
+    expect(result.frame.height).toBeUndefined();
+    expect(result.fit.vertical).toBe('content');
   });
 });
 
@@ -284,7 +286,7 @@ describe('contentWidth / contentHeight', () => {
   test('single paragraph, single line → contentWidth === line.width', () => {
     const result = layoutTextFrame(makeTextFrame([makeParagraph('Hello')]));
 
-    expect(result.contentWidth).toBeCloseTo(result.lines[0].width, 3);
+    expect(result.content.width).toBeCloseTo(result.lines[0].width, 3);
   });
 
   test('two paragraphs → contentWidth === max of both', () => {
@@ -294,14 +296,14 @@ describe('contentWidth / contentHeight', () => {
     ]));
 
     const maxLineWidth = Math.max(...result.lines.map((l) => l.width));
-    expect(result.contentWidth).toBeGreaterThanOrEqual(maxLineWidth - 0.01);
+    expect(result.content.width).toBeGreaterThanOrEqual(maxLineWidth - 0.01);
   });
 
   test('single paragraph → contentHeight === last line y + height', () => {
     const result = layoutTextFrame(makeTextFrame([makeParagraph('Hello')]));
 
     const lastLine = result.lines[result.lines.length - 1];
-    expect(result.contentHeight).toBeCloseTo(lastLine.y + lastLine.height, 3);
+    expect(result.content.height).toBeCloseTo(lastLine.y + lastLine.height, 3);
   });
 
   test('two paragraphs → contentHeight === last line y + height', () => {
@@ -311,7 +313,7 @@ describe('contentWidth / contentHeight', () => {
     ]));
 
     const lastLine = result.lines[result.lines.length - 1];
-    expect(result.contentHeight).toBeCloseTo(lastLine.y + lastLine.height, 3);
+    expect(result.content.height).toBeCloseTo(lastLine.y + lastLine.height, 3);
   });
 
   test('paragraph with wrapping → contentWidth >= max line width', () => {
@@ -322,7 +324,7 @@ describe('contentWidth / contentHeight', () => {
 
     expect(result.lines.length).toBeGreaterThanOrEqual(2);
     const maxLineWidth = Math.max(...result.lines.map((l) => l.width));
-    expect(result.contentWidth).toBeGreaterThanOrEqual(maxLineWidth - 0.01);
+    expect(result.content.width).toBeGreaterThanOrEqual(maxLineWidth - 0.01);
   });
 });
 
@@ -486,5 +488,21 @@ describe('pre-line with hard breaks', () => {
     expect(result.lines[0].spans.map(s => s.text).join('')).toBe('Hello World');
     expect(result.lines[1].spans.map(s => s.text).join('')).toBe('Привет Мир');
     expect(result.lines[2].spans.map(s => s.text).join('')).toBe('World of Text');
+  });
+});
+
+describe('overflow (5c)', () => {
+  test('content taller than frame.height → overflow.vertical', () => {
+    const paras = Array.from({ length: 8 }, () => makeParagraph('Line of text here'));
+    const r = layoutTextFrame(makeTextFrame(paras, { width: 300, height: 40 }));
+    expect(r.overflow.vertical).toBe(true);
+    expect(r.overflow.horizontal).toBe(false);
+    expect(r.fit.vertical).toBe('frame');       // frame size was given
+    expect(r.content.height).toBeGreaterThan(40);
+  });
+  test('no frame size → overflow false on that axis', () => {
+    const r = layoutTextFrame(makeTextFrame([makeParagraph('x')]));
+    expect(r.overflow.vertical).toBe(false);
+    expect(r.overflow.horizontal).toBe(false);
   });
 });

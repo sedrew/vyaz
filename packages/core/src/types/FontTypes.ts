@@ -63,6 +63,7 @@ export interface IFontMetricsProvider {
     fontSize: number,
     weight?: string,
     style?: string,
+    mode?: 'browser' | 'office',
   ): FontMetrics;
 }
 

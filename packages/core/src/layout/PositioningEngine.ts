@@ -19,9 +19,7 @@
 import type { ParagraphStyle, ListStyle, NumberFormat } from '../types/Document.js';
 import type { FontMetrics } from '../types/FontTypes.js';
 import type { Line, Span, SpanFontMetrics } from '../types/LayoutTypes.js';
-import type { PreparedRichInlineItem } from '../compile/DocumentCompiler.js';
-import type { MeasureFn } from './estimateWidth.js';
-import { resolveFragmentWidths } from './estimateWidth.js';
+import type { PreparedRichInlineItem } from '../compile/ParagraphCompiler.js';
 import { formatListNumber, defaultBulletChar } from '../utils/list.js';
 
 // ── Helper types for pretext ───────────────────────────────────────────
@@ -84,6 +82,11 @@ function resolveBulletIndent(
 }
 
 // ── PositioningEngine ─────────────────────────────────────────────────
+
+/** Round to 2 decimal places — the precision every emitted geometry value carries. */
+function round2(value: number): number {
+  return Math.round(value * 100) / 100;
+}
 
 /**
  * Build Line[] from pretext lines with alignment and metrics.
@@ -235,22 +238,25 @@ export function positionLines(
         }
       }
 
-      // Resolve widths via resolveFragmentWidths:
-      //   exact measurement (measureText) when available,
-      //   weight-based fallback otherwise,
-      //   then correctToSumInvariant to preserve line-breaking invariant.
+      // Split the pretext fragment into leading-space / trimmed-text /
+      // trailing-space pieces and give each a width.
+      //  - one piece → use pretext's authoritative width for the whole fragment
+      //  - several  → measure each piece directly. Line breaking and positioning
+      //    now read the same fontkit tables, so the pieces sum back to the
+      //    fragment width; the old proportional `correctToSumInvariant` fix-up
+      //    (a leftover from the canvas-vs-fontkit split) is gone.
       const fragments: string[] = [];
       if (leadingSpaceChars > 0) fragments.push(text.slice(0, leadingSpaceChars));
       if (remainingText.length > 0) fragments.push(remainingText);
       if (trailingSpaceChars > 0) fragments.push(text.slice(leadingSpaceChars + remainingText.length));
 
-      // Build measure function with font parameters baked in
       const { fontFamily, fontWeight, fontStyle } = item.metadata.style;
       const fsWeight = String(fontWeight || 400);
       const fsStyle = fontStyle || 'normal';
-      const fragmentMeasureFn: MeasureFn = (t: string) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle);
 
-      const resolvedWidths = resolveFragmentWidths(fragments, text, textWidth, fragmentMeasureFn);
+      const resolvedWidths: number[] = fragments.length === 1
+        ? [textWidth]
+        : fragments.map((t) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle));
       let resolvedIdx = 0;
       const leadingWidth = leadingSpaceChars > 0 ? resolvedWidths[resolvedIdx++] : 0;
       const trimmedWidth = remainingText.length > 0 ? resolvedWidths[resolvedIdx++] : 0;
@@ -494,15 +500,28 @@ export function positionLines(
     let lineX = xOffset;
     let lineWidth = runX - xOffset;
     if (spans.length > 0) {
-      const minSpanX = Math.min(...spans.map(s => s.x));
-      const maxSpanRight = Math.max(...spans.map(s => s.x + s.width));
+      // running min/max — avoids two `spans.map` allocations plus a spread that
+      // blows the call stack on pathologically long lines.
+      let minSpanX = Infinity;
+      let maxSpanRight = -Infinity;
+      for (let k = 0; k < spans.length; k++) {
+        const sx = spans[k].x;
+        if (sx < minSpanX) minSpanX = sx;
+        const sr = sx + spans[k].width;
+        if (sr > maxSpanRight) maxSpanRight = sr;
+      }
       lineX = minSpanX;
       lineWidth = maxSpanRight - minSpanX;
     }
     // contentWidth is the absolute right edge of content (not just line.width).
     // When line.x > 0 (outside marker, indent, center/right), consumers that
     // size the canvas as contentWidth with viewBox origin 0 need this value.
-    contentWidth = Math.max(contentWidth, lineX + lineWidth);
+    //
+    // Derived from the same 2dp-rounded values the emitted Line carries, so
+    // that contentWidth === max(line.x + line.width) exactly. Summing the raw
+    // floats here instead left contentWidth a few thousandths off the line box
+    // it is supposed to bound.
+    contentWidth = Math.max(contentWidth, round2(lineX) + round2(lineWidth));
 
 
 
@@ -590,9 +609,9 @@ export function positionLines(
     }
 
     lines.push({
-      x: Math.round(lineX * 100) / 100,
-      y: Math.round(currentY * 100) / 100,
-      width: Math.round(lineWidth * 100) / 100,
+      x: round2(lineX),
+      y: round2(currentY),
+      width: round2(lineWidth),
       height: Math.round(lineBoxHeight * 100) / 100,
       baseline: Math.round(baseline * 100) / 100,
       ascent: Math.round(maxAscent * 100) / 100,

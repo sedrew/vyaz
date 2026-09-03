@@ -1,12 +1,16 @@
 {
   "name": "@vyaz/core",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "bin"
   ],
+  "bin": {
+    "vyaz": "./bin/vyaz.js"
+  },
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
@@ -18,6 +22,13 @@
       "browser": "./dist/index.browser.js",
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./debug": {
+      "bun": "./src/debug.ts",
+      "node": "./dist/debug.js",
+      "browser": "./dist/debug.browser.js",
+      "types": "./dist/debug.d.ts",
+      "default": "./dist/debug.js"
     }
   },
   "browser": {
@@ -28,12 +39,12 @@
     "child_process": false
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @chenglou/pretext --external js-yaml --external @napi-rs/canvas --external fontkit --external get-system-fonts && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser && tsc -b",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external js-yaml --external @napi-rs/canvas --external fontkit --external get-system-fonts && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser && bun build ./src/debug.ts --outdir ./dist --target bun --external js-yaml && bun build ./src/debug.ts --outdir ./dist --outfile ./dist/debug.browser.js --target browser && bun build ./src/cli/check.ts --outdir ./dist/cli --target bun --external @napi-rs/canvas --external fontkit --external get-system-fonts && tsc -b",
     "prepublishOnly": "bun run build",
+    "vendor:pretext": "bun run scripts/vendor-pretext.ts",
     "test": "bun test"
   },
   "dependencies": {
-    "@chenglou/pretext": "^0.0.8",
     "js-yaml": "^5.0.0"
   },
   "optionalDependencies": {
@@ -42,6 +53,7 @@
     "get-system-fonts": "^2.0.2"
   },
   "devDependencies": {
+    "@chenglou/pretext": "^0.0.8",
     "@types/node": "^26.0.0",
     "@clean-jsdoc-theme/typedoc": "^5.0.6",
     "typedoc": "^0.28.19"
