@@ -96,12 +96,17 @@ pack-test: build
 	@rm -rf $(DIST_TMP)
 	@echo "✅ pack-test passed"
 
+# ── Environment check ────────────────────────────────────────────
+check-env:
+	bun run --cwd packages/core vyaz --check
+	@echo "✅ check-env passed"
+
 # ── Browser bundle export validation ─────────────────────────────
 browser-check: build
 	bun test packages/core/tests/build-browser.test.ts
 
 # ── Full pre-publish pipeline ────────────────────────────────────
-check: build test smoke pack-test browser-check
+check: build test smoke pack-test browser-check check-env
 	@echo ""
 	@echo "═══════════════════════════════════════════════"
 	@echo "  ✅ All checks passed — ready to publish"

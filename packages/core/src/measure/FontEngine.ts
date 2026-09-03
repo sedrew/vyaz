@@ -13,6 +13,18 @@
 
 import type { FontMetrics } from '../types/FontTypes.js';
 
+// ── Missing-glyph policy ───────────────────────────────────────────────
+
+/**
+ * Factor used when a glyph is not present in the font.
+ * Multiplied by fontSize to estimate the missing glyph's advance.
+ *
+ * Lives here, in the fontkit facade, so every measurement path can share one
+ * definition without importing FontMetricsProvider (which installs globals as
+ * an import side effect).
+ */
+export const MISSING_GLYPH_FACTOR = 0.5;
+
 // ── Internal font object shape ─────────────────────────────────────────
 // We keep fontkit.Font opaque — users of FontEngine never import fontkit.
 
