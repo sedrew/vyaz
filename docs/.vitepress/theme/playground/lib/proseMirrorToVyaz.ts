@@ -1,0 +1,411 @@
+/**
+ * proseMirrorToVyaz.ts — Convert ProseMirror JSON (from Tiptap) to @vyaz/core TextFrame.
+ *
+ * Handles:
+ *   - doc → paragraphs
+ *   - text nodes → TextRun
+ *   - marks: bold, italic, underline, strike, code, link
+ *   - headings → fontSize bump
+ *   - bulletList / orderedList → listStyle
+ *   - horizontalRule, hardBreak → placeholder
+ */
+
+import type { TextFrame, Paragraph, TextRun, TextAlignment, ListStyle, ListStylePosition } from '@vyaz/core'
+
+// ── ProseMirror JSON types ─────────────────────────────────────────────
+
+interface PMNode {
+  type: string
+  content?: PMNode[]
+  text?: string
+  marks?: PMark[]
+  attrs?: Record<string, unknown>
+}
+
+interface PMark {
+  type: string
+  attrs?: Record<string, unknown>
+}
+
+interface PMDoc {
+  type: 'doc'
+  content?: PMNode[]
+}
+
+// ── Defaults ────────────────────────────────────────────────────────────
+
+const DEFAULT_FONT_FAMILY = 'Arial'
+const DEFAULT_FONT_SIZE = 16
+const HEADING_SIZES: Record<string, number> = {
+  heading: 24,
+  heading2: 22,
+  heading3: 20,
+  heading4: 18,
+  heading5: 16,
+  heading6: 14,
+}
+
+const HEADING_SIZES_BY_LEVEL: Record<number, number> = {
+  1: 28,
+  2: 24,
+  3: 20,
+  4: 18,
+  5: 16,
+  6: 14,
+}
+
+// ── Mark → style helpers ───────────────────────────────────────────────
+
+function mergeMarks(marks: PMark[] | undefined, base: Partial<TextRun>): Partial<TextRun> {
+  const s: Partial<TextRun> = { ...base }
+
+  if (!marks) return s
+
+  for (const mark of marks) {
+    switch (mark.type) {
+      case 'bold':
+        s.fontWeight = 'bold'
+        break
+      case 'italic':
+        s.fontStyle = 'italic'
+        break
+      case 'underline':
+        s.underline = true
+        break
+      case 'strike':
+        s.strikethrough = true
+        break
+      case 'code':
+        s.fontFamily = 'monospace'
+        s.backgroundColor = '#f0f0f0'
+        break
+      case 'link':
+        // preserve color or add a link colour
+        if (!s.color) s.color = '#1a73e8'
+        s.underline = true
+        break
+      case 'subscript':
+        s.script = 'sub'
+        break
+      case 'superscript':
+        s.script = 'super'
+        break
+      case 'textStyle':
+        // can contain fontSize, color, fontFamily via attrs
+        if (mark.attrs) {
+          if (typeof mark.attrs.fontSize === 'number') {
+            s.fontSize = mark.attrs.fontSize
+          }
+          if (typeof mark.attrs.color === 'string') {
+            s.color = mark.attrs.color
+          }
+          if (typeof mark.attrs.fontFamily === 'string') {
+            s.fontFamily = mark.attrs.fontFamily
+          }
+          if (mark.attrs.fontSize != null && s.fontSize == null) {
+            const n = Number(mark.attrs.fontSize)
+            if (!Number.isNaN(n)) s.fontSize = n
+          }
+          if (mark.attrs.letterSpacing != null) {
+            const n = Number(mark.attrs.letterSpacing)
+            if (!Number.isNaN(n)) s.letterSpacing = n
+          }
+        }
+        break
+    }
+  }
+
+  return s
+}
+
+function makeTextRun(text: string, marks?: PMark[]): TextRun {
+  const style = mergeMarks(marks, {})
+  return {
+    type: 'text',
+    text,
+    fontFamily: style.fontFamily ?? DEFAULT_FONT_FAMILY,
+    fontSize: style.fontSize ?? DEFAULT_FONT_SIZE,
+    fontWeight: style.fontWeight ?? 'normal',
+    fontStyle: style.fontStyle ?? 'normal',
+    color: style.color ?? '#000000',
+    underline: style.underline ?? false,
+    strikethrough: style.strikethrough ?? false,
+    script: style.script ?? 'normal',
+    backgroundColor: style.backgroundColor,
+  }
+}
+
+// ── Content walker (handles hardBreak → \n) ────────────────────────────
+
+/**
+ * Walk ProseMirror content nodes inside a paragraph/heading.
+ * - text nodes → collect text with current marks
+ * - hardBreak → append "\n" to current accumulated text
+ * - Different mark sets between adjacent text nodes → create separate TextRuns
+ * - Same marks → merge into one TextRun
+ *
+ * Tiptap's hardBreak means Shift+Enter in the editor.
+ */
+function collectRuns(node: PMNode): TextRun[] {
+  const runs: TextRun[] = []
+
+  if (!node.content) return runs
+
+  let currentText = ''
+  let currentMarks: PMark[] | undefined
+
+  function flush() {
+    if (currentText.length > 0) {
+      runs.push(makeTextRun(currentText, currentMarks))
+      currentText = ''
+    }
+  }
+
+  for (const child of node.content) {
+    if (child.type === 'text') {
+      // Check if marks changed from previous segment
+      const marksChanged = marksSignature(child.marks) !== marksSignature(currentMarks)
+      if (marksChanged && currentText.length > 0) {
+        flush()
+      }
+      currentText += child.text ?? ''
+      currentMarks = child.marks
+    } else if (child.type === 'hardBreak') {
+      // Shift+Enter → insert \n within the same text run
+      currentText += '\n'
+      // marks reset after hardBreak (same line in ProseMirror)
+    }
+  }
+
+  flush()
+  return runs
+}
+
+/** Deterministic string key for mark array comparison. */
+function marksSignature(marks: PMark[] | undefined): string {
+  if (!marks || marks.length === 0) return ''
+  return marks.map(m => `${m.type}:${JSON.stringify(m.attrs ?? {})}`).join('|')
+}
+
+// ── Node → Paragraph converter ─────────────────────────────────────────
+
+function pmNodeToParagraph(node: PMNode, listLevel: number = 0): Paragraph | null {
+  switch (node.type) {
+    case 'paragraph':
+    case 'heading': {
+      const runs = collectRuns(node)
+
+      if (runs.length === 0) {
+        runs.push(makeTextRun(' '))
+      }
+
+      const isHeading = node.type === 'heading'
+      const level = isHeading ? (node.attrs?.level as number) ?? 1 : undefined
+      const headingFontSize = level ? (HEADING_SIZES_BY_LEVEL[level] ?? DEFAULT_FONT_SIZE) : undefined
+
+      if (isHeading) {
+        for (const r of runs) {
+          r.fontSize = headingFontSize!
+          r.fontWeight = 'bold'
+        }
+      }
+
+      // Extract textAlign from node attrs (set by @tiptap/extension-text-align)
+      const alignment = (node.attrs?.textAlign as TextAlignment) ?? 'left'
+      const a = node.attrs ?? {}
+      const num = (v: unknown, d: number) => {
+        const n = Number(v); return Number.isFinite(n) ? n : d
+      }
+
+      return {
+        style: {
+          alignment,
+          lineHeight: a.lineHeight != null ? num(a.lineHeight, isHeading ? 1.25 : 1.45) : (isHeading ? 1.25 : 1.45),
+          spaceBefore: a.spaceBefore != null ? num(a.spaceBefore, 0) : (isHeading ? (level === 1 ? 0 : 22) : 4),
+          spaceAfter: a.spaceAfter != null ? num(a.spaceAfter, 0) : (isHeading ? 10 : 9),
+        },
+        children: runs,
+      }
+    }
+
+    case 'horizontalRule': {
+      return {
+        style: {
+          alignment: 'left',
+          lineHeight: 1.2,
+          spaceBefore: 8,
+          spaceAfter: 8,
+        },
+        children: [
+          {
+            type: 'text',
+            text: '────────────────────',
+            fontFamily: DEFAULT_FONT_FAMILY,
+            fontSize: 8,
+            fontWeight: 'normal',
+            fontStyle: 'normal',
+            color: '#999999',
+          },
+        ],
+      }
+    }
+
+    case 'bulletList': {
+      // Tiptap uses bulletList → listItem → paragraph
+      // Each listItem becomes a paragraph with listStyle
+      const items: Paragraph[] = []
+      if (node.content) {
+        for (const item of node.content) {
+          if (item.type === 'listItem') {
+            // Flatten listItem content (could be one or more paragraphs)
+            for (const child of item.content ?? []) {
+              if (child.type === 'paragraph') {
+                const p = pmNodeToParagraph(child, listLevel)
+                if (p) {
+                  p.style.listStyle = {
+                    type: 'bullet',
+                    level: listLevel,
+                    position: 'outside' as ListStylePosition,
+                  }
+                  items.push(p)
+                }
+              }
+            }
+          }
+        }
+      }
+      // Return the first item (others will be collected in proseMirrorToVyaz)
+      // We handle this by collecting all items from list wrappers
+      return items.length > 0 ? items[0] : null
+    }
+
+    case 'orderedList': {
+      const items: Paragraph[] = []
+      if (node.content) {
+        for (const item of node.content) {
+          if (item.type === 'listItem') {
+            for (const child of item.content ?? []) {
+              if (child.type === 'paragraph') {
+                const p = pmNodeToParagraph(child, listLevel)
+                if (p) {
+                  p.style.listStyle = {
+                    type: 'number',
+                    numberFormat: 'decimal',
+                    level: listLevel,
+                    position: 'outside' as ListStylePosition,
+                    startNumber: ((node.attrs?.start as number) ?? 1),
+                  }
+                  items.push(p)
+                }
+              }
+            }
+          }
+        }
+      }
+      return items.length > 0 ? items[0] : null
+    }
+
+    default:
+      // skip unknown nodes
+      return null
+  }
+}
+
+// ── Flatten list wrappers ──────────────────────────────────────────────
+
+/**
+ * Walk ProseMirror doc content and flatten bulletList/orderedList wrappers
+ * into individual paragraphs. Each list item becomes a paragraph with listStyle.
+ */
+function flattenList(
+  node: PMNode,
+  level: number,
+  out: Paragraph[],
+): void {
+  const a = node.attrs ?? {}
+  const isOrdered = node.type === 'orderedList'
+  const base = {
+    type: (isOrdered ? 'number' : 'bullet') as 'number' | 'bullet',
+    level,
+    position: ((a.position as ListStylePosition) ?? 'outside') as ListStylePosition,
+    ...(isOrdered
+      ? { numberFormat: (a.numberFormat as any) ?? 'decimal', startNumber: (a.start as number) ?? 1 }
+      : { ...(a.bulletChar ? { bulletChar: String(a.bulletChar) } : {}) }),
+    ...(a.bulletIndent != null ? { bulletIndent: Number(a.bulletIndent) } : {}),
+  }
+  for (const item of node.content ?? []) {
+    if (item.type !== 'listItem') continue
+    for (const child of item.content ?? []) {
+      if (child.type === 'bulletList' || child.type === 'orderedList') {
+        flattenList(child, level + 1, out)
+      } else if (child.type === 'paragraph' || child.type === 'heading') {
+        const p = pmNodeToParagraph(child, level)
+        if (p) { p.style.listStyle = { ...base }; out.push(p) }
+      }
+    }
+  }
+}
+
+function flattenBlockquote(node: PMNode, out: Paragraph[]): void {
+  for (const child of node.content ?? []) {
+    if (child.type === 'bulletList' || child.type === 'orderedList') {
+      flattenList(child, 0, out)
+    } else {
+      const p = pmNodeToParagraph(child)
+      if (!p) continue
+      p.style.leftIndent = (p.style.leftIndent ?? 0) + 16
+      for (const r of p.children) if (!r.color || r.color === '#000000') r.color = '#6a737d'
+      out.push(p)
+    }
+  }
+}
+
+function flattenDoc(doc: PMDoc): Paragraph[] {
+  const paragraphs: Paragraph[] = []
+  for (const node of doc.content ?? []) {
+    if (node.type === 'bulletList' || node.type === 'orderedList') {
+      flattenList(node, 0, paragraphs)
+    } else if (node.type === 'blockquote') {
+      flattenBlockquote(node, paragraphs)
+    } else {
+      const p = pmNodeToParagraph(node)
+      if (p) paragraphs.push(p)
+    }
+  }
+  return paragraphs
+}
+
+// ── Main converter ─────────────────────────────────────────────────────
+
+/**
+ * Convert ProseMirror JSON doc to @vyaz/core TextFrame.
+ */
+export function proseMirrorToVyaz(
+  doc: PMDoc,
+  options?: {
+    width?: number
+    height?: number
+    alignment?: TextAlignment
+    padding?: { top: number; right: number; bottom: number; left: number }
+  },
+): TextFrame {
+  const paragraphs = flattenDoc(doc)
+
+  // Optional global alignment override (per-paragraph textAlign wins when unset)
+  if (options?.alignment) {
+    for (const p of paragraphs) {
+      p.style.alignment = options.alignment
+    }
+  }
+
+  const frame: TextFrame = {
+    width: options?.width ?? 600,
+    wrap: true,
+    writingMode: 'horizontal-tb',
+    verticalAlignment: 'top',
+    paragraphs,
+  }
+  if (options?.height != null) frame.height = options.height
+  if (options?.padding) frame.padding = options.padding
+  return frame
+}

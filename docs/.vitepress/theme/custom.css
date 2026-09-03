@@ -1,0 +1,19 @@
+/* Playground: give the doc column more room, but keep the sidebar. */
+.VPDoc:has(.vyaz-pg) .container { max-width: 1180px; }
+.VPDoc:has(.vyaz-pg) .content { max-width: none; }
+
+/* the ported EditorPanel ships its own header — the pane already has one */
+.vyaz-pg .editor-header { display: none; }
+.vyaz-pg .editor-panel { border-right: 0; }
+
+/* Toolbar / control widgets — key off VitePress vars so light/dark just work. */
+.vyaz-pg select,
+.vyaz-pg input[type='number'] {
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
+  font-size: 12px;
+}
