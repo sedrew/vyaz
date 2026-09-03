@@ -1,29 +1,54 @@
-# Vyaz
+<p align="center">
+  <img src=".github/assets/logo.png" alt="Vyaz" width="160" height="160">
+</p>
 
-Rich text layout engine — TypeScript, isomorphic (browser + Bun/Node.js), pixel-perfect typography.
+<h1 align="center">Vyaz</h1>
 
-Parses styled text into positioned lines with precise font metrics, supporting both CSS Text and Office (PowerPoint/DrawingML) rendering modes.
+<p align="center">
+  Rich‑text layout engine — TypeScript, isomorphic (browser + Bun/Node.js), pixel‑perfect typography.
+</p>
 
-The engine operates on a **TextFrame → Paragraph → TextRun** hierarchy, following W3C CSS Text, CSS Writing Modes, and CSS Inline Layout specifications.
+<p align="center">
+  <a href="https://sedrew.github.io/vyaz/playground">Playground</a> ·
+  <a href="https://sedrew.github.io/vyaz/">Docs</a>
+</p>
+
+---
+
+Vyaz parses styled text into positioned lines with precise font metrics and
+renders them to SVG. It supports both a CSS‑Text line box and an Office
+(PowerPoint / DrawingML) line box.
+
+The engine works on a **TextFrame → Paragraph → TextRun** hierarchy, following
+W3C CSS Text, CSS Writing Modes and CSS Inline Layout.
+
+The name is [**Vyaz**](https://en.wikipedia.org/wiki/Vyaz) (Russian: вязь) — the
+ligatured display script of old Slavonic manuscripts, where letters are bound
+tightly into a single decorative band. Fitting, for an engine whose job is
+binding runs of text into lines.
 
 ## Packages
 
 | Package | Description |
-|---------|-------------|
-| **@vyaz/core** | Text frame and paragraph layout engine, font metrics, auto-fit, compiler |
-| **@vyaz/renderer** | SVG and Canvas renderers for layout output |
-| **@vyaz/demo** | Demo application |
+|---|---|
+| **@vyaz/core** | Layout engine — text-frame & paragraph layout, font metrics, autofit, compiler |
+| **@vyaz/renderer** | SVG and Canvas renderers for the layout output |
 
-## Quick Start
+The interactive **Playground** (Tiptap editor → live SVG) lives in the docs
+site — `docs/` — not as a separate package.
+
+## Install
 
 ```bash
 bun add @vyaz/core @vyaz/renderer
 ```
 
+## Quick start
+
 ```ts
-import { layoutTextFrame } from '@vyaz/core';
-import { renderToSVG } from '@vyaz/renderer';
-import type { TextFrame } from '@vyaz/core';
+import { layoutTextFrame } from '@vyaz/core'
+import { renderToSVG } from '@vyaz/renderer'
+import type { TextFrame } from '@vyaz/core'
 
 const frame: TextFrame = {
   width: 400,
@@ -32,178 +57,142 @@ const frame: TextFrame = {
     {
       style: { alignment: 'left', lineHeight: 1.4, spaceBefore: 0, spaceAfter: 0 },
       children: [
-        { text: 'Hello, Vyaz!', fontFamily: 'Arial', fontSize: 16, fontWeight: 'bold', fontStyle: 'normal', color: '#000' },
+        { text: 'Hello, ', fontFamily: 'Inter', fontSize: 16, fontWeight: 'normal', fontStyle: 'normal', color: '#111' },
+        { text: 'Vyaz!', fontFamily: 'Inter', fontSize: 16, fontWeight: 'bold', fontStyle: 'normal', color: '#111' },
       ],
     },
   ],
-};
+}
 
-const result = layoutTextFrame(frame);
-const svg = renderToSVG(result.lines, { preset: 'browser', width: 400, height: 100 });
-
-console.log(svg);
+const result = layoutTextFrame(frame)   // → LayoutResult
+const svg = renderToSVG(result, { preset: 'browser' })
 ```
+
+Register fonts before laying out (see [Fonts](#fonts)).
 
 ## Features
 
-- **Text frame layout** — multi-paragraph frames with padding, wrapping, and vertical alignment
-- **Multi-font, multi-style text** — bold, italic, size, color, subscript/superscript, letter-spacing
-- **Text alignment** — left, center, right, justify
-- **Line wrapping** — soft/hard breaks, `white-space` control (normal, nowrap, pre)
-- **Writing modes** — `horizontal-tb`, `vertical-rl`, `vertical-lr` with text orientation
-- **Auto-fit** — scale text proportionally to fit the container (`AutofitConfig`)
-- **Inline widgets** — embedded objects (icons, images) inside the text flow
-- **Office-compatible mode** — `mode: 'office'` for PowerPoint/DrawingML rendering
-- **SVG output** — four presets: `flat`, `browser`, `preserve`, `glyph` with CSS or XML styles
-- **Canvas output** — with debug overlays (box, baseline, ascent/descent, frame, labels, runs, line gap)
-- **Font metrics** — system font registry with fontkit-based metric extraction
-- **Compiler** — paragraph compilation with token preparation for external renderers
+- **Text-frame layout** — multi-paragraph frames, padding, wrapping, vertical alignment
+- **Rich runs** — bold, italic, size, colour, background, letter-spacing, sub/superscript, text-transform
+- **Alignment** — left / center / right / justify, per paragraph
+- **Line breaking** — soft & hard breaks, `white-space` (`normal` `nowrap` `pre` `pre-line` `pre-wrap`)
+- **Lists** — bullet & numbered, nesting, `outside` / `inside` markers, custom bullet char, roman/alpha formats
+- **Multi-column** — `column-fill: balance` (default) or `auto`
+- **Autofit** — one proportional scale so the content fits the frame (`{ autofit: … }`)
+- **Metric modes** — `browser` (CSS/Chrome line box) and `office` (PowerPoint / DrawingML) as a per-layout option
+- **Font fallback** — `fontFamily: string | string[]` with `onMissingFont: 'throw' | 'substitute'`
+- **SVG output** — four presets: `flat`, `browser`, `preserve`, `glyph`; CSS or XML style attributes; debug overlays
+- **Pure JS** — the core measurement path is fontkit-only; no canvas polyfill in Node/Bun
 
-## Usage
+## API
 
-### Text Frame Layout
+### `layoutTextFrame(frame, options?)`
 
 ```ts
-import { layoutTextFrame } from '@vyaz/core';
-import type { TextFrame, TextFrameLayoutResult } from '@vyaz/core';
+import { layoutTextFrame } from '@vyaz/core'
 
-const frame: TextFrame = {
-  width: 600,
-  height: 400,
-  wrap: true,
-  padding: { top: 20, right: 20, bottom: 20, left: 20 },
-  verticalAlignment: 'top',
-  paragraphs: [
-    {
-      style: { alignment: 'left', lineHeight: 1.4, spaceBefore: 0, spaceAfter: 12 },
-      children: [
-        { text: 'First paragraph', fontFamily: 'Arial', fontSize: 16, fontWeight: 'normal', fontStyle: 'normal', color: '#000' },
-      ],
-    },
-  ],
-};
-
-const result: TextFrameLayoutResult = layoutTextFrame(frame);
-// → { lines: Line[], frameWidth?, frameHeight?, contentWidth, contentHeight, fitHorizontal, fitVertical }
+const result = layoutTextFrame(frame, {
+  mode: 'office',                   // 'browser' (default) | 'office'
+  autofit: { minFontSize: 10 },     // true | { minFontSize? }
+  onMissingFont: 'substitute',      // 'throw' (default) | 'substitute'
+  glyphAdvances: true,              // fill Span.glyphAdvances (glyph preset / hit-testing)
+})
 ```
 
-### Autofit
+The result:
 
 ```ts
-import { applyScale, findScale } from '@vyaz/core';
-import type { AutoFitOptions, AutoFitResult } from '@vyaz/core';
-
-const scale: AutoFitResult = findScale(contentWidth, contentHeight, frameWidth, frameHeight);
-const scaledLines = applyScale(result.lines, scale);
+interface LayoutResult {
+  lines: Line[]
+  content:  { width: number; height: number }        // intrinsic text bbox
+  frame:    { width?: number; height?: number }       // as given on the input
+  overflow: { horizontal: boolean; vertical: boolean }
+  fit:      { horizontal: 'frame' | 'content'; vertical: 'frame' | 'content' }
+  autofit?: { scale: number; clampedToMin: boolean }  // when autofit ran
+  warnings?: LayoutWarning[]                           // font fallback / substitution
+}
 ```
 
-### SVG Render
+### `createLayoutEngine(options?)`
+
+`layoutTextFrame` uses a shared engine with a bounded prepared-line cache. For
+isolation (per document / per request), an explicit cache bound, or the ability
+to drop the cache:
 
 ```ts
-import { renderToSVG, renderParagraphToSVG, renderResultToSVG } from '@vyaz/renderer';
-import type { SVGRenderOptions, SvgPreset, SvgStyle, SvgFit, SvgSizing } from '@vyaz/renderer';
+import { createLayoutEngine } from '@vyaz/core'
 
-// From lines
-const svg = renderToSVG(result.lines, {
-  preset: 'browser',     // flat | browser | preserve | glyph
-  style: 'css',          // css | xml
-  fit: 'text',           // none | text | frag
+const engine = createLayoutEngine({ cache: { max: 1024 } })
+const result = engine.layout(frame, { mode: 'browser' })
+engine.clearCache()
+```
+
+### `renderToSVG(input, options?)`
+
+```ts
+import { renderToSVG } from '@vyaz/renderer'
+
+// recommended — canvas size / sizing derived from the result
+renderToSVG(result, { preset: 'preserve', style: 'css' })
+
+// low-level — you supply width / height / sizing
+renderToSVG(result.lines, {
+  sizing: { horizontal: 'frame', vertical: 'content' },
   width: 400,
-  height: 200,
-});
-
-// From ParagraphLayoutResult
-const svg2 = renderResultToSVG(result, { preset: 'browser' });
-
-// From a single paragraph
-const svg3 = renderParagraphToSVG(paragraphLines, { preset: 'preserve' });
+  preset: 'flat',
+})
 ```
 
-### Canvas Render
+Presets: `flat` (one `<text>` per run), `browser` (`<tspan>` per run),
+`preserve` (adds `textLength`), `glyph` (per-glyph `x`).
+
+### Autofit primitives (low-level)
 
 ```ts
-import { renderToCanvas, renderDebugToCanvas } from '@vyaz/renderer';
-import type { CanvasRenderOptions, DebugFlags } from '@vyaz/renderer';
-
-const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
-const ctx = canvas.getContext('2d')!;
-
-renderToCanvas(ctx, result.lines, {
-  width: 400,
-  height: 200,
-});
-
-// With debug overlays
-renderDebugToCanvas(ctx, result.lines, {
-  box: true,
-  baseline: true,
-  ascentDescent: true,
-  frame: true,
-  labels: true,
-  runs: true,
-  lineGap: true,
-});
+import { applyScale, findScale } from '@vyaz/core'
 ```
 
-### Font Registration & Metrics
+Prefer the `{ autofit }` layout option above; these stay for manual control.
+
+## Fonts
+
+Fonts must be registered before layout. Measurement is fontkit-only.
 
 ```ts
-import {
-  FontMetricsProvider,
-  SystemFontRegistry,
-  createFontFace,
-  getFontBuffer,
-} from '@vyaz/core';
-import type { FontMetrics, IFontMetricsProvider, FontFace } from '@vyaz/core';
+import { fontMetricsProvider, getFontBuffer } from '@vyaz/core'
 
-const provider = new FontMetricsProvider();
+// Node.js
+import { readFileSync } from 'node:fs'
+await fontMetricsProvider.registerFont('Inter', { weight: 'bold', style: 'normal' },
+  readFileSync('/path/to/Inter-Bold.otf'))
 
-// Node.js — register from a local file
-import { readFileSync } from 'node:fs';
-const buffer = readFileSync('/path/to/font.ttf');
-await provider.registerFont('MyFont', { weight: 'bold', style: 'normal' }, buffer);
-
-// Browser — register from a URL
-await provider.registerFont('MyFont', {}, 'https://example.com/font.woff2');
-
-// Or download manually for re-use
-const fontBuffer = await getFontBuffer('https://example.com/font.woff2');
-const fontFace: FontFace = await createFontFace(fontBuffer);
-console.log(fontFace.unitsPerEm, fontFace.ascent, fontFace.descent);
-
-// Get pixel metrics
-const metrics: FontMetrics = provider.getMetrics('MyFont', 16);
-// → { ascent, descent, capHeight, unitsPerEm, sourceTable }
-
-// Per-glyph advance width
-const advance = fontFace._raw.glyphForCodePoint('A'.codePointAt(0)!)?.advanceWidth;
-
-// System font discovery (Node.js only)
-const registry = SystemFontRegistry.instance;
-const stats = await registry.scan();
-console.log(`Registered ${stats.registered} of ${stats.total} fonts`);
+// Browser
+await fontMetricsProvider.registerFont('Inter', {},
+  await getFontBuffer('https://example.com/Inter.woff2'))
 ```
 
-### Compiler
+Node.js can discover system fonts via `SystemFontRegistry` (imports `node:fs`,
+so it is excluded from the browser bundle).
+
+## Debug tooling
+
+Invariant checks and semantic YAML snapshots live in a separate entry so
+`js-yaml` never lands in the production bundle:
 
 ```ts
-import { compileParagraph, getParagraphText, makeFontToken } from '@vyaz/core';
-import type { PreparedRichInlineItem } from '@vyaz/core';
-
-const items: PreparedRichInlineItem[] = compileParagraph(paragraph, defaultStyle);
-const text: string = getParagraphText(paragraph);
-const token: string = makeFontToken(fontFamily, fontSize, fontWeight, fontStyle);
+import { assertLineInvariants, linesToYAML } from '@vyaz/core/debug'
 ```
 
-### Paragraph Layout Engine (low-level)
+## Development
 
-```ts
-import { ParagraphLayoutEngine, paragraphLayoutEngine } from '@vyaz/core';
-
-const engine = new ParagraphLayoutEngine();
-const result = engine.layout(paragraph, maxWidth, yOffset);
-// → ParagraphLayoutResult { lines: Line[], width, height, contentWidth, contentHeight }
+```bash
+bun install
+bun test            # unit + golden-corpus tests
+bun run bench       # layout + render throughput, 100 … 1,000,000 runs
 ```
+
+`bench/BASELINE.txt` holds reference numbers; re-run and diff after touching the
+layout hot path.
 
 ## License
 
