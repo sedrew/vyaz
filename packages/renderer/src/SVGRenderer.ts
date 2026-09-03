@@ -18,7 +18,7 @@
  *   const svg = renderToSVG(lines, { preset: 'preserve', style: 'css', fit: 'frag' })
  */
 
-import type { Line, Span, ParagraphLayoutResult, ParagraphGroup, MultiColumnConfig } from '@vyaz/core';
+import type { Line, Span, ParagraphLayoutResult, TextFrameLayoutResult, ParagraphGroup, MultiColumnConfig } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
 import { computeBBox, fmt } from './utils.js';
@@ -425,15 +425,19 @@ function buildTspanAttrs(span: Span, x: number, currentStyle: StyleState | null)
  * The `letter-spacing` attribute should NOT be set on `<tspan>` when
  * using glyph mode, because the spacing is already baked into the x positions.
  */
-function buildGlyphPositions(span: Span, _lineX: number): string {
+function buildGlyphPositions(span: Span, spanDX: number): string {
   if (!span.glyphAdvances || span.glyphAdvances.length === 0) {
-    return '';
+    // List markers and inter-run spaces have no per-glyph advances. Without an
+    // explicit start the <tspan> flows from the parent <text> origin (usually
+    // x=0) instead of its real position. Pin it.
+    return (span.type === 'marker' || span.type === 'space') && span.text
+      ? fmt(span.x + spanDX, 1)
+      : '';
   }
-  // span.x is already absolute — computed by PositioningEngine.
-  // lineX is NOT added because that would double-shift.
+  // span.x is line-relative. `spanDX` (0 for everything except multi-column
+  // columns > 0) shifts it to the line's column origin.
   const ls = span.style.letterSpacing || 0;
-  const spanX = span.x;
-  let xPos = spanX;
+  let xPos = span.x + spanDX;
   const positions: string[] = [fmt(xPos, 1)];
   for (let i = 0; i < span.glyphAdvances.length - 1; i++) {
     xPos += span.glyphAdvances[i] + ls;
@@ -879,14 +883,50 @@ function getSpanBackgroundAttrs(span: Span, baselineY: number): { x: number; y: 
 // ── Main render logic ────────────────────────────────────────────────────
 
 /**
- * Render Line[] into SVG string.
+ * Render a layout to an SVG string.
  *
- * @param lines — layout lines with spans
- * @param options — rendering options (preset + style/fit/sizing modifiers)
+ * Pass a full {@link TextFrameLayoutResult} (recommended) and the canvas size /
+ * `sizing` are derived from its `frame*` / `content*` / `fit*` fields — you only
+ * add render options (preset, style, debug). Passing a bare `Line[]` is the
+ * low-level form: you supply `width` / `height` / `sizing` yourself.
+ *
+ * @param input — a layout result, or bare layout lines
+ * @param options — rendering options (preset + style/fit/sizing modifiers); any
+ *                   field here overrides the value derived from a result
  * @returns SVG string
  */
-export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): string {
-  const opts = resolveOptions(options);
+export function renderToSVG(
+  input: Line[] | TextFrameLayoutResult,
+  options: SVGRenderOptions = {},
+): string {
+  let lines: Line[];
+  let resolvedOptions: SVGRenderOptions;
+  if (Array.isArray(input)) {
+    lines = input;
+    resolvedOptions = options;
+  } else {
+    lines = input.lines;
+    // Derive canvas size / sizing from the result — unless the caller took
+    // control by passing any of `sizing` / `width` / `height` themselves.
+    const callerSizes =
+      options.sizing !== undefined || options.width !== undefined || options.height !== undefined;
+    if (callerSizes) {
+      resolvedOptions = options;
+    } else {
+      const fw = input.fit.horizontal === 'frame' && input.frame.width != null;
+      const fh = input.fit.vertical === 'frame' && input.frame.height != null;
+      resolvedOptions = {
+        sizing: {
+          horizontal: fw ? 'frame' : 'content',
+          vertical: fh ? 'frame' : 'content',
+        },
+        width: fw ? input.frame.width : input.content.width,
+        height: fh ? input.frame.height : input.content.height,
+        ...options,
+      };
+    }
+  }
+  const opts = resolveOptions(resolvedOptions);
 
   // Determine canvas size and viewBox
   const { width: svgWidth, height: svgHeight, viewBox, frameWidth, frameHeight } = resolveSize(lines, opts);
@@ -907,18 +947,26 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
     }
 
     if (opts.structure === 'glyph') {
-      // Per-glyph positioning with run-based <text> grouping
+      // Per-glyph positioning. Open a new <text> whenever the run index OR the
+      // style signature changes (matches flat/expanded) — otherwise a list
+      // marker's or its gap-space's font-size leaks onto the following text,
+      // which shares itemIndex 0 with the marker.
+      const glyphFirstTextX = line.spans.find(s => s.type === 'text' || s.type === 'marker')?.x ?? 0;
+      const glyphSpanDX = line.x - glyphFirstTextX;
       let currentRunIdx = -1;
+      let currentSig = '';
       for (const span of line.spans) {
         if (!span.text) continue;
         const runIdx = span.itemIndex;
-        if (runIdx !== currentRunIdx) {
+        const sig = styleSignature(span);
+        if (runIdx !== currentRunIdx || sig !== currentSig) {
           builder.closeText();
           const runId = span.tag ? `${span.tag}-${runIdx}` : undefined;
           builder.openText(line, span, runId);
           currentRunIdx = runIdx;
+          currentSig = sig;
         }
-        builder.addGlyphTspan(span, line.x);
+        builder.addGlyphTspan(span, glyphSpanDX);
       }
       builder.closeText();
     } else if (opts.structure === 'flat') {
@@ -1025,10 +1073,17 @@ export function renderToSVG(lines: Line[], options: SVGRenderOptions = {}): stri
           builder.openText(line, baseSpan);
         }
 
+        // span.x is relative to the line's own origin. When line.x differs from
+        // the first text span's x (multi-column: spans keep 0-based x while the
+        // line sits in column N), shift every tspan by that delta so it lands
+        // in the right column. In every other case the delta is 0.
+        const lineFirstTextX = line.spans.find(s => s.type === 'text' || s.type === 'marker')?.x ?? 0;
+        const spanDX = line.x - lineFirstTextX;
+
         let currentStyle: StyleState | null = null;
         for (const span of group.spans) {
           if (!span.text) continue;
-          const x = span.x;
+          const x = span.x + spanDX;
 
           const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';
           if (shouldRender) {

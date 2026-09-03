@@ -1,6 +1,6 @@
 {
   "name": "@vyaz/renderer",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,7 +24,7 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@vyaz/core": "^0.0.14"
+    "@vyaz/core": "^0.0.16"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
