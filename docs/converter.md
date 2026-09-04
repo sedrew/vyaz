@@ -6,11 +6,11 @@ outline: false
 
 # HTML → SVG
 
-Paste a formatted-HTML fragment on the left; [`@vyaz/html`](https://github.com/sedrew/vyaz/tree/main/packages/html)
+Paste a formatted-HTML fragment on top; [`@vyaz/html`](https://github.com/sedrew/vyaz/tree/main/packages/html)
 converts it to a `TextFrame`, the engine lays it out, and the renderer produces
-SVG on the right. Switch the **Code / Preview** tabs to compare your source with
-how a browser renders it. Debug overlays are off — the <kbd>debug</kbd> menu
-turns them on. **Download SVG** saves a self-contained file with fonts inlined.
+the SVG below. Switch the **Code / Preview** tabs to compare your source with how
+a browser renders it. Debug overlays are off — the <kbd>debug</kbd> menu turns
+them on. **Download SVG** saves a self-contained file with fonts inlined.
 
 <ClientOnly>
   <Converter />

@@ -146,12 +146,15 @@ const stats = computed(() => {
 </script>
 
 <style scoped>
-.cv { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 22px 0; }
+.cv { display: flex; flex-direction: column; gap: 16px; margin: 22px 0; }
 .cv__pane {
-  display: flex; flex-direction: column; min-width: 0; height: 680px;
+  display: flex; flex-direction: column; min-width: 0;
   border: 1px solid var(--vp-c-divider); border-radius: 10px;
   overflow: hidden; background: var(--vp-c-bg);
 }
+/* HTML on top (fixed-ish), SVG below (taller). */
+.cv__pane:first-child { height: 360px; }
+.cv__pane:last-child { height: 640px; }
 .cv__hd {
   display: flex; align-items: center; gap: 10px;
   padding: 6px 12px; font-size: 11px; font-weight: 600;
@@ -175,7 +178,7 @@ const stats = computed(() => {
 .cv__list code { font-size: 11px; }
 
 @media (max-width: 900px) {
-  .cv { grid-template-columns: 1fr; }
-  .cv__pane { height: 520px; }
+  .cv__pane:first-child { height: 300px; }
+  .cv__pane:last-child { height: 520px; }
 }
 </style>
