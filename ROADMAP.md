@@ -7,9 +7,8 @@ Direction, not a schedule. Order within a section is rough priority.
 - **Shaping by default** for the `browser` / `preserve` SVG presets. The `glyph`
   preset gets shaped per-cluster advances so ligature-heavy fonts position
   correctly (today its per-character `x` is naive).
-- **`registerWebFont(family, url, opts)`** — one call that feeds both the metrics
-  engine and `document.fonts`, so browser output can't drift from the layout
-  (the split documented in [Browser usage](https://sedrew.github.io/vyaz/guide/browser)).
+- ~~**`registerWebFont(family, url, opts)`** — one call that feeds both the metrics
+  engine and `document.fonts`.~~ Shipped as `registerFont` in `@vyaz/renderer`.
 - **Per-glyph font fallback** — walk a family chain for a missing code point
   instead of falling back to `.notdef` / a `0.5em` estimate.
 - **`text-decoration` styles** — dashed / dotted / wavy, custom colour and

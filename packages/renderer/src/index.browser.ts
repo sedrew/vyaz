@@ -17,4 +17,7 @@ export type { CanvasRenderOptions, CursorOptions } from './CanvasRenderer.js';
 export { charAtPoint, charIndexToPos, posToCharIndex } from './interactive.js';
 export type { CharPos } from './interactive.js';
 
+export { registerFont } from './register-font.js';
+export type { RegisterFontOptions, RegisterFontResult } from './register-font.js';
+
 export type { DebugFlags } from './types.js';
