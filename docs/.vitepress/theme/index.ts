@@ -3,6 +3,7 @@ import type { Theme } from 'vitepress'
 import { h } from 'vue'
 import Playground from './playground/Playground.vue'
 import CaseExplorer from './playground/components/CaseExplorer.vue'
+import Converter from './converter/Converter.vue'
 import './custom.css'
 
 export default {
@@ -13,5 +14,6 @@ export default {
     // from playground.md and cases.md via <ClientOnly>.
     app.component('Playground', Playground)
     app.component('CaseExplorer', CaseExplorer)
+    app.component('Converter', Converter)
   },
 } satisfies Theme

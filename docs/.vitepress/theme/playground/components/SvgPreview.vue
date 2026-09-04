@@ -29,8 +29,14 @@
         <IconCode :size="16" :stroke="1.75" /> code
       </button>
 
-      <button class="sp__btn" @click="download" title="Download self-contained SVG">
+      <button
+        class="sp__btn"
+        :class="{ 'sp__btn--primary': !!downloadLabel }"
+        @click="download"
+        title="Download self-contained SVG"
+      >
         <IconDownload :size="16" :stroke="1.75" />
+        <span v-if="downloadLabel">{{ downloadLabel }}</span>
       </button>
     </div>
 
@@ -78,6 +84,8 @@ const props = withDefaults(defineProps<{
   width?: number
   height?: number
   downloadName?: string
+  /** when set, the download button shows this text and is styled as the primary action */
+  downloadLabel?: string
   /** family → raw bytes, for @font-face inlining in the download */
   fontBytes?: Map<string, Uint8Array>
 }>(), { stats: null, downloadName: 'vyaz' })
@@ -192,6 +200,11 @@ function download() {
 }
 .sp__btn:hover { color: var(--vp-c-text-1); border-color: var(--vp-c-text-3); }
 .sp__btn.is-on { color: var(--vp-c-brand-1); border-color: var(--vp-c-brand-1); }
+.sp__btn--primary {
+  color: #fff; background: var(--vp-c-danger-1, #e5484d);
+  border-color: var(--vp-c-danger-1, #e5484d); font-weight: 600; padding: 5px 12px;
+}
+.sp__btn--primary:hover { color: #fff; background: var(--vp-c-danger-2, #c93a3f); border-color: var(--vp-c-danger-2, #c93a3f); }
 .sp__badge {
   min-width: 15px; padding: 0 3px; border-radius: 8px; text-align: center;
   background: var(--vp-c-brand-1); color: #fff; font-size: 10px; line-height: 15px;

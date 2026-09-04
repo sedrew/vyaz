@@ -18,6 +18,7 @@ export default defineConfig({
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Playground', link: '/playground' },
+      { text: 'Converter', link: '/converter' },
       { text: 'Cases', link: '/cases' },
       { text: 'API', link: '/api/core' },
     ],
@@ -28,6 +29,7 @@ export default defineConfig({
           { text: 'Getting Started', link: '/guide/getting-started' },
           { text: 'Browser usage', link: '/guide/browser' },
           { text: 'Playground', link: '/playground' },
+          { text: 'HTML → SVG', link: '/converter' },
           { text: 'Cases', link: '/cases' },
         ],
       },
@@ -47,11 +49,12 @@ export default defineConfig({
       alias: {
         '@vyaz/core': r('../../packages/core/src'),
         '@vyaz/renderer': r('../../packages/renderer/src'),
+        '@vyaz/html': r('../../packages/html/src'),
       },
     },
     optimizeDeps: {
       // @vyaz/* are aliased to TS source; the rest are Node-only and stubbed below
-      exclude: ['@vyaz/core', '@vyaz/renderer', 'get-system-fonts', '@napi-rs/canvas'],
+      exclude: ['@vyaz/core', '@vyaz/renderer', '@vyaz/html', 'get-system-fonts', '@napi-rs/canvas'],
     },
     ssr: {
       // keep the playground + its heavy deps out of the SSR build
