@@ -30,6 +30,10 @@ export type { LayoutEngine, LayoutEngineOptions } from './layout/create-engine.j
 export type { LayoutOptions, TextFrameLayoutResult, AutofitOutcome, FrameTransform } from './layout/TextFrameLayoutEngine.js';
 export type { OnMissingFont } from './layout/resolve-font.js';
 
+// ── Table Layout Engine — @beta ─────────────────────────
+export { layoutTableFrame } from './layout/TableLayoutEngine.js';
+export type { TableLayoutResult, TableRowLayoutResult, TableCellLayoutResult, TableLayoutOptions } from './layout/TableLayoutEngine.js';
+
 // ── Autofit — stable ────────────────────────────────────
 export { applyScale, findScale } from './layout/AutoFitEngine.js';
 
