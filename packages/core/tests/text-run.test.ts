@@ -33,6 +33,7 @@ import {
   makeParagraph,
   makeStyledParagraph,
   makeMultiRunParagraph,
+  makeTextFrame,
   layoutParagraph,
   layoutGlyphParagraph,
   allSpans,
@@ -41,6 +42,7 @@ import {
   spanTexts,
   lastSpan,
 } from './helpers.ts';
+import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
 import { FontNotFoundError } from '../src/measure/FontNotFoundError.js';
 import { compileParagraph } from '../src/compile/ParagraphCompiler.js';
 
@@ -150,6 +152,35 @@ describe('TextRun.type: "inline-box"', () => {
     const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 20 } }));
     const inlineSpan = allSpans(result).find((s) => s.inlineWidget)!;
     expect(inlineSpan.text).toBe('\uFFFC');
+  });
+
+  // Regression: the line box used to come from the carrier run's *font*
+  // metrics only, ignoring inlineWidget.height entirely — invisible for a
+  // small icon, but a wide/tall widget (e.g. a rendered <table>, see
+  // @vyaz/html's handleTable()) overlapped the paragraph after it.
+  test('inlineWidget.height sets the line height when taller than the font\'s own line height', () => {
+    const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 100 } }));
+    expect(result.lines[0].height).toBeGreaterThanOrEqual(100);
+  });
+
+  test('a paragraph after a tall inline-box widget does not overlap it', () => {
+    const frame = makeTextFrame([
+      makeParagraph('', { type: 'inline-box', inlineWidget: { width: 40, height: 120 } }),
+      makeParagraph('after'),
+    ]);
+    const result = layoutTextFrame(frame);
+    expect(result.lines).toHaveLength(2);
+    const [widgetLine, textLine] = result.lines;
+    expect(widgetLine.height).toBeGreaterThanOrEqual(120);
+    expect(textLine.y).toBeGreaterThanOrEqual(widgetLine.y + widgetLine.height);
+  });
+
+  test('baselineOffset shifts the line-height split between ascent and descent, total unchanged', () => {
+    const flat = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 100 } }));
+    const hung = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 100, baselineOffset: 30 } }));
+    // total line height (ascent+descent-driven) stays ~the same either way
+    expect(hung.lines[0].height).toBeCloseTo(flat.lines[0].height, 0);
+    expect(hung.lines[0].descent).toBeGreaterThan(flat.lines[0].descent);
   });
 });
 

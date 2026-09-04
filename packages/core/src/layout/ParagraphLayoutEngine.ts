@@ -61,8 +61,34 @@ function glyphCacheKey(
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
+/**
+ * Synthetic FontMetrics for an inline-box item, derived from its widget's own
+ * `height` (+ `baselineOffset`) instead of any font table — an inline-box has
+ * no glyphs, so the carrier run's font metrics say nothing about how tall it
+ * actually is. Without this, the line box (and the paragraph flow after it)
+ * used the *text* line height regardless of the widget's real size — invisible
+ * for small icons, but a wide/tall widget (e.g. a rendered <table>) would
+ * overlap the following content.
+ *
+ * Geometry matches CanvasRenderer's placement (`iwY = baselineY - height +
+ * baselineOffset`): `baselineOffset` 0 sits the whole box above the baseline
+ * (ascent = height, descent = 0), like a normal inline image.
+ */
+function inlineWidgetMetrics(
+  iw: NonNullable<PreparedRichInlineItem['metadata']['inlineWidget']>,
+  fontSize: number,
+): FontMetrics {
+  const bo = iw.baselineOffset ?? 0;
+  const ascent = Math.max(0, iw.height - bo);
+  const descent = Math.max(0, bo);
+  return { ascent, descent, capHeight: ascent, unitsPerEm: fontSize || 1, sourceTable: 'fallback' };
+}
+
 /** Get FontMetrics for a PreparedRichInlineItem */
 function getFontMetricsForItem(item: PreparedRichInlineItem, mode?: 'browser' | 'office'): FontMetrics {
+  if (item.metadata.inlineWidget) {
+    return inlineWidgetMetrics(item.metadata.inlineWidget, item.metadata.effectiveFontSize);
+  }
   return fontMetricsProvider.getMetrics(
     item.metadata.style.fontFamily,
     item.metadata.effectiveFontSize,
@@ -249,6 +275,9 @@ export class ParagraphLayoutEngine {
       materializedLines,
       items,
       (item) => {
+        if (item.metadata.inlineWidget) {
+          return inlineWidgetMetrics(item.metadata.inlineWidget, item.metadata.effectiveFontSize);
+        }
         if (fontProvider) {
           return fontProvider.getMetrics(
             item.metadata.style.fontFamily,

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="137" viewBox="0 0 420 137">
+  <text x="0" y="20" font-family="Unifont" font-size="20" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="20" fill="#111111">Dropped on purpose</tspan>
+  </text>
+  <g transform="translate(0 34)"><svg xmlns="http://www.w3.org/2000/svg" width="228" height="70" viewBox="0 0 228 70">
+  <rect x="0" y="0" width="228" height="35" fill="#f5f5f5" />
+  <rect x="0.5" y="0.5" width="69" height="34" fill="none" stroke="#ddd" stroke-width="1" />
+  <rect x="70.5" y="0.5" width="157" height="34" fill="none" stroke="#ddd" stroke-width="1" />
+  <rect x="0.5" y="35.5" width="69" height="34" fill="none" stroke="#ddd" stroke-width="1" />
+  <rect x="70.5" y="35.5" width="157" height="34" fill="none" stroke="#ddd" stroke-width="1" />
+  <g transform="translate(7 7)"><svg xmlns="http://www.w3.org/2000/svg" width="56" height="21" viewBox="0 0 56 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">Feature</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(77 7)"><svg xmlns="http://www.w3.org/2000/svg" width="144" height="21" viewBox="0 0 144 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">State</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(7 42)"><svg xmlns="http://www.w3.org/2000/svg" width="56" height="21" viewBox="0 0 56 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">tables</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(77 42)"><svg xmlns="http://www.w3.org/2000/svg" width="144" height="21" viewBox="0 0 144 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">need a grid layout</tspan>
+  </text>
+</svg>
+</g>
+</svg>
+</g>
+  <text x="0" y="132" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="italic" font-family="Unifont" font-size="16" fill="#111111">221B Baker Street, London</tspan>
+  </text>
+</svg>

@@ -91,6 +91,14 @@ export interface TableLayoutResult {
 
 export interface TableLayoutOptions {
   mode?: 'browser' | 'office';
+  /**
+   * What to do when a cell's `fontFamily` isn't registered — forwarded to
+   * every cell's own `layoutTextFrame` call. `'throw'` (default) raises
+   * `FontNotFoundError`; `'substitute'` uses any registered family and folds
+   * the cell's own warnings into the table's (none surfaced directly here —
+   * a caller wanting them should lay out a cell's `TextFrame` itself).
+   */
+  onMissingFont?: 'throw' | 'substitute';
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────
@@ -266,7 +274,7 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
       left: p.pad.left + (bw?.left ?? 0),
     };
     p.natural =
-      layoutTextFrame({ ...p.cell.content, width: undefined, wrap: false }, { mode: options.mode }).content.width +
+      layoutTextFrame({ ...p.cell.content, width: undefined, wrap: false }, { mode: options.mode, onMissingFont: options.onMissingFont }).content.width +
       p.inset.left + p.inset.right;
   }
 
@@ -301,7 +309,7 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
   for (const p of placed) {
     p.width = sumSpan(colWidths, p.startCol, p.colSpan, colGaps);
     const contentWidth = Math.max(0, p.width - p.inset.left - p.inset.right);
-    p.content = layoutTextFrame({ ...p.cell.content, width: contentWidth, wrap: true }, { mode: options.mode });
+    p.content = layoutTextFrame({ ...p.cell.content, width: contentWidth, wrap: true }, { mode: options.mode, onMissingFont: options.onMissingFont });
     p.cellHeight = p.content.content.height + p.inset.top + p.inset.bottom;
   }
 
