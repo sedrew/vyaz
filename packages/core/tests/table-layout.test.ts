@@ -1,7 +1,7 @@
 /**
  * table-layout.test.ts — TableLayoutEngine.
  * T0: grid sizing (no spans, no borders). T1: colSpan / rowSpan placement +
- * deficit-widen sizing. T2 (borders) not covered here yet.
+ * deficit-widen sizing. T2: solid per-side borders + uniform corner radius.
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, makeParagraph, makeTextFrame } from './helpers.ts';
@@ -260,5 +260,90 @@ describe('TableLayoutEngine — colSpan / rowSpan (T1)', () => {
     expect(big.height).toBeCloseTo(r.rows[0].height + r.rows[1].height, 1);
     // row 1's only real cell (r1c2) still lands in column 2, past the occupied span
     expect(r.rows[1].cells[0].x).toBe(r.rows[2].cells[2].x);
+  });
+});
+
+describe('TableLayoutEngine — borders + corner radius (T2)', () => {
+  test('no borderWidths anywhere → border is absent on table/row/cell', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [cell('a')] }] });
+    expect(r.border).toBeUndefined();
+    expect(r.rows[0].border).toBeUndefined();
+    expect(r.rows[0].cells[0].border).toBeUndefined();
+  });
+
+  test('cell borderWidths: uniform number resolves to all four sides, default color #000', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 2 } }] }] });
+    const b = r.rows[0].cells[0].border!;
+    expect(b.widths).toEqual({ top: 2, right: 2, bottom: 2, left: 2 });
+    expect(b.colors).toEqual({ top: '#000', right: '#000', bottom: '#000', left: '#000' });
+  });
+
+  test('borderWidths / borderColors shorthand: [tb,lr] and [t,r,b,l]', () => {
+    const twoW = { ...cell('a'), style: { borderWidths: [1, 3] as [number, number] } };
+    const fourW = { ...cell('b'), style: { borderWidths: [1, 2, 3, 4] as [number, number, number, number] } };
+    const fourC = { ...cell('c'), style: { borderWidths: 1, borderColors: ['#111', '#222', '#333', '#444'] as [string, string, string, string] } };
+    const r = layoutTableFrame({ rows: [{ cells: [twoW, fourW, fourC] }] });
+    expect(r.rows[0].cells[0].border!.widths).toEqual({ top: 1, right: 3, bottom: 1, left: 3 });
+    expect(r.rows[0].cells[1].border!.widths).toEqual({ top: 1, right: 2, bottom: 3, left: 4 });
+    expect(r.rows[0].cells[2].border!.colors).toEqual({ top: '#111', right: '#222', bottom: '#333', left: '#444' });
+  });
+
+  test('cell borderWidths: 0 (explicit) means no border, same as absent', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 0 } }] }] });
+    expect(r.rows[0].cells[0].border).toBeUndefined();
+  });
+
+  test('cell style wins over defaultCellStyle for borders', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 5 } }, cell('b')] }],
+      defaultCellStyle: { borderWidths: 1, borderColors: '#f00' },
+    });
+    expect(r.rows[0].cells[0].border!.widths.top).toBe(5);
+    expect(r.rows[0].cells[0].border!.colors.top).toBe('#f00'); // color still falls back to default
+    expect(r.rows[0].cells[1].border!.widths.top).toBe(1); // second cell uses the default entirely
+  });
+
+  test('row border is independent of cell borders, with its own defaultRowStyle cascade', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [cell('a')], style: { borderWidths: 3, bgColor: '#eee' } }],
+      defaultRowStyle: { borderColors: '#0a0' },
+    });
+    expect(r.rows[0].border!.widths.top).toBe(3);
+    expect(r.rows[0].border!.colors.top).toBe('#0a0');
+    expect(r.rows[0].cells[0].border).toBeUndefined(); // cell itself has none
+  });
+
+  test('the table\'s own outer border comes from TableStyle, separate from row/cell borders', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [cell('a')] }], style: { borderWidths: 4, borderColors: '#333' } });
+    expect(r.border).toEqual({ widths: { top: 4, right: 4, bottom: 4, left: 4 }, colors: { top: '#333', right: '#333', bottom: '#333', left: '#333' } });
+  });
+
+  test('rx/ry: one given, the other defaults to it', () => {
+    const onlyRx = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1, rx: 6 } }] }] });
+    const onlyRy = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1, ry: 9 } }] }] });
+    expect(onlyRx.rows[0].cells[0].border).toMatchObject({ rx: 6, ry: 6 });
+    expect(onlyRy.rows[0].cells[0].border).toMatchObject({ rx: 9, ry: 9 });
+  });
+
+  test('rx/ry both given are kept as-is; neither given leaves them undefined', () => {
+    const both = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1, rx: 4, ry: 12 } }] }] });
+    const neither = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1 } }] }] });
+    expect(both.rows[0].cells[0].border).toMatchObject({ rx: 4, ry: 12 });
+    expect(neither.rows[0].cells[0].border!.rx).toBeUndefined();
+    expect(neither.rows[0].cells[0].border!.ry).toBeUndefined();
+  });
+
+  test('border width is inset alongside padding — content wraps sooner in a fixed-width column', () => {
+    const long = 'a rather long piece of cell text that will need to wrap eventually';
+    const plain = layoutTableFrame({ rows: [{ cells: [cell(long)] }], columnWidths: [150] });
+    const bordered = layoutTableFrame({
+      rows: [{ cells: [{ ...cell(long), style: { borderWidths: 20 } }] }],
+      columnWidths: [150],
+    });
+    expect(bordered.rows[0].cells[0].content.lines.length).toBeGreaterThanOrEqual(
+      plain.rows[0].cells[0].content.lines.length,
+    );
+    // the box width itself is unchanged — only the content area inside it shrinks
+    expect(bordered.rows[0].cells[0].width).toBe(plain.rows[0].cells[0].width);
   });
 });

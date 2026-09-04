@@ -15,19 +15,30 @@
  *                       *widen* their spanned columns, evenly, if their own
  *                       natural width doesn't already fit (never shrink).
  *   3. per-cell content — laid out once at its final (possibly multi-column)
- *                       width; same deficit-widen rule for row heights and
- *                       rowSpan cells.
+ *                       width, inset by padding *and* border width (border-box
+ *                       model — a border never overlaps the text); same
+ *                       deficit-widen rule for row heights and rowSpan cells.
  *   4. position        — column/row offsets accumulated from final sizes.
  *
- * T2 (not yet implemented): borders (bgColor only so far).
+ * T3 (not yet implemented): border dash patterns, stroke-linecap, asymmetric
+ * corner radii — only solid per-side width/color + a uniform rx/ry so far.
  */
-import type { TableFrame, TableRow, TableCell, TableCellStyle, TableRowStyle } from '../types/TableTypes.js';
+import type { TableFrame, TableRow, TableCell, TableCellStyle, TableRowStyle, BorderStyles, Widths, ColorsOnWidth } from '../types/TableTypes.js';
 import type { TextFrameLayoutResult } from './TextFrameLayoutEngine.js';
 import type { VerticalAlignment } from '../types/Document.js';
 import { layoutTextFrame } from './TextFrameLayoutEngine.js';
-import { resolveWidths } from '../utils/widths.js';
+import { resolveWidths, resolveColors, type Side } from '../utils/sides.js';
 
 // ── Result shape ─────────────────────────────────────────────────────────
+
+/** A resolved, ready-to-paint border. Absent when every side's width is `0`. */
+export interface ResolvedBorder {
+  widths: Record<Side, number>;
+  colors: Record<Side, string>;
+  /** Present only when `rx`/`ry` was set anywhere in the style cascade. */
+  rx?: number;
+  ry?: number;
+}
 
 export interface TableCellLayoutResult {
   /** Absolute X of the cell box (border-box) within the table. */
@@ -38,11 +49,12 @@ export interface TableCellLayoutResult {
   width: number;
   /** Full box height — sums every spanned row + the gaps between them. */
   height: number;
-  /** Resolved padding box. */
+  /** Resolved padding box (inside the border, if any). */
   padding: { top: number; right: number; bottom: number; left: number };
   /** Extra Y offset inside the padding box from `verticalAlign` (0 for `'top'`). */
   verticalOffset: number;
   bgColor?: string;
+  border?: ResolvedBorder;
   /** The cell's laid-out content — same shape a lone `TextFrame` produces. */
   content: TextFrameLayoutResult;
   /** Columns this cell occupies (>1 for `colSpan`). */
@@ -55,6 +67,7 @@ export interface TableRowLayoutResult {
   y: number;
   height: number;
   bgColor?: string;
+  border?: ResolvedBorder;
   /** Only cells that *start* in this row (a rowSpan cell from above is not repeated here). */
   cells: TableCellLayoutResult[];
 }
@@ -65,6 +78,8 @@ export interface TableLayoutResult {
   /** Full outer box height, margins included. */
   height: number;
   bgColor?: string;
+  /** The table's own outer border (`TableStyle`), distinct from row/cell borders. */
+  border?: ResolvedBorder;
   rows: TableRowLayoutResult[];
 }
 
@@ -76,23 +91,64 @@ export interface TableLayoutOptions {
 
 const DEFAULT_PADDING = 8;
 
-function resolveCellStyle(cell: TableCell, table: TableFrame): Required<TableCellStyle> {
+interface ResolvedCellStyle {
+  bgColor: string;
+  paddings: Widths;
+  verticalAlign: VerticalAlignment;
+  borderWidths?: Widths;
+  borderColors?: ColorsOnWidth;
+  rx?: number;
+  ry?: number;
+}
+
+interface ResolvedRowStyle {
+  height: number;
+  bgColor: string;
+  borderWidths?: Widths;
+  borderColors?: ColorsOnWidth;
+  rx?: number;
+  ry?: number;
+}
+
+function resolveCellStyle(cell: TableCell, table: TableFrame): ResolvedCellStyle {
   const d = table.defaultCellStyle ?? {};
   const s = cell.style ?? {};
   return {
     bgColor: s.bgColor ?? d.bgColor ?? '',
     paddings: s.paddings ?? d.paddings ?? DEFAULT_PADDING,
     verticalAlign: s.verticalAlign ?? d.verticalAlign ?? 'top',
+    borderWidths: s.borderWidths ?? d.borderWidths,
+    borderColors: s.borderColors ?? d.borderColors,
+    rx: s.rx ?? d.rx,
+    ry: s.ry ?? d.ry,
   };
 }
 
-function resolveRowStyle(row: TableRow, table: TableFrame): Required<TableRowStyle> {
+function resolveRowStyle(row: TableRow, table: TableFrame): ResolvedRowStyle {
   const d = table.defaultRowStyle ?? {};
   const s = row.style ?? {};
   return {
     height: s.height ?? d.height ?? 0,
     bgColor: s.bgColor ?? d.bgColor ?? '',
+    borderWidths: s.borderWidths ?? d.borderWidths,
+    borderColors: s.borderColors ?? d.borderColors,
+    rx: s.rx ?? d.rx,
+    ry: s.ry ?? d.ry,
   };
+}
+
+/** Resolve a `BorderStyles`-shaped style into paint-ready per-side values, or `undefined` if every side is `0`-width. */
+function resolveBorder(raw: BorderStyles | undefined): ResolvedBorder | undefined {
+  if (!raw) return undefined;
+  const widths = resolveWidths(raw.borderWidths, 0);
+  if (widths.top === 0 && widths.right === 0 && widths.bottom === 0 && widths.left === 0) return undefined;
+  const colors = resolveColors(raw.borderColors, '#000');
+  const border: ResolvedBorder = { widths, colors };
+  if (raw.rx !== undefined || raw.ry !== undefined) {
+    border.rx = raw.rx ?? raw.ry;
+    border.ry = raw.ry ?? raw.rx;
+  }
+  return border;
 }
 
 function verticalOffsetFor(align: VerticalAlignment, available: number, content: number): number {
@@ -119,8 +175,11 @@ interface Placed {
   colSpan: number;
   rowSpan: number;
   // filled in during measurement/layout — see layoutTableFrame
-  cs: Required<TableCellStyle>;
+  cs: ResolvedCellStyle;
   pad: { top: number; right: number; bottom: number; left: number };
+  border?: ResolvedBorder;
+  /** padding + border width per side — the actual content inset (border-box model). */
+  inset: { top: number; right: number; bottom: number; left: number };
   natural: number;
   width: number;
   content: TextFrameLayoutResult;
@@ -153,7 +212,7 @@ function placeCells(rows: TableRow[]): { placed: Placed[]; colCount: number } {
       placed.push({
         cell, startRow: ri, startCol: ci, colSpan, rowSpan,
         // placeholders — filled in by layoutTableFrame
-        cs: undefined as any, pad: undefined as any, natural: 0, width: 0,
+        cs: undefined as any, pad: undefined as any, inset: undefined as any, natural: 0, width: 0,
         content: undefined as any, cellHeight: 0,
       });
       for (let dr = 1; dr < rowSpan; dr++) {
@@ -174,6 +233,7 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
   const colGaps = style.colGaps ?? 0;
   const rowGaps = style.rowGaps ?? 0;
   const rowCount = table.rows.length;
+  const tableBorder = resolveBorder(style);
 
   const { placed, colCount } = placeCells(table.rows);
   if (colCount === 0 || rowCount === 0) {
@@ -181,6 +241,7 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
       width: margins.left + margins.right,
       height: margins.top + margins.bottom,
       bgColor: style.bgColor,
+      ...(tableBorder ? { border: tableBorder } : {}),
       rows: [],
     };
   }
@@ -189,9 +250,17 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
   for (const p of placed) {
     p.cs = resolveCellStyle(p.cell, table);
     p.pad = resolveWidths(p.cs.paddings, DEFAULT_PADDING);
+    p.border = resolveBorder(p.cs);
+    const bw = p.border?.widths;
+    p.inset = {
+      top: p.pad.top + (bw?.top ?? 0),
+      right: p.pad.right + (bw?.right ?? 0),
+      bottom: p.pad.bottom + (bw?.bottom ?? 0),
+      left: p.pad.left + (bw?.left ?? 0),
+    };
     p.natural =
       layoutTextFrame({ ...p.cell.content, width: undefined, wrap: false }, { mode: options.mode }).content.width +
-      p.pad.left + p.pad.right;
+      p.inset.left + p.inset.right;
   }
 
   // ── Column widths: span-1 cells set the max; spanning cells only widen ──
@@ -224,9 +293,9 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
   // ── Lay out every cell's content at its final (possibly multi-column) width ──
   for (const p of placed) {
     p.width = sumSpan(colWidths, p.startCol, p.colSpan, colGaps);
-    const contentWidth = Math.max(0, p.width - p.pad.left - p.pad.right);
+    const contentWidth = Math.max(0, p.width - p.inset.left - p.inset.right);
     p.content = layoutTextFrame({ ...p.cell.content, width: contentWidth, wrap: true }, { mode: options.mode });
-    p.cellHeight = p.content.content.height + p.pad.top + p.pad.bottom;
+    p.cellHeight = p.content.content.height + p.inset.top + p.inset.bottom;
   }
 
   // ── Row heights: span-1 cells set the max; spanning cells only widen ───
@@ -266,11 +335,12 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
 
   const rows: TableRowLayoutResult[] = table.rows.map((row, ri) => {
     const rs = resolveRowStyle(row, table);
+    const rowBorder = resolveBorder(rs);
     const cells: TableCellLayoutResult[] = placed
       .filter((p) => p.startRow === ri)
       .map((p) => {
         const height = sumSpan(rowHeights, p.startRow, p.rowSpan, rowGaps);
-        const available = height - p.pad.top - p.pad.bottom;
+        const available = height - p.inset.top - p.inset.bottom;
         const verticalOffset = verticalOffsetFor(p.cs.verticalAlign, available, p.content.content.height);
         return {
           x: colX[p.startCol],
@@ -280,16 +350,29 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
           padding: p.pad,
           verticalOffset,
           ...(p.cs.bgColor ? { bgColor: p.cs.bgColor } : {}),
+          ...(p.border ? { border: p.border } : {}),
           content: p.content,
           colSpan: p.colSpan,
           rowSpan: p.rowSpan,
         };
       });
-    return { y: rowY[ri], height: rowHeights[ri], ...(rs.bgColor ? { bgColor: rs.bgColor } : {}), cells };
+    return {
+      y: rowY[ri],
+      height: rowHeights[ri],
+      ...(rs.bgColor ? { bgColor: rs.bgColor } : {}),
+      ...(rowBorder ? { border: rowBorder } : {}),
+      cells,
+    };
   });
 
   const totalWidth = margins.left + colWidths.reduce((a: number, b: number) => a + b, 0) + colGaps * Math.max(0, colCount - 1) + margins.right;
   const totalHeight = margins.top + rowHeights.reduce((a: number, b: number) => a + b, 0) + rowGaps * Math.max(0, rowCount - 1) + margins.bottom;
 
-  return { width: totalWidth, height: totalHeight, bgColor: style.bgColor, rows };
+  return {
+    width: totalWidth,
+    height: totalHeight,
+    bgColor: style.bgColor,
+    ...(tableBorder ? { border: tableBorder } : {}),
+    rows,
+  };
 }

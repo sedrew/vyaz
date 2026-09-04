@@ -11,24 +11,49 @@
  * callback, and column/row sizing is measured from that content rather than
  * required from the caller.
  *
- * T0 (this file + TableLayoutEngine.ts): grid sizing only — no colSpan/rowSpan,
- * no borders. See ROADMAP / packages/core `PLAN.md`-adjacent notes for T1–T3.
+ * T0/T1 (this file + TableLayoutEngine.ts): grid sizing + colSpan/rowSpan.
+ * T2 (this update): solid per-side borders + uniform corner radius. Dash
+ * patterns / stroke-linecap / asymmetric radii are a later phase (T3).
  */
 import type { TextFrame, VerticalAlignment } from './Document.js';
 
 // ── Shared shorthand primitives ─────────────────────────────────────────
 
 /**
- * CSS-style shorthand for a per-side numeric value.
- * `n` = all four sides; `[tb, lr]` = top/bottom, left/right; `[t, r, b, l]` =
+ * CSS-style shorthand for a per-side value of type `T`.
+ * `v` = all four sides; `[tb, lr]` = top/bottom, left/right; `[t, r, b, l]` =
  * one per side (CSS clockwise order).
  */
-export type Widths = number | [number, number] | [number, number, number, number];
+export type Sides<T> = T | [T, T] | [T, T, T, T];
+
+/** `Sides<number>` — paddings, margins, border widths. */
+export type Widths = Sides<number>;
+
+/** `Sides<string>` — border colors. */
+export type ColorsOnWidth = Sides<string>;
+
+/**
+ * Solid per-side border + a uniform corner radius. Shared by `TableStyle`
+ * (the table's own outer border), `TableRowStyle` and `TableCellStyle`.
+ *
+ * @see TableTypes.ts header — modelled on svg-table-core's `BorderStyles`,
+ *      minus dash patterns / stroke-linecap / asymmetric radii (T3).
+ */
+export interface BorderStyles {
+  /** Per-side border width, CSS shorthand. `0` (absent) = no border on that side. */
+  borderWidths?: Widths;
+  /** Per-side border color, CSS shorthand. Default `'#000'` when a width is set. */
+  borderColors?: ColorsOnWidth;
+  /** Uniform corner radius (all four corners). Asymmetric radii are T3. */
+  rx?: number;
+  /** Uniform corner radius; defaults to `rx` when only one is given. */
+  ry?: number;
+}
 
 // ── Cell ─────────────────────────────────────────────────────────────────
 
 /** Style for a single `TableCell`. Falls back to `TableFrame.defaultCellStyle`. */
-export interface TableCellStyle {
+export interface TableCellStyle extends BorderStyles {
   /** Cell background fill. */
   bgColor?: string;
   /** Inner padding, CSS shorthand. Default `8` on all sides. */
@@ -57,7 +82,7 @@ export interface TableCell {
 // ── Row ──────────────────────────────────────────────────────────────────
 
 /** Style for a `TableRow`. Falls back to `TableFrame.defaultRowStyle`. */
-export interface TableRowStyle {
+export interface TableRowStyle extends BorderStyles {
   /** Explicit row height override, in px. Auto (tallest cell) when absent. */
   height?: number;
   /** Row background fill, painted under `TableCellStyle.bgColor`. */
@@ -74,7 +99,7 @@ export interface TableRow {
 // ── Table (root) ─────────────────────────────────────────────────────────
 
 /** Table-wide style. */
-export interface TableStyle {
+export interface TableStyle extends BorderStyles {
   /** Outer margin around the whole table, CSS shorthand. Default `0`. */
   margins?: Widths;
   /** Table background fill, painted under row/cell backgrounds. */

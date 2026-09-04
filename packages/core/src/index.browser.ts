@@ -32,7 +32,7 @@ export type { OnMissingFont } from './layout/resolve-font.js';
 
 // ── Table Layout Engine — @beta ─────────────────────────
 export { layoutTableFrame } from './layout/TableLayoutEngine.js';
-export type { TableLayoutResult, TableRowLayoutResult, TableCellLayoutResult, TableLayoutOptions } from './layout/TableLayoutEngine.js';
+export type { TableLayoutResult, TableRowLayoutResult, TableCellLayoutResult, TableLayoutOptions, ResolvedBorder } from './layout/TableLayoutEngine.js';
 
 // ── Autofit — stable ────────────────────────────────────
 export { applyScale, findScale } from './layout/AutoFitEngine.js';

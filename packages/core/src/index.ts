@@ -51,7 +51,10 @@ export type {
   TableStyle,
   TableRowStyle,
   TableCellStyle,
+  BorderStyles,
   Widths,
+  ColorsOnWidth,
+  Sides,
 } from './types/TableTypes.js';
 // ⚠️ Bun's `bun build --target bun` (and `--target node`) has the same const-inlining
 //    limitation as `--target browser`. Using object spread forces the bundler
@@ -102,7 +105,7 @@ export type { TextFrameLayoutResult, LayoutOptions, AutofitOutcome, FrameTransfo
 
 // ── Table Layout Engine — @beta ──────────────────────────────────────────
 export { layoutTableFrame } from './layout/TableLayoutEngine.js';
-export type { TableLayoutResult, TableRowLayoutResult, TableCellLayoutResult, TableLayoutOptions } from './layout/TableLayoutEngine.js';
+export type { TableLayoutResult, TableRowLayoutResult, TableCellLayoutResult, TableLayoutOptions, ResolvedBorder } from './layout/TableLayoutEngine.js';
 export type { OnMissingFont } from './layout/resolve-font.js';
 
 // ── Autofit — stable ───────────────────────────────────────────────────
