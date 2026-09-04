@@ -24,6 +24,12 @@
  * xmlns… viewBox…>` for a bare `<g>`, for splicing this table into a
  * document that already has one (composing tables, nested-table cells).
  *
+ * `cell.nestedTable` (`TableCell.content` was itself a `TableFrame`) paints
+ * via a *recursive* `renderTableToSVG(cell.nestedTable, { fragment: true })`
+ * call at the cell's content origin instead of the normal `renderToSVG` text
+ * path — `fragment: true` is exactly what makes this splice in as a `<g>`
+ * rather than nesting `<svg>` inside `<svg>` inside `<svg>`.
+ *
  * Border dash patterns (`stroke-dasharray`) and per-side `stroke-linecap`
  * (T3, `dashAttrs`/`dashUniform`) paint on both border shapes: a uniform
  * `<rect stroke>` needs its pattern+linecap to also match on all four sides
@@ -163,14 +169,21 @@ export function renderTableToSVG(result: TableLayoutResult, opts: TableRenderOpt
   for (const row of result.rows) {
     for (const cell of row.cells) {
       if (cell.before) parts.push(paintSlot(cell.before, preset, style));
-      const cw = contentWidthOf(cell);
-      const ch = cell.content.content.height;
-      if (cw > 0 && ch > 0 && cell.content.lines.length > 0) {
-        const originX = cell.x + cell.padding.left + (cell.border?.widths.left ?? 0) + cell.cx;
-        const originY = cell.y + cell.padding.top + (cell.border?.widths.top ?? 0) + cell.verticalOffset + cell.cy;
-        let svg = renderToSVG(cell.content, { preset, style, sizing: 'frame', width: cw, height: ch });
-        if (cell.allowOverflow) svg = withOverflowVisible(svg);
-        parts.push(`  <g transform="translate(${fmt(originX)} ${fmt(originY)})">${svg}</g>\n`);
+      const originX = cell.x + cell.padding.left + (cell.border?.widths.left ?? 0) + cell.cx;
+      const originY = cell.y + cell.padding.top + (cell.border?.widths.top ?? 0) + cell.verticalOffset + cell.cy;
+      if (cell.nestedTable) {
+        // A cell whose TableCell.content was a TableFrame — render it as a <g>
+        // fragment (opts.fragment) so it splices in without a nested <svg>.
+        const nestedSvg = renderTableToSVG(cell.nestedTable, { preset, style, fragment: true });
+        parts.push(`  <g transform="translate(${fmt(originX)} ${fmt(originY)})">${nestedSvg}</g>\n`);
+      } else {
+        const cw = contentWidthOf(cell);
+        const ch = cell.content.content.height;
+        if (cw > 0 && ch > 0 && cell.content.lines.length > 0) {
+          let svg = renderToSVG(cell.content, { preset, style, sizing: 'frame', width: cw, height: ch });
+          if (cell.allowOverflow) svg = withOverflowVisible(svg);
+          parts.push(`  <g transform="translate(${fmt(originX)} ${fmt(originY)})">${svg}</g>\n`);
+        }
       }
       if (cell.after) parts.push(paintSlot(cell.after, preset, style));
     }

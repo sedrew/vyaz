@@ -532,3 +532,52 @@ describe('TableLayoutEngine — before/after decorative slots', () => {
     expect(c.before!.x).toBeLessThan(c.after!.x);
   });
 });
+
+describe('TableLayoutEngine — nested tables (TableCell.content as a TableFrame)', () => {
+  const nestedTable: TableFrame = { rows: [{ cells: [cell('n1'), cell('n2')] }] };
+
+  test('a cell whose content is a TableFrame gets a nestedTable result, content is a zero-line placeholder', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [{ content: nestedTable }] }] });
+    const c = r.rows[0].cells[0];
+    expect(c.nestedTable).toBeDefined();
+    expect(c.nestedTable!.rows.length).toBe(1);
+    expect(c.content.lines).toEqual([]);
+    expect(c.content.content.width).toBeCloseTo(c.nestedTable!.width, 1);
+    expect(c.content.content.height).toBeCloseTo(c.nestedTable!.height, 1);
+  });
+
+  test('a plain TextFrame cell has no nestedTable', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [cell('x')] }] });
+    expect(r.rows[0].cells[0].nestedTable).toBeUndefined();
+  });
+
+  test('the outer cell sizes to the nested table\'s natural width, like any other content', () => {
+    const wide: TableFrame = { rows: [{ cells: [cell('a very long cell that needs a lot of room'), cell('b')] }] };
+    const r = layoutTableFrame({ rows: [{ cells: [{ content: wide }, cell('sibling')] }] });
+    const nestedCell = r.rows[0].cells[0];
+    expect(nestedCell.width).toBeGreaterThan(r.rows[0].cells[1].width); // wider than the plain sibling cell
+    expect(nestedCell.nestedTable!.width).toBeLessThanOrEqual(nestedCell.width);
+  });
+
+  test('the nested table is laid out at the outer cell\'s own content width when the column is constrained', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [{ content: nestedTable }] }] }, {});
+    const auto = r.rows[0].cells[0].nestedTable!.width;
+    const narrow = layoutTableFrame({ rows: [{ cells: [{ content: nestedTable }] }], columnWidths: [Math.max(20, auto - 40)] });
+    expect(narrow.rows[0].cells[0].nestedTable!.width).toBeLessThan(auto);
+  });
+
+  test('nesting two levels deep works — a table inside a cell inside a cell', () => {
+    const twoDeep: TableFrame = { rows: [{ cells: [{ content: nestedTable }] }] };
+    const r = layoutTableFrame({ rows: [{ cells: [{ content: twoDeep }] }] });
+    const outer = r.rows[0].cells[0].nestedTable!;
+    const inner = outer.rows[0].cells[0].nestedTable!;
+    expect(inner.rows[0].cells.length).toBe(2); // n1, n2 from the innermost table
+  });
+
+  test('a pathological/cyclic content structure throws past the depth ceiling instead of hanging', () => {
+    // build a genuinely-deep (not cyclic — cyclic would need `any`) chain past the 50-level ceiling
+    let deepest: TableFrame = nestedTable;
+    for (let i = 0; i < 55; i++) deepest = { rows: [{ cells: [{ content: deepest }] }] };
+    expect(() => layoutTableFrame(deepest)).toThrow(/depth/i);
+  });
+});

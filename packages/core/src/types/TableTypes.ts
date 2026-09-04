@@ -101,15 +101,25 @@ export interface TableCellStyle extends BorderStyles {
 }
 
 /**
- * One table cell. `content` is a full `TextFrame` — the same recursive shape
- * as everywhere else in vyaz, laid out and rendered like any other text box.
+ * One table cell. `content` is usually a full `TextFrame` — the same
+ * recursive shape as everywhere else in vyaz, laid out and rendered like any
+ * other text box — but can also be a `TableFrame`, nesting a table inside
+ * this cell (distinguished by shape: a `TableFrame` has `rows`, a `TextFrame`
+ * has `paragraphs` — see `isNestedTable` in `TableLayoutEngine.ts`).
  *
- * `content.width` and `content.wrap` are overridden by the table layout (the
- * column width decides them); set everything else — paragraphs, alignment,
- * runs — as usual.
+ * `content.width` and `content.wrap` (`TextFrame`) / `content.width`
+ * (`TableFrame`) are overridden by the table layout (the column width
+ * decides them); set everything else as usual.
+ *
+ * Nesting depth is unbounded here (a `TableFrame` cell can itself contain a
+ * cell with a `TableFrame`, and so on) but `layoutTableFrame` throws past a
+ * hard ceiling (50) as a guard against a pathological/cyclic structure — see
+ * `TableLayoutOptions._depth`. `@vyaz/html`'s own HTML `<table>`-in-`<table>`
+ * conversion does not yet build this shape (still a follow-up); this is the
+ * `TableFrame`-level primitive it would build on.
  */
 export interface TableCell {
-  content: TextFrame;
+  content: TextFrame | TableFrame;
   /**
    * Columns this cell spans. Default `1`. `'auto'` — only honoured on the
    * *last* cell of a row — stretches it to fill every remaining column, so a

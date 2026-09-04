@@ -199,4 +199,31 @@ describe('renderTableToSVG', () => {
     // exactly one nested content <svg> (the cell's own) — no before/after slots
     expect((svg.match(/<svg /g) ?? []).length).toBe(2); // outer table svg + one content svg
   });
+
+  test('a nested table (TableCell.content as a TableFrame) renders as a <g> fragment, not a nested <svg>', () => {
+    const inner: TableFrame = { rows: [{ cells: [cell('n1'), cell('n2')] }] };
+    const table: TableFrame = { rows: [{ cells: [{ content: inner }, cell('sibling')] }] };
+    const svg = renderTableToSVG(layoutTableFrame(table));
+    for (const t of ['n1', 'n2', 'sibling']) expect(svg).toContain(t);
+    // outer table + sibling's own content svg + n1's + n2's — the *nested table itself* is a <g>
+    // fragment, not an extra <svg> wrapper (would be 5 if it wrapped its own <svg>)
+    expect((svg.match(/<svg /g) ?? []).length).toBe(4);
+    expect(svg).toMatch(/<g[^>]*>[\s\S]*n1[\s\S]*n2[\s\S]*<\/g>/); // n1/n2 sit inside one shared <g>, not their own <svg>
+  });
+
+  test('a nested table\'s own bg/border/cells still paint (recursive renderTableToSVG really ran)', () => {
+    const inner: TableFrame = { rows: [{ cells: [{ ...cell('x'), style: { bgColor: '#0f0' } }] }] };
+    const table: TableFrame = { rows: [{ cells: [{ content: inner }] }] };
+    const svg = renderTableToSVG(layoutTableFrame(table));
+    expect(svg).toContain('fill="#0f0"');
+  });
+
+  test('a cell with nestedTable ignores before/after positioning math but still paints its own before/after', () => {
+    const inner: TableFrame = { rows: [{ cells: [cell('inner')] }] };
+    const table: TableFrame = { rows: [{ cells: [{ content: inner, before: makeTextFrame([makeParagraph('B', { fontFamily: 'Unifont', fontSize: 14 })]) }] }] };
+    const svg = renderTableToSVG(layoutTableFrame(table));
+    expect(svg).toContain('B');
+    expect(svg).toContain('inner');
+    expect(svg.indexOf('B')).toBeLessThan(svg.indexOf('inner'));
+  });
 });

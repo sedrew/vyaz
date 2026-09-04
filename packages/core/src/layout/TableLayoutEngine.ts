@@ -25,10 +25,25 @@
  * `@vyaz/renderer`'s `TableRenderer.ts` (`borderMarkup`) — this engine only
  * produces the resolved per-side values. Asymmetric corner radii (only a
  * uniform `rx`/`ry` today) remain a possible future addition.
+ *
+ * Nested tables: `TableCell.content` can be a `TableFrame` instead of a
+ * `TextFrame` (`isNestedTable`). Both the natural-width pass and the final
+ * layout pass then call `layoutTableFrame` recursively instead of
+ * `layoutTextFrame` — meaning a nested cell's own two-pass layout happens
+ * *twice* (once per outer pass), so cost roughly doubles per nesting depth.
+ * The nested `TableLayoutResult` is exposed as `TableCellLayoutResult.
+ * nestedTable`; `content` still gets a placeholder `TextFrameLayoutResult`
+ * (zero lines, sized to the nested table) so every existing consumer that
+ * reads cell dimensions off `content.content.{width,height}` keeps working
+ * unchanged — `TableRenderer.ts` checks `nestedTable` first and renders that
+ * instead of `content` when present. `_depth` is an internal recursion
+ * counter (not meant to be set by callers) — past 50 levels this throws
+ * instead of hanging, on the assumption that's a cyclic/pathological input,
+ * not a real document.
  */
 import type { TableFrame, TableRow, TableCell, TableCellStyle, TableRowStyle, BorderStyles, Widths, ColorsOnWidth, BorderLineCap } from '../types/TableTypes.js';
 import type { TextFrameLayoutResult } from './TextFrameLayoutEngine.js';
-import type { VerticalAlignment } from '../types/Document.js';
+import type { TextFrame, VerticalAlignment } from '../types/Document.js';
 import { layoutTextFrame } from './TextFrameLayoutEngine.js';
 import { resolveWidths, resolveColors, resolvePatterns, resolveShapes, type Side } from '../utils/sides.js';
 
@@ -68,8 +83,20 @@ export interface TableCellLayoutResult {
   allowOverflow: boolean;
   bgColor?: string;
   border?: ResolvedBorder;
-  /** The cell's laid-out content — same shape a lone `TextFrame` produces. */
+  /**
+   * The cell's laid-out content — same shape a lone `TextFrame` produces.
+   * When `TableCell.content` was a `TableFrame` (see `nestedTable`), this is
+   * a zero-line placeholder sized to match it — a renderer should check
+   * `nestedTable` first and use that instead of painting `content` as text.
+   */
   content: TextFrameLayoutResult;
+  /**
+   * Present when `TableCell.content` was a `TableFrame` — a table nested
+   * inside this cell, already laid out at the cell's own content width.
+   * `content` (above) is a same-sized placeholder in this case, not real
+   * text — paint this instead.
+   */
+  nestedTable?: TableLayoutResult;
   /**
    * `TableCell.before`, laid out unwrapped at its own natural size and
    * positioned absolute-within-the-table, already vertically centered.
@@ -120,6 +147,32 @@ export interface TableLayoutOptions {
    * a caller wanting them should lay out a cell's `TextFrame` itself).
    */
   onMissingFont?: 'throw' | 'substitute';
+  /**
+   * Internal nested-table recursion counter — do not set this yourself.
+   * `layoutTableFrame` increments it on every recursive call (a `TableCell`
+   * whose `content` is itself a `TableFrame`) and throws past 50 levels.
+   * @internal
+   */
+  _depth?: number;
+}
+
+const MAX_NESTED_TABLE_DEPTH = 50;
+
+/** `TableCell.content` discriminator — a `TableFrame` has `rows`, a `TextFrame` has `paragraphs`. */
+function isNestedTable(content: TextFrame | TableFrame): content is TableFrame {
+  return 'rows' in content;
+}
+
+/** A zero-line placeholder `TextFrameLayoutResult` sized to a nested table, so size-reading consumers need no branch. */
+function placeholderContentFor(nested: TableLayoutResult): TextFrameLayoutResult {
+  return {
+    lines: [],
+    content: { width: nested.width, height: nested.height },
+    frame: { width: nested.width, height: nested.height },
+    overflow: { horizontal: false, vertical: false },
+    fit: { horizontal: 'content', vertical: 'content' },
+    writingMode: 'horizontal-tb',
+  };
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────
@@ -239,6 +292,8 @@ interface Placed {
   natural: number;
   width: number;
   content: TextFrameLayoutResult;
+  /** Set instead of/alongside a placeholder `content` when `cell.content` is a `TableFrame`. */
+  nestedTable?: TableLayoutResult;
   cellHeight: number;
 }
 
@@ -300,6 +355,12 @@ function placeCells(rows: TableRow[]): { placed: Placed[]; colCount: number } {
 // ── Layout ───────────────────────────────────────────────────────────────
 
 export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions = {}): TableLayoutResult {
+  const depth = options._depth ?? 0;
+  if (depth > MAX_NESTED_TABLE_DEPTH) {
+    throw new Error(
+      `layoutTableFrame: nested table depth exceeded ${MAX_NESTED_TABLE_DEPTH} — likely a cyclic or pathological TableCell.content structure, not a real document.`,
+    );
+  }
   const style = table.style ?? {};
   const margins = resolveWidths(style.margins, 0);
   const colGaps = style.colGaps ?? 0;
@@ -331,9 +392,10 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
       bottom: p.pad.bottom + (bw?.bottom ?? 0),
       left: p.pad.left + (bw?.left ?? 0),
     };
-    p.natural =
-      layoutTextFrame({ ...p.cell.content, width: undefined, wrap: false }, { mode: options.mode, onMissingFont: options.onMissingFont }).content.width +
-      p.inset.left + p.inset.right;
+    const naturalWidth = isNestedTable(p.cell.content)
+      ? layoutTableFrame(p.cell.content, { mode: options.mode, onMissingFont: options.onMissingFont, _depth: depth + 1 }).width
+      : layoutTextFrame({ ...p.cell.content, width: undefined, wrap: false }, { mode: options.mode, onMissingFont: options.onMissingFont }).content.width;
+    p.natural = naturalWidth + p.inset.left + p.inset.right;
   }
 
   // ── Column widths: span-1 cells set the max; spanning cells only widen ──
@@ -367,7 +429,16 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
   for (const p of placed) {
     p.width = sumSpan(colWidths, p.startCol, p.colSpan, colGaps);
     const contentWidth = Math.max(0, p.width - p.inset.left - p.inset.right);
-    p.content = layoutTextFrame({ ...p.cell.content, width: contentWidth, wrap: true }, { mode: options.mode, onMissingFont: options.onMissingFont });
+    if (isNestedTable(p.cell.content)) {
+      const nested = layoutTableFrame(
+        { ...p.cell.content, width: contentWidth },
+        { mode: options.mode, onMissingFont: options.onMissingFont, _depth: depth + 1 },
+      );
+      p.nestedTable = nested;
+      p.content = placeholderContentFor(nested);
+    } else {
+      p.content = layoutTextFrame({ ...p.cell.content, width: contentWidth, wrap: true }, { mode: options.mode, onMissingFont: options.onMissingFont });
+    }
     p.cellHeight = p.content.content.height + p.inset.top + p.inset.bottom;
   }
 
@@ -442,6 +513,7 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
           ...(p.cs.bgColor ? { bgColor: p.cs.bgColor } : {}),
           ...(p.border ? { border: p.border } : {}),
           content: p.content,
+          ...(p.nestedTable ? { nestedTable: p.nestedTable } : {}),
           ...(before ? { before } : {}),
           ...(after ? { after } : {}),
           colSpan: p.colSpan,
