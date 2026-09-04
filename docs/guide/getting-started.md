@@ -39,4 +39,10 @@ console.log(svg);
 | Package | Description |
 |---------|-------------|
 | **@vyaz/core** | Text frame and paragraph layout engine, font metrics, auto-fit, compiler |
-| **@vyaz/renderer** | SVG and Canvas renderers for layout output |
+| **@vyaz/renderer** | SVG renderer for layout output |
+
+## Next
+
+Running this in a browser? See **[Browser usage](./browser)** — fonts need to be
+registered with the layout engine *and* `document.fonts`, or the SVG renders with
+the wrong metrics.

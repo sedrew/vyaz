@@ -17,14 +17,14 @@ hero:
 features:
   - title: Text Frame Layout
     details: Multi-paragraph frames with padding, wrapping, and vertical alignment
-  - title: Multi-Font Styling
-    details: Bold, italic, size, color, subscript/superscript, letter-spacing
-  - title: Writing Modes
-    details: horizontal-tb, vertical-rl, vertical-lr with text orientation
+  - title: Rich Runs
+    details: Bold, italic, size, colour, background, letter-spacing, sub/superscript, decorations
+  - title: Lists & Columns
+    details: Nested bullet/numbered lists, custom markers, multi-column with balanced fill
   - title: Auto-Fit
     details: Scale text proportionally to fit the container
   - title: Office Compatible
-    details: "mode: 'office' for PowerPoint/DrawingML rendering"
-  - title: SVG & Canvas Output
-    details: Four SVG presets and Canvas renderer with debug overlays
+    details: "mode: 'office' for PowerPoint / DrawingML line boxes"
+  - title: SVG Output
+    details: Four presets (flat / browser / preserve / glyph), opt-in shaping, debug overlays
 ---

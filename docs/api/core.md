@@ -2,20 +2,21 @@
 
 Rich text layout engine — TypeScript, isomorphic (browser + Bun/Node.js), pixel-perfect typography.
 
-The engine operates on a **TextFrame → Paragraph → TextRun** hierarchy, following W3C CSS Text, CSS Writing Modes, and CSS Inline Layout specifications.
+The engine operates on a **TextFrame → Paragraph → TextRun** hierarchy, following W3C CSS Text and CSS Inline Layout.
 
 ## Features
 
 - **Text frame layout** — multi-paragraph frames with padding, wrapping, and vertical alignment
-- **Multi-font, multi-style text** — bold, italic, size, color, subscript/superscript, letter-spacing
-- **Text alignment** — left, center, right, justify
-- **Line wrapping** — soft/hard breaks, `white-space` control (normal, nowrap, pre)
-- **Writing modes** — `horizontal-tb`, `vertical-rl`, `vertical-lr` with text orientation
-- **Auto-fit** — scale text proportionally to fit the container (`AutofitConfig`)
-- **Inline widgets** — embedded objects (icons, images) inside the text flow
-- **Office-compatible mode** — `mode: 'office'` for PowerPoint/DrawingML rendering
-- **Font metrics** — system font registry with fontkit-based metric extraction
-- **Compiler** — paragraph compilation with token preparation for external renderers
+- **Multi-font, multi-style text** — bold, italic, size, colour, background, sub/superscript, letter-spacing, underline, strikethrough, text-transform
+- **Text alignment** — left, center, right, justify, per paragraph
+- **Line wrapping** — soft/hard breaks, `white-space` (`normal` `nowrap` `pre` `pre-line` `pre-wrap`)
+- **Lists** — nested bullet / numbered, `outside` / `inside` markers, custom bullet char, roman / alpha
+- **Multi-column** — balanced or `auto` fill
+- **Auto-fit** — scale text proportionally to fit the container
+- **Shaping** — opt-in `{ shaping: true }` for GPOS kerning + GSUB ligatures (browser-metrics parity)
+- **Inline widgets** — reserve width for embedded objects (`type: 'inline-box'`) inside the text flow
+- **Office-compatible mode** — `mode: 'office'` for PowerPoint / DrawingML line boxes
+- **Font metrics** — fontkit-based metric extraction; variable-font instancing; optional system font registry (Node)
 
 ## Module Structure
 

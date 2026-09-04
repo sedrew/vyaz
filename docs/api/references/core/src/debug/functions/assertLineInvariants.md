@@ -1,4 +1,4 @@
-[vyaz-monorepo](../../../index.md) / [core/src](../index.md) / assertLineInvariants
+[vyaz-monorepo](../../../../index.md) / [core/src/debug](../index.md) / assertLineInvariants
 
 # Function: assertLineInvariants()
 
@@ -13,7 +13,7 @@ Throws on first violation.
 
 ### lines
 
-[`Line`](../interfaces/Line.md)[]
+[`Line`](../../interfaces/Line.md)[]
 
 ### originalText
 

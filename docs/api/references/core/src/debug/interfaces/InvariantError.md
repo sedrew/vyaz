@@ -1,4 +1,4 @@
-[vyaz-monorepo](../../../index.md) / [core/src](../index.md) / InvariantError
+[vyaz-monorepo](../../../../index.md) / [core/src/debug](../index.md) / InvariantError
 
 # Interface: InvariantError
 

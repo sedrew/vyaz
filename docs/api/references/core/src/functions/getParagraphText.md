@@ -4,7 +4,7 @@
 
 > **getParagraphText**(`paragraph`): `string`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:268](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L268)
+Defined in: [core/src/compile/ParagraphCompiler.ts:277](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L277)
 
 Get the full text of a paragraph (for INDEX_CONSIST checks).
 

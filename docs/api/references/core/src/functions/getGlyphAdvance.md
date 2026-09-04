@@ -4,7 +4,7 @@
 
 > **getGlyphAdvance**(`font`, `codePoint`): `number` \| `null`
 
-Defined in: [core/src/measure/FontEngine.ts:101](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L101)
+Defined in: [core/src/measure/FontEngine.ts:168](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L168)
 
 Get the advance width (in font units) for a single code point.
 

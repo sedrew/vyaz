@@ -24,7 +24,7 @@ Consecutive runs with different styles are split by the input parser.
 
 > `optional` **backgroundColor?**: `string`
 
-Defined in: [core/src/types/Document.ts:268](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L268)
+Defined in: [core/src/types/Document.ts:273](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L273)
 
 Background color (optional).
 
@@ -34,7 +34,7 @@ Background color (optional).
 
 > **color**: `string`
 
-Defined in: [core/src/types/Document.ts:266](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L266)
+Defined in: [core/src/types/Document.ts:271](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L271)
 
 Text color in any CSS-compatible format (hex, rgb, named).
 
@@ -42,11 +42,14 @@ Text color in any CSS-compatible format (hex, rgb, named).
 
 ### fontFamily
 
-> **fontFamily**: `string`
+> **fontFamily**: `string` \| `string`[]
 
-Defined in: [core/src/types/Document.ts:258](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L258)
+Defined in: [core/src/types/Document.ts:263](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L263)
 
-Font family name (e.g. `"Arial"`, `"Times New Roman"`).
+Font family name, or a CSS-style fallback list tried in order
+(e.g. `"Arial"` or `["Inter", "Arial", "sans-serif"]`). The layout result
+always reports the concrete family that was used; see
+`LayoutOptions.onMissingFont`.
 
 ***
 
@@ -54,7 +57,7 @@ Font family name (e.g. `"Arial"`, `"Times New Roman"`).
 
 > **fontSize**: `number`
 
-Defined in: [core/src/types/Document.ts:260](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L260)
+Defined in: [core/src/types/Document.ts:265](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L265)
 
 Font size in px.
 
@@ -64,7 +67,7 @@ Font size in px.
 
 > **fontStyle**: `"normal"` \| `"italic"`
 
-Defined in: [core/src/types/Document.ts:264](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L264)
+Defined in: [core/src/types/Document.ts:269](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L269)
 
 Font style.
 
@@ -74,7 +77,7 @@ Font style.
 
 > **fontWeight**: `number` \| `"normal"` \| `"bold"`
 
-Defined in: [core/src/types/Document.ts:262](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L262)
+Defined in: [core/src/types/Document.ts:267](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L267)
 
 Font weight: `'normal'`, `'bold'`, or a numeric CSS weight (100–900).
 
@@ -84,13 +87,11 @@ Font weight: `'normal'`, `'bold'`, or a numeric CSS weight (100–900).
 
 > `optional` **fullSizeKana?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:294](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L294)
+Defined in: [core/src/types/Document.ts:299](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L299)
 
-Convert small kana to full-size kana.
+**`Experimental`**
 
-#### Todo
-
-Not yet implemented.
+Convert small kana to full-size kana.  Accepted in the type but ignored by the layout engine (no-op until implemented).
 
 ***
 
@@ -98,13 +99,11 @@ Not yet implemented.
 
 > `optional` **fullWidth?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:292](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L292)
+Defined in: [core/src/types/Document.ts:297](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L297)
 
-Force full-width characters (CJK).
+**`Experimental`**
 
-#### Todo
-
-Not yet implemented.
+Force full-width characters (CJK).  Accepted in the type but ignored by the layout engine (no-op until implemented).
 
 ***
 
@@ -124,7 +123,7 @@ inside the text flow.
 
 > `optional` **letterSpacing?**: `number`
 
-Defined in: [core/src/types/Document.ts:270](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L270)
+Defined in: [core/src/types/Document.ts:275](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L275)
 
 Letter-spacing (tracking) in px. `0` means default.
 
@@ -134,13 +133,11 @@ Letter-spacing (tracking) in px. `0` means default.
 
 > `optional` **overline?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:281](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L281)
+Defined in: [core/src/types/Document.ts:286](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L286)
 
-Overline decoration.
+**`Experimental`**
 
-#### Todo
-
-Not yet implemented.
+Overline decoration.  Accepted in the type but ignored by the layout engine (no-op until implemented).
 
 ***
 
@@ -148,7 +145,7 @@ Not yet implemented.
 
 > `optional` **script?**: [`ScriptType`](../type-aliases/ScriptType.md)
 
-Defined in: [core/src/types/Document.ts:272](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L272)
+Defined in: [core/src/types/Document.ts:277](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L277)
 
 Subscript / superscript override.
 
@@ -158,7 +155,7 @@ Subscript / superscript override.
 
 > `optional` **strikethrough?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:279](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L279)
+Defined in: [core/src/types/Document.ts:284](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L284)
 
 Strikethrough decoration.
 
@@ -178,13 +175,11 @@ The text content of this run (or `\uFFFC` for inline-box).
 
 > `optional` **textDecorationColor?**: `string`
 
-Defined in: [core/src/types/Document.ts:285](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L285)
+Defined in: [core/src/types/Document.ts:290](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L290)
 
-Underline / overline / strikethrough line color.
+**`Experimental`**
 
-#### Todo
-
-Not yet implemented.
+Underline / overline / strikethrough line color.  Accepted in the type but ignored by the layout engine (no-op until implemented).
 
 ***
 
@@ -192,13 +187,11 @@ Not yet implemented.
 
 > `optional` **textDecorationStyle?**: [`TextDecorationStyle`](../type-aliases/TextDecorationStyle.md)
 
-Defined in: [core/src/types/Document.ts:283](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L283)
+Defined in: [core/src/types/Document.ts:288](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L288)
 
-Underline / overline / strikethrough line style.
+**`Experimental`**
 
-#### Todo
-
-Not yet implemented.
+Underline / overline / strikethrough line style.  Accepted in the type but ignored by the layout engine (no-op until implemented).
 
 ***
 
@@ -206,7 +199,7 @@ Not yet implemented.
 
 > `optional` **textTransform?**: [`TextTransform`](../type-aliases/TextTransform.md)
 
-Defined in: [core/src/types/Document.ts:290](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L290)
+Defined in: [core/src/types/Document.ts:295](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L295)
 
 Case transform (uppercase, lowercase, capitalize).
 
@@ -228,6 +221,6 @@ Run kind:
 
 > `optional` **underline?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:277](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L277)
+Defined in: [core/src/types/Document.ts:282](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L282)
 
 Underline decoration.

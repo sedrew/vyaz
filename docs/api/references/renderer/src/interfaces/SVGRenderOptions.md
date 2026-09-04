@@ -60,6 +60,19 @@ How `textLength` is applied.
 
 ***
 
+### glyphDecorations?
+
+> `optional` **glyphDecorations?**: `boolean`
+
+Defined in: [renderer/src/SVGRenderer.ts:80](https://github.com/sedrew/vyaz/blob/main/packages/renderer/src/SVGRenderer.ts#L80)
+
+glyph preset only: draw `underline` / `strikethrough` as explicit `<line>`
+geometry. The glyph path positions each character with its own `x`, so it
+cannot rely on SVG `text-decoration` (which the flat/expanded paths use).
+Ignored by every other preset. Default `true`.
+
+***
+
 ### height?
 
 > `optional` **height?**: `number`

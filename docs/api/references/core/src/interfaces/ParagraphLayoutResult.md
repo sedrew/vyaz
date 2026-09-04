@@ -42,6 +42,16 @@ Defined in: [core/src/types/LayoutTypes.ts:136](https://github.com/sedrew/vyaz/b
 
 ***
 
+### warnings?
+
+> `optional` **warnings?**: [`LayoutWarning`](LayoutWarning.md)[]
+
+Defined in: [core/src/types/LayoutTypes.ts:142](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L142)
+
+Non-fatal issues (e.g. font fallback/substitution).
+
+***
+
 ### width
 
 > **width**: `number`

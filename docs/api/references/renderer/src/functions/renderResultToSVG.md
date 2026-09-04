@@ -4,7 +4,7 @@
 
 > **renderResultToSVG**(`result`, `options?`): `string`
 
-Defined in: [renderer/src/SVGRenderer.ts:1101](https://github.com/sedrew/vyaz/blob/main/packages/renderer/src/SVGRenderer.ts#L1101)
+Defined in: [renderer/src/SVGRenderer.ts:1231](https://github.com/sedrew/vyaz/blob/main/packages/renderer/src/SVGRenderer.ts#L1231)
 
 Render a ParagraphLayoutResult to SVG, auto-passing dimensions.
 

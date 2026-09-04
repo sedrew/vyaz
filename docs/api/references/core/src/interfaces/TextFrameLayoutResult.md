@@ -2,7 +2,7 @@
 
 # Interface: TextFrameLayoutResult
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:36](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L36)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:38](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L38)
 
 Result of laying out a full TextFrame.
 
@@ -12,63 +12,68 @@ Result of laying out a full TextFrame.
 
 ## Properties
 
-### contentHeight
+### autofit?
 
-> **contentHeight**: `number`
+> `optional` **autofit?**: [`AutofitOutcome`](AutofitOutcome.md)
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:45](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L45)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:55](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L55)
 
-Actual content height (may exceed frameHeight).
-
-***
-
-### contentWidth
-
-> **contentWidth**: `number`
-
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:43](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L43)
-
-Actual content width (may exceed frameWidth when wrap=false).
+Present when autofit ran — the scale applied and whether it bottomed out.
 
 ***
 
-### fitHorizontal
+### content
 
-> **fitHorizontal**: `"frame"` \| `"content"`
-
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:47](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L47)
-
-Whether horizontal dimension should use frame or content size.
-
-***
-
-### fitVertical
-
-> **fitVertical**: `"frame"` \| `"content"`
-
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:49](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L49)
-
-Whether vertical dimension should use frame or content size.
-
-***
-
-### frameHeight?
-
-> `optional` **frameHeight?**: `number`
+> **content**: `object`
 
 Defined in: [core/src/layout/TextFrameLayoutEngine.ts:41](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L41)
 
-Frame height (set when TextFrame.height was provided).
+Intrinsic content box — the text bounding box.
+
+#### height
+
+> **height**: `number`
+
+#### width
+
+> **width**: `number`
 
 ***
 
-### frameWidth?
+### fit
 
-> `optional` **frameWidth?**: `number`
+> **fit**: `object`
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:39](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L39)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:53](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L53)
 
-Frame width (set when TextFrame.width was provided).
+Which size a renderer should use per axis: `'frame'` when a frame size was
+provided, otherwise `'content'`.
+
+#### horizontal
+
+> **horizontal**: `"frame"` \| `"content"`
+
+#### vertical
+
+> **vertical**: `"frame"` \| `"content"`
+
+***
+
+### frame
+
+> **frame**: `object`
+
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:43](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L43)
+
+Frame box as given on the input; an axis is omitted when its size was not set.
+
+#### height?
+
+> `optional` **height?**: `number`
+
+#### width?
+
+> `optional` **width?**: `number`
 
 ***
 
@@ -76,4 +81,33 @@ Frame width (set when TextFrame.width was provided).
 
 > **lines**: [`Line`](Line.md)[]
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:37](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L37)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:39](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L39)
+
+***
+
+### overflow
+
+> **overflow**: `object`
+
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:48](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L48)
+
+Whether content spills past the frame on each axis. `false` for an axis
+with no frame size. Use it to decide auto-grow vs clip vs autofit.
+
+#### horizontal
+
+> **horizontal**: `boolean`
+
+#### vertical
+
+> **vertical**: `boolean`
+
+***
+
+### warnings?
+
+> `optional` **warnings?**: [`LayoutWarning`](LayoutWarning.md)[]
+
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:57](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L57)
+
+Non-fatal issues (font fallback / substitution). Omitted when empty.

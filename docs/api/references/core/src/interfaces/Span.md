@@ -71,7 +71,7 @@ Paragraph index in TextFrame.paragraphs[]. Stable key for grouping & diff.
 
 ### style
 
-> **style**: [`TextRun`](TextRun.md)
+> **style**: [`ResolvedTextRun`](../type-aliases/ResolvedTextRun.md)
 
 Defined in: [core/src/types/LayoutTypes.ts:35](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L35)
 

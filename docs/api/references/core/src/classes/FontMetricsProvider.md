@@ -2,9 +2,22 @@
 
 # Class: FontMetricsProvider
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:63](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L63)
+Defined in: [core/src/measure/FontMetricsProvider.ts:114](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L114)
 
-Metrics provider — isomorphic interface
+Font metrics provider — registers, resolves, and measures fonts.
+
+Public API (stable):
+  - `registerFont()`
+  - `getMetrics()`
+  - `getFont()`
+  - `setMode()` / `getMode()`
+
+Semi-stable (@beta — may change with notice):
+  - `waitForPendingRegistrations()`
+  - `getRegisteredFamilies()`
+  - `getFamilyVariants()`
+
+Everything else is internal.
 
 ## Implements
 
@@ -22,14 +35,39 @@ Metrics provider — isomorphic interface
 
 ## Methods
 
+### getFamilyVariants()
+
+> **getFamilyVariants**(`family`): `string`[]
+
+Defined in: [core/src/measure/FontMetricsProvider.ts:257](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L257)
+
+**`Beta`**
+
+Get all variant keys registered for a given family.
+Returns empty array if family not found.
+
+ — may change with notice
+
+#### Parameters
+
+##### family
+
+`string`
+
+#### Returns
+
+`string`[]
+
+***
+
 ### getFont()
 
 > **getFont**(`family`, `weight?`, `style?`): [`FontFace`](../interfaces/FontFace.md) \| `undefined`
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:138](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L138)
+Defined in: [core/src/measure/FontMetricsProvider.ts:268](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L268)
 
-Get font engine FontFace object for per-character calculations.
-Returns undefined if font is not registered.
+Get font engine FontFace for per-character calculations.
+Uses the same smart fallback logic as getMetrics().
 
 #### Parameters
 
@@ -53,11 +91,15 @@ Returns undefined if font is not registered.
 
 ### getMetrics()
 
-> **getMetrics**(`fontFamily`, `fontSize`, `weight?`, `style?`): [`FontMetrics`](../interfaces/FontMetrics.md)
+> **getMetrics**(`fontFamily`, `fontSize`, `weight?`, `style?`, `mode?`): [`FontMetrics`](../interfaces/FontMetrics.md)
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:145](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L145)
+Defined in: [core/src/measure/FontMetricsProvider.ts:361](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L361)
 
-Get metrics for a given family and size.
+Get pixel-scale metrics for a given font family, size, weight, and style.
+
+Resolution order:
+1. FontEngine (fontkit) from registry — with smart weight/style fallback
+2. Canvas TextMetrics (browser fallback when fontkit unavailable)
 
 #### Parameters
 
@@ -77,9 +119,17 @@ Get metrics for a given family and size.
 
 `string` = `'normal'`
 
+##### mode?
+
+`"browser"` \| `"office"`
+
 #### Returns
 
 [`FontMetrics`](../interfaces/FontMetrics.md)
+
+#### Throws
+
+FontNotFoundError when font is neither registered nor available via Canvas
 
 #### Implementation of
 
@@ -91,9 +141,9 @@ Get metrics for a given family and size.
 
 > **getMode**(): `"browser"` \| `"office"`
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:85](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L85)
+Defined in: [core/src/measure/FontMetricsProvider.ts:163](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L163)
 
-Get current mode.
+Get current measurement mode.
 
 #### Returns
 
@@ -105,11 +155,29 @@ Get current mode.
 
 ***
 
+### getRegisteredFamilies()
+
+> **getRegisteredFamilies**(): `string`[]
+
+Defined in: [core/src/measure/FontMetricsProvider.ts:247](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L247)
+
+**`Beta`**
+
+List all families registered in the provider.
+
+ — may change with notice
+
+#### Returns
+
+`string`[]
+
+***
+
 ### registerFont()
 
 > **registerFont**(`family`, `options`, `source`, `sourcePath?`): `Promise`\<`void`\>
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:101](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L101)
+Defined in: [core/src/measure/FontMetricsProvider.ts:179](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L179)
 
 Register a binary font for use with fontkit.
 
@@ -128,6 +196,10 @@ In the browser the caller must provide font bytes (e.g. fetched via
 ###### style?
 
 `string`
+
+###### variation?
+
+`Record`\<`string`, `number`\>
 
 ###### weight?
 
@@ -159,11 +231,11 @@ Optional filesystem path (used for @napi-rs/canvas in Node.js)
 
 > **setMode**(`mode`): `void`
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:71](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L71)
+Defined in: [core/src/measure/FontMetricsProvider.ts:153](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L153)
 
 Set measurement mode.
-  'browser' — hhea.ascender/descender (default)
-  'office'  — OS/2.usWinAscent/usWinDescent
+- `'browser'` — hhea.ascender/descender (default)
+- `'office'`  — OS/2.usWinAscent/usWinDescent
 
 #### Parameters
 
@@ -178,3 +250,22 @@ Set measurement mode.
 #### Implementation of
 
 [`IFontMetricsProvider`](../interfaces/IFontMetricsProvider.md).[`setMode`](../interfaces/IFontMetricsProvider.md#setmode)
+
+***
+
+### waitForPendingRegistrations()
+
+> **waitForPendingRegistrations**(): `Promise`\<`void`\>
+
+Defined in: [core/src/measure/FontMetricsProvider.ts:236](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L236)
+
+**`Beta`**
+
+Wait for all in-flight font registrations to complete.
+Useful after a batch of registerFont() calls before layout.
+
+ — may change with notice
+
+#### Returns
+
+`Promise`\<`void`\>

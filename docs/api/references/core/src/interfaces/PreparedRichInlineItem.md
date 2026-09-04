@@ -2,7 +2,7 @@
 
 # Interface: PreparedRichInlineItem
 
-Defined in: [core/src/compile/DocumentCompiler.ts:53](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L53)
+Defined in: [core/src/compile/ParagraphCompiler.ts:53](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L53)
 
 Compilation context (passed to pretext)
 
@@ -12,7 +12,7 @@ Compilation context (passed to pretext)
 
 > `optional` **break?**: `"normal"` \| `"never"`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:58](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L58)
+Defined in: [core/src/compile/ParagraphCompiler.ts:58](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L58)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/src/compile/DocumentCompiler.ts:58](https://github.com/sedrew/
 
 > `optional` **extraWidth?**: `number`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:57](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L57)
+Defined in: [core/src/compile/ParagraphCompiler.ts:57](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L57)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [core/src/compile/DocumentCompiler.ts:57](https://github.com/sedrew/
 
 > **font**: `string`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:55](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L55)
+Defined in: [core/src/compile/ParagraphCompiler.ts:55](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L55)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [core/src/compile/DocumentCompiler.ts:55](https://github.com/sedrew/
 
 > `optional` **letterSpacing?**: `number`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:56](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L56)
+Defined in: [core/src/compile/ParagraphCompiler.ts:56](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L56)
 
 ***
 
@@ -44,7 +44,7 @@ Defined in: [core/src/compile/DocumentCompiler.ts:56](https://github.com/sedrew/
 
 > **metadata**: `object`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L61)
+Defined in: [core/src/compile/ParagraphCompiler.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L61)
 
 #### baselineOffset
 
@@ -64,7 +64,7 @@ Defined in: [core/src/compile/DocumentCompiler.ts:61](https://github.com/sedrew/
 
 #### style
 
-> **style**: [`TextRun`](TextRun.md)
+> **style**: [`ResolvedTextRun`](../type-aliases/ResolvedTextRun.md)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [core/src/compile/DocumentCompiler.ts:61](https://github.com/sedrew/
 
 > `optional` **originalText?**: `string`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L60)
+Defined in: [core/src/compile/ParagraphCompiler.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L60)
 
 Original text before text-transform (if transform was applied). Used for copy-paste / round-trip.
 
@@ -82,4 +82,4 @@ Original text before text-transform (if transform was applied). Used for copy-pa
 
 > **text**: `string`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:54](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L54)
+Defined in: [core/src/compile/ParagraphCompiler.ts:54](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L54)

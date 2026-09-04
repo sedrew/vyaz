@@ -4,6 +4,6 @@
 
 > `const` **DEFAULT\_PARAGRAPH\_STYLE**: [`ParagraphStyle`](../interfaces/ParagraphStyle.md)
 
-Defined in: [core/src/types/Document.ts:654](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L654)
+Defined in: [core/src/index.ts:51](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L51)
 
-Default paragraph style used when a `Paragraph` omits its `style` field.
+**`Internal`**

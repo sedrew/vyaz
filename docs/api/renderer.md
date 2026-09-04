@@ -1,12 +1,8 @@
 # @vyaz/renderer
 
-SVG and Canvas renderers for Vyaz layout output.
+SVG renderer for Vyaz layout output.
 
-## Renderers
-
-### SVG Renderer
-
-Four presets for different use cases:
+## Presets
 
 | Preset | Structure | Use case |
 |--------|-----------|----------|
@@ -15,9 +11,7 @@ Four presets for different use cases:
 | `preserve` | `<text>` + `<tspan>` + `textLength` | **Pixel-perfect rendering** |
 | `glyph` | `<tspan x="x0 x1 ...">` per glyph | **Selection / cursor positioning** |
 
-### Canvas Renderer
-
-Renders lines to HTML Canvas 2D context with optional debug overlays.
+Pass `{ debug: { frameBox, contentBox, baseline, … } }` for overlay boxes.
 
 ## Generated API Reference
 

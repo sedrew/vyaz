@@ -2,7 +2,7 @@
 
 # Interface: SemanticLine
 
-Defined in: [core/src/types/LayoutTypes.ts:154](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L154)
+Defined in: [core/src/types/LayoutTypes.ts:172](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L172)
 
 Semantic line for snapshots
 
@@ -12,7 +12,7 @@ Semantic line for snapshots
 
 > **baseline**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:158](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L158)
+Defined in: [core/src/types/LayoutTypes.ts:176](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L176)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/src/types/LayoutTypes.ts:158](https://github.com/sedrew/vyaz/b
 
 > **fragments**: [`SemanticFragment`](SemanticFragment.md)[]
 
-Defined in: [core/src/types/LayoutTypes.ts:159](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L159)
+Defined in: [core/src/types/LayoutTypes.ts:177](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L177)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [core/src/types/LayoutTypes.ts:159](https://github.com/sedrew/vyaz/b
 
 > **height**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:157](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L157)
+Defined in: [core/src/types/LayoutTypes.ts:175](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L175)
 
 ***
 
@@ -36,7 +36,7 @@ Defined in: [core/src/types/LayoutTypes.ts:157](https://github.com/sedrew/vyaz/b
 
 > **width**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:156](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L156)
+Defined in: [core/src/types/LayoutTypes.ts:174](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L174)
 
 ***
 
@@ -44,4 +44,4 @@ Defined in: [core/src/types/LayoutTypes.ts:156](https://github.com/sedrew/vyaz/b
 
 > **y**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:155](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L155)
+Defined in: [core/src/types/LayoutTypes.ts:173](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L173)

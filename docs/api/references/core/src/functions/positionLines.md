@@ -4,7 +4,7 @@
 
 > **positionLines**(`pretextLines`, `items`, `fontMetricsFn`, `style`, `maxWidth`, `startY?`, `mode?`, `measureText`, `tag?`, `listStyle?`, `listIndex?`, `listMarkerWidth?`): `object`
 
-Defined in: [core/src/layout/PositioningEngine.ts:108](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/PositioningEngine.ts#L108)
+Defined in: [core/src/layout/PositioningEngine.ts:111](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/PositioningEngine.ts#L111)
 
 Build Line[] from pretext lines with alignment and metrics.
 

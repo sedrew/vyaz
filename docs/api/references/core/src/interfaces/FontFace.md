@@ -2,7 +2,7 @@
 
 # Interface: FontFace
 
-Defined in: [core/src/measure/FontEngine.ts:20](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L20)
+Defined in: [core/src/measure/FontEngine.ts:32](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L32)
 
 Opaque font face handle returned by FontEngine.create()
 
@@ -12,7 +12,7 @@ Opaque font face handle returned by FontEngine.create()
 
 > `readonly` **\_raw**: `any`
 
-Defined in: [core/src/measure/FontEngine.ts:22](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L22)
+Defined in: [core/src/measure/FontEngine.ts:34](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L34)
 
 fontkit font object (private — not meant for direct access)
 
@@ -22,7 +22,7 @@ fontkit font object (private — not meant for direct access)
 
 > `readonly` **ascent**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:25](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L25)
+Defined in: [core/src/measure/FontEngine.ts:37](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L37)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [core/src/measure/FontEngine.ts:25](https://github.com/sedrew/vyaz/b
 
 > `readonly` **capHeight**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:27](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L27)
+Defined in: [core/src/measure/FontEngine.ts:39](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L39)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [core/src/measure/FontEngine.ts:27](https://github.com/sedrew/vyaz/b
 
 > `readonly` **descent**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:26](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L26)
+Defined in: [core/src/measure/FontEngine.ts:38](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L38)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [core/src/measure/FontEngine.ts:26](https://github.com/sedrew/vyaz/b
 
 > `readonly` **unitsPerEm**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:24](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L24)
+Defined in: [core/src/measure/FontEngine.ts:36](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L36)
 
 Cached values extracted once after creation
 
@@ -56,7 +56,7 @@ Cached values extracted once after creation
 
 > `readonly` **winAscent**: `number` \| `null`
 
-Defined in: [core/src/measure/FontEngine.ts:28](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L28)
+Defined in: [core/src/measure/FontEngine.ts:40](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L40)
 
 ***
 
@@ -64,4 +64,4 @@ Defined in: [core/src/measure/FontEngine.ts:28](https://github.com/sedrew/vyaz/b
 
 > `readonly` **winDescent**: `number` \| `null`
 
-Defined in: [core/src/measure/FontEngine.ts:29](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L29)
+Defined in: [core/src/measure/FontEngine.ts:41](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L41)

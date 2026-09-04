@@ -10,7 +10,7 @@ Metrics provider — isomorphic interface
 
 ### getMetrics()
 
-> **getMetrics**(`fontFamily`, `fontSize`, `weight?`, `style?`): [`FontMetrics`](FontMetrics.md)
+> **getMetrics**(`fontFamily`, `fontSize`, `weight?`, `style?`, `mode?`): [`FontMetrics`](FontMetrics.md)
 
 Defined in: [core/src/types/FontTypes.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L61)
 
@@ -33,6 +33,10 @@ Get metrics for a given family and size.
 ##### style?
 
 `string`
+
+##### mode?
+
+`"browser"` \| `"office"`
 
 #### Returns
 

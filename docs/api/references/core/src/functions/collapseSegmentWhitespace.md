@@ -4,7 +4,7 @@
 
 > **collapseSegmentWhitespace**(`segment`): `string`
 
-Defined in: [core/src/compile/DocumentCompiler.ts:88](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/DocumentCompiler.ts#L88)
+Defined in: [core/src/compile/ParagraphCompiler.ts:88](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L88)
 
 Collapse consecutive collapsible whitespace → single space.
 Trim leading/trailing. CSS Text §4.1.1.

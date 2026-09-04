@@ -4,7 +4,7 @@
 
 > **findScale**(`doc`, `layoutFn`, `config`, `options?`): [`AutoFitResult`](../interfaces/AutoFitResult.md)
 
-Defined in: [core/src/layout/AutoFitEngine.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/AutoFitEngine.ts#L60)
+Defined in: [core/src/layout/AutoFitEngine.ts:62](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/AutoFitEngine.ts#L62)
 
 Find the optimal scale factor for a document.
 
