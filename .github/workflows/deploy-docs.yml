@@ -1,11 +1,11 @@
 name: Deploy Docs
 
 on:
+  # Rebuild on every merge to main — the docs site embeds the renderer test
+  # corpus (Cases page) and aliases @vyaz/* to source, so a code change can
+  # change what the site renders even when docs/** is untouched.
   push:
     branches: [main]
-    paths:
-      - "docs/**"
-      - ".github/workflows/deploy-docs.yml"
   workflow_dispatch:
 
 permissions:
