@@ -78,6 +78,35 @@ describe('TableLayoutEngine — grid sizing', () => {
     expect(r.width).toBeCloseTo(500, 0);
   });
 
+  test('explicit table height taller than natural grows rows, shorter shrinks them (mirrors width)', () => {
+    const table: TableFrame = { rows: [{ cells: [cell('a')] }, { cells: [cell('b')] }] };
+    const auto = layoutTableFrame(table);
+    const taller = layoutTableFrame({ ...table, height: auto.height * 2 });
+    const shorter = layoutTableFrame({ ...table, height: auto.height / 2 });
+    expect(taller.height).toBeCloseTo(auto.height * 2, 0);
+    expect(taller.rows[0].height).toBeGreaterThan(auto.rows[0].height);
+    expect(shorter.height).toBeCloseTo(auto.height / 2, 0);
+    expect(shorter.rows[0].height).toBeLessThan(auto.rows[0].height);
+  });
+
+  test('table height applies whether rowHeights was measured or an explicit override, same as width', () => {
+    const table: TableFrame = { rows: [{ cells: [cell('a')] }], rowHeights: [40], height: 80 };
+    const r = layoutTableFrame(table);
+    expect(r.rows[0].height).toBeCloseTo(80, 0); // explicit 40 still gets scaled to fit height: 80
+  });
+
+  test('shrinking below natural content height does not corrupt layout (no NaN/Infinity) — verticalOffset just no-ops', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [{ ...cell('a tall cell with several words that will wrap onto more than one line'), style: { verticalAlign: 'middle' } }] }],
+      columnWidths: [80],
+      height: 5, // absurdly small — content will overflow
+    };
+    const r = layoutTableFrame(table);
+    expect(Number.isFinite(r.rows[0].height)).toBe(true);
+    expect(Number.isFinite(r.rows[0].cells[0].verticalOffset)).toBe(true);
+    expect(r.rows[0].cells[0].verticalOffset).toBe(0); // no room to offset into — no-op, not negative
+  });
+
   test('columnWidths / rowHeights overrides win over measurement', () => {
     const table: TableFrame = {
       rows: [{ cells: [cell('a'), cell('b')] }],

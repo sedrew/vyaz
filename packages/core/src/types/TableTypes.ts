@@ -196,6 +196,15 @@ export interface TableFrame {
    * column widths) when absent.
    */
   width?: number;
+  /**
+   * Total table height in px. When set, row heights (whichever way they
+   * were determined — measured or `rowHeights` below) scale proportionally
+   * to fit it: taller gives every row extra room; shorter shrinks them,
+   * which (unlike `width`) can't be absorbed by reflowing text — content
+   * simply overflows its row past a certain point (see `TableCellStyle.
+   * allowOverflow`). Auto (sum of row heights) when absent.
+   */
+  height?: number;
   /** Explicit per-column width override, in px. Overrides measurement. */
   columnWidths?: number[];
   /** Explicit per-row height override, in px. Overrides measurement. */

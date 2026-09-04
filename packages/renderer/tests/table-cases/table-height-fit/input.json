@@ -1,0 +1,13 @@
+{
+  "_comment": "TableFrame.height: a total-height target that proportionally scales whatever row heights were measured/given (mirrors TableFrame.width, which already did this for columns). Unlike the earlier fill-target-height case (explicit rowHeights[] summing to a target, computed by hand), here the three rows have DIFFERENT natural heights and no rowHeights override at all -- height:240 alone stretches all three proportionally taller than their natural sum.",
+  "table": {
+    "height": 240,
+    "defaultCellStyle": { "paddings": 8, "borderWidths": 1, "borderColors": "#ccc", "verticalAlign": "middle" },
+    "rows": [
+      { "cells": [{ "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "center", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "one line", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } }] },
+      { "cells": [{ "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "center", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "a row with more text that wraps onto two lines", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } }], "style": { "bgColor": "#f4f7fc" } },
+      { "cells": [{ "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "center", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "one line", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } }] }
+    ]
+  },
+  "renders": { "browser": { "preset": "browser" } }
+}

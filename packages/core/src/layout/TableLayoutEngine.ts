@@ -20,6 +20,12 @@
  *                       deficit-widen rule for row heights and rowSpan cells.
  *   4. position        — column/row offsets accumulated from final sizes.
  *
+ * `table.width`/`table.height` (both optional) scale the *final* colWidths/
+ * rowHeights arrays proportionally to fit, applied after whichever source
+ * produced them (measured or an explicit `columnWidths`/`rowHeights`
+ * override) — symmetric, but width-shrink reflows text via wrapping while
+ * height-shrink has no equivalent and simply overflows the row.
+ *
  * Border dash patterns (`borderPatterns`) and per-side `stroke-linecap`
  * (`borderShapes`) resolve here (`resolveBorder`) but paint in
  * `@vyaz/renderer`'s `TableRenderer.ts` (`borderMarkup`) — this engine only
@@ -462,6 +468,22 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
         const extra = (p.cellHeight - covered) / p.rowSpan;
         for (let r = p.startRow; r < p.startRow + p.rowSpan; r++) rowHeights[r] += extra;
       }
+    }
+  }
+
+  // Fit to an explicit table height — scale rows proportionally, mirroring
+  // the table.width fit above (applies whether rowHeights came from
+  // measurement or an explicit table.rowHeights override, same as width).
+  // Unlike width, a row can't "wrap" to absorb a shrink — text simply
+  // overflows the row's box past a certain point (verticalOffsetFor already
+  // no-ops instead of going negative; allowOverflow controls whether that
+  // overflow paints past the cell or clips).
+  if (table.height !== undefined) {
+    const budget = table.height - margins.top - margins.bottom - rowGaps * Math.max(0, rowCount - 1);
+    const naturalSum = rowHeights.reduce((a: number, b: number) => a + b, 0);
+    if (naturalSum > 0 && budget > 0) {
+      const scale = budget / naturalSum;
+      for (let i = 0; i < rowHeights.length; i++) rowHeights[i] *= scale;
     }
   }
 

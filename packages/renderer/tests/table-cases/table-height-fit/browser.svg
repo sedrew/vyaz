@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="240" viewBox="0 0 340 240">
+  <rect x="0" y="80" width="340" height="80" fill="#f4f7fc" />
+  <rect x="0.5" y="0.5" width="339" height="79" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="80.5" width="339" height="79" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="160.5" width="339" height="79" fill="none" stroke="#ccc" stroke-width="1" />
+  <g transform="translate(9 31)"><svg xmlns="http://www.w3.org/2000/svg" width="322" height="18" viewBox="0 0 322 18">
+  <text x="133" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="133" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">one line</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(9 111)"><svg xmlns="http://www.w3.org/2000/svg" width="322" height="18" viewBox="0 0 322 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">a row with more text that wraps onto two lines</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(9 191)"><svg xmlns="http://www.w3.org/2000/svg" width="322" height="18" viewBox="0 0 322 18">
+  <text x="133" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="133" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">one line</tspan>
+  </text>
+</svg>
+</g>
+</svg>
