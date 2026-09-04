@@ -274,6 +274,34 @@ describe('TextRun.backgroundColor', () => {
   test('no backgroundColor → undefined', () => {
     expect(allSpans(layoutParagraph(makeParagraph('Hello')))[0].style.backgroundColor).toBeUndefined();
   });
+
+  // The inter-word space belongs to the run that authored it. A highlighted
+  // word must not paint the space in front of it.
+  test('gap from a previous run\'s trailing space does NOT inherit the next run\'s background', () => {
+    const spans = allSpaceSpans(layoutParagraph(makeMultiRunParagraph([
+      { text: 'plain ' },
+      { text: 'marked', style: { backgroundColor: '#FFFF00' } },
+    ])));
+    // the only inter-word space is the trailing space of "plain "
+    expect(spans.length).toBeGreaterThan(0);
+    expect(spans.every((s) => s.style.backgroundColor === undefined)).toBe(true);
+  });
+
+  test('trailing space of a highlighted run stays highlighted', () => {
+    const spans = allSpaceSpans(layoutParagraph(makeMultiRunParagraph([
+      { text: 'marked ', style: { backgroundColor: '#FFFF00' } },
+      { text: 'plain' },
+    ])));
+    expect(spans.every((s) => s.style.backgroundColor === '#FFFF00')).toBe(true);
+  });
+
+  test('leading space of the next run (no trailing space on previous) is not back-attributed', () => {
+    const spans = allSpaceSpans(layoutParagraph(makeMultiRunParagraph([
+      { text: 'plain' },
+      { text: ' marked', style: { backgroundColor: '#FFFF00' } },
+    ])));
+    expect(spans.some((s) => s.style.backgroundColor === '#FFFF00')).toBe(true);
+  });
 });
 
 // ── 9. TextRun.letterSpacing ─────────────────────────────────────────────
@@ -387,6 +415,39 @@ describe('TextRun.overline', () => {
     const h = layoutParagraph(makeParagraph('Hello')).lines[0].height;
     expect(layoutParagraph(makeParagraph('Hello', { overline: true })).lines[0].width).toBe(w);
     expect(layoutParagraph(makeParagraph('Hello', { overline: true })).lines[0].height).toBe(h);
+  });
+});
+
+// ── 13b. script suppresses underline / strikethrough (Word / LO parity) ──
+
+describe('script drops underline & strikethrough', () => {
+  test('script: "super" + underline → Span.style.underline === false', () => {
+    const span = allSpans(layoutParagraph(makeParagraph('x', { fontSize: 20, script: 'super', underline: true })))[0];
+    expect(span.style.underline).toBe(false);
+  });
+  test('script: "sub" + strikethrough → Span.style.strikethrough === false', () => {
+    const span = allSpans(layoutParagraph(makeParagraph('x', { fontSize: 20, script: 'sub', strikethrough: true })))[0];
+    expect(span.style.strikethrough).toBe(false);
+  });
+  test('script: "super" + both decorations → both cleared', () => {
+    const span = allSpans(layoutParagraph(makeParagraph('x', { fontSize: 20, script: 'super', underline: true, strikethrough: true })))[0];
+    expect(span.style.underline).toBe(false);
+    expect(span.style.strikethrough).toBe(false);
+  });
+  test('sibling normal run keeps its underline when a super run drops it', () => {
+    const spans = allTextSpans(layoutParagraph(makeMultiRunParagraph([
+      { text: 'ref', style: { fontSize: 20, underline: true } },
+      { text: '12', style: { fontSize: 20, script: 'super', underline: true } },
+      { text: 'body', style: { fontSize: 20, underline: true } },
+    ])));
+    const byItem = (i: number) => spans.find((s) => s.itemIndex === i)!;
+    expect(byItem(0).style.underline).toBe(true);
+    expect(byItem(1).style.underline).toBe(false);
+    expect(byItem(2).style.underline).toBe(true);
+  });
+  test('script: "normal" + underline → underline preserved', () => {
+    const span = allSpans(layoutParagraph(makeParagraph('x', { fontSize: 20, script: 'normal', underline: true })))[0];
+    expect(span.style.underline).toBe(true);
   });
 });
 

@@ -152,6 +152,15 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
       type: run.type,
     } as unknown as ResolvedTextRun;
 
+    // super/sub drop underline & strikethrough: a raised/lowered, shrunk glyph
+    // with a baseline-aligned decoration line reads as broken, and Word / LibreOffice
+    // both suppress the decoration on script runs. The line decoration belongs to
+    // the surrounding baseline text, not the script fragment.
+    if (run.script === 'super' || run.script === 'sub') {
+      resolvedStyle.underline = false;
+      resolvedStyle.strikethrough = false;
+    }
+
     const item: PreparedRichInlineItem = {
       text,
       font: makeFontToken(run, effectiveFontSize),

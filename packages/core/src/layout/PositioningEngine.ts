@@ -203,16 +203,31 @@ export function positionLines(
       };
 
       if (gapWidth > 0) {
+        // pretext collapses two different things into `gapBefore`: whitespace at
+        // the START of this item, and whitespace at the END of the previous item
+        // (measured with the previous item's font). Those belong to different
+        // runs. When the gap came from the previous run's trailing space it must
+        // carry that run's paint — background / underline / colour — not this
+        // run's, or a highlighted word bleeds its background onto the space in
+        // front of it. Matches how a browser attributes a collapsed space to the
+        // element that contains it in source.
+        const prevItem = items[frag.itemIndex - 1];
+        const gapFromPrev =
+          !!prevItem &&
+          (prevItem.text ?? '').trim().length > 0 && // a real run, not a lone separator
+          /\s$/.test(prevItem.text ?? '') &&
+          !/^\s/.test(item.text ?? '');
+        const gapItem = gapFromPrev ? prevItem : item;
         spans.push({
           x: 0,
           width: gapWidth,
           text: ' ',
-          itemIndex: frag.itemIndex,
+          itemIndex: gapFromPrev ? frag.itemIndex - 1 : frag.itemIndex,
           pIdx: 0,
           tag,
           fontMetrics: baseFontMetrics,
-          style: item.metadata.style,
-          inlineWidget: item.metadata.inlineWidget,
+          style: gapItem.metadata.style,
+          inlineWidget: gapItem.metadata.inlineWidget,
           type: 'space',
         });
       }
