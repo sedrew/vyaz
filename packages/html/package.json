@@ -20,15 +20,15 @@
     }
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @vyaz/core && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core && tsc -b",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @vyaz/core --external @vyaz/renderer && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core --external @vyaz/renderer && tsc -b",
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@vyaz/core": "^0.2.1"
+    "@vyaz/core": "^0.2.1",
+    "@vyaz/renderer": "^0.2.1"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
-    "@vyaz/renderer": "^0.2.1",
     "linkedom": "^0.18.13",
     "typescript": "^5.4.0"
   }

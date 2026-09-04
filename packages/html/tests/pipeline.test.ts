@@ -23,33 +23,36 @@ const HTML = `
      and <code>inline()</code> code.</p>
   <blockquote><p>A quoted paragraph.</p></blockquote>
   <p style="text-align:center">Centered line.<br>Second line.</p>
-  <table><tr><td>dropped</td></tr></table>
+  <table><tr><th>Col</th></tr><tr><td>table cell text</td></tr></table>
 `;
 
 describe('full pipeline', () => {
-  test('converts, lays out, and renders to valid SVG', () => {
-    const { frame, warnings, dropped } = convert(HTML, {
+  test('converts, lays out, and renders to valid SVG — including a table', () => {
+    const { frame, inlineBoxes, warnings, dropped } = convert(HTML, {
       width: 500,
       baseFont: { family: 'Unifont', size: 16 },
       monospaceFamily: 'Unifont', // only Unifont is registered in this suite
     });
 
-    expect(frame.paragraphs.length).toBe(4); // h1, p, blockquote>p, centered p
+    expect(frame.paragraphs.length).toBe(5); // h1, p, blockquote>p, centered p, table widget
     expect(warnings.some((w) => w.code === 'link-href-lost')).toBe(true);
-    expect(dropped.map((d) => d.tag)).toContain('table');
+    expect(dropped).toEqual([]); // nothing dropped in this sample — the table converts now
+    expect(Object.keys(inlineBoxes)).toHaveLength(1);
 
     const result = layoutTextFrame(frame);
     expect(result.lines.length).toBeGreaterThan(0);
 
-    const svg = renderToSVG(result, { preset: 'browser' });
+    const svg = renderToSVG(result, { preset: 'browser', inlineBoxes });
     expect(svg.startsWith('<svg')).toBe(true);
     expect(svg).toContain('Report');
     expect(svg).toContain('bold');
     expect(svg).toContain('Centered line.');
+    expect(svg).toContain('table cell text'); // the table's own nested <svg>, spliced in via inlineBoxes
   });
 
-  test('renderToSVG accepts the inlineBoxes map (empty in Phase 0–2)', () => {
+  test('renderToSVG accepts an empty inlineBoxes map when there is nothing to splice', () => {
     const { frame, inlineBoxes } = convert('<p>x</p>', { baseFont: { family: 'Unifont' } });
+    expect(inlineBoxes).toEqual({});
     const svg = renderToSVG(layoutTextFrame(frame), { preset: 'flat', inlineBoxes });
     expect(svg).toContain('>x<');
   });

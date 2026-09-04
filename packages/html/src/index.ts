@@ -47,8 +47,9 @@ export function htmlToTextFrame(
   const opts = resolveOptions(options);
   const root = resolveRoot(html, opts);
   const col = new Collector();
+  const inlineBoxes: Record<string, string> = {};
 
-  const paragraphs = walk(root, opts, col);
+  const paragraphs = walk(root, opts, col, inlineBoxes);
 
   const frame: TextFrame = {
     width: opts.width,
@@ -64,5 +65,5 @@ export function htmlToTextFrame(
   };
   if (opts.width == null) delete (frame as { width?: number }).width;
 
-  return { frame, inlineBoxes: {}, warnings: col.warnings, dropped: col.dropped };
+  return { frame, inlineBoxes, warnings: col.warnings, dropped: col.dropped };
 }

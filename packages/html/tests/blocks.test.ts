@@ -85,12 +85,7 @@ describe('frame assembly', () => {
 });
 
 describe('dropped + warnings', () => {
-  test('table family is dropped with a reason', () => {
-    const { frame, dropped } = convert('<p>keep</p><table><tr><td>x</td></tr></table>');
-    expect(frame.paragraphs.map(text)).toEqual(['keep']);
-    expect(dropped[0].tag).toBe('table');
-    expect(dropped[0].reason).toMatch(/grid/);
-  });
+  // <table> itself converts now — see tables.test.ts.
 
   test('media + form controls dropped', () => {
     const { dropped } = convert('<video src="x"></video><input><button>go</button>');

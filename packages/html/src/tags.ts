@@ -1,8 +1,10 @@
 /**
  * tags.ts — how each HTML tag is classified.
  *
- * Phase 0–2: inline formatting + block text. Lists (Phase 3), graphics
- * (Phase 4) and the full drop list (Phase 5) are stubbed here and refined later.
+ * Inline formatting, block text and lists are classified here and driven by
+ * walk.ts's generic dispatch. `<table>` is a special case — see the DROPPED
+ * comment below. Graphics (`<img>`/`<svg>`/`<progress>`/`<meter>`/`<hr>` — a
+ * later phase) are still in DROPPED.
  */
 import type { TextRun } from '@vyaz/core';
 
@@ -51,11 +53,17 @@ export const TRANSPARENT: Set<string> = new Set([
 /** List containers — each child `<li>` becomes a Paragraph with `listStyle`. */
 export const LIST: Set<string> = new Set(['ul', 'ol', 'menu']);
 
-/** Tags that produce no output (recorded in `dropped[]`). Phases 4–5 move some out. */
+/**
+ * Tags that produce no output (recorded in `dropped[]`). `<table>` itself is
+ * handled by `handleTable()` in walk.ts (→ TableFrame → an inline-box SVG);
+ * these entries only fire for a sub-tag found *outside* a `<table>` (malformed
+ * markup) — `handleTable` walks a table's own children directly and never
+ * consults this map for them.
+ */
 export const DROPPED: Record<string, string> = {
-  table: 'no grid layout (see ROADMAP)',
-  thead: 'table', tbody: 'table', tfoot: 'table', tr: 'table', th: 'table', td: 'table',
-  caption: 'table', colgroup: 'table', col: 'table',
+  thead: 'only valid inside <table>', tbody: 'only valid inside <table>', tfoot: 'only valid inside <table>',
+  tr: 'only valid inside <table>', th: 'only valid inside <table>', td: 'only valid inside <table>',
+  caption: 'only valid inside <table>', colgroup: 'only valid inside <table>', col: 'only valid inside <table>',
   video: 'media', audio: 'media', iframe: 'embedded document', embed: 'embedded document',
   object: 'embedded document', canvas: 'script-drawn',
   img: 'image (Phase 4: options.resolveImage)', svg: 'inline svg (Phase 4)',

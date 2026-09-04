@@ -5,7 +5,9 @@
  * paragraph buffer; a block child flushes the buffer and recurses with a fresh
  * (possibly derived) paragraph/run style.
  */
-import type { Paragraph, ParagraphStyle, TextRun } from '@vyaz/core';
+import type { Paragraph, ParagraphStyle, TextRun, TableFrame, TableRow, TableCell } from '@vyaz/core';
+import { layoutTableFrame } from '@vyaz/core';
+import { renderTableToSVG } from '@vyaz/renderer';
 import type { ResolvedOptions } from './options.js';
 import { Collector } from './warnings.js';
 import { parseInlineStyle } from './inline-style.js';
@@ -18,6 +20,10 @@ interface Ctx {
   opts: ResolvedOptions;
   col: Collector;
   out: Paragraph[];
+  /** SVG fragments for inline-box widgets (tables so far), keyed by id — shared across the whole document, mutated in place. */
+  inlineBoxes: Record<string, string>;
+  /** Monotonic id source for inline-box widgets. An object (not a number) so it stays shared when `ctx` is spread for a sub-walk (e.g. a table cell's own content). */
+  idSeq: { n: number };
 }
 
 const WS_RE = /\s+/g;
@@ -261,6 +267,128 @@ function walkList(
   }
 }
 
+// ── Tables ───────────────────────────────────────────────────────────────
+//
+// A <table> is laid out and rendered right here (not left for the caller to
+// do, like the rest of the model) because @vyaz/html already depends on both
+// @vyaz/core (layoutTableFrame) and @vyaz/renderer (renderTableToSVG) — the
+// result is one pre-rendered SVG dropped into the flow as an inline-box, the
+// same "self-contained SVG fragment in a box" pattern as an <img>/<progress>
+// widget (see options.ts's `resolveImage`, Phase 4).
+
+/** A cell's own content, as an independent TextFrame (recursion — same walk). */
+function buildCellFrame(cellEl: Element, ctx: Ctx, runOverride?: Partial<RunStyle>): import('@vyaz/core').TextFrame {
+  const run: RunStyle = { ...baseRunStyle(ctx.opts), ...runOverride };
+  const out: Paragraph[] = [];
+  processChildren(cellEl, baseParaStyle(), run, false, { ...ctx, out });
+  return { wrap: true, paragraphs: trimParagraphs(out) };
+}
+
+/** `colspan`/`rowspan` — only returned when a real span (>1) is given. */
+function spanAttr(el: Element, name: string): number | undefined {
+  const v = Number(el.getAttribute?.(name));
+  return Number.isFinite(v) && v > 1 ? Math.trunc(v) : undefined;
+}
+
+function buildTableRow(tr: Element, ctx: Ctx): TableRow | undefined {
+  const cells: TableCell[] = [];
+  let isHeader = true;
+  for (const td of Array.from(tr.children)) {
+    const tag = td.tagName.toLowerCase();
+    if (tag !== 'td' && tag !== 'th') continue;
+    if (tag !== 'th') isHeader = false;
+    const content = buildCellFrame(td, ctx, tag === 'th' ? { fontWeight: 'bold' } : undefined);
+    const colSpan = spanAttr(td, 'colspan');
+    const rowSpan = spanAttr(td, 'rowspan');
+    cells.push({
+      content,
+      ...(colSpan ? { colSpan } : {}),
+      ...(rowSpan ? { rowSpan } : {}),
+      ...(tag === 'th' ? { style: { bgColor: '#f5f5f5' } } : {}),
+    });
+  }
+  return cells.length > 0 ? { cells, isHeader } : undefined;
+}
+
+/** `<table>` → `TableFrame`. `<thead>`/`<tbody>`/`<tfoot>` are transparent — only their `<tr>`s matter. */
+function buildTableFrame(tableEl: Element, ctx: Ctx): TableFrame | undefined {
+  const rows: TableRow[] = [];
+  for (const child of Array.from(tableEl.children)) {
+    const tag = child.tagName.toLowerCase();
+    if (tag === 'tr') {
+      const row = buildTableRow(child, ctx);
+      if (row) rows.push(row);
+    } else if (tag === 'thead' || tag === 'tbody' || tag === 'tfoot') {
+      for (const tr of Array.from(child.children)) {
+        if (tr.tagName.toLowerCase() !== 'tr') continue;
+        const row = buildTableRow(tr, ctx);
+        if (row) rows.push(row);
+      }
+    }
+    // <caption> is handled by handleTable() itself; <colgroup>/<col> are
+    // presentational-only hints with no equivalent here — silently ignored.
+  }
+  if (rows.length === 0) return undefined;
+  return {
+    rows,
+    width: ctx.opts.width,
+    defaultCellStyle: { paddings: 6, borderWidths: 1, borderColors: '#ddd' },
+  };
+}
+
+/** `<table>` → laid out, rendered to SVG, and pushed as one inline-box paragraph. */
+function handleTable(tableEl: Element, para: ParagraphStyle, run: RunStyle, ctx: Ctx): void {
+  const captionEl = Array.from(tableEl.children).find((c) => c.tagName.toLowerCase() === 'caption');
+  if (captionEl) {
+    const buffer: TextRun[] = [];
+    for (const node of Array.from(captionEl.childNodes)) appendInline(node, { ...run, fontWeight: 'bold' }, buffer, false, ctx);
+    if (hasContent(buffer)) {
+      ctx.out.push({
+        style: { ...para, alignment: 'center', spaceAfter: Math.round(ctx.opts.baseSize * 0.3) },
+        children: mergeAdjacent(buffer),
+      });
+    }
+  }
+
+  const tableFrame = buildTableFrame(tableEl, ctx);
+  if (!tableFrame) {
+    ctx.col.warn('table-empty', 'table', 'no rows with cells — dropped');
+    return;
+  }
+
+  let width: number, height: number, svg: string;
+  try {
+    // A table is laid out and rendered right here, during conversion — unlike
+    // the rest of the document, which stays plain data until the caller's own
+    // layoutTextFrame() call. 'substitute' keeps one unregistered cell font
+    // from failing the whole document; a real @vyaz/html consumer should still
+    // register every family it cares about before calling htmlToTextFrame.
+    const result = layoutTableFrame(tableFrame, { mode: ctx.opts.mode, onMissingFont: 'substitute' });
+    svg = renderTableToSVG(result);
+    width = result.width;
+    height = result.height;
+  } catch (e) {
+    ctx.col.warn('table-render-failed', 'table', `layout/render failed: ${String((e as Error)?.message ?? e)}`);
+    return;
+  }
+
+  const id = `table-${ctx.idSeq.n++}`;
+  ctx.inlineBoxes[id] = svg;
+  ctx.out.push({
+    style: { ...para, spaceAfter: Math.round(ctx.opts.baseSize * 0.75) },
+    children: [{
+      type: 'inline-box',
+      text: '￼',
+      fontFamily: ctx.opts.baseFamily,
+      fontSize: ctx.opts.baseSize,
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+      color: '#000000',
+      inlineWidget: { width, height, id },
+    }],
+  });
+}
+
 /** Walk `el`'s children, emitting paragraphs into `ctx.out`. */
 function processChildren(
   el: Element,
@@ -304,6 +432,11 @@ function processChildren(
       // a stray <li> outside a list — treat as a level-0 bullet
       flush();
       walkListItem(child, { type: 'bullet', level: 0 }, para, run, ctx);
+      continue;
+    }
+    if (tag === 'table') {
+      flush();
+      handleTable(child, para, run, ctx);
       continue;
     }
     if (BLOCK_TEXT.has(tag)) {
@@ -359,13 +492,11 @@ function sameStyle(a: TextRun, b: TextRun): boolean {
     a.letterSpacing === b.letterSpacing && a.textTransform === b.textTransform;
 }
 
-export function walk(root: Element, opts: ResolvedOptions, col: Collector): Paragraph[] {
-  _dlWarned = false;
-  _nestedListWarned = false;
-  const out: Paragraph[] = [];
-  processChildren(root, baseParaStyle(), baseRunStyle(opts), false, { opts, col, out });
-  // Trim leading / trailing spaces on each paragraph — but not in `pre`, where
-  // whitespace is significant.
+/**
+ * Trim leading / trailing spaces on each paragraph — but not in `pre`, where
+ * whitespace is significant — and drop paragraphs left with no real content.
+ */
+function trimParagraphs(out: Paragraph[]): Paragraph[] {
   for (const p of out) {
     if (p.style.whiteSpace === 'pre' || p.style.whiteSpace === 'pre-wrap') continue;
     if (p.children[0]) p.children[0].text = p.children[0].text.replace(/^[ \t]+/, '');
@@ -373,4 +504,18 @@ export function walk(root: Element, opts: ResolvedOptions, col: Collector): Para
     if (last) last.text = last.text.replace(/[ \t]+$/, '');
   }
   return out.filter((p) => p.children.length > 0 && p.children.some((r) => r.text !== ''));
+}
+
+export function walk(
+  root: Element,
+  opts: ResolvedOptions,
+  col: Collector,
+  inlineBoxes: Record<string, string>,
+): Paragraph[] {
+  _dlWarned = false;
+  _nestedListWarned = false;
+  const out: Paragraph[] = [];
+  const ctx: Ctx = { opts, col, out, inlineBoxes, idSeq: { n: 0 } };
+  processChildren(root, baseParaStyle(), baseRunStyle(opts), false, ctx);
+  return trimParagraphs(out);
 }
