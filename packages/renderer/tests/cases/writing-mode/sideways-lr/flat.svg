@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="240" viewBox="0 0 150 240">
+  <g transform="translate(0 240) rotate(270)">
+  <text x="0" y="15" font-family="Unifont" font-size="15" fill="#111" font-weight="700" xml:space="preserve">Vertical label </text>
+  <text x="112.5" y="15" font-family="Unifont" font-size="15" fill="#444" font-weight="400" xml:space="preserve">turned 90 degrees </text>
+  <text x="0" y="35" font-family="Unifont" font-size="15" fill="#444" font-weight="400" xml:space="preserve">counter-clockwise, wrapping by </text>
+  <text x="0" y="55" font-family="Unifont" font-size="15" fill="#444" font-weight="400" xml:space="preserve">the frame height.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="240" height="150" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="247.5" height="60" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  </g>
+</svg>

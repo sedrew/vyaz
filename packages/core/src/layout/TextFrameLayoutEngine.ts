@@ -20,7 +20,7 @@
  *   4. If frame.height is set, lines overflow to next column when colHeight exceeded
  *   5. If no frame.height, columns are infinite (all lines stay in column 0)
  */
-import type { TextFrame, ListStyle, VerticalAlignment, Paragraph } from '../types/Document.js';
+import type { TextFrame, ListStyle, VerticalAlignment, Paragraph, WritingMode } from '../types/Document.js';
 import type { Line, LayoutWarning } from '../types/LayoutTypes.js';
 import { paragraphLayoutEngine, ParagraphLayoutEngine } from './ParagraphLayoutEngine.js';
 import { splitParagraphByHardBreaks } from '../compile/ParagraphCompiler.js';
@@ -53,8 +53,42 @@ export interface TextFrameLayoutResult {
   fit: { horizontal: 'frame' | 'content'; vertical: 'frame' | 'content' };
   /** Present when autofit ran — the scale applied and whether it bottomed out. */
   autofit?: AutofitOutcome;
+  /**
+   * Block flow direction this layout was produced for — echoes
+   * `TextFrame.writingMode`, defaulting to `'horizontal-tb'`.
+   */
+  writingMode: WritingMode;
+  /**
+   * Post-layout rigid transform to realise `writingMode: 'sideways-*'` and/or
+   * `TextFrame.rotation`. Omitted when the net rotation is a multiple of 360°
+   * (nothing to apply). `lines`, `content` bbox aside, live in pre-rotation
+   * layout space; `content` / `overflow` are reported in **visual** space.
+   */
+  transform?: FrameTransform;
   /** Non-fatal issues (font fallback / substitution). Omitted when empty. */
   warnings?: LayoutWarning[];
+}
+
+/**
+ * Rigid transform a renderer applies to {@link TextFrameLayoutResult.lines} so a
+ * `sideways-*` writing mode or an explicit `rotation` takes visual effect. The
+ * layout math itself (line breaking, measuring, positioning) is unchanged.
+ */
+export interface FrameTransform {
+  /** Net clockwise rotation in degrees, normalised to `[0, 360)`. */
+  rotate: number;
+  /**
+   * The box `lines` occupy in their own pre-rotation coordinate space. The
+   * renderer rotates this box about its centre; for `rotate` of 90 / 270 the
+   * visible canvas is this box with width and height swapped.
+   */
+  layoutBox: { width: number; height: number };
+}
+
+/** Normalise a degree value into `[0, 360)`. */
+function normalizeDeg(d: number): number {
+  const r = d % 360;
+  return r < 0 ? r + 360 : r;
 }
 
 /**
@@ -199,13 +233,22 @@ export function runFlow(
   const mode = options.mode;
   const onMissingFont = options.onMissingFont ?? 'throw';
   const warnings: LayoutWarning[] = [];
+
+  // ── Writing mode ─────────────────────────────────────────────────
+  // `sideways-*` lays the block out horizontally, then a rigid ±90° turn is
+  // reported on the result for the renderer to apply. The only layout-time
+  // effect: the inline (wrap) axis runs along the frame's *height*.
+  const writingMode: WritingMode = frame.writingMode ?? 'horizontal-tb';
+  const sideways = writingMode === 'sideways-rl' || writingMode === 'sideways-lr';
+
   // ── Multi-column setup ────────────────────────────────────────────
   const leftPad = frame.padding?.left ?? 0;
   const rightPad = frame.padding?.right ?? 0;
   const topPad = frame.padding?.top ?? 0;
   const bottomPad = frame.padding?.bottom ?? 0;
 
-  const hasColumns = frame.columns != null && frame.columns.count > 1 && frame.width != null;
+  // Multi-column + sideways is out of scope — the column model is width-based.
+  const hasColumns = !sideways && frame.columns != null && frame.columns.count > 1 && frame.width != null;
   let colWidth: number | undefined;
   let colCount = 1;
   let colGap = 0;
@@ -349,11 +392,16 @@ export function runFlow(
     // Zero phase: split `pre`/`pre-line`/`pre-wrap` paragraphs on \n
     const subParagraphs = splitParagraphByHardBreaks(p);
 
-    // Available width: colWidth if columns, otherwise frame.width minus padding
+    // Available inline size: colWidth if columns; otherwise the frame's inline
+    // axis minus its padding. Under `sideways-*` the inline axis is the frame
+    // *height* (wrap clips by height), so read that instead of the width.
+    const inlineFrameSize = sideways ? frame.height : frame.width;
+    const inlinePadStart = sideways ? topPad : leftPad;
+    const inlinePadEnd = sideways ? bottomPad : rightPad;
     const maxWidth = hasColumns
       ? colWidth!
-      : frame.width !== undefined
-        ? frame.width - leftPad - rightPad
+      : inlineFrameSize !== undefined
+        ? inlineFrameSize - inlinePadStart - inlinePadEnd
         : Infinity;
 
     // If wrap is disabled, force no-wrap on the paragraph
@@ -466,18 +514,42 @@ export function runFlow(
     ? lastLine.y + lastLine.height + bottomPad
     : bottomPad;
 
+  // ── Post-layout rigid transform (writing-mode + rotation) ────────
+  // `sideways-rl` turns the block 90° CW, `sideways-lr` 90° CCW (≡ 270° CW);
+  // `frame.rotation` adds on top. `lines` / the `contentWidth`×`contentHeight`
+  // bbox are in pre-rotation layout space; `content` / `overflow` below are in
+  // post-rotation *visual* space so `frame` stays the box the caller gave.
+  const wmRotate = sideways ? (writingMode === 'sideways-rl' ? 90 : 270) : 0;
+  const rotate = normalizeDeg(wmRotate + (frame.rotation ?? 0));
+  const quarterTurned = rotate === 90 || rotate === 270;
+
+  const visualContentWidth = quarterTurned ? contentHeight : contentWidth;
+  const visualContentHeight = quarterTurned ? contentWidth : contentHeight;
+
+  const transform: FrameTransform | undefined = rotate === 0
+    ? undefined
+    : {
+        rotate,
+        layoutBox: {
+          width: (sideways ? frame.height : frame.width) ?? contentWidth,
+          height: (sideways ? frame.width : frame.height) ?? contentHeight,
+        },
+      };
+
   return {
     lines: allLines,
-    content: { width: contentWidth, height: contentHeight },
+    content: { width: visualContentWidth, height: visualContentHeight },
     frame: { width: frame.width, height: frame.height },
     overflow: {
-      horizontal: frame.width !== undefined && contentWidth > frame.width + 0.01,
-      vertical: frame.height !== undefined && contentHeight > frame.height + 0.01,
+      horizontal: frame.width !== undefined && visualContentWidth > frame.width + 0.01,
+      vertical: frame.height !== undefined && visualContentHeight > frame.height + 0.01,
     },
     fit: {
       horizontal: frame.width !== undefined ? 'frame' : 'content',
       vertical: frame.height !== undefined ? 'frame' : 'content',
     },
+    writingMode,
+    ...(transform ? { transform } : {}),
     ...(warnings.length ? { warnings } : {}),
   };
 }

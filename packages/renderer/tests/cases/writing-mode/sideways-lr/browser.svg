@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="240" viewBox="0 0 150 240">
+  <g transform="translate(0 240) rotate(270)">
+    <text x="0" y="15" font-family="Unifont" font-size="15" fill="#111" font-weight="700" xml:space="preserve">
+      <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="15" fill="#111">Vertical label</tspan>
+      <tspan x="105"> </tspan>
+    </text>
+    <text x="0" y="15" font-family="Unifont" font-size="15" fill="#444" font-weight="400" xml:space="preserve">
+      <tspan x="112.5" font-weight="400" font-style="normal" font-family="Unifont" font-size="15" fill="#444">turned 90 degrees</tspan>
+      <tspan x="240"> </tspan>
+    </text>
+    <text x="0" y="35" font-family="Unifont" font-size="15" fill="#444" font-weight="400" xml:space="preserve">
+      <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="15" fill="#444">counter-clockwise, wrapping by</tspan>
+      <tspan x="225"> </tspan>
+    </text>
+    <text x="0" y="55" font-family="Unifont" font-size="15" fill="#444" font-weight="400" xml:space="preserve">
+      <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="15" fill="#444">the frame height.</tspan>
+    </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="240" height="150" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="247.5" height="60" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  </g>
+</svg>

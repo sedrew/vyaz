@@ -27,7 +27,7 @@ export { groupLinesByParagraph } from './utils/groupLinesByParagraph.js';
 export { layoutTextFrame } from './layout/TextFrameLayoutEngine.js';
 export { createLayoutEngine } from './layout/create-engine.js';
 export type { LayoutEngine, LayoutEngineOptions } from './layout/create-engine.js';
-export type { LayoutOptions, TextFrameLayoutResult, AutofitOutcome } from './layout/TextFrameLayoutEngine.js';
+export type { LayoutOptions, TextFrameLayoutResult, AutofitOutcome, FrameTransform } from './layout/TextFrameLayoutEngine.js';
 export type { OnMissingFont } from './layout/resolve-font.js';
 
 // ── Autofit — stable ────────────────────────────────────

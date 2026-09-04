@@ -22,7 +22,10 @@ Direction, not a schedule. Order within a section is rough priority.
 
 - **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
   `WritingMode` / `direction` are in the type surface; the engine is not.
-- **Vertical writing modes** — `vertical-rl` / `vertical-lr` + `text-orientation`.
+- **True vertical writing modes** — `vertical-rl` / `vertical-lr` with per-glyph
+  `text-orientation` (`mixed` / `upright`), vertical advance metrics, block-axis
+  line breaking. (`sideways-rl` / `sideways-lr` and frame `rotation` already ship
+  as a post-layout rigid transform on `TextFrameLayoutResult.transform`.)
 - **Complex-script shaping parity** — fontkit's Indic / Arabic / Thai shapers are
   simpler than HarfBuzz. Evaluate a HarfBuzz-wasm path for those scripts.
 - **Dictionary hyphenation** (soft hyphens already break).

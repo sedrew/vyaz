@@ -21,17 +21,34 @@
  *
  * Determines how lines stack relative to each other:
  * - `horizontal-tb`: lines flow horizontally top-to-bottom (Latin, Cyrillic, default).
- * - `vertical-rl`: lines flow vertically right-to-left (traditional CJK).
+ * - `vertical-rl`: lines flow vertically right-to-left (traditional CJK, per-glyph
+ *   upright/rotated via {@link TextOrientation}).
  * - `vertical-lr`: lines flow vertically left-to-right (Mongolian, some UI scenarios).
+ * - `sideways-rl`: the whole text block is laid out horizontally, then rotated
+ *   90° **clockwise** as a rigid unit; wrapped lines stack right-to-left. A single
+ *   line reads top-to-bottom. Matches PowerPoint `bodyPr vert="vert"`.
+ * - `sideways-lr`: same, rotated 90° **counter-clockwise**; wrapped lines stack
+ *   left-to-right, a line reads bottom-to-top. Matches PowerPoint `vert="vert270"`.
  *
  * **Layout impact:**
  *  Under `horizontal-tb`, `wrap` clips by **width**, `autofit` shrinks by **height**.
- *  Under `vertical-*`, `wrap` clips by **height**, `autofit` shrinks by **width**
- *  (width and height swap roles).
+ *  Under `vertical-*` / `sideways-*`, `wrap` clips by **height**, `autofit` shrinks
+ *  by **width** (width and height swap roles).
  *
- * @see {@link https://www.w3.org/TR/css-writing-modes-3/#block-flow | CSS Writing Modes: block flow}
+ * **Implementation status:** `sideways-rl` / `sideways-lr` are implemented as a
+ * post-layout affine transform (the engine reports it on
+ * `TextFrameLayoutResult.transform`; the renderer applies it). `vertical-rl` /
+ * `vertical-lr` with per-glyph orientation are **not yet implemented** — they are
+ * accepted by the type but currently laid out as `horizontal-tb`.
+ *
+ * @see {@link https://www.w3.org/TR/css-writing-modes-4/#block-flow | CSS Writing Modes: block flow}
  */
-export type WritingMode = 'horizontal-tb' | 'vertical-rl' | 'vertical-lr';
+export type WritingMode =
+  | 'horizontal-tb'
+  | 'vertical-rl'
+  | 'vertical-lr'
+  | 'sideways-rl'
+  | 'sideways-lr';
 
 /**
  * Character orientation inside a vertical line.
@@ -612,6 +629,20 @@ export interface TextFrame {
    * Ignored when `writingMode === 'horizontal-tb'`.
    */
   textOrientation?: TextOrientation;
+  /**
+   * Rigid clockwise rotation of the **whole** text block, in degrees, applied
+   * after layout as an affine transform about the frame-box centre. This does
+   * **not** affect line breaking, measurement or positioning — only the final
+   * render transform. Mirrors PowerPoint's shape rotation (`<a:xfrm rot>`).
+   *
+   * Composes with `writingMode: 'sideways-*'` (which contributes its own ±90°).
+   * `0`, `90`, `180`, `270` are the exercised values; other angles are accepted
+   * and rotate about the centre without expanding the canvas bounding box.
+   *
+   * The engine folds this together with the writing-mode rotation and reports
+   * the result on `TextFrameLayoutResult.transform`.
+   */
+  rotation?: number;
   /**
    * Base text direction (important for bidi).
    * `'ltr'` = left-to-right, `'rtl'` = right-to-left.

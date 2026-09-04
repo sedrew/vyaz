@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="90" viewBox="0 0 260 90">
+  <g transform="translate(260 90) rotate(180)">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#222" font-weight="400" xml:space="preserve">Upside-down caption, rotated 180 </text>
+  <text x="0" y="31" font-family="Unifont" font-size="14" fill="#222" font-weight="400" xml:space="preserve">degrees about the frame centre.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="260" height="90" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="231" height="36" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  </g>
+</svg>

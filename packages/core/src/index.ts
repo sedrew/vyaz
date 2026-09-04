@@ -87,7 +87,7 @@ export { positionLines } from './layout/PositioningEngine.js';
 export { layoutTextFrame } from './layout/TextFrameLayoutEngine.js';
 export { createLayoutEngine } from './layout/create-engine.js';
 export type { LayoutEngine, LayoutEngineOptions } from './layout/create-engine.js';
-export type { TextFrameLayoutResult, LayoutOptions, AutofitOutcome } from './layout/TextFrameLayoutEngine.js';
+export type { TextFrameLayoutResult, LayoutOptions, AutofitOutcome, FrameTransform } from './layout/TextFrameLayoutEngine.js';
 export type { OnMissingFont } from './layout/resolve-font.js';
 
 // ── Autofit — stable ───────────────────────────────────────────────────

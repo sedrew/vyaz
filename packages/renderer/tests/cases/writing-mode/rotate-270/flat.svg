@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="150" viewBox="0 0 240 150">
+  <g transform="translate(0 150) rotate(270)">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#222" font-weight="400" xml:space="preserve">Plain rotation 270: </text>
+  <text x="0" y="31" font-family="Unifont" font-size="14" fill="#222" font-weight="400" xml:space="preserve">lines still wrap by </text>
+  <text x="0" y="49" font-family="Unifont" font-size="14" fill="#222" font-weight="400" xml:space="preserve">width, the whole box </text>
+  <text x="0" y="67" font-family="Unifont" font-size="14" fill="#222" font-weight="400" xml:space="preserve">turns.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="150" height="240" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="147" height="72" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  </g>
+</svg>

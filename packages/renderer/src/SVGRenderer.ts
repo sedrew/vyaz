@@ -18,7 +18,7 @@
  *   const svg = renderToSVG(lines, { preset: 'preserve', style: 'css', fit: 'frag' })
  */
 
-import type { Line, Span, ParagraphLayoutResult, TextFrameLayoutResult, ParagraphGroup, MultiColumnConfig } from '@vyaz/core';
+import type { Line, Span, ParagraphLayoutResult, TextFrameLayoutResult, ParagraphGroup, MultiColumnConfig, FrameTransform } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
 import { computeBBox, fmt } from './utils.js';
@@ -72,6 +72,17 @@ export interface SVGRenderOptions {
   /** Left padding from frame (needed for column debug rendering). */
   paddingLeft?: number;
   /**
+   * Post-layout rigid transform (writing-mode `sideways-*` / frame `rotation`).
+   * When the input is a {@link TextFrameLayoutResult} its own `transform` is used
+   * automatically; pass this to supply one for the bare `Line[]` form or to
+   * override. A net rotation that is a multiple of 360° is ignored.
+   *
+   * The lines are rendered into `layoutBox` (pre-rotation space) and the whole
+   * output is wrapped in one `<g transform>`; the `<svg>` canvas becomes the
+   * rotated visual box.
+   */
+  transform?: FrameTransform;
+  /**
    * glyph preset only: draw `underline` / `strikethrough` as explicit `<line>`
    * geometry. The glyph path positions each character with its own `x`, so it
    * cannot rely on SVG `text-decoration` (which the flat/expanded paths use).
@@ -108,6 +119,24 @@ const PRESETS: Record<SvgPreset, { structure: StructureMode; spacing: SpacingMod
 };
 
 // ── Helpers ──────────────────────────────────────────────────────────────
+
+/** Normalise a degree value into `[0, 360)`. */
+function normalizeDeg(d: number): number {
+  const r = d % 360;
+  return r < 0 ? r + 360 : r;
+}
+
+/**
+ * SVG `transform` that rotates a `w`×`h` layout box by `rotate`° clockwise and
+ * shifts it back into the positive quadrant. For 90 / 270 the visible box is
+ * `w`/`h` swapped; other angles rotate about the centre without a bbox change.
+ */
+function rotationTransform(rotate: number, w: number, h: number): { transform: string; width: number; height: number } {
+  if (rotate === 90) return { transform: `translate(${fmt(h)} 0) rotate(90)`, width: h, height: w };
+  if (rotate === 270) return { transform: `translate(0 ${fmt(w)}) rotate(270)`, width: h, height: w };
+  if (rotate === 180) return { transform: `translate(${fmt(w)} ${fmt(h)}) rotate(180)`, width: w, height: h };
+  return { transform: `rotate(${fmt(rotate)} ${fmt(w / 2)} ${fmt(h / 2)})`, width: w, height: h };
+}
 
 function escapeXml(text: string): string {
   return text
@@ -927,6 +956,13 @@ export function renderToSVG(
 ): string {
   let lines: Line[];
   let resolvedOptions: SVGRenderOptions;
+  // Net post-layout rotation to realise `sideways-*` / `rotation`. Explicit
+  // option wins; otherwise the result carries its own.
+  const xf: FrameTransform | undefined =
+    options.transform ?? (Array.isArray(input) ? undefined : input.transform);
+  const rotate = xf ? normalizeDeg(xf.rotate) : 0;
+  const applyTransform = xf !== undefined && rotate !== 0;
+
   if (Array.isArray(input)) {
     lines = input;
     resolvedOptions = options;
@@ -938,6 +974,15 @@ export function renderToSVG(
       options.sizing !== undefined || options.width !== undefined || options.height !== undefined;
     if (callerSizes) {
       resolvedOptions = options;
+    } else if (applyTransform) {
+      // Render into the pre-rotation layout box; the `<g>` wrapper below turns
+      // it and the `<svg>` canvas is resized to the visual box.
+      resolvedOptions = {
+        sizing: { horizontal: 'frame', vertical: 'frame' },
+        width: xf!.layoutBox.width,
+        height: xf!.layoutBox.height,
+        ...options,
+      };
     } else {
       const fw = input.fit.horizontal === 'frame' && input.frame.width != null;
       const fh = input.fit.vertical === 'frame' && input.frame.height != null;
@@ -1190,6 +1235,22 @@ export function renderToSVG(
       0, // rightPad — not tracked in options yet
     );
     builder.addDebug(debugSvg);
+  }
+
+  // Wrap everything (text + debug overlays) in one <g> so a `sideways-*` /
+  // `rotation` frame turns as a rigid unit, and resize the <svg> to the
+  // rotated visual box.
+  if (applyTransform) {
+    const { transform, width: visW, height: visH } = rotationTransform(
+      rotate,
+      xf!.layoutBox.width,
+      xf!.layoutBox.height,
+    );
+    const kids = builder.root.children.splice(0, builder.root.children.length);
+    builder.root.children.push(el('g', { transform }, kids));
+    builder.root.attrs.width = fmt(visW);
+    builder.root.attrs.height = fmt(visH);
+    builder.root.attrs.viewBox = `0 0 ${fmt(visW)} ${fmt(visH)}`;
   }
 
   return serializeSvg(builder.root);
