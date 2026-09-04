@@ -547,14 +547,8 @@ export function positionLines(
     //   1. lineHeightPx = maxFontSize * style.lineHeight
     //
     // 'office' (MS Office / DrawingML pixel-perfect):
-    //   lineHeight = (lnSpc% / 100) × 1.2 × maxRunSizeInLine.
-    //   `maxLineHeightBase` is max(ascent + descent) over the line's runs, and
-    //   FontMetricsProvider makes ascent+descent = 1.2 × fontSize per run in
-    //   office mode (the 1.2 is calibrated against real PowerPoint on macOS —
-    //   see scripts/office-metrics/; it may drift slightly by OS / build), so
-    //   that product is 1.2 × maxRunSizeInLine. `style.lineHeight` carries the
-    //   paragraph's lnSpc as a fraction (100% → 1.0); note the DrawingML single
-    //   default is 1.0, unlike the CSS/browser ~1.15.
+    //   PowerPoint has no line-height multiplier for single lines.
+    //   Line height strictly = ascent + descent (OS/2.usWinAscent + usWinDescent).
     //   Baseline = Top + ascent without any half-leading additions.
     //   See pixel-perfect-text-layout.md §1 and ECMA-376.
     const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
@@ -566,11 +560,11 @@ export function positionLines(
     let baseline: number;
 
     if (mode === 'office') {
-      // DrawingML: lineHeight = (lnSpc% / 100) × 1.2 × maxRunSizeInLine.
-      // `maxLineHeightBase` already = 1.2 × maxRunSizeInLine (see the metrics
-      // provider); `style.lineHeight` is the lnSpc fraction (single → 1.0). No
-      // half-leading distribution — PowerPoint anchors the baseline at the ascent.
-      lineBoxHeight = Math.round(maxLineHeightBase * (style.lineHeight || 1));
+      // DrawingML: lineHeight = ascent + descent, no lineHeight ×1.15 and no leading.
+      // DrawingML: base line height = OS/2 (usWinAscent + usWinDescent), without
+      // sum of rounded ascent/descent — that formula caused pixel-perfect
+      // mismatch with PowerPoint, so we use maxLineHeightBase.
+      lineBoxHeight = maxLineHeightBase;
       baseline = ascentRounded;
     } else {
       // Browser: CSS-compatible with leading distribution.

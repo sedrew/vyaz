@@ -18,16 +18,17 @@ bun scripts/office-metrics/report.ts
 
 ## Findings (see `report.md` for the tables)
 
-- **Line box = `1.2 × fontSize`, font-independent.** Great Vibes (OS/2 win ratio
-  ≈ 1.75) gets the *same* 1.2× box as Roboto. No single fontkit table field
-  (`win` / `hhea` / `typo` / `head`) yields ~1.2 for both fonts, so the engine
-  uses the flat 1.2 constant, splitting it into ascent/descent by the font's win
-  proportion only for baseline placement.
-- vyaz applies it as `office` line height =
-  `(lnSpc% / 100) × 1.2 × maxRunSizeInLine`
-  — see `packages/core/src/measure/FontMetricsProvider.ts` (the old
-  `winAscent × 1.078` model is kept there, commented, for reference) and the
-  `office` branch of `PositioningEngine.ts`.
+- **This suggests the line box is `1.2 × fontSize`, font-independent.** Great
+  Vibes (OS/2 win ratio ≈ 1.75) got the *same* ~1.2× box as Roboto, and a
+  10-line wrapped stack landed on 1.201/line. No single fontkit table field
+  (`win` / `hhea` / `typo` / `head`) yields ~1.2 for both fonts.
+- **Not applied.** vyaz still uses `mode: 'office'` =
+  `ascent/descent = winAscent/winDescent × 1.078` (fitted to Arial:
+  `1.117 × 1.078 ≈ 1.2`), which matches the fonts we care about. Switching to a
+  flat `1.2 × maxRunSizeInLine × lnSpc%` is an open question — see the roadmap
+  ("Exploring"). It needs more oracle data (a display/script font with a large
+  `hhea`) and a decision on `lnSpc%` handling before it's worth an `office`-mode
+  behaviour break.
 - **Width needs no calibration** — fontkit `layout()` (GPOS+GSUB) already matches
   PowerPoint's selection box to ±0.4%.
 

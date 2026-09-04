@@ -35,6 +35,19 @@ Direction, not a schedule. Order within a section is rough priority.
 
 - A React / Vue `<VyazText>` wrapper package.
 - PDF output from the same `LayoutResult`.
+- **`office` line-box model — open question.** Today `mode: 'office'` uses
+  `ascent/descent = winAscent/winDescent × 1.078` (fitted to Arial:
+  `1.117 × 1.078 ≈ 1.2`). Calibrating against real PowerPoint on macOS
+  (`scripts/office-metrics/` — `font-metrics.pptx` oracle + `report.ts`)
+  suggests the line box may actually be a **font-independent `1.2 × fontSize`**:
+  Great Vibes (OS/2 win ratio ≈ 1.75) got the *same* ~1.2× box as Roboto, and a
+  10-line wrapped stack landed on 1.201/line. No single fontkit table field
+  yields ~1.2 for both faces. Not changed yet — `1.078` matches the fonts we
+  care about and the alternative (`1.2 × maxRunSizeInLine × lnSpc%`, or
+  `max(1.2, hhea/upm) × …`) needs more oracle data (a display/script font with a
+  large `hhea`) and a decision on `lnSpc%` handling before it's worth the
+  `office`-mode break. Width already matches PowerPoint to ±0.4% and needs
+  nothing.
 
 ---
 

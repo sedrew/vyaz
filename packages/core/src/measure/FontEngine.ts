@@ -173,38 +173,18 @@ export function getGlyphAdvance(font: FontFace, codePoint: number): number | nul
 
 /**
  * Compute pixel‑scale metrics for a given font size.
- *
- * `office` mirrors {@link FontMetricsProvider.getMetrics}: the DrawingML line
- * box is `1.2 × fontSize` (font-independent, calibrated against real PowerPoint —
- * see `scripts/office-metrics/`), split into ascent/descent by the font's OS/2
- * win proportion. Keep the two in sync.
  */
 export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'browser' | 'office'): FontMetrics {
   const scale = fontSize / font.unitsPerEm;
 
   if (mode === 'office' && font.winAscent != null && font.winDescent != null) {
-    // See FontMetricsProvider.getMetrics for the full rationale. Short version:
-    // PowerPoint's single-spacing line box ≈ 1.2 × fontSize regardless of the
-    // font's own metrics; PositioningEngine turns that into
-    //   (lnSpc% / 100) × 1.2 × maxRunSizeInLine.
-    // ⚠ 1.2 measured on macOS PowerPoint; may drift slightly by OS / build.
-    const OFFICE_LINE_FACTOR = 1.2;
-    const box = OFFICE_LINE_FACTOR * fontSize;
-    const winFrac = font.winAscent / (font.winAscent + Math.abs(font.winDescent));
     return {
-      ascent: box * winFrac,
-      descent: box * (1 - winFrac),
+      ascent: font.winAscent * scale * 1.078,
+      descent: Math.abs(font.winDescent) * scale * 1.078,
       capHeight: (font.capHeight ?? font.ascent) * scale,
       unitsPerEm: font.unitsPerEm,
       sourceTable: 'OS/2',
     };
-
-    // ── Previous model (kept for reference) ─────────────────────────────
-    // `winAscent/winDescent × 1.078`; 1.078 was reverse-fitted to Arial
-    // (win ratio 1.117 × 1.078 ≈ 1.2) and broke on any face with a different
-    // win ratio (Great Vibes: +55%).
-    //   ascent:  font.winAscent  * scale * 1.078,
-    //   descent: Math.abs(font.winDescent) * scale * 1.078,
   }
 
   // browser mode (or Office fallback when OS/2 is absent)
