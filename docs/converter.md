@@ -24,13 +24,13 @@ convert.
 
 - **Works:** headings, paragraphs, `strong` / `em` / `u` / `s` / `sup` / `sub` /
   `small` / `mark` / `code`, links (as style — the `href` is not kept), ordered
-  and unordered lists (including nesting), `blockquote`, `pre`, `dl`, inline
-  `style=""`.
+  and unordered lists (including nesting), `blockquote`, `pre`, `dl`, `table`
+  (`colspan`/`rowspan`, `<caption>`, header shading), inline `style=""`.
 - **Drawn into an SVG box** *(coming next)*: `img` (as base64), inline `svg`,
   `progress`, `meter`, `hr`.
-- **Dropped** (listed under the result): `table` (there is no grid layout yet),
-  `video` / `audio` / `iframe` / `canvas`, form controls, `<style>` and
-  class-based CSS, `position` / `flex` / `grid` / `float`.
+- **Dropped** (listed under the result): `video` / `audio` / `iframe` /
+  `canvas`, form controls, `<style>` and class-based CSS, `position` / `flex` /
+  `grid` / `float`.
 
 Everything simplified or removed is reported in the panel beneath the SVG.
 
