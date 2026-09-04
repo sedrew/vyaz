@@ -1,0 +1,99 @@
+{
+  "table": {
+    "defaultCellStyle": {
+      "paddings": 8,
+      "borderWidths": 1,
+      "borderColors": "#ddd"
+    },
+    "rows": [
+      {
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Status:",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "bold",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "plain ",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    },
+                    {
+                      "type": "text",
+                      "text": "bold ",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "bold",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    },
+                    {
+                      "type": "text",
+                      "text": "italic ",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "italic",
+                      "color": "#111111"
+                    },
+                    {
+                      "type": "text",
+                      "text": "colored",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#c0392b"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "renders": {
+    "browser": {
+      "preset": "browser"
+    }
+  }
+}

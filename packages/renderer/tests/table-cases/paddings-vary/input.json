@@ -1,0 +1,116 @@
+{
+  "table": {
+    "rows": [
+      {
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "x",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "style": {
+              "paddings": 2,
+              "borderWidths": 1,
+              "borderColors": "#999"
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "x",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "style": {
+              "paddings": [
+                4,
+                20
+              ],
+              "borderWidths": 1,
+              "borderColors": "#999"
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "x",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "style": {
+              "paddings": [
+                2,
+                20,
+                10,
+                2
+              ],
+              "borderWidths": 1,
+              "borderColors": "#999"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "renders": {
+    "browser": {
+      "preset": "browser"
+    }
+  }
+}

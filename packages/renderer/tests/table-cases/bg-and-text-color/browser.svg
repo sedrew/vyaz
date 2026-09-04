@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="131" height="36" viewBox="0 0 131 36">
+  <rect x="0" y="0" width="53" height="36" fill="#fde2e2" />
+  <rect x="53" y="0" width="46" height="36" fill="#fff3cd" />
+  <rect x="99" y="0" width="32" height="36" fill="#d9f2e3" />
+  <rect x="0.5" y="0.5" width="52" height="35" fill="none" stroke="#eeeeee" stroke-width="1" />
+  <rect x="53.5" y="0.5" width="45" height="35" fill="none" stroke="#eeeeee" stroke-width="1" />
+  <rect x="99.5" y="0.5" width="31" height="35" fill="none" stroke="#eeeeee" stroke-width="1" />
+  <g transform="translate(9 9)"><svg xmlns="http://www.w3.org/2000/svg" width="35" height="18" viewBox="0 0 35 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#7a1f1f" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="14" fill="#7a1f1f">Error</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(62 9)"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="18" viewBox="0 0 28 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#7a5c00" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="14" fill="#7a5c00">Warn</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(108 9)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#125a34" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="14" fill="#125a34">OK</tspan>
+  </text>
+</svg>
+</g>
+</svg>

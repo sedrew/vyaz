@@ -1,0 +1,361 @@
+{
+  "table": {
+    "defaultCellStyle": {
+      "borderWidths": 1,
+      "borderColors": "#ccc",
+      "paddings": 6
+    },
+    "rows": [
+      {
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "writingMode": "sideways-rl",
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Column A",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "style": {
+              "verticalAlign": "bottom",
+              "borderWidths": 1,
+              "borderColors": "#ccc",
+              "paddings": 6
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "writingMode": "sideways-rl",
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Column B",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "style": {
+              "verticalAlign": "bottom",
+              "borderWidths": 1,
+              "borderColors": "#ccc",
+              "paddings": 6
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "writingMode": "sideways-rl",
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Column C",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "style": {
+              "verticalAlign": "bottom",
+              "borderWidths": 1,
+              "borderColors": "#ccc",
+              "paddings": 6
+            }
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Row 1",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "bold",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "center",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "11",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "center",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "12",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "center",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "13",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Row 2",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "bold",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "center",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "21",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "center",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "22",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "center",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "23",
+                      "fontFamily": "Unifont",
+                      "fontSize": 14,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "renders": {
+    "browser": {
+      "preset": "browser"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="68" viewBox="0 0 60 68">
+  <rect x="0" y="0" width="60" height="68" fill="#0b3d91" />
+  <rect x="0" y="0" width="30" height="34" fill="#ffffff" />
+  <rect x="30" y="0" width="30" height="34" fill="#ffffff" />
+  <rect x="0" y="34" width="30" height="34" fill="#ffffff" />
+  <rect x="30" y="34" width="30" height="34" fill="#ffffff" />
+  <rect x="2" y="2" width="56" height="64" fill="none" stroke="#0b3d91" stroke-width="4" rx="10" ry="10" />
+  <g transform="translate(8 8)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">a1</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(38 8)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">b1</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(8 42)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">a2</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(38 42)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">b2</tspan>
+  </text>
+</svg>
+</g>
+</svg>

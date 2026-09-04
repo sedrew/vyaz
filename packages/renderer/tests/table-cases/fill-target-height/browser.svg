@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="84" height="150" viewBox="0 0 84 150">
+  <rect x="0.5" y="0.5" width="83" height="39" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="40.5" width="83" height="59" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="100.5" width="83" height="49" fill="none" stroke="#ccc" stroke-width="1" />
+  <g transform="translate(7 11)"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="18" viewBox="0 0 70 18">
+  <text x="3.5" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="3.5" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">short row</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(7 61)"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="18" viewBox="0 0 70 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">taller row</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(7 116)"><svg xmlns="http://www.w3.org/2000/svg" width="70" height="18" viewBox="0 0 70 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">medium row</tspan>
+  </text>
+</svg>
+</g>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="104" height="116" viewBox="0 0 104 116">
+  <rect x="4.5" y="4.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="36.5" y="4.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="68.5" y="4.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="4.5" y="40.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="36.5" y="40.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="68.5" y="40.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="4.5" y="76.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="36.5" y="76.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="68.5" y="76.5" width="31" height="35" fill="none" stroke="#dddddd" stroke-width="1" />
+  <rect x="5" y="5" width="94" height="106" fill="none" stroke="#333333" stroke-width="2" rx="16" ry="16" />
+  <g transform="translate(13 13)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">a1</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(45 13)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">b1</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(77 13)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">c1</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(13 49)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">a2</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(45 49)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">b2</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(77 49)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">c2</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(13 85)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">a3</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(45 85)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">b3</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(77 85)"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">c3</tspan>
+  </text>
+</svg>
+</g>
+</svg>
