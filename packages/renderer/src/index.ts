@@ -7,6 +7,9 @@
 export { renderToSVG, renderParagraphToSVG, renderResultToSVG } from './SVGRenderer.js';
 export type { SVGRenderOptions, SvgPreset, SvgStyle, SvgFit, SvgSizing } from './SVGRenderer.js';
 
+export { renderTableToSVG } from './TableRenderer.js';
+export type { TableRenderOptions } from './TableRenderer.js';
+
 export { renderToCanvas, renderDebugToCanvas, renderSelection, renderCursor } from './CanvasRenderer.js';
 export type { CanvasRenderOptions, CursorOptions } from './CanvasRenderer.js';
 

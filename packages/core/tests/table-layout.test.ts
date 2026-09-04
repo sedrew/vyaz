@@ -119,6 +119,17 @@ describe('TableLayoutEngine — grid sizing', () => {
     expect(r.height).toBeCloseTo(r.rows[0].height + 20, 1);
   });
 
+  test('contentBox is the outer box with margins excluded', () => {
+    const table: TableFrame = { rows: [{ cells: [cell('a')] }], style: { margins: [10, 20] } };
+    const r = layoutTableFrame(table);
+    expect(r.contentBox).toEqual({ x: 20, y: 10, width: r.width - 40, height: r.height - 20 });
+  });
+
+  test('contentBox with no margins spans the full outer box from (0,0)', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [cell('a')] }] });
+    expect(r.contentBox).toEqual({ x: 0, y: 0, width: r.width, height: r.height });
+  });
+
   test('colGaps / rowGaps add space between cells without affecting cell width', () => {
     const table: TableFrame = {
       rows: [{ cells: [cell('a'), cell('a')] }, { cells: [cell('a'), cell('a')] }],

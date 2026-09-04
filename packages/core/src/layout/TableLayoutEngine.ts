@@ -80,6 +80,12 @@ export interface TableLayoutResult {
   bgColor?: string;
   /** The table's own outer border (`TableStyle`), distinct from row/cell borders. */
   border?: ResolvedBorder;
+  /**
+   * The border-box — the outer box with `TableStyle.margins` excluded. Rows
+   * span its full width; `border` (above) is drawn at this box. A renderer
+   * uses it directly instead of re-deriving margins from row/cell positions.
+   */
+  contentBox: { x: number; y: number; width: number; height: number };
   rows: TableRowLayoutResult[];
 }
 
@@ -242,6 +248,7 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
       height: margins.top + margins.bottom,
       bgColor: style.bgColor,
       ...(tableBorder ? { border: tableBorder } : {}),
+      contentBox: { x: margins.left, y: margins.top, width: 0, height: 0 },
       rows: [],
     };
   }
@@ -373,6 +380,12 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
     height: totalHeight,
     bgColor: style.bgColor,
     ...(tableBorder ? { border: tableBorder } : {}),
+    contentBox: {
+      x: margins.left,
+      y: margins.top,
+      width: totalWidth - margins.left - margins.right,
+      height: totalHeight - margins.top - margins.bottom,
+    },
     rows,
   };
 }
