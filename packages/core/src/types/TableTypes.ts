@@ -44,15 +44,12 @@ export interface TableCellStyle {
  * `content.width` and `content.wrap` are overridden by the table layout (the
  * column width decides them); set everything else — paragraphs, alignment,
  * runs — as usual.
- *
- * @todo `colSpan` / `rowSpan` are accepted by the type but not yet implemented
- *       by the layout engine (T1) — every cell occupies exactly one column and row.
  */
 export interface TableCell {
   content: TextFrame;
-  /** Columns this cell spans. @todo not yet implemented (T1); treated as `1`. */
+  /** Columns this cell spans. Default `1`. */
   colSpan?: number;
-  /** Rows this cell spans. @todo not yet implemented (T1); treated as `1`. */
+  /** Rows this cell spans. Default `1`. */
   rowSpan?: number;
   style?: Partial<TableCellStyle>;
 }

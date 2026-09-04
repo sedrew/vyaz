@@ -1,6 +1,7 @@
 /**
- * table-layout.test.ts — TableLayoutEngine (T0): grid sizing, no colSpan/
- * rowSpan/borders yet.
+ * table-layout.test.ts — TableLayoutEngine.
+ * T0: grid sizing (no spans, no borders). T1: colSpan / rowSpan placement +
+ * deficit-widen sizing. T2 (borders) not covered here yet.
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, makeParagraph, makeTextFrame } from './helpers.ts';
@@ -156,5 +157,108 @@ describe('TableLayoutEngine — grid sizing', () => {
     const r = layoutTableFrame({ rows: [{ cells: [weird] }] }, {});
     // natural width path still measured it unconstrained, so it's not clipped to 5
     expect(r.rows[0].cells[0].width).toBeGreaterThan(5);
+  });
+
+  test('a plain T0 cell reports colSpan/rowSpan = 1 in the result', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [cell('a')] }] });
+    expect(r.rows[0].cells[0]).toMatchObject({ colSpan: 1, rowSpan: 1 });
+  });
+});
+
+describe('TableLayoutEngine — colSpan / rowSpan (T1)', () => {
+  test('colSpan: a header cell spans two columns; the row below lines up under it', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [{ ...cell('Header'), colSpan: 2 }] },
+        { cells: [cell('a'), cell('bbbbbbbbbbbbbbbbbbbb')] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    const header = r.rows[0].cells[0];
+    const [a, b] = r.rows[1].cells;
+    expect(header.colSpan).toBe(2);
+    expect(header.x).toBe(a.x);
+    expect(header.width).toBeCloseTo(a.width + b.width, 1); // no gaps by default
+    expect(b.x).toBe(a.x + a.width);
+  });
+
+  test('colSpan: when the spanning cell is wider than its columns, they widen (never shrink)', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [{ ...cell('a very long spanning header that needs lots of room'), colSpan: 2 }] },
+        { cells: [cell('a'), cell('b')] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    const header = r.rows[0].cells[0];
+    const [a, b] = r.rows[1].cells;
+    expect(header.width).toBeCloseTo(a.width + b.width, 1);
+    // both narrow columns absorbed roughly half the deficit each
+    expect(a.width).toBeCloseTo(b.width, 1);
+    expect(a.width).toBeGreaterThan(20); // wider than a lone "a"/"b" cell would need
+  });
+
+  test('colSpan never shrinks a column below what its own single-span cells need', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [{ ...cell('x'), colSpan: 2 }] },
+        { cells: [cell('a very long cell that sets column 0 width on its own'), cell('b')] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    const [a] = r.rows[1].cells;
+    // column 0 is driven by the long cell, not shrunk by the short spanning header
+    expect(a.width).toBeGreaterThan(100);
+  });
+
+  test('rowSpan: a cell spanning two rows occupies col 0; the next row\'s lone cell lands in col 1', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [{ ...cell('side'), rowSpan: 2 }, cell('r0c1')] },
+        { cells: [cell('r1c1')] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    expect(r.rows[0].cells).toHaveLength(2);
+    expect(r.rows[1].cells).toHaveLength(1);
+    const side = r.rows[0].cells[0];
+    const r0c1 = r.rows[0].cells[1];
+    const r1c1 = r.rows[1].cells[0];
+    expect(side.rowSpan).toBe(2);
+    expect(r1c1.x).toBe(r0c1.x); // column 1, same as the cell above it
+    expect(side.height).toBeCloseTo(r.rows[0].height + r.rows[1].height, 1);
+  });
+
+  test('rowSpan: when the spanning cell is taller than its rows, they widen (never shrink)', () => {
+    const tall = { content: makeTextFrame([makeParagraph('one', { fontFamily: 'Unifont', fontSize: 16 }), makeParagraph('two', { fontFamily: 'Unifont', fontSize: 16 }), makeParagraph('three', { fontFamily: 'Unifont', fontSize: 16 })]) };
+    const table: TableFrame = {
+      rows: [
+        { cells: [{ ...tall, rowSpan: 2 }, cell('short0')] },
+        { cells: [cell('short1')] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    const side = r.rows[0].cells[0];
+    expect(side.height).toBeCloseTo(r.rows[0].height + r.rows[1].height, 1);
+    // both rows absorbed roughly half the deficit each (short cells barely need any height)
+    expect(r.rows[0].height).toBeCloseTo(r.rows[1].height, 1);
+  });
+
+  test('a cell can span both rows and columns at once', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [{ ...cell('big'), colSpan: 2, rowSpan: 2 }, cell('r0c2')] },
+        { cells: [cell('r1c2')] },
+        { cells: [cell('r2c0'), cell('r2c1'), cell('r2c2')] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    const big = r.rows[0].cells[0];
+    expect(big.colSpan).toBe(2);
+    expect(big.rowSpan).toBe(2);
+    expect(big.width).toBeCloseTo(r.rows[2].cells[0].width + r.rows[2].cells[1].width, 1);
+    expect(big.height).toBeCloseTo(r.rows[0].height + r.rows[1].height, 1);
+    // row 1's only real cell (r1c2) still lands in column 2, past the occupied span
+    expect(r.rows[1].cells[0].x).toBe(r.rows[2].cells[2].x);
   });
 });

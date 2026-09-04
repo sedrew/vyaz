@@ -1,5 +1,5 @@
 /**
- * TableLayoutEngine.ts — TableFrame → positioned grid (T0).
+ * TableLayoutEngine.ts — TableFrame → positioned grid.
  *
  * Column widths and row heights are *measured*, not required from the caller
  * (unlike svg-table-core, whose `calculateRows` takes them as input — see
@@ -7,8 +7,19 @@
  * once unconstrained to get its natural width, once at the final column width
  * to get its wrapped height.
  *
- * T0 scope: no `colSpan` / `rowSpan` (every cell is 1×1), no borders (bgColor
- * only). Both land in later phases without changing this shape.
+ * Pipeline:
+ *   1. placeCells    — colSpan/rowSpan → each cell's (startRow, startCol),
+ *                       borrowing svg-table-core's "occupied slot" idea
+ *                       (calculateRows' insertIgnoredCell), done natively.
+ *   2. column widths  — span-1 cells set the per-column max; span>N cells only
+ *                       *widen* their spanned columns, evenly, if their own
+ *                       natural width doesn't already fit (never shrink).
+ *   3. per-cell content — laid out once at its final (possibly multi-column)
+ *                       width; same deficit-widen rule for row heights and
+ *                       rowSpan cells.
+ *   4. position        — column/row offsets accumulated from final sizes.
+ *
+ * T2 (not yet implemented): borders (bgColor only so far).
  */
 import type { TableFrame, TableRow, TableCell, TableCellStyle, TableRowStyle } from '../types/TableTypes.js';
 import type { TextFrameLayoutResult } from './TextFrameLayoutEngine.js';
@@ -23,7 +34,9 @@ export interface TableCellLayoutResult {
   x: number;
   /** Absolute Y of the cell box within the table. */
   y: number;
+  /** Full box width — sums every spanned column + the gaps between them. */
   width: number;
+  /** Full box height — sums every spanned row + the gaps between them. */
   height: number;
   /** Resolved padding box. */
   padding: { top: number; right: number; bottom: number; left: number };
@@ -32,12 +45,17 @@ export interface TableCellLayoutResult {
   bgColor?: string;
   /** The cell's laid-out content — same shape a lone `TextFrame` produces. */
   content: TextFrameLayoutResult;
+  /** Columns this cell occupies (>1 for `colSpan`). */
+  colSpan: number;
+  /** Rows this cell occupies (>1 for `rowSpan`). */
+  rowSpan: number;
 }
 
 export interface TableRowLayoutResult {
   y: number;
   height: number;
   bgColor?: string;
+  /** Only cells that *start* in this row (a rowSpan cell from above is not repeated here). */
   cells: TableCellLayoutResult[];
 }
 
@@ -85,6 +103,69 @@ function verticalOffsetFor(align: VerticalAlignment, available: number, content:
   return 0;
 }
 
+/** Sum `count` consecutive entries of `arr` starting at `start`, plus `gap` between them. */
+function sumSpan(arr: number[], start: number, count: number, gap: number): number {
+  let sum = 0;
+  for (let i = start; i < start + count; i++) sum += arr[i] ?? 0;
+  return sum + gap * Math.max(0, count - 1);
+}
+
+// ── Placement (colSpan / rowSpan → grid position) ───────────────────────
+
+interface Placed {
+  cell: TableCell;
+  startRow: number;
+  startCol: number;
+  colSpan: number;
+  rowSpan: number;
+  // filled in during measurement/layout — see layoutTableFrame
+  cs: Required<TableCellStyle>;
+  pad: { top: number; right: number; bottom: number; left: number };
+  natural: number;
+  width: number;
+  content: TextFrameLayoutResult;
+  cellHeight: number;
+}
+
+/**
+ * Assign every cell its (startRow, startCol), accounting for cells above it
+ * that `rowSpan` into this row. Column index within a row advances past any
+ * slot still occupied by such a span (an implicit "ignored" cell — we track
+ * occupancy instead of materialising placeholder cells).
+ */
+function placeCells(rows: TableRow[]): { placed: Placed[]; colCount: number } {
+  const placed: Placed[] = [];
+  const occupied: Map<number, Set<number>> = new Map(); // row → set of taken columns
+  const isOccupied = (r: number, c: number) => occupied.get(r)?.has(c) ?? false;
+  const occupy = (r: number, c: number) => {
+    let set = occupied.get(r);
+    if (!set) occupied.set(r, (set = new Set()));
+    set.add(c);
+  };
+
+  let colCount = 0;
+  for (let ri = 0; ri < rows.length; ri++) {
+    let ci = 0;
+    for (const cell of rows[ri].cells) {
+      while (isOccupied(ri, ci)) ci++;
+      const colSpan = Math.max(1, cell.colSpan ?? 1);
+      const rowSpan = Math.max(1, cell.rowSpan ?? 1);
+      placed.push({
+        cell, startRow: ri, startCol: ci, colSpan, rowSpan,
+        // placeholders — filled in by layoutTableFrame
+        cs: undefined as any, pad: undefined as any, natural: 0, width: 0,
+        content: undefined as any, cellHeight: 0,
+      });
+      for (let dr = 1; dr < rowSpan; dr++) {
+        for (let dc = 0; dc < colSpan; dc++) occupy(ri + dr, ci + dc);
+      }
+      colCount = Math.max(colCount, ci + colSpan);
+      ci += colSpan;
+    }
+  }
+  return { placed, colCount };
+}
+
 // ── Layout ───────────────────────────────────────────────────────────────
 
 export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions = {}): TableLayoutResult {
@@ -92,9 +173,10 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
   const margins = resolveWidths(style.margins, 0);
   const colGaps = style.colGaps ?? 0;
   const rowGaps = style.rowGaps ?? 0;
+  const rowCount = table.rows.length;
 
-  const colCount = table.rows.reduce((n, r) => Math.max(n, r.cells.length), 0);
-  if (colCount === 0 || table.rows.length === 0) {
+  const { placed, colCount } = placeCells(table.rows);
+  if (colCount === 0 || rowCount === 0) {
     return {
       width: margins.left + margins.right,
       height: margins.top + margins.bottom,
@@ -103,17 +185,27 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
     };
   }
 
-  // ── Pass 1: natural (unwrapped) width per cell → per-column max ────────
-  const colWidths = table.columnWidths ? table.columnWidths.slice(0, colCount) : new Array(colCount).fill(0);
-  if (!table.columnWidths) {
-    for (const row of table.rows) {
-      for (let ci = 0; ci < row.cells.length; ci++) {
-        const cell = row.cells[ci];
-        const cs = resolveCellStyle(cell, table);
-        const pad = resolveWidths(cs.paddings, DEFAULT_PADDING);
-        const natural = layoutTextFrame({ ...cell.content, width: undefined, wrap: false }, { mode: options.mode }).content.width;
-        const cellW = natural + pad.left + pad.right;
-        colWidths[ci] = Math.max(colWidths[ci] ?? 0, cellW);
+  // ── Resolve style + natural (unwrapped) width for every placed cell ────
+  for (const p of placed) {
+    p.cs = resolveCellStyle(p.cell, table);
+    p.pad = resolveWidths(p.cs.paddings, DEFAULT_PADDING);
+    p.natural =
+      layoutTextFrame({ ...p.cell.content, width: undefined, wrap: false }, { mode: options.mode }).content.width +
+      p.pad.left + p.pad.right;
+  }
+
+  // ── Column widths: span-1 cells set the max; spanning cells only widen ──
+  const colWidths = new Array(colCount).fill(0);
+  if (table.columnWidths) {
+    for (let c = 0; c < colCount; c++) colWidths[c] = table.columnWidths[c] ?? 0;
+  } else {
+    for (const p of placed) if (p.colSpan === 1) colWidths[p.startCol] = Math.max(colWidths[p.startCol], p.natural);
+    for (const p of placed) {
+      if (p.colSpan <= 1) continue;
+      const covered = sumSpan(colWidths, p.startCol, p.colSpan, colGaps);
+      if (p.natural > covered) {
+        const extra = (p.natural - covered) / p.colSpan;
+        for (let c = p.startCol; c < p.startCol + p.colSpan; c++) colWidths[c] += extra;
       }
     }
   }
@@ -122,66 +214,82 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
   // wraps text; grow gives every column extra room).
   if (table.width !== undefined) {
     const budget = table.width - margins.left - margins.right - colGaps * Math.max(0, colCount - 1);
-    const naturalSum = colWidths.reduce((a, b) => a + b, 0);
+    const naturalSum = colWidths.reduce((a: number, b: number) => a + b, 0);
     if (naturalSum > 0 && budget > 0) {
       const scale = budget / naturalSum;
       for (let i = 0; i < colWidths.length; i++) colWidths[i] *= scale;
     }
   }
 
-  // ── Pass 2: layout each cell at its column's content width ─────────────
-  const rows: TableRowLayoutResult[] = [];
-  let y = margins.top;
-
-  for (let ri = 0; ri < table.rows.length; ri++) {
-    const row = table.rows[ri];
-    const rs = resolveRowStyle(row, table);
-    const explicitHeight = table.rowHeights?.[ri] ?? (rs.height > 0 ? rs.height : undefined);
-
-    interface Prepared { cell: TableCell; cs: Required<TableCellStyle>; pad: { top: number; right: number; bottom: number; left: number }; x: number; w: number; content: TextFrameLayoutResult }
-    const prepared: Prepared[] = [];
-    let x = margins.left;
-    let rowHeight = explicitHeight ?? 0;
-
-    for (let ci = 0; ci < row.cells.length; ci++) {
-      const cell = row.cells[ci];
-      const cs = resolveCellStyle(cell, table);
-      const pad = resolveWidths(cs.paddings, DEFAULT_PADDING);
-      const w = colWidths[ci] ?? 0;
-      const contentWidth = Math.max(0, w - pad.left - pad.right);
-      const content = layoutTextFrame({ ...cell.content, width: contentWidth, wrap: true }, { mode: options.mode });
-      const cellHeight = content.content.height + pad.top + pad.bottom;
-      if (explicitHeight === undefined) rowHeight = Math.max(rowHeight, cellHeight);
-      prepared.push({ cell, cs, pad, x, w, content });
-      x += w + colGaps;
-    }
-
-    const cells: TableCellLayoutResult[] = prepared.map((p) => {
-      const available = rowHeight - p.pad.top - p.pad.bottom;
-      const verticalOffset = verticalOffsetFor(p.cs.verticalAlign, available, p.content.content.height);
-      return {
-        x: p.x,
-        y,
-        width: p.w,
-        height: rowHeight,
-        padding: p.pad,
-        verticalOffset,
-        ...(p.cs.bgColor ? { bgColor: p.cs.bgColor } : {}),
-        content: p.content,
-      };
-    });
-
-    rows.push({ y, height: rowHeight, ...(rs.bgColor ? { bgColor: rs.bgColor } : {}), cells });
-    y += rowHeight + rowGaps;
+  // ── Lay out every cell's content at its final (possibly multi-column) width ──
+  for (const p of placed) {
+    p.width = sumSpan(colWidths, p.startCol, p.colSpan, colGaps);
+    const contentWidth = Math.max(0, p.width - p.pad.left - p.pad.right);
+    p.content = layoutTextFrame({ ...p.cell.content, width: contentWidth, wrap: true }, { mode: options.mode });
+    p.cellHeight = p.content.content.height + p.pad.top + p.pad.bottom;
   }
 
-  const contentBottom = y - (rows.length > 0 ? rowGaps : 0);
-  const totalWidth = margins.left + colWidths.reduce((a, b) => a + b, 0) + colGaps * Math.max(0, colCount - 1) + margins.right;
+  // ── Row heights: span-1 cells set the max; spanning cells only widen ───
+  const rowHeights = new Array(rowCount).fill(0);
+  if (table.rowHeights) {
+    for (let r = 0; r < rowCount; r++) rowHeights[r] = table.rowHeights[r] ?? 0;
+  } else {
+    for (let ri = 0; ri < rowCount; ri++) {
+      const explicitHeight = resolveRowStyle(table.rows[ri], table).height;
+      if (explicitHeight > 0) rowHeights[ri] = explicitHeight;
+    }
+    for (const p of placed) {
+      if (p.rowSpan === 1 && rowHeights[p.startRow] === 0) rowHeights[p.startRow] = p.cellHeight;
+      else if (p.rowSpan === 1) rowHeights[p.startRow] = Math.max(rowHeights[p.startRow], p.cellHeight);
+    }
+    for (const p of placed) {
+      if (p.rowSpan <= 1) continue;
+      const covered = sumSpan(rowHeights, p.startRow, p.rowSpan, rowGaps);
+      if (p.cellHeight > covered) {
+        const extra = (p.cellHeight - covered) / p.rowSpan;
+        for (let r = p.startRow; r < p.startRow + p.rowSpan; r++) rowHeights[r] += extra;
+      }
+    }
+  }
 
-  return {
-    width: totalWidth,
-    height: contentBottom + margins.bottom,
-    bgColor: style.bgColor,
-    rows,
-  };
+  // ── Position ─────────────────────────────────────────────────────────
+  const colX: number[] = [];
+  {
+    let acc = margins.left;
+    for (let c = 0; c < colCount; c++) { colX.push(acc); acc += colWidths[c] + colGaps; }
+  }
+  const rowY: number[] = [];
+  {
+    let acc = margins.top;
+    for (let r = 0; r < rowCount; r++) { rowY.push(acc); acc += rowHeights[r] + rowGaps; }
+  }
+
+  const rows: TableRowLayoutResult[] = table.rows.map((row, ri) => {
+    const rs = resolveRowStyle(row, table);
+    const cells: TableCellLayoutResult[] = placed
+      .filter((p) => p.startRow === ri)
+      .map((p) => {
+        const height = sumSpan(rowHeights, p.startRow, p.rowSpan, rowGaps);
+        const available = height - p.pad.top - p.pad.bottom;
+        const verticalOffset = verticalOffsetFor(p.cs.verticalAlign, available, p.content.content.height);
+        return {
+          x: colX[p.startCol],
+          y: rowY[p.startRow],
+          width: p.width,
+          height,
+          padding: p.pad,
+          verticalOffset,
+          ...(p.cs.bgColor ? { bgColor: p.cs.bgColor } : {}),
+          content: p.content,
+          colSpan: p.colSpan,
+          rowSpan: p.rowSpan,
+        };
+      });
+    return { y: rowY[ri], height: rowHeights[ri], ...(rs.bgColor ? { bgColor: rs.bgColor } : {}), cells };
+  });
+
+  const totalWidth = margins.left + colWidths.reduce((a: number, b: number) => a + b, 0) + colGaps * Math.max(0, colCount - 1) + margins.right;
+  const totalHeight = margins.top + rowHeights.reduce((a: number, b: number) => a + b, 0) + rowGaps * Math.max(0, rowCount - 1) + margins.bottom;
+
+  return { width: totalWidth, height: totalHeight, bgColor: style.bgColor, rows };
 }
