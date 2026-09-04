@@ -14,6 +14,13 @@
  * right-aligned paragraphs — the nested `<svg>`'s viewBox has to start at
  * (0, 0) so `line.x` stays the true position within the cell.
  *
+ * `cell.cx`/`cy` are an extra px nudge added straight onto the content
+ * origin. `cell.allowOverflow` forces `overflow: visible` on the cell's own
+ * nested `<svg>` (default clips at the padding box, same as `svg-table-core`
+ * — see `withOverflowVisible`). `opts.fragment` swaps the outer `<svg
+ * xmlns… viewBox…>` for a bare `<g>`, for splicing this table into a
+ * document that already has one (composing tables, nested-table cells).
+ *
  * T3 (not yet): dash patterns / stroke-linecap on borders, asymmetric corner
  * radii — a uniform `rx`/`ry` becomes a plain `<rect>` radius; a border whose
  * four sides don't share one width+color falls back to four `<line>`s (no
@@ -29,8 +36,20 @@ export interface TableRenderOptions {
   preset?: SvgPreset;
   /** How cell text style properties are expressed. Default `'xml'`. */
   style?: SvgStyle;
-  /** CSS class for the root `<svg>`. */
+  /** CSS class for the root `<svg>`/`<g>`. */
   className?: string;
+  /**
+   * Emit a bare `<g>` (no `<svg>`/`viewBox`/`xmlns` wrapper) for splicing
+   * into a document that already has an outer `<svg>` — e.g. composing
+   * several tables, or embedding as a nested-table cell's content. Default
+   * `false`.
+   */
+  fragment?: boolean;
+}
+
+/** Force `overflow: visible` on a `renderToSVG`-produced root `<svg …>` tag (`allowOverflow` cells). */
+function withOverflowVisible(svg: string): string {
+  return svg.replace(/^<svg /, '<svg style="overflow:visible" ');
 }
 
 // ── Shape helpers ────────────────────────────────────────────────────────
@@ -108,11 +127,17 @@ export function renderTableToSVG(result: TableLayoutResult, opts: TableRenderOpt
       const cw = contentWidthOf(cell);
       const ch = cell.content.content.height;
       if (cw <= 0 || ch <= 0 || cell.content.lines.length === 0) continue;
-      const originX = cell.x + cell.padding.left + (cell.border?.widths.left ?? 0);
-      const originY = cell.y + cell.padding.top + (cell.border?.widths.top ?? 0) + cell.verticalOffset;
-      const svg = renderToSVG(cell.content, { preset, style, sizing: 'frame', width: cw, height: ch });
+      const originX = cell.x + cell.padding.left + (cell.border?.widths.left ?? 0) + cell.cx;
+      const originY = cell.y + cell.padding.top + (cell.border?.widths.top ?? 0) + cell.verticalOffset + cell.cy;
+      let svg = renderToSVG(cell.content, { preset, style, sizing: 'frame', width: cw, height: ch });
+      if (cell.allowOverflow) svg = withOverflowVisible(svg);
       parts.push(`  <g transform="translate(${fmt(originX)} ${fmt(originY)})">${svg}</g>\n`);
     }
+  }
+
+  if (opts.fragment) {
+    const gAttrs = opts.className ? ` class="${opts.className}"` : '';
+    return `<g${gAttrs}>\n${parts.join('')}</g>\n`;
   }
 
   const attrs = [

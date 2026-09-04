@@ -60,6 +60,20 @@ export interface TableCellStyle extends BorderStyles {
   paddings?: Widths;
   /** Vertical alignment of the cell's content within its row height. Default `'top'`. */
   verticalAlign?: VerticalAlignment;
+  /**
+   * Fine-tuning nudge applied to the cell's content position, in px, on top of
+   * padding/alignment/`verticalAlign`. Positive `cx` moves right, positive
+   * `cy` moves down. Default `0`.
+   */
+  cx?: number;
+  /** @see cx */
+  cy?: number;
+  /**
+   * Let content wider/taller than the cell's padding box paint past its
+   * edges instead of being clipped. Default `false` (clipped) — matches
+   * `svg-table-core`'s default.
+   */
+  allowOverflow?: boolean;
 }
 
 /**

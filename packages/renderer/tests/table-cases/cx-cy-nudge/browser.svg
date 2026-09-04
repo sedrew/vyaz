@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="70" viewBox="0 0 360 70">
+  <rect x="0.5" y="0.5" width="119" height="69" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="120.5" y="0.5" width="119" height="69" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="240.5" y="0.5" width="119" height="69" fill="none" stroke="#ccc" stroke-width="1" />
+  <g transform="translate(-11 26)"><svg xmlns="http://www.w3.org/2000/svg" width="102" height="18" viewBox="0 0 102 18">
+  <text x="30" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="30" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">cx:-20</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(129 26)"><svg xmlns="http://www.w3.org/2000/svg" width="102" height="18" viewBox="0 0 102 18">
+  <text x="23" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="23" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">no nudge</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(249 44)"><svg xmlns="http://www.w3.org/2000/svg" width="102" height="18" viewBox="0 0 102 18">
+  <text x="30" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="30" font-weight="400" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">cy:+18</tspan>
+  </text>
+</svg>
+</g>
+</svg>

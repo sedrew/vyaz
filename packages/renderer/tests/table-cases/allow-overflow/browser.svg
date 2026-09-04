@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="62" viewBox="0 0 260 62">
+  <rect x="0.5" y="0.5" width="99" height="30" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="100.5" y="0.5" width="159" height="30" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="31.5" width="99" height="30" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="100.5" y="31.5" width="159" height="30" fill="none" stroke="#ccc" stroke-width="1" />
+  <g transform="translate(7 7)"><svg xmlns="http://www.w3.org/2000/svg" width="86" height="17" viewBox="0 0 86 17">
+  <text x="0" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">clipped:</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(107 7)"><svg xmlns="http://www.w3.org/2000/svg" width="146" height="17" viewBox="0 0 146 17">
+  <text x="0" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">one long unbroken line of text</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(7 38)"><svg xmlns="http://www.w3.org/2000/svg" width="86" height="17" viewBox="0 0 86 17">
+  <text x="0" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">bleeds:</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(107 38)"><svg style="overflow:visible" xmlns="http://www.w3.org/2000/svg" width="146" height="17" viewBox="0 0 146 17">
+  <text x="0" y="12" font-family="Unifont" font-size="13" fill="#c0392b" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#c0392b">one long unbroken line of text</tspan>
+  </text>
+</svg>
+</g>
+</svg>

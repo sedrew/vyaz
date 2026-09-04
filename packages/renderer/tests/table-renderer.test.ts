@@ -104,4 +104,43 @@ describe('renderTableToSVG', () => {
     expect(flat).not.toContain('<tspan');
     expect(glyph).toContain('<tspan');
   });
+
+  test('cx/cy nudge the content origin without moving the cell box or border', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [{ ...cell('x'), style: { cx: 12, cy: -7 } }] }],
+    };
+    const result = layoutTableFrame(table);
+    const cellResult = result.rows[0].cells[0];
+    const svg = renderTableToSVG(result);
+    const originX = cellResult.x + cellResult.padding.left + cellResult.cx;
+    const originY = cellResult.y + cellResult.padding.top + cellResult.verticalOffset + cellResult.cy;
+    const fmt = (n: number) => (Math.round(n * 100) / 100).toString();
+    expect(svg).toContain(`<g transform="translate(${fmt(originX)} ${fmt(originY)})">`);
+  });
+
+  test('allowOverflow sets overflow:visible on the cell\'s content <svg>; default clips (no style attr)', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [
+        { ...cell('clipped'), style: { allowOverflow: false } },
+        { ...cell('bleeds'), style: { allowOverflow: true } },
+      ] }],
+    };
+    const svg = renderTableToSVG(layoutTableFrame(table));
+    // exactly one "overflow:visible" in the whole document — the "bleeds" cell's
+    expect((svg.match(/overflow:visible/g) ?? []).length).toBe(1);
+    expect(svg.indexOf('overflow:visible')).toBeLessThan(svg.indexOf('bleeds'));
+    expect(svg.indexOf('overflow:visible')).toBeGreaterThan(svg.indexOf('clipped'));
+  });
+
+  test('fragment: true wraps in a bare <g> — no outer <svg>/xmlns/viewBox (each cell keeps its own nested <svg>)', () => {
+    const table: TableFrame = { rows: [{ cells: [cell('x')] }] };
+    const wrapped = renderTableToSVG(layoutTableFrame(table));
+    const fragment = renderTableToSVG(layoutTableFrame(table), { fragment: true, className: 'frag' });
+    expect(wrapped.startsWith('<svg xmlns')).toBe(true); // control: default still wraps
+    expect(fragment.startsWith('<g class="frag">')).toBe(true);
+    expect(fragment.trim().endsWith('</g>')).toBe(true);
+    // exactly one <svg> — the cell's own nested one — vs two (outer + nested) when wrapped
+    expect((wrapped.match(/<svg /g) ?? []).length).toBe(2);
+    expect((fragment.match(/<svg /g) ?? []).length).toBe(1);
+  });
 });

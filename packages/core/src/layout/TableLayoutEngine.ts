@@ -53,6 +53,12 @@ export interface TableCellLayoutResult {
   padding: { top: number; right: number; bottom: number; left: number };
   /** Extra Y offset inside the padding box from `verticalAlign` (0 for `'top'`). */
   verticalOffset: number;
+  /** `TableCellStyle.cx`/`cy` — an additional px nudge on top of padding/alignment. Default `0`. */
+  cx: number;
+  /** @see cx */
+  cy: number;
+  /** `TableCellStyle.allowOverflow` — let content paint past the cell's padding box. Default `false`. */
+  allowOverflow: boolean;
   bgColor?: string;
   border?: ResolvedBorder;
   /** The cell's laid-out content — same shape a lone `TextFrame` produces. */
@@ -109,6 +115,9 @@ interface ResolvedCellStyle {
   bgColor: string;
   paddings: Widths;
   verticalAlign: VerticalAlignment;
+  cx: number;
+  cy: number;
+  allowOverflow: boolean;
   borderWidths?: Widths;
   borderColors?: ColorsOnWidth;
   rx?: number;
@@ -131,6 +140,9 @@ function resolveCellStyle(cell: TableCell, table: TableFrame): ResolvedCellStyle
     bgColor: s.bgColor ?? d.bgColor ?? '',
     paddings: s.paddings ?? d.paddings ?? DEFAULT_PADDING,
     verticalAlign: s.verticalAlign ?? d.verticalAlign ?? 'top',
+    cx: s.cx ?? d.cx ?? 0,
+    cy: s.cy ?? d.cy ?? 0,
+    allowOverflow: s.allowOverflow ?? d.allowOverflow ?? false,
     borderWidths: s.borderWidths ?? d.borderWidths,
     borderColors: s.borderColors ?? d.borderColors,
     rx: s.rx ?? d.rx,
@@ -364,6 +376,9 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
           height,
           padding: p.pad,
           verticalOffset,
+          cx: p.cs.cx,
+          cy: p.cs.cy,
+          allowOverflow: p.cs.allowOverflow,
           ...(p.cs.bgColor ? { bgColor: p.cs.bgColor } : {}),
           ...(p.border ? { border: p.border } : {}),
           content: p.content,

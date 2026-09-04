@@ -1,0 +1,32 @@
+{
+  "_comment": "allowOverflow: a paragraph with whiteSpace:'nowrap' (effectiveMaxWidth=Infinity in ParagraphLayoutEngine) stays a single line wider than its column, so it genuinely overflows instead of wrapping. Top cell (allowOverflow unset -> false, default) is clipped by its own nested <svg> viewport; bottom cell (allowOverflow: true) bleeds visibly past the column border.",
+  "table": {
+    "columnWidths": [100, 160],
+    "defaultCellStyle": { "paddings": 6, "borderWidths": 1, "borderColors": "#ccc" },
+    "rows": [
+      {
+        "cells": [
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "clipped:", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "bold", "fontStyle": "normal", "color": "#111111" }] }] }
+          },
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0, "whiteSpace": "nowrap" }, "children": [{ "type": "text", "text": "one long unbroken line of text", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] },
+            "style": { "allowOverflow": false }
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "bleeds:", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "bold", "fontStyle": "normal", "color": "#111111" }] }] }
+          },
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0, "whiteSpace": "nowrap" }, "children": [{ "type": "text", "text": "one long unbroken line of text", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#c0392b" }] }] },
+            "style": { "allowOverflow": true }
+          }
+        ]
+      }
+    ]
+  },
+  "renders": { "browser": { "preset": "browser" } }
+}

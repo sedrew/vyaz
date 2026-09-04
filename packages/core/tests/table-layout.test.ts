@@ -110,6 +110,25 @@ describe('TableLayoutEngine — grid sizing', () => {
     expect(bot.verticalOffset).toBeGreaterThan(mid.verticalOffset);
   });
 
+  test('cx/cy default to 0 and resolve cell-over-default like every other style field', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [cell('a'), { ...cell('b'), style: { cx: 5, cy: -3 } }] }],
+      defaultCellStyle: { cx: 1, cy: 1 },
+    };
+    const r = layoutTableFrame(table);
+    expect(r.rows[0].cells[0]).toMatchObject({ cx: 1, cy: 1 }); // falls back to default
+    expect(r.rows[0].cells[1]).toMatchObject({ cx: 5, cy: -3 }); // cell overrides default
+  });
+
+  test('allowOverflow defaults to false and resolves cell-over-default', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [cell('a'), { ...cell('b'), style: { allowOverflow: true } }] }],
+    };
+    const r = layoutTableFrame(table);
+    expect(r.rows[0].cells[0].allowOverflow).toBe(false);
+    expect(r.rows[0].cells[1].allowOverflow).toBe(true);
+  });
+
   test('margins offset the whole grid and are included in the outer box', () => {
     const table: TableFrame = { rows: [{ cells: [cell('a')] }], style: { margins: [10, 20] } };
     const r = layoutTableFrame(table);
