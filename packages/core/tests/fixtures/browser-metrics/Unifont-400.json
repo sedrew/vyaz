@@ -1,0 +1,3539 @@
+{
+  "meta": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.44121.4 Chrome/148.0.7778.280 Safari/537.36",
+    "dpr": 2,
+    "date": "2026-09-04T04:01:33.084Z",
+    "corpusSizes": [
+      10,
+      12,
+      16,
+      24,
+      48
+    ],
+    "family": "Unifont",
+    "weight": "400",
+    "variation": null
+  },
+  "entries": [
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 10,
+      "svgPx": 90,
+      "canvasPx": 90
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 12,
+      "svgPx": 108,
+      "canvasPx": 108
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 16,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 24,
+      "svgPx": 216,
+      "canvasPx": 216
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 48,
+      "svgPx": 432,
+      "canvasPx": 432
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 10,
+      "svgPx": 55,
+      "canvasPx": 55
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 12,
+      "svgPx": 66,
+      "canvasPx": 66
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 16,
+      "svgPx": 88,
+      "canvasPx": 88
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 24,
+      "svgPx": 132,
+      "canvasPx": 132
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 48,
+      "svgPx": 264,
+      "canvasPx": 264
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 10,
+      "svgPx": 35,
+      "canvasPx": 35
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 12,
+      "svgPx": 42,
+      "canvasPx": 42
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 16,
+      "svgPx": 56,
+      "canvasPx": 56
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 24,
+      "svgPx": 84,
+      "canvasPx": 84
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 48,
+      "svgPx": 168,
+      "canvasPx": 168
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 10,
+      "svgPx": 70,
+      "canvasPx": 70
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 12,
+      "svgPx": 84,
+      "canvasPx": 84
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 16,
+      "svgPx": 112,
+      "canvasPx": 112
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 24,
+      "svgPx": 168,
+      "canvasPx": 168
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 48,
+      "svgPx": 336,
+      "canvasPx": 336
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 10,
+      "svgPx": 55,
+      "canvasPx": 55
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 12,
+      "svgPx": 66,
+      "canvasPx": 66
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 16,
+      "svgPx": 88,
+      "canvasPx": 88
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 24,
+      "svgPx": 132,
+      "canvasPx": 132
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 48,
+      "svgPx": 264,
+      "canvasPx": 264
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 10,
+      "svgPx": 20,
+      "canvasPx": 20
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 12,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 16,
+      "svgPx": 32,
+      "canvasPx": 32
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 24,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 48,
+      "svgPx": 96,
+      "canvasPx": 96
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 10,
+      "svgPx": 45,
+      "canvasPx": 45
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 12,
+      "svgPx": 54,
+      "canvasPx": 54
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 16,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 24,
+      "svgPx": 108,
+      "canvasPx": 108
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 48,
+      "svgPx": 216,
+      "canvasPx": 216
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 10,
+      "svgPx": 25,
+      "canvasPx": 25
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 12,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 16,
+      "svgPx": 40,
+      "canvasPx": 40
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 24,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 48,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 10,
+      "svgPx": 40,
+      "canvasPx": 40
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 12,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 16,
+      "svgPx": 64,
+      "canvasPx": 64
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 24,
+      "svgPx": 96,
+      "canvasPx": 96
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 48,
+      "svgPx": 192,
+      "canvasPx": 192
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 10,
+      "svgPx": 25,
+      "canvasPx": 25
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 12,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 16,
+      "svgPx": 40,
+      "canvasPx": 40
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 24,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 48,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 10,
+      "svgPx": 50,
+      "canvasPx": 50
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 12,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 16,
+      "svgPx": 80,
+      "canvasPx": 80
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 24,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 48,
+      "svgPx": 240,
+      "canvasPx": 240
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 10,
+      "svgPx": 25,
+      "canvasPx": 25
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 12,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 16,
+      "svgPx": 40,
+      "canvasPx": 40
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 24,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 48,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 10,
+      "svgPx": 15,
+      "canvasPx": 15
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 12,
+      "svgPx": 18,
+      "canvasPx": 18
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 16,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 24,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 48,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 10,
+      "svgPx": 15,
+      "canvasPx": 15
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 12,
+      "svgPx": 18,
+      "canvasPx": 18
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 16,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 24,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 48,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 10,
+      "svgPx": 10,
+      "canvasPx": 10
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 12,
+      "svgPx": 12,
+      "canvasPx": 12
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 16,
+      "svgPx": 16,
+      "canvasPx": 16
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 24,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 48,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 10,
+      "svgPx": 50,
+      "canvasPx": 50
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 12,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 16,
+      "svgPx": 80,
+      "canvasPx": 80
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 24,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 48,
+      "svgPx": 240,
+      "canvasPx": 240
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 10,
+      "svgPx": 45,
+      "canvasPx": 45
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 12,
+      "svgPx": 54,
+      "canvasPx": 54
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 16,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 24,
+      "svgPx": 108,
+      "canvasPx": 108
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 48,
+      "svgPx": 216,
+      "canvasPx": 216
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 10,
+      "svgPx": 40,
+      "canvasPx": 40
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 12,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 16,
+      "svgPx": 64,
+      "canvasPx": 64
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 24,
+      "svgPx": 96,
+      "canvasPx": 96
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 48,
+      "svgPx": 192,
+      "canvasPx": 192
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 10,
+      "svgPx": 25,
+      "canvasPx": 25
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 12,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 16,
+      "svgPx": 40,
+      "canvasPx": 40
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 24,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 48,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 10,
+      "svgPx": 50,
+      "canvasPx": 50
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 12,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 16,
+      "svgPx": 80,
+      "canvasPx": 80
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 24,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 48,
+      "svgPx": 240,
+      "canvasPx": 240
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 10,
+      "svgPx": 35,
+      "canvasPx": 35
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 12,
+      "svgPx": 42,
+      "canvasPx": 42
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 16,
+      "svgPx": 56,
+      "canvasPx": 56
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 24,
+      "svgPx": 84,
+      "canvasPx": 84
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 48,
+      "svgPx": 168,
+      "canvasPx": 168
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 10,
+      "svgPx": 630,
+      "canvasPx": 630
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 12,
+      "svgPx": 756,
+      "canvasPx": 756
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 16,
+      "svgPx": 1008,
+      "canvasPx": 1008
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 24,
+      "svgPx": 1512,
+      "canvasPx": 1512
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 48,
+      "svgPx": 3024,
+      "canvasPx": 3024
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 10,
+      "svgPx": 5,
+      "canvasPx": 25
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 12,
+      "svgPx": 6,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 16,
+      "svgPx": 8,
+      "canvasPx": 40
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 24,
+      "svgPx": 12,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 48,
+      "svgPx": 24,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 10,
+      "svgPx": 35,
+      "canvasPx": 40
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 12,
+      "svgPx": 42,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 16,
+      "svgPx": 56,
+      "canvasPx": 64
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 24,
+      "svgPx": 84,
+      "canvasPx": 96
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 48,
+      "svgPx": 168,
+      "canvasPx": 192
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 10,
+      "svgPx": 15,
+      "canvasPx": 20
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 12,
+      "svgPx": 18,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 16,
+      "svgPx": 24,
+      "canvasPx": 32
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 24,
+      "svgPx": 36,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 48,
+      "svgPx": 72,
+      "canvasPx": 96
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 10,
+      "svgPx": 15,
+      "canvasPx": 15
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 12,
+      "svgPx": 18,
+      "canvasPx": 18
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 16,
+      "svgPx": 24,
+      "canvasPx": 24
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 24,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 48,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 10,
+      "svgPx": 40,
+      "canvasPx": 45
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 12,
+      "svgPx": 48,
+      "canvasPx": 54
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 16,
+      "svgPx": 64,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 24,
+      "svgPx": 96,
+      "canvasPx": 108
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 48,
+      "svgPx": 192,
+      "canvasPx": 216
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 10,
+      "svgPx": 45,
+      "canvasPx": 50
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 12,
+      "svgPx": 54,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 16,
+      "svgPx": 72,
+      "canvasPx": 80
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 24,
+      "svgPx": 108,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 48,
+      "svgPx": 216,
+      "canvasPx": 240
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 10,
+      "svgPx": 25,
+      "canvasPx": 25
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 12,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 16,
+      "svgPx": 40,
+      "canvasPx": 40
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 24,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 48,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 10,
+      "svgPx": 35,
+      "canvasPx": 35
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 12,
+      "svgPx": 42,
+      "canvasPx": 42
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 16,
+      "svgPx": 56,
+      "canvasPx": 56
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 24,
+      "svgPx": 84,
+      "canvasPx": 84
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 48,
+      "svgPx": 168,
+      "canvasPx": 168
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 10,
+      "svgPx": 75,
+      "canvasPx": 75
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 12,
+      "svgPx": 90,
+      "canvasPx": 90
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 16,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 24,
+      "svgPx": 180,
+      "canvasPx": 180
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 48,
+      "svgPx": 360,
+      "canvasPx": 360
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 10,
+      "svgPx": 85,
+      "canvasPx": 85
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 12,
+      "svgPx": 102,
+      "canvasPx": 102
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 16,
+      "svgPx": 136,
+      "canvasPx": 136
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 24,
+      "svgPx": 204,
+      "canvasPx": 204
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 48,
+      "svgPx": 408,
+      "canvasPx": 408
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 10,
+      "svgPx": 35,
+      "canvasPx": 35
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 12,
+      "svgPx": 42,
+      "canvasPx": 42
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 16,
+      "svgPx": 56,
+      "canvasPx": 56
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 24,
+      "svgPx": 84,
+      "canvasPx": 84
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 48,
+      "svgPx": 168,
+      "canvasPx": 168
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 10,
+      "svgPx": 50,
+      "canvasPx": 50
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 12,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 16,
+      "svgPx": 80,
+      "canvasPx": 80
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 24,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 48,
+      "svgPx": 240,
+      "canvasPx": 240
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 10,
+      "svgPx": 30,
+      "canvasPx": 30
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 12,
+      "svgPx": 36,
+      "canvasPx": 36
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 16,
+      "svgPx": 48,
+      "canvasPx": 48
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 24,
+      "svgPx": 72,
+      "canvasPx": 72
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 48,
+      "svgPx": 144,
+      "canvasPx": 144
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 10,
+      "svgPx": 50,
+      "canvasPx": 50
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 12,
+      "svgPx": 60,
+      "canvasPx": 60
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 16,
+      "svgPx": 80,
+      "canvasPx": 80
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 24,
+      "svgPx": 120,
+      "canvasPx": 120
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 48,
+      "svgPx": 240,
+      "canvasPx": 240
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 10,
+      "svgPx": 55,
+      "canvasPx": 55
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 12,
+      "svgPx": 66,
+      "canvasPx": 66
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 16,
+      "svgPx": 88,
+      "canvasPx": 88
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 24,
+      "svgPx": 132,
+      "canvasPx": 132
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 48,
+      "svgPx": 264,
+      "canvasPx": 264
+    }
+  ]
+}

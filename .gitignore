@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 fonts/
+# ...except committed test / demo font assets
+!docs/.vitepress/theme/playground/fonts/
+!packages/renderer/tests/cases/fonts/
 
 dist/
 
@@ -25,3 +28,5 @@ npm-debug.log*
 tmp/
 
 .idea/
+# generated calibration page (rebuild: bun scripts/browser-metrics/build-page.ts)
+scripts/browser-metrics/page.html

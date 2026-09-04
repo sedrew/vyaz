@@ -59,6 +59,29 @@ export async function registerUnifont(): Promise<void> {
   await fontMetricsProvider.registerFont('Unifont', { weight: 'normal', style: 'normal' }, data);
 }
 
+// ── Fixture font registration (Roboto / Inter / GreatVibes) ───────────
+
+/**
+ * Register the libre test fonts from `tests/fixtures/` (see FONTS.md).
+ * Variable fonts are pinned to concrete instances: `wght` 400/700 for Roboto
+ * and Inter, plus `opsz` for Inter so widths match `font-optical-sizing: auto`
+ * at the given size. `optSize` defaults to 16.
+ */
+export async function registerFixtureFonts(optSize = 16): Promise<void> {
+  const dir = resolve(dirname(fileURLToPath(import.meta.url)), 'fixtures');
+  const read = (f: string) => readFileSync(resolve(dir, f));
+
+  await fontMetricsProvider.registerFont('Roboto', { weight: 'normal' }, read('Roboto-VariableFont_wdth,wght.ttf'));
+  await fontMetricsProvider.registerFont('Roboto', { weight: 'bold', variation: { wght: 700 } }, read('Roboto-VariableFont_wdth,wght.ttf'));
+
+  const inter = read('Inter-Variable.ttf');
+  const opsz = Math.max(14, Math.min(32, optSize));
+  await fontMetricsProvider.registerFont('Inter', { weight: 'normal', variation: { opsz } }, inter);
+  await fontMetricsProvider.registerFont('Inter', { weight: 'bold', variation: { opsz, wght: 700 } }, inter);
+
+  await fontMetricsProvider.registerFont('GreatVibes', { weight: 'normal' }, read('GreatVibes-Regular.ttf'));
+}
+
 // ── Arial variants registration ──────────────────────────────────────
 
 /** Parse font subfamily name → { weight, style }. */

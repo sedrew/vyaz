@@ -1,0 +1,3539 @@
+{
+  "meta": {
+    "ua": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.44121.4 Chrome/148.0.7778.280 Safari/537.36",
+    "dpr": 2,
+    "date": "2026-09-04T04:01:33.084Z",
+    "corpusSizes": [
+      10,
+      12,
+      16,
+      24,
+      48
+    ],
+    "family": "GreatVibes",
+    "weight": "400",
+    "variation": null
+  },
+  "entries": [
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 10,
+      "svgPx": 10.297,
+      "canvasPx": 10.29
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 12,
+      "svgPx": 12.352,
+      "canvasPx": 12.348
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 16,
+      "svgPx": 16.469,
+      "canvasPx": 16.464
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 24,
+      "svgPx": 24.703,
+      "canvasPx": 24.696
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ав",
+      "size": 48,
+      "svgPx": 49.398,
+      "canvasPx": 49.392
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 10,
+      "svgPx": 16.797,
+      "canvasPx": 16.79
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 12,
+      "svgPx": 20.148,
+      "canvasPx": 20.148
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 16,
+      "svgPx": 26.867,
+      "canvasPx": 26.864
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 24,
+      "svgPx": 40.297,
+      "canvasPx": 40.296
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "АУ",
+      "size": 48,
+      "svgPx": 80.594,
+      "canvasPx": 80.592
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 10,
+      "svgPx": 4.852,
+      "canvasPx": 4.85
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 12,
+      "svgPx": 5.82,
+      "canvasPx": 5.82
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 16,
+      "svgPx": 7.766,
+      "canvasPx": 7.76
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 24,
+      "svgPx": 11.641,
+      "canvasPx": 11.64
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "г,",
+      "size": 48,
+      "svgPx": 23.281,
+      "canvasPx": 23.28
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 10,
+      "svgPx": 16.492,
+      "canvasPx": 16.49
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 12,
+      "svgPx": 19.789,
+      "canvasPx": 19.788
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 16,
+      "svgPx": 26.391,
+      "canvasPx": 26.384
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 24,
+      "svgPx": 39.578,
+      "canvasPx": 39.576
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГА",
+      "size": 48,
+      "svgPx": 79.156,
+      "canvasPx": 79.152
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 10,
+      "svgPx": 18.617,
+      "canvasPx": 18.61
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 12,
+      "svgPx": 22.336,
+      "canvasPx": 22.332
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 16,
+      "svgPx": 29.781,
+      "canvasPx": 29.776
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 24,
+      "svgPx": 44.664,
+      "canvasPx": 44.664
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ГЛ",
+      "size": 48,
+      "svgPx": 89.328,
+      "canvasPx": 89.328
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 10,
+      "svgPx": 12.234,
+      "canvasPx": 12.23
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 12,
+      "svgPx": 14.68,
+      "canvasPx": 14.676
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 16,
+      "svgPx": 19.57,
+      "canvasPx": 19.568
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 24,
+      "svgPx": 29.359,
+      "canvasPx": 29.352
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Го",
+      "size": 48,
+      "svgPx": 58.711,
+      "canvasPx": 58.704
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 10,
+      "svgPx": 13.344,
+      "canvasPx": 13.34
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 12,
+      "svgPx": 16.016,
+      "canvasPx": 16.008
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 16,
+      "svgPx": 21.352,
+      "canvasPx": 21.344
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 24,
+      "svgPx": 32.023,
+      "canvasPx": 32.016
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Гу",
+      "size": 48,
+      "svgPx": 64.039,
+      "canvasPx": 64.032
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 10,
+      "svgPx": 13.266,
+      "canvasPx": 13.26
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 12,
+      "svgPx": 15.914,
+      "canvasPx": 15.912
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 16,
+      "svgPx": 21.219,
+      "canvasPx": 21.216
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 24,
+      "svgPx": 31.828,
+      "canvasPx": 31.824
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ру",
+      "size": 48,
+      "svgPx": 63.648,
+      "canvasPx": 63.648
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 10,
+      "svgPx": 20.156,
+      "canvasPx": 20.15
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 12,
+      "svgPx": 24.188,
+      "canvasPx": 24.18
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 16,
+      "svgPx": 32.242,
+      "canvasPx": 32.24
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 24,
+      "svgPx": 48.367,
+      "canvasPx": 48.36
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "ТА",
+      "size": 48,
+      "svgPx": 96.727,
+      "canvasPx": 96.72
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 10,
+      "svgPx": 17,
+      "canvasPx": 17
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 12,
+      "svgPx": 20.406,
+      "canvasPx": 20.4
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 16,
+      "svgPx": 27.203,
+      "canvasPx": 27.2
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 24,
+      "svgPx": 40.805,
+      "canvasPx": 40.8
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ту",
+      "size": 48,
+      "svgPx": 81.602,
+      "canvasPx": 81.6
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 10,
+      "svgPx": 6.063,
+      "canvasPx": 6.06
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 12,
+      "svgPx": 7.273,
+      "canvasPx": 7.272
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 16,
+      "svgPx": 9.703,
+      "canvasPx": 9.696
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 24,
+      "svgPx": 14.547,
+      "canvasPx": 14.544
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "у.",
+      "size": 48,
+      "svgPx": 29.094,
+      "canvasPx": 29.088
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 10,
+      "svgPx": 16.797,
+      "canvasPx": 16.79
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 12,
+      "svgPx": 20.148,
+      "canvasPx": 20.148
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 16,
+      "svgPx": 26.867,
+      "canvasPx": 26.864
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 24,
+      "svgPx": 40.297,
+      "canvasPx": 40.296
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "УА",
+      "size": 48,
+      "svgPx": 80.594,
+      "canvasPx": 80.592
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 10,
+      "svgPx": 15.352,
+      "canvasPx": 15.35
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 12,
+      "svgPx": 18.422,
+      "canvasPx": 18.42
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 16,
+      "svgPx": 24.563,
+      "canvasPx": 24.56
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 24,
+      "svgPx": 36.844,
+      "canvasPx": 36.84
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ум",
+      "size": 48,
+      "svgPx": 73.688,
+      "canvasPx": 73.68
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 10,
+      "svgPx": 14.141,
+      "canvasPx": 14.14
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 12,
+      "svgPx": 16.969,
+      "canvasPx": 16.968
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 16,
+      "svgPx": 22.625,
+      "canvasPx": 22.624
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 24,
+      "svgPx": 33.938,
+      "canvasPx": 33.936
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "s": "Ф.",
+      "size": 48,
+      "svgPx": 67.875,
+      "canvasPx": 67.872
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 10,
+      "svgPx": 64.797,
+      "canvasPx": 64.79
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 12,
+      "svgPx": 77.75,
+      "canvasPx": 77.748
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 16,
+      "svgPx": 103.664,
+      "canvasPx": 103.664
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 24,
+      "svgPx": 155.5,
+      "canvasPx": 155.496
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "быстрая рыжая лиса",
+      "size": 48,
+      "svgPx": 310.992,
+      "canvasPx": 310.992
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 10,
+      "svgPx": 43.055,
+      "canvasPx": 43.05
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 12,
+      "svgPx": 51.664,
+      "canvasPx": 51.66
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 16,
+      "svgPx": 68.883,
+      "canvasPx": 68.88
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 24,
+      "svgPx": 103.32,
+      "canvasPx": 103.32
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Государство",
+      "size": 48,
+      "svgPx": 206.641,
+      "canvasPx": 206.64
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 10,
+      "svgPx": 32.938,
+      "canvasPx": 32.93
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 12,
+      "svgPx": 39.523,
+      "canvasPx": 39.516
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 16,
+      "svgPx": 52.695,
+      "canvasPx": 52.688
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 24,
+      "svgPx": 79.039,
+      "canvasPx": 79.032
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Кернинг",
+      "size": 48,
+      "svgPx": 158.07,
+      "canvasPx": 158.064
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 10,
+      "svgPx": 55.797,
+      "canvasPx": 55.79
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 12,
+      "svgPx": 66.953,
+      "canvasPx": 66.948
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 16,
+      "svgPx": 89.266,
+      "canvasPx": 89.264
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 24,
+      "svgPx": 133.898,
+      "canvasPx": 133.896
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Модуль вёрстки",
+      "size": 48,
+      "svgPx": 267.797,
+      "canvasPx": 267.792
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 10,
+      "svgPx": 29.438,
+      "canvasPx": 29.43
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 12,
+      "svgPx": 35.32,
+      "canvasPx": 35.316
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 16,
+      "svgPx": 47.094,
+      "canvasPx": 47.088
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 24,
+      "svgPx": 70.633,
+      "canvasPx": 70.632
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Привет",
+      "size": 48,
+      "svgPx": 141.266,
+      "canvasPx": 141.264
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 10,
+      "svgPx": 47.984,
+      "canvasPx": 47.98
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 12,
+      "svgPx": 57.578,
+      "canvasPx": 57.576
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 16,
+      "svgPx": 76.773,
+      "canvasPx": 76.768
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 24,
+      "svgPx": 115.156,
+      "canvasPx": 115.152
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Типографика",
+      "size": 48,
+      "svgPx": 230.305,
+      "canvasPx": 230.304
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 10,
+      "svgPx": 23.594,
+      "canvasPx": 23.59
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 12,
+      "svgPx": 28.313,
+      "canvasPx": 28.308
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 16,
+      "svgPx": 37.75,
+      "canvasPx": 37.744
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 24,
+      "svgPx": 56.617,
+      "canvasPx": 56.616
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Фыва",
+      "size": 48,
+      "svgPx": 113.234,
+      "canvasPx": 113.232
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 10,
+      "svgPx": 37.945,
+      "canvasPx": 37.94
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 12,
+      "svgPx": 45.531,
+      "canvasPx": 45.528
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 16,
+      "svgPx": 60.711,
+      "canvasPx": 60.704
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 24,
+      "svgPx": 91.063,
+      "canvasPx": 91.056
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "s": "Ярославль",
+      "size": 48,
+      "svgPx": 182.117,
+      "canvasPx": 182.112
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 10,
+      "svgPx": 30.578,
+      "canvasPx": 30.571
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 12,
+      "svgPx": 36.688,
+      "canvasPx": 36.686
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 16,
+      "svgPx": 48.914,
+      "canvasPx": 48.914
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 24,
+      "svgPx": 73.375,
+      "canvasPx": 73.371
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Αθήνα",
+      "size": 48,
+      "svgPx": 146.742,
+      "canvasPx": 146.742
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 10,
+      "svgPx": 44.148,
+      "canvasPx": 44.143
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 12,
+      "svgPx": 52.977,
+      "canvasPx": 52.972
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 16,
+      "svgPx": 70.633,
+      "canvasPx": 70.629
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 24,
+      "svgPx": 105.945,
+      "canvasPx": 105.943
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "άνθρωπος",
+      "size": 48,
+      "svgPx": 211.891,
+      "canvasPx": 211.887
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 10,
+      "svgPx": 37.273,
+      "canvasPx": 37.27
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 12,
+      "svgPx": 44.727,
+      "canvasPx": 44.724
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 16,
+      "svgPx": 59.633,
+      "canvasPx": 59.632
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 24,
+      "svgPx": 89.453,
+      "canvasPx": 89.448
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Ελλάδα",
+      "size": 48,
+      "svgPx": 178.898,
+      "canvasPx": 178.896
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 10,
+      "svgPx": 26.492,
+      "canvasPx": 26.492
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 12,
+      "svgPx": 31.797,
+      "canvasPx": 31.79
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 16,
+      "svgPx": 42.391,
+      "canvasPx": 42.386
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 24,
+      "svgPx": 63.586,
+      "canvasPx": 63.58
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "λόγος",
+      "size": 48,
+      "svgPx": 127.164,
+      "canvasPx": 127.159
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 10,
+      "svgPx": 54.711,
+      "canvasPx": 54.71
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 12,
+      "svgPx": 65.656,
+      "canvasPx": 65.651
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 16,
+      "svgPx": 87.539,
+      "canvasPx": 87.535
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 24,
+      "svgPx": 131.305,
+      "canvasPx": 131.303
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "s": "Τυπογραφία",
+      "size": 48,
+      "svgPx": 262.609,
+      "canvasPx": 262.606
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 10,
+      "svgPx": 4.203,
+      "canvasPx": 4.2
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 12,
+      "svgPx": 5.047,
+      "canvasPx": 5.04
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 16,
+      "svgPx": 6.727,
+      "canvasPx": 6.72
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 24,
+      "svgPx": 10.086,
+      "canvasPx": 10.08
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "1.",
+      "size": 48,
+      "svgPx": 20.164,
+      "canvasPx": 20.16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 10,
+      "svgPx": 4.477,
+      "canvasPx": 4.47
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 12,
+      "svgPx": 5.367,
+      "canvasPx": 5.364
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 16,
+      "svgPx": 7.156,
+      "canvasPx": 7.152
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 24,
+      "svgPx": 10.734,
+      "canvasPx": 10.728
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "7,",
+      "size": 48,
+      "svgPx": 21.461,
+      "canvasPx": 21.456
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 10,
+      "svgPx": 17.461,
+      "canvasPx": 17.46
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 12,
+      "svgPx": 20.953,
+      "canvasPx": 20.952
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 16,
+      "svgPx": 27.938,
+      "canvasPx": 27.936
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 24,
+      "svgPx": 41.906,
+      "canvasPx": 41.904
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AT",
+      "size": 48,
+      "svgPx": 83.813,
+      "canvasPx": 83.808
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 10,
+      "svgPx": 16.961,
+      "canvasPx": 16.96
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 12,
+      "svgPx": 20.359,
+      "canvasPx": 20.352
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 16,
+      "svgPx": 27.141,
+      "canvasPx": 27.136
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 24,
+      "svgPx": 40.711,
+      "canvasPx": 40.704
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AV",
+      "size": 48,
+      "svgPx": 81.414,
+      "canvasPx": 81.408
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 10,
+      "svgPx": 20.672,
+      "canvasPx": 20.67
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 12,
+      "svgPx": 24.805,
+      "canvasPx": 24.804
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 16,
+      "svgPx": 33.078,
+      "canvasPx": 33.072
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 24,
+      "svgPx": 49.609,
+      "canvasPx": 49.608
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AW",
+      "size": 48,
+      "svgPx": 99.219,
+      "canvasPx": 99.216
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 10,
+      "svgPx": 16.797,
+      "canvasPx": 16.79
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 12,
+      "svgPx": 20.148,
+      "canvasPx": 20.148
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 16,
+      "svgPx": 26.867,
+      "canvasPx": 26.864
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 24,
+      "svgPx": 40.297,
+      "canvasPx": 40.296
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "AY",
+      "size": 48,
+      "svgPx": 80.594,
+      "canvasPx": 80.592
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 10,
+      "svgPx": 12.586,
+      "canvasPx": 12.58
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 12,
+      "svgPx": 15.102,
+      "canvasPx": 15.096
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 16,
+      "svgPx": 20.133,
+      "canvasPx": 20.128
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 24,
+      "svgPx": 30.195,
+      "canvasPx": 30.192
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "F.",
+      "size": 48,
+      "svgPx": 60.391,
+      "canvasPx": 60.384
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 10,
+      "svgPx": 7.367,
+      "canvasPx": 7.36
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 12,
+      "svgPx": 8.836,
+      "canvasPx": 8.832
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 16,
+      "svgPx": 11.781,
+      "canvasPx": 11.776
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 24,
+      "svgPx": 17.664,
+      "canvasPx": 17.664
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "f)",
+      "size": 48,
+      "svgPx": 35.328,
+      "canvasPx": 35.328
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 10,
+      "svgPx": 16.492,
+      "canvasPx": 16.49
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 12,
+      "svgPx": 19.789,
+      "canvasPx": 19.788
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 16,
+      "svgPx": 26.391,
+      "canvasPx": 26.384
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 24,
+      "svgPx": 39.578,
+      "canvasPx": 39.576
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LT",
+      "size": 48,
+      "svgPx": 79.156,
+      "canvasPx": 79.152
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 10,
+      "svgPx": 16.797,
+      "canvasPx": 16.79
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 12,
+      "svgPx": 20.148,
+      "canvasPx": 20.148
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 16,
+      "svgPx": 26.867,
+      "canvasPx": 26.864
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 24,
+      "svgPx": 40.297,
+      "canvasPx": 40.296
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "LY",
+      "size": 48,
+      "svgPx": 80.594,
+      "canvasPx": 80.592
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 10,
+      "svgPx": 11.305,
+      "canvasPx": 11.3
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 12,
+      "svgPx": 13.563,
+      "canvasPx": 13.56
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 16,
+      "svgPx": 18.086,
+      "canvasPx": 18.08
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 24,
+      "svgPx": 27.125,
+      "canvasPx": 27.12
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "P.",
+      "size": 48,
+      "svgPx": 54.242,
+      "canvasPx": 54.24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 10,
+      "svgPx": 16.414,
+      "canvasPx": 16.41
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 12,
+      "svgPx": 19.695,
+      "canvasPx": 19.692
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 16,
+      "svgPx": 26.258,
+      "canvasPx": 26.256
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 24,
+      "svgPx": 39.391,
+      "canvasPx": 39.384
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "PA",
+      "size": 48,
+      "svgPx": 78.773,
+      "canvasPx": 78.768
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 10,
+      "svgPx": 4.641,
+      "canvasPx": 4.64
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 12,
+      "svgPx": 5.57,
+      "canvasPx": 5.568
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 16,
+      "svgPx": 7.43,
+      "canvasPx": 7.424
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 24,
+      "svgPx": 11.141,
+      "canvasPx": 11.136
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "r.",
+      "size": 48,
+      "svgPx": 22.273,
+      "canvasPx": 22.272
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 10,
+      "svgPx": 12.727,
+      "canvasPx": 12.72
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 12,
+      "svgPx": 15.266,
+      "canvasPx": 15.264
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 16,
+      "svgPx": 20.359,
+      "canvasPx": 20.352
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 24,
+      "svgPx": 30.531,
+      "canvasPx": 30.528
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ta",
+      "size": 48,
+      "svgPx": 61.063,
+      "canvasPx": 61.056
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 10,
+      "svgPx": 11.688,
+      "canvasPx": 11.68
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 12,
+      "svgPx": 14.023,
+      "canvasPx": 14.016
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 16,
+      "svgPx": 18.695,
+      "canvasPx": 18.688
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 24,
+      "svgPx": 28.039,
+      "canvasPx": 28.032
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Te",
+      "size": 48,
+      "svgPx": 56.07,
+      "canvasPx": 56.064
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 10,
+      "svgPx": 12.484,
+      "canvasPx": 12.48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 12,
+      "svgPx": 14.977,
+      "canvasPx": 14.976
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 16,
+      "svgPx": 19.969,
+      "canvasPx": 19.968
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 24,
+      "svgPx": 29.953,
+      "canvasPx": 29.952
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "To",
+      "size": 48,
+      "svgPx": 59.906,
+      "canvasPx": 59.904
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 10,
+      "svgPx": 11.844,
+      "canvasPx": 11.84
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 12,
+      "svgPx": 14.211,
+      "canvasPx": 14.208
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 16,
+      "svgPx": 18.945,
+      "canvasPx": 18.944
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 24,
+      "svgPx": 28.422,
+      "canvasPx": 28.416
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tr",
+      "size": 48,
+      "svgPx": 56.836,
+      "canvasPx": 56.832
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 10,
+      "svgPx": 12.711,
+      "canvasPx": 12.71
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 12,
+      "svgPx": 15.258,
+      "canvasPx": 15.252
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 16,
+      "svgPx": 20.344,
+      "canvasPx": 20.336
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 24,
+      "svgPx": 30.508,
+      "canvasPx": 30.504
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tu",
+      "size": 48,
+      "svgPx": 61.016,
+      "canvasPx": 61.008
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 10,
+      "svgPx": 14.102,
+      "canvasPx": 14.1
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 12,
+      "svgPx": 16.922,
+      "canvasPx": 16.92
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 16,
+      "svgPx": 22.563,
+      "canvasPx": 22.56
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 24,
+      "svgPx": 33.844,
+      "canvasPx": 33.84
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Tw",
+      "size": 48,
+      "svgPx": 67.688,
+      "canvasPx": 67.68
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 10,
+      "svgPx": 12.961,
+      "canvasPx": 12.96
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 12,
+      "svgPx": 15.555,
+      "canvasPx": 15.552
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 16,
+      "svgPx": 20.742,
+      "canvasPx": 20.736
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 24,
+      "svgPx": 31.109,
+      "canvasPx": 31.104
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ty",
+      "size": 48,
+      "svgPx": 62.211,
+      "canvasPx": 62.208
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 10,
+      "svgPx": 17.703,
+      "canvasPx": 17.7
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 12,
+      "svgPx": 21.242,
+      "canvasPx": 21.24
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 16,
+      "svgPx": 28.32,
+      "canvasPx": 28.32
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 24,
+      "svgPx": 42.484,
+      "canvasPx": 42.48
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "VA",
+      "size": 48,
+      "svgPx": 84.961,
+      "canvasPx": 84.96
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 10,
+      "svgPx": 17.164,
+      "canvasPx": 17.16
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 12,
+      "svgPx": 20.594,
+      "canvasPx": 20.592
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 16,
+      "svgPx": 27.461,
+      "canvasPx": 27.456
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 24,
+      "svgPx": 41.188,
+      "canvasPx": 41.184
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wa",
+      "size": 48,
+      "svgPx": 82.375,
+      "canvasPx": 82.368
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 10,
+      "svgPx": 16.141,
+      "canvasPx": 16.14
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 12,
+      "svgPx": 19.375,
+      "canvasPx": 19.368
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 16,
+      "svgPx": 25.828,
+      "canvasPx": 25.824
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 24,
+      "svgPx": 38.742,
+      "canvasPx": 38.736
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "We",
+      "size": 48,
+      "svgPx": 77.477,
+      "canvasPx": 77.472
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 10,
+      "svgPx": 16.961,
+      "canvasPx": 16.96
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 12,
+      "svgPx": 20.359,
+      "canvasPx": 20.352
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 16,
+      "svgPx": 27.141,
+      "canvasPx": 27.136
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 24,
+      "svgPx": 40.711,
+      "canvasPx": 40.704
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Wo",
+      "size": 48,
+      "svgPx": 81.414,
+      "canvasPx": 81.408
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 10,
+      "svgPx": 5.867,
+      "canvasPx": 5.86
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 12,
+      "svgPx": 7.039,
+      "canvasPx": 7.032
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 16,
+      "svgPx": 9.383,
+      "canvasPx": 9.376
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 24,
+      "svgPx": 14.07,
+      "canvasPx": 14.064
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "y.",
+      "size": 48,
+      "svgPx": 28.133,
+      "canvasPx": 28.128
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 10,
+      "svgPx": 13.367,
+      "canvasPx": 13.36
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 12,
+      "svgPx": 16.039,
+      "canvasPx": 16.032
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 16,
+      "svgPx": 21.383,
+      "canvasPx": 21.376
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 24,
+      "svgPx": 32.07,
+      "canvasPx": 32.064
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Ya",
+      "size": 48,
+      "svgPx": 64.133,
+      "canvasPx": 64.128
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 10,
+      "svgPx": 13.172,
+      "canvasPx": 13.17
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 12,
+      "svgPx": 15.805,
+      "canvasPx": 15.804
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 16,
+      "svgPx": 21.078,
+      "canvasPx": 21.072
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 24,
+      "svgPx": 31.609,
+      "canvasPx": 31.608
+    },
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "s": "Yo",
+      "size": 48,
+      "svgPx": 63.219,
+      "canvasPx": 63.216
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 10,
+      "svgPx": 12.742,
+      "canvasPx": 12.74
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 12,
+      "svgPx": 15.289,
+      "canvasPx": 15.288
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 16,
+      "svgPx": 20.391,
+      "canvasPx": 20.384
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 24,
+      "svgPx": 30.578,
+      "canvasPx": 30.576
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "affix",
+      "size": 48,
+      "svgPx": 61.156,
+      "canvasPx": 61.152
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 10,
+      "svgPx": 5.82,
+      "canvasPx": 5.82
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 12,
+      "svgPx": 6.984,
+      "canvasPx": 6.984
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 16,
+      "svgPx": 9.313,
+      "canvasPx": 9.312
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 24,
+      "svgPx": 13.969,
+      "canvasPx": 13.968
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffi",
+      "size": 48,
+      "svgPx": 27.938,
+      "canvasPx": 27.936
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 10,
+      "svgPx": 6.094,
+      "canvasPx": 6.09
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 12,
+      "svgPx": 7.313,
+      "canvasPx": 7.308
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 16,
+      "svgPx": 9.75,
+      "canvasPx": 9.744
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 24,
+      "svgPx": 14.617,
+      "canvasPx": 14.616
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "ffl",
+      "size": 48,
+      "svgPx": 29.234,
+      "canvasPx": 29.232
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 10,
+      "svgPx": 3.727,
+      "canvasPx": 3.72
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 12,
+      "svgPx": 4.469,
+      "canvasPx": 4.464
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 16,
+      "svgPx": 5.953,
+      "canvasPx": 5.952
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 24,
+      "svgPx": 8.93,
+      "canvasPx": 8.928
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fi",
+      "size": 48,
+      "svgPx": 17.859,
+      "canvasPx": 17.856
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 10,
+      "svgPx": 4.117,
+      "canvasPx": 4.11
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 12,
+      "svgPx": 4.938,
+      "canvasPx": 4.932
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 16,
+      "svgPx": 6.578,
+      "canvasPx": 6.576
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 24,
+      "svgPx": 9.867,
+      "canvasPx": 9.864
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fl",
+      "size": 48,
+      "svgPx": 19.734,
+      "canvasPx": 19.728
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 10,
+      "svgPx": 15.914,
+      "canvasPx": 15.91
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 12,
+      "svgPx": 19.094,
+      "canvasPx": 19.092
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 16,
+      "svgPx": 25.461,
+      "canvasPx": 25.456
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 24,
+      "svgPx": 38.188,
+      "canvasPx": 38.184
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "fluffy",
+      "size": 48,
+      "svgPx": 76.375,
+      "canvasPx": 76.368
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 10,
+      "svgPx": 14.391,
+      "canvasPx": 14.39
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 12,
+      "svgPx": 17.273,
+      "canvasPx": 17.268
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 16,
+      "svgPx": 23.031,
+      "canvasPx": 23.024
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 24,
+      "svgPx": 34.539,
+      "canvasPx": 34.536
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "office",
+      "size": 48,
+      "svgPx": 69.078,
+      "canvasPx": 69.072
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 10,
+      "svgPx": 17.188,
+      "canvasPx": 17.18
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 12,
+      "svgPx": 20.617,
+      "canvasPx": 20.616
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 16,
+      "svgPx": 27.492,
+      "canvasPx": 27.488
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 24,
+      "svgPx": 41.234,
+      "canvasPx": 41.232
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "s": "waffle",
+      "size": 48,
+      "svgPx": 82.469,
+      "canvasPx": 82.464
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 10,
+      "svgPx": 22.516,
+      "canvasPx": 22.51
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 12,
+      "svgPx": 27.016,
+      "canvasPx": 27.012
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 16,
+      "svgPx": 36.023,
+      "canvasPx": 36.016
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 24,
+      "svgPx": 54.031,
+      "canvasPx": 54.024
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "$99.00",
+      "size": 48,
+      "svgPx": 108.055,
+      "canvasPx": 108.048
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 10,
+      "svgPx": 38.25,
+      "canvasPx": 38.25
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 12,
+      "svgPx": 45.906,
+      "canvasPx": 45.9
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 16,
+      "svgPx": 61.203,
+      "canvasPx": 61.2
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 24,
+      "svgPx": 91.805,
+      "canvasPx": 91.8
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "0123456789",
+      "size": 48,
+      "svgPx": 183.602,
+      "canvasPx": 183.6
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 10,
+      "svgPx": 30.031,
+      "canvasPx": 30.03
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 12,
+      "svgPx": 36.039,
+      "canvasPx": 36.036
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 16,
+      "svgPx": 48.055,
+      "canvasPx": 48.048
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 24,
+      "svgPx": 72.078,
+      "canvasPx": 72.072
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "1,234,567",
+      "size": 48,
+      "svgPx": 144.148,
+      "canvasPx": 144.144
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 10,
+      "svgPx": 41.203,
+      "canvasPx": 41.2
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 12,
+      "svgPx": 49.445,
+      "canvasPx": 49.44
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 16,
+      "svgPx": 65.922,
+      "canvasPx": 65.92
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 24,
+      "svgPx": 98.883,
+      "canvasPx": 98.88
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "10:45 AM",
+      "size": 48,
+      "svgPx": 197.766,
+      "canvasPx": 197.76
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 10,
+      "svgPx": 19.023,
+      "canvasPx": 19.02
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 12,
+      "svgPx": 22.828,
+      "canvasPx": 22.824
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 16,
+      "svgPx": 30.438,
+      "canvasPx": 30.432
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 24,
+      "svgPx": 45.648,
+      "canvasPx": 45.648
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "12.5%",
+      "size": 48,
+      "svgPx": 91.297,
+      "canvasPx": 91.296
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 10,
+      "svgPx": 41.695,
+      "canvasPx": 41.69
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 12,
+      "svgPx": 50.031,
+      "canvasPx": 50.028
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 16,
+      "svgPx": 66.711,
+      "canvasPx": 66.704
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 24,
+      "svgPx": 100.063,
+      "canvasPx": 100.056
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "2026-09-04",
+      "size": 48,
+      "svgPx": 200.117,
+      "canvasPx": 200.112
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 10,
+      "svgPx": 23.281,
+      "canvasPx": 23.28
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 12,
+      "svgPx": 27.938,
+      "canvasPx": 27.936
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 16,
+      "svgPx": 37.25,
+      "canvasPx": 37.248
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 24,
+      "svgPx": 55.875,
+      "canvasPx": 55.872
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "s": "3.14159",
+      "size": 48,
+      "svgPx": 111.75,
+      "canvasPx": 111.744
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 10,
+      "svgPx": 367.25,
+      "canvasPx": 367.249
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 12,
+      "svgPx": 440.703,
+      "canvasPx": 440.699
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 16,
+      "svgPx": 587.602,
+      "canvasPx": 587.599
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 24,
+      "svgPx": 881.406,
+      "canvasPx": 881.399
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "s": "Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed.",
+      "size": 48,
+      "svgPx": 1762.805,
+      "canvasPx": 1762.799
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 10,
+      "svgPx": 3.344,
+      "canvasPx": 10.18
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 12,
+      "svgPx": 4.016,
+      "canvasPx": 12.216
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 16,
+      "svgPx": 5.352,
+      "canvasPx": 16.288
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 24,
+      "svgPx": 8.023,
+      "canvasPx": 24.432
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "  x  ",
+      "size": 48,
+      "svgPx": 16.039,
+      "canvasPx": 48.864
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 10,
+      "svgPx": 21.094,
+      "canvasPx": 22.8
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 12,
+      "svgPx": 25.313,
+      "canvasPx": 27.36
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 16,
+      "svgPx": 33.75,
+      "canvasPx": 36.48
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 24,
+      "svgPx": 50.617,
+      "canvasPx": 54.72
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": " leading",
+      "size": 48,
+      "svgPx": 101.234,
+      "canvasPx": 109.44
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 10,
+      "svgPx": 8.563,
+      "canvasPx": 10.27
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 12,
+      "svgPx": 10.273,
+      "canvasPx": 12.324
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 16,
+      "svgPx": 13.703,
+      "canvasPx": 16.432
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 24,
+      "svgPx": 20.547,
+      "canvasPx": 24.648
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a  b",
+      "size": 48,
+      "svgPx": 41.094,
+      "canvasPx": 49.296
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 10,
+      "svgPx": 8.563,
+      "canvasPx": 8.56
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 12,
+      "svgPx": 10.273,
+      "canvasPx": 10.272
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 16,
+      "svgPx": 13.703,
+      "canvasPx": 13.696
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 24,
+      "svgPx": 20.547,
+      "canvasPx": 20.544
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "a b",
+      "size": 48,
+      "svgPx": 41.094,
+      "canvasPx": 41.088
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 10,
+      "svgPx": 21.172,
+      "canvasPx": 22.88
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 12,
+      "svgPx": 25.406,
+      "canvasPx": 27.456
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 16,
+      "svgPx": 33.875,
+      "canvasPx": 36.608
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 24,
+      "svgPx": 50.813,
+      "canvasPx": 54.912
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "trailing ",
+      "size": 48,
+      "svgPx": 101.617,
+      "canvasPx": 109.824
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 10,
+      "svgPx": 30.414,
+      "canvasPx": 32.12
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 12,
+      "svgPx": 36.492,
+      "canvasPx": 38.544
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 16,
+      "svgPx": 48.656,
+      "canvasPx": 51.392
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 24,
+      "svgPx": 72.984,
+      "canvasPx": 77.088
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "s": "word  word",
+      "size": 48,
+      "svgPx": 145.969,
+      "canvasPx": 154.176
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 10,
+      "svgPx": 22.016,
+      "canvasPx": 22.01
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 12,
+      "svgPx": 26.414,
+      "canvasPx": 26.412
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 16,
+      "svgPx": 35.219,
+      "canvasPx": 35.216
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 24,
+      "svgPx": 52.828,
+      "canvasPx": 52.824
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Avatar",
+      "size": 48,
+      "svgPx": 105.648,
+      "canvasPx": 105.648
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 10,
+      "svgPx": 21.711,
+      "canvasPx": 21.71
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 12,
+      "svgPx": 26.055,
+      "canvasPx": 26.052
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 16,
+      "svgPx": 34.742,
+      "canvasPx": 34.736
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 24,
+      "svgPx": 52.109,
+      "canvasPx": 52.104
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Fjord",
+      "size": 48,
+      "svgPx": 104.211,
+      "canvasPx": 104.208
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 10,
+      "svgPx": 29.664,
+      "canvasPx": 29.66
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 12,
+      "svgPx": 35.594,
+      "canvasPx": 35.592
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 16,
+      "svgPx": 47.461,
+      "canvasPx": 47.456
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 24,
+      "svgPx": 71.188,
+      "canvasPx": 71.184
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Kerning",
+      "size": 48,
+      "svgPx": 142.375,
+      "canvasPx": 142.368
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 10,
+      "svgPx": 54.711,
+      "canvasPx": 54.71
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 12,
+      "svgPx": 65.656,
+      "canvasPx": 65.652
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 16,
+      "svgPx": 87.539,
+      "canvasPx": 87.536
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 24,
+      "svgPx": 131.305,
+      "canvasPx": 131.304
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "PRAVDA",
+      "size": 48,
+      "svgPx": 262.609,
+      "canvasPx": 262.608
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 10,
+      "svgPx": 44.445,
+      "canvasPx": 44.44
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 12,
+      "svgPx": 53.328,
+      "canvasPx": 53.328
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 16,
+      "svgPx": 71.109,
+      "canvasPx": 71.104
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 24,
+      "svgPx": 106.656,
+      "canvasPx": 106.656
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "quick brown fox",
+      "size": 48,
+      "svgPx": 213.313,
+      "canvasPx": 213.312
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 10,
+      "svgPx": 65.891,
+      "canvasPx": 65.89
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 12,
+      "svgPx": 79.07,
+      "canvasPx": 79.068
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 16,
+      "svgPx": 105.43,
+      "canvasPx": 105.424
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 24,
+      "svgPx": 158.141,
+      "canvasPx": 158.136
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "The Layout Engine",
+      "size": 48,
+      "svgPx": 316.273,
+      "canvasPx": 316.272
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 10,
+      "svgPx": 27.164,
+      "canvasPx": 27.16
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 12,
+      "svgPx": 32.594,
+      "canvasPx": 32.592
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 16,
+      "svgPx": 43.461,
+      "canvasPx": 43.456
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 24,
+      "svgPx": 65.188,
+      "canvasPx": 65.184
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Toronto",
+      "size": 48,
+      "svgPx": 130.375,
+      "canvasPx": 130.368
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 10,
+      "svgPx": 40.367,
+      "canvasPx": 40.36
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 12,
+      "svgPx": 48.438,
+      "canvasPx": 48.432
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 16,
+      "svgPx": 64.578,
+      "canvasPx": 64.576
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 24,
+      "svgPx": 96.867,
+      "canvasPx": 96.864
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Typography",
+      "size": 48,
+      "svgPx": 193.734,
+      "canvasPx": 193.728
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 10,
+      "svgPx": 26.992,
+      "canvasPx": 26.99
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 12,
+      "svgPx": 32.391,
+      "canvasPx": 32.388
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 16,
+      "svgPx": 43.188,
+      "canvasPx": 43.184
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 24,
+      "svgPx": 64.781,
+      "canvasPx": 64.776
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Voyage",
+      "size": 48,
+      "svgPx": 129.555,
+      "canvasPx": 129.552
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 10,
+      "svgPx": 25.813,
+      "canvasPx": 25.81
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 12,
+      "svgPx": 30.977,
+      "canvasPx": 30.972
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 16,
+      "svgPx": 41.297,
+      "canvasPx": 41.296
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 24,
+      "svgPx": 61.945,
+      "canvasPx": 61.944
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Waffle",
+      "size": 48,
+      "svgPx": 123.891,
+      "canvasPx": 123.888
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 10,
+      "svgPx": 40.867,
+      "canvasPx": 40.86
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 12,
+      "svgPx": 49.039,
+      "canvasPx": 49.032
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 16,
+      "svgPx": 65.383,
+      "canvasPx": 65.376
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 24,
+      "svgPx": 98.07,
+      "canvasPx": 98.064
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Watermelon",
+      "size": 48,
+      "svgPx": 196.133,
+      "canvasPx": 196.128
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 10,
+      "svgPx": 39.055,
+      "canvasPx": 39.05
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 12,
+      "svgPx": 46.867,
+      "canvasPx": 46.86
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 16,
+      "svgPx": 62.484,
+      "canvasPx": 62.48
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 24,
+      "svgPx": 93.727,
+      "canvasPx": 93.72
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "s": "Yellowstone",
+      "size": 48,
+      "svgPx": 187.445,
+      "canvasPx": 187.44
+    }
+  ]
+}

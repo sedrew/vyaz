@@ -1,0 +1,64 @@
+{
+  "_comment": "Calibration corpus. Consumed by scripts/browser-metrics/ (generates the oracle) and by browser-metrics.test.ts (asserts fontkit shape-profile widths against it). Keep strings short and single-line.",
+  "sizes": [10, 12, 16, 24, 48],
+  "fonts": [
+    { "family": "Roboto", "file": "Roboto-VariableFont_wdth,wght.ttf", "variants": [
+      { "weight": "400" },
+      { "weight": "700", "variation": { "wght": 700 } }
+    ] },
+    { "family": "Inter", "file": "Inter-Variable.ttf", "variants": [
+      { "weight": "400" },
+      { "weight": "700", "variation": { "wght": 700 } }
+    ] },
+    { "family": "GreatVibes", "file": "GreatVibes-Regular.ttf", "variants": [ { "weight": "400" } ] },
+    { "family": "Unifont", "file": "unifont-17.0.05.otf", "variants": [ { "weight": "400" } ] }
+  ],
+  "groups": [
+    {
+      "script": "latin",
+      "category": "kerning-pairs",
+      "strings": ["AV", "AW", "AY", "AT", "Ta", "Te", "To", "Tr", "Tu", "Tw", "Ty", "Wa", "We", "Wo", "Ya", "Yo", "PA", "VA", "LT", "LY", "F.", "P.", "r.", "y.", "f)", "1.", "7,"]
+    },
+    {
+      "script": "latin",
+      "category": "words",
+      "strings": ["Typography", "Watermelon", "Avatar", "Voyage", "Yellowstone", "Kerning", "Waffle", "Toronto", "PRAVDA", "Fjord", "quick brown fox", "The Layout Engine"]
+    },
+    {
+      "script": "latin",
+      "category": "numerals",
+      "strings": ["0123456789", "12.5%", "1,234,567", "$99.00", "3.14159", "2026-09-04", "10:45 AM"]
+    },
+    {
+      "script": "latin",
+      "category": "ligatures",
+      "note": "shape profile keeps liga ON (browser default); flagged looser in tests until a char->glyph cluster map lands",
+      "strings": ["fi", "fl", "ffi", "ffl", "office", "waffle", "fluffy", "affix"]
+    },
+    {
+      "script": "latin",
+      "category": "whitespace",
+      "strings": ["a b", "a  b", "word  word", " leading", "trailing ", "  x  "]
+    },
+    {
+      "script": "cyrillic",
+      "category": "kerning-pairs",
+      "strings": ["ГА", "ГЛ", "АУ", "УА", "ТА", "Гу", "Го", "Ту", "Ру", "Ав", "Ум", "Ф.", "у.", "г,"]
+    },
+    {
+      "script": "cyrillic",
+      "category": "words",
+      "strings": ["Привет", "Типографика", "Кернинг", "Государство", "Ярославль", "Фыва", "быстрая рыжая лиса", "Модуль вёрстки"]
+    },
+    {
+      "script": "greek",
+      "category": "words",
+      "strings": ["Τυπογραφία", "Ελλάδα", "Αθήνα", "λόγος", "άνθρωπος"]
+    },
+    {
+      "script": "latin",
+      "category": "paragraph",
+      "strings": ["Typography is the art and technique of arranging type to make written language legible, readable and appealing when displayed."]
+    }
+  ]
+}
