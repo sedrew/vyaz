@@ -178,4 +178,25 @@ describe('renderTableToSVG', () => {
     expect(svg).not.toContain('stroke-dasharray');
     expect(svg).not.toContain('stroke-linecap');
   });
+
+  test('before/after slots paint at their own resolved position, before → content → after in source order', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [{ ...cell('middle'), before: makeTextFrame([makeParagraph('B', { fontFamily: 'Unifont', fontSize: 14 })]), after: makeTextFrame([makeParagraph('A', { fontFamily: 'Unifont', fontSize: 14 })]) }] }],
+    };
+    const result = layoutTableFrame(table);
+    const c = result.rows[0].cells[0];
+    const svg = renderTableToSVG(result);
+    for (const t of ['B', 'middle', 'A']) expect(svg).toContain(t);
+    expect(svg.indexOf('B')).toBeLessThan(svg.indexOf('middle'));
+    expect(svg.indexOf('middle')).toBeLessThan(svg.indexOf('A'));
+    const fmt = (n: number) => (Math.round(n * 100) / 100).toString();
+    expect(svg).toContain(`<g transform="translate(${fmt(c.before!.x)} ${fmt(c.before!.y)})">`);
+    expect(svg).toContain(`<g transform="translate(${fmt(c.after!.x)} ${fmt(c.after!.y)})">`);
+  });
+
+  test('a cell with no before/after emits no extra content groups beyond its own main content', () => {
+    const svg = renderTableToSVG(layoutTableFrame({ rows: [{ cells: [cell('plain')] }] }));
+    // exactly one nested content <svg> (the cell's own) — no before/after slots
+    expect((svg.match(/<svg /g) ?? []).length).toBe(2); // outer table svg + one content svg
+  });
 });

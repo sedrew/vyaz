@@ -70,6 +70,14 @@ export interface TableCellLayoutResult {
   border?: ResolvedBorder;
   /** The cell's laid-out content — same shape a lone `TextFrame` produces. */
   content: TextFrameLayoutResult;
+  /**
+   * `TableCell.before`, laid out unwrapped at its own natural size and
+   * positioned absolute-within-the-table, already vertically centered.
+   * Absent when the cell has no `before`.
+   */
+  before?: { content: TextFrameLayoutResult; x: number; y: number };
+  /** @see before — from `TableCell.after`, right-anchored instead. */
+  after?: { content: TextFrameLayoutResult; x: number; y: number };
   /** Columns this cell occupies (>1 for `colSpan`). */
   colSpan: number;
   /** Rows this cell occupies (>1 for `rowSpan`). */
@@ -407,9 +415,23 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
         const height = sumSpan(rowHeights, p.startRow, p.rowSpan, rowGaps);
         const available = height - p.inset.top - p.inset.bottom;
         const verticalOffset = verticalOffsetFor(p.cs.verticalAlign, available, p.content.content.height);
+        const cellX = colX[p.startCol];
+        const cellY = rowY[p.startRow];
+
+        let before: TableCellLayoutResult['before'];
+        if (p.cell.before) {
+          const bc = layoutTextFrame({ ...p.cell.before, width: undefined, wrap: false }, { mode: options.mode, onMissingFont: options.onMissingFont });
+          before = { content: bc, x: cellX + p.inset.left, y: cellY + (height - bc.content.height) / 2 };
+        }
+        let after: TableCellLayoutResult['after'];
+        if (p.cell.after) {
+          const ac = layoutTextFrame({ ...p.cell.after, width: undefined, wrap: false }, { mode: options.mode, onMissingFont: options.onMissingFont });
+          after = { content: ac, x: cellX + p.width - p.inset.right - ac.content.width, y: cellY + (height - ac.content.height) / 2 };
+        }
+
         return {
-          x: colX[p.startCol],
-          y: rowY[p.startRow],
+          x: cellX,
+          y: cellY,
           width: p.width,
           height,
           padding: p.pad,
@@ -420,6 +442,8 @@ export function layoutTableFrame(table: TableFrame, options: TableLayoutOptions 
           ...(p.cs.bgColor ? { bgColor: p.cs.bgColor } : {}),
           ...(p.border ? { border: p.border } : {}),
           content: p.content,
+          ...(before ? { before } : {}),
+          ...(after ? { after } : {}),
           colSpan: p.colSpan,
           rowSpan: p.rowSpan,
         };

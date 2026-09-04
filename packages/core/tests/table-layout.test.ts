@@ -484,3 +484,51 @@ describe('TableLayoutEngine — dash patterns + stroke-linecap (T3)', () => {
     expect(r.rows[0].border!.patterns).toEqual({ top: [2, 2], right: [2, 2], bottom: [2, 2], left: [2, 2] });
   });
 });
+
+describe('TableLayoutEngine — before/after decorative slots', () => {
+  const badge = (text: string) => makeTextFrame([makeParagraph(text, { fontFamily: 'Unifont', fontSize: 12 })]);
+
+  test('no before/after → both absent on the result', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [cell('a')] }] });
+    expect(r.rows[0].cells[0].before).toBeUndefined();
+    expect(r.rows[0].cells[0].after).toBeUndefined();
+  });
+
+  test('before sits at the cell\'s left inset, vertically centered in the full cell height', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [{ ...cell('a'), before: badge('*'), style: { paddings: 6 } }] }],
+      rowHeights: [100],
+    });
+    const c = r.rows[0].cells[0];
+    expect(c.before).toBeDefined();
+    expect(c.before!.x).toBeCloseTo(c.x + c.padding.left, 1);
+    expect(c.before!.y).toBeCloseTo(c.y + (c.height - c.before!.content.content.height) / 2, 1);
+  });
+
+  test('after sits right-anchored (cell right inset minus its own natural width), vertically centered', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [{ ...cell('a'), after: badge('done'), style: { paddings: 6 } }] }],
+      rowHeights: [100],
+    });
+    const c = r.rows[0].cells[0];
+    expect(c.after).toBeDefined();
+    const naturalWidth = c.after!.content.content.width;
+    expect(c.after!.x).toBeCloseTo(c.x + c.width - c.padding.right - naturalWidth, 1);
+  });
+
+  test('before/after do not affect column-width measurement (decorative, not sized-for)', () => {
+    const withBadge = layoutTableFrame({ rows: [{ cells: [{ ...cell('x'), before: badge('a much much wider badge than the cell text') }] }] });
+    const without = layoutTableFrame({ rows: [{ cells: [cell('x')] }] });
+    expect(withBadge.rows[0].cells[0].width).toBeCloseTo(without.rows[0].cells[0].width, 1);
+  });
+
+  test('before and after can coexist on the same cell, independently positioned', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [{ ...cell('middle'), before: badge('<'), after: badge('>') }] }],
+    });
+    const c = r.rows[0].cells[0];
+    expect(c.before).toBeDefined();
+    expect(c.after).toBeDefined();
+    expect(c.before!.x).toBeLessThan(c.after!.x);
+  });
+});

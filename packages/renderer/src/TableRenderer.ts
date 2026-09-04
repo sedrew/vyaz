@@ -2,11 +2,14 @@
  * TableRenderer.ts — TableLayoutResult → SVG string.
  *
  * Paint order (back to front): table bg → row bg → cell bg → row borders →
- * cell borders → table border → cell content. Each cell's content is a
- * complete nested `<svg>` (from `renderToSVG`), positioned with a `<g
- * transform="translate(…)">` — the same "paint a self-contained SVG fragment
- * into a box" pattern `SVGRenderOptions.inlineBoxes` uses for `<img>`/`<svg>`
- * boxes from `@vyaz/html`.
+ * cell borders → table border → cell content (before slot → main content →
+ * after slot, per cell). Each of those three is a complete nested `<svg>`
+ * (from `renderToSVG`), positioned with a `<g transform="translate(…)">` —
+ * the same "paint a self-contained SVG fragment into a box" pattern
+ * `SVGRenderOptions.inlineBoxes` uses for `<img>`/`<svg>` boxes from
+ * `@vyaz/html`. `before`/`after` (`paintSlot`) paint at the absolute
+ * position `TableLayoutEngine` already resolved for them — no extra
+ * padding/border math here, unlike main content.
  *
  * A cell's content is rendered at `sizing: 'frame'` with the *exact* width
  * TableLayoutEngine measured it at (not `sizing: 'content'`): trimming to the
@@ -119,6 +122,14 @@ function contentWidthOf(cell: TableCellLayoutResult): number {
   return Math.max(0, cell.width - cell.padding.left - cell.padding.right - (b ? b.left + b.right : 0));
 }
 
+/** Paint a `before`/`after` decorative slot at its own already-resolved absolute position. */
+function paintSlot(slot: NonNullable<TableCellLayoutResult['before']>, preset: SvgPreset, style: SvgStyle | undefined): string {
+  const { content, x, y } = slot;
+  if (content.content.width <= 0 || content.content.height <= 0 || content.lines.length === 0) return '';
+  const svg = renderToSVG(content, { preset, style, sizing: 'frame', width: content.content.width, height: content.content.height });
+  return `  <g transform="translate(${fmt(x)} ${fmt(y)})">${svg}</g>\n`;
+}
+
 // ── Render ───────────────────────────────────────────────────────────────
 
 export function renderTableToSVG(result: TableLayoutResult, opts: TableRenderOptions = {}): string {
@@ -151,14 +162,17 @@ export function renderTableToSVG(result: TableLayoutResult, opts: TableRenderOpt
 
   for (const row of result.rows) {
     for (const cell of row.cells) {
+      if (cell.before) parts.push(paintSlot(cell.before, preset, style));
       const cw = contentWidthOf(cell);
       const ch = cell.content.content.height;
-      if (cw <= 0 || ch <= 0 || cell.content.lines.length === 0) continue;
-      const originX = cell.x + cell.padding.left + (cell.border?.widths.left ?? 0) + cell.cx;
-      const originY = cell.y + cell.padding.top + (cell.border?.widths.top ?? 0) + cell.verticalOffset + cell.cy;
-      let svg = renderToSVG(cell.content, { preset, style, sizing: 'frame', width: cw, height: ch });
-      if (cell.allowOverflow) svg = withOverflowVisible(svg);
-      parts.push(`  <g transform="translate(${fmt(originX)} ${fmt(originY)})">${svg}</g>\n`);
+      if (cw > 0 && ch > 0 && cell.content.lines.length > 0) {
+        const originX = cell.x + cell.padding.left + (cell.border?.widths.left ?? 0) + cell.cx;
+        const originY = cell.y + cell.padding.top + (cell.border?.widths.top ?? 0) + cell.verticalOffset + cell.cy;
+        let svg = renderToSVG(cell.content, { preset, style, sizing: 'frame', width: cw, height: ch });
+        if (cell.allowOverflow) svg = withOverflowVisible(svg);
+        parts.push(`  <g transform="translate(${fmt(originX)} ${fmt(originY)})">${svg}</g>\n`);
+      }
+      if (cell.after) parts.push(paintSlot(cell.after, preset, style));
     }
   }
 

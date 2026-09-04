@@ -1,0 +1,36 @@
+{
+  "_comment": "before/after: decorative TextFrame slots anchored to a cell's left/right edge, vertically centered, independent of the main content's own alignment (center here) — a status dot before the label, a checkmark/cross after it.",
+  "table": {
+    "columnWidths": [200, 200],
+    "rowHeights": [50, 50],
+    "defaultCellStyle": { "paddings": 10, "borderWidths": 1, "borderColors": "#ddd" },
+    "rows": [
+      {
+        "cells": [
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "center", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Build passed", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] },
+            "before": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "●", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "normal", "fontStyle": "normal", "color": "#22863a" }] }] },
+            "after": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "✓", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "bold", "fontStyle": "normal", "color": "#22863a" }] }] }
+          },
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "center", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Tests failed", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] },
+            "before": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "●", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "normal", "fontStyle": "normal", "color": "#c0392b" }] }] },
+            "after": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "✗", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "bold", "fontStyle": "normal", "color": "#c0392b" }] }] }
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "center", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "no badges here", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#666666" }] }] }
+          },
+          {
+            "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "center", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "before only", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] },
+            "before": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "→", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "normal", "fontStyle": "normal", "color": "#185fa5" }] }] }
+          }
+        ]
+      }
+    ]
+  },
+  "renders": { "browser": { "preset": "browser" } }
+}

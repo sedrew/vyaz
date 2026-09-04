@@ -124,6 +124,19 @@ export interface TableCell {
   /** Rows this cell spans. Default `1`. */
   rowSpan?: number;
   style?: Partial<TableCellStyle>;
+  /**
+   * Decorative content anchored to the cell's left edge, vertically centered
+   * in the cell's full height — independent of `content`'s own alignment
+   * (an icon glyph, a status marker, a leading label). Laid out unwrapped at
+   * its own natural size and does *not* contribute to column-width
+   * measurement — a narrow column can make `before`/`after` overlap
+   * `content`, same tradeoff as `allowOverflow`. svg-table-core's `before`
+   * accepts arbitrary render callbacks; this is a `TextFrame` like every
+   * other content slot in vyaz, not an arbitrary-content callback.
+   */
+  before?: TextFrame;
+  /** @see before — anchored to the right edge instead. */
+  after?: TextFrame;
 }
 
 // ── Row ──────────────────────────────────────────────────────────────────
