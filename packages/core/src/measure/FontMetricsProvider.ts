@@ -148,7 +148,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   /**
    * Set measurement mode.
    * - `'browser'` — hhea.ascender/descender (default)
-   * - `'office'`  — OS/2.usWinAscent/usWinDescent
+   * - `'office'`  — PowerPoint / DrawingML line box: `1.2 × fontSize`, split into
+   *   ascent/descent by the font's OS/2 win proportion (see {@link getMetrics}).
    */
   setMode(mode: 'browser' | 'office'): void {
     if (this.mode === mode) return;
@@ -395,9 +396,42 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       let sourceTable: 'hhea' | 'OS/2' | 'fallback';
 
       if (m === 'office' && font.winAscent != null && font.winDescent != null) {
-        ascent = font.winAscent * scale * 1.078;
-        descent = Math.abs(font.winDescent) * scale * 1.078;
+        // ── Office / DrawingML line box ─────────────────────────────────
+        // PowerPoint's single-spacing (100% lnSpc) line box is
+        //     lineHeight = (lnSpc% / 100) × OFFICE_LINE_FACTOR × maxRunSizeInLine
+        // where OFFICE_LINE_FACTOR ≈ 1.2 and is **independent of the font's own
+        // metrics** — a script face like Great Vibes (winAscent+winDescent ≈
+        // 1.75em) still gets a 1.2em box. So `ascent + descent` here is exactly
+        // `1.2 × fontSize`; PositioningEngine takes max(ascent+descent) across a
+        // line's runs (→ ×maxRunSizeInLine) and multiplies by style.lineHeight
+        // (→ ×lnSpc%/100).
+        //
+        // Calibrated against real PowerPoint (see `scripts/office-metrics/` —
+        // `font-metrics.pptx` + `report.ts`, which hand-fit rects to the text
+        // selection box). The 1.2 constant is undocumented PowerPoint behaviour;
+        // measured spread was 1.20–1.215.
+        //
+        // ⚠ Measured on macOS (PowerPoint for Mac). The factor may drift a little
+        //   by OS and PowerPoint build — re-run the calibration if you need
+        //   Windows-exact parity.
+        //
+        // The box is split into ascent/descent by the font's OS/2 win proportion
+        // so the baseline still sits where the font expects inside the 1.2em box.
+        const OFFICE_LINE_FACTOR = 1.2;
+        const box = OFFICE_LINE_FACTOR * fontSize;
+        const winFrac =
+          font.winAscent / (font.winAscent + Math.abs(font.winDescent));
+        ascent = box * winFrac;
+        descent = box * (1 - winFrac);
         sourceTable = 'OS/2';
+
+        // ── Previous model (kept for reference) ────────────────────────
+        // `winAscent/winDescent × K`, with K = 1.078 reverse-fitted to Arial in
+        // PowerPoint: Arial win = (1854+434)/2048 = 1.117, and 1.117 × 1.078 ≈
+        // 1.20. It only held for faces whose win ratio is already ~Arial's;
+        // script / display fonts overshot badly (Great Vibes: +55%).
+        //   ascent  = font.winAscent * scale * 1.078;
+        //   descent = Math.abs(font.winDescent) * scale * 1.078;
       } else {
         ascent = font.ascent * scale;
         descent = Math.abs(font.descent) * scale;
