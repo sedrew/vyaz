@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="224" height="48" viewBox="-10 -10 224 48">
+  <text x="0" y="22" font-family="Unifont" font-size="24" fill="#CC0000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#CC0000" text-decoration="underline">under</tspan>
+  </text>
+  <text x="0" y="22" font-family="Unifont" font-size="24" fill="#0044CC" font-weight="400" xml:space="preserve">
+    <tspan x="60" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#0044CC" text-decoration="line-through"> </tspan>
+    <tspan x="72" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#0044CC" text-decoration="line-through">strike</tspan>
+  </text>
+  <text x="0" y="22" font-family="Unifont" font-size="24" fill="#008800" font-weight="400" xml:space="preserve">
+    <tspan x="144" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#008800" text-decoration="underline line-through"> </tspan>
+    <tspan x="156" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#008800" text-decoration="underline line-through">both</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="204" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

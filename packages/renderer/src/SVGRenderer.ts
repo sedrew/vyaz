@@ -71,6 +71,13 @@ export interface SVGRenderOptions {
   columns?: MultiColumnConfig;
   /** Left padding from frame (needed for column debug rendering). */
   paddingLeft?: number;
+  /**
+   * glyph preset only: draw `underline` / `strikethrough` as explicit `<line>`
+   * geometry. The glyph path positions each character with its own `x`, so it
+   * cannot rely on SVG `text-decoration` (which the flat/expanded paths use).
+   * Ignored by every other preset. Default `true`.
+   */
+  glyphDecorations?: boolean;
 }
 
 type SpacingMode = 'browser' | 'preserve';
@@ -88,6 +95,7 @@ type ResolvedOptions = {
   className?: string;
   contentPadding: number;
   debug?: DebugFlags;
+  glyphDecorations: boolean;
 };
 
 // ── Preset map ───────────────────────────────────────────────────────────
@@ -200,7 +208,7 @@ function resolveOptions(opts: SVGRenderOptions): ResolvedOptions {
     fit = 'text';
   }
 
-  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug };
+  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug, glyphDecorations: opts.glyphDecorations ?? true };
 }
 
 /**
@@ -591,6 +599,7 @@ class SvgAstBuilder {
         x: fmt(x),
         y: fmt(yOverride),
       };
+      if (runId) attrs.id = runId;
       if (this.opts.style === 'css') {
         let css = `font-family: '${s.fontFamily}', sans-serif; font-size: ${fmt(fontSizeOverride)}px; fill: ${colorToRGB(s.color)}; font-weight: ${s.fontWeight}`;
         if (s.fontStyle === 'italic') css += `; font-style: italic`;
@@ -685,6 +694,23 @@ class SvgAstBuilder {
       fill: color,
     });
     this.root.children.push(rect);
+  }
+
+  /**
+   * Add a horizontal decoration rule (underline / strikethrough) as a direct
+   * child of the root <svg>, painted after the text so it sits on top.
+   * Used by the glyph structure, which cannot use SVG `text-decoration`.
+   */
+  addDecorationLine(x: number, width: number, y: number, color: string, thickness: number): void {
+    this.closeText();
+    this.root.children.push(el('line', {
+      x1: fmt(x),
+      y1: fmt(y),
+      x2: fmt(x + width),
+      y2: fmt(y),
+      stroke: color,
+      'stroke-width': fmt(thickness),
+    }));
   }
 
   /**
@@ -936,12 +962,18 @@ export function renderToSVG(
   for (const line of lines) {
     const baselineY = line.y + line.baseline;
 
-    // First pass: render background rects for all highlighted spans
+    // First pass: render background rects for all highlighted spans.
+    // span.x is line-origin-relative and already carries the alignment/column
+    // offset; line.x carries that same offset again (plus padding). The text
+    // passes all subtract firstTextX to cancel the double count — the rect must
+    // do the same or the highlight drifts right of its glyphs on any
+    // centered / right-aligned / multi-column line.
+    const bgFirstTextX = line.spans.find(s => s.type === 'text' || s.type === 'marker')?.x ?? 0;
     for (const span of line.spans) {
       if (!span.text || !span.style.backgroundColor) continue;
       const bg = getSpanBackgroundAttrs(span, baselineY);
       if (bg) {
-        const rx = line.x + bg.x;
+        const rx = line.x + bg.x - bgFirstTextX;
         builder.addBackgroundRect(rx, bg.y, bg.w, bg.h, bg.fill);
       }
     }
@@ -962,13 +994,56 @@ export function renderToSVG(
         if (runIdx !== currentRunIdx || sig !== currentSig) {
           builder.closeText();
           const runId = span.tag ? `${span.tag}-${runIdx}` : undefined;
-          builder.openText(line, span, runId);
+          // super/sub: raise/lower the <text> baseline and shrink it, matching
+          // the flat/expanded paths. Without this the glyph path drew script
+          // runs on the normal baseline at full size.
+          const offset = span.fontMetrics.baselineOffset || 0;
+          if (offset !== 0) {
+            const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+            builder.openText(line, span, runId, targetY, span.fontMetrics.fontSize);
+          } else {
+            builder.openText(line, span, runId);
+          }
           currentRunIdx = runIdx;
           currentSig = sig;
         }
         builder.addGlyphTspan(span, glyphSpanDX);
       }
       builder.closeText();
+
+      // Decoration pass. The glyph path positions every character with its own
+      // <tspan x="…">, so SVG `text-decoration` can't be used (it would re-anchor
+      // per glyph). Draw underline / strikethrough as an explicit rule per
+      // decorated run instead. Offsets match CanvasRenderer. super/sub spans
+      // already have their decoration flags cleared upstream, so they're skipped
+      // here and never pick up a baseline-anchored line.
+      if (opts.glyphDecorations) {
+        type DecoRun = { x: number; end: number; baseY: number; ascent: number; color: string; u: boolean; s: boolean };
+        let cur: DecoRun | null = null;
+        const flushDeco = () => {
+          if (!cur) return;
+          const w = cur.end - cur.x;
+          if (cur.u) builder.addDecorationLine(cur.x, w, cur.baseY + 2, cur.color, 1);
+          if (cur.s) builder.addDecorationLine(cur.x, w, cur.baseY - cur.ascent * 0.4, cur.color, 1);
+          cur = null;
+        };
+        for (const span of line.spans) {
+          if (!span.text) continue;
+          const u = !!span.style.underline;
+          const s = !!span.style.strikethrough;
+          if (!u && !s) { flushDeco(); continue; }
+          const color = span.style.color || '#000000';
+          const x = span.x + glyphSpanDX;
+          const baseY = line.y + line.baseline;
+          if (cur && cur.u === u && cur.s === s && cur.color === color && Math.abs(cur.end - x) < 0.01) {
+            cur.end = x + span.width;
+          } else {
+            flushDeco();
+            cur = { x, end: x + span.width, baseY, ascent: span.fontMetrics.ascent, color, u, s };
+          }
+        }
+        flushDeco();
+      }
     } else if (opts.structure === 'flat') {
       // flat mode: each unique style → separate <text> element.
       // Group spans by (targetY + styleSignature) so bold/normal/italic

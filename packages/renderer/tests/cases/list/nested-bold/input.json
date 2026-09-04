@@ -1,0 +1,102 @@
+{
+  "profile": "raw",
+  "frame": {
+    "width": 400,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "text": "top level item"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 0
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "text": "nested with "
+          },
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "text": "bold",
+            "fontWeight": "bold"
+          },
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "text": " word"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 1
+          }
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

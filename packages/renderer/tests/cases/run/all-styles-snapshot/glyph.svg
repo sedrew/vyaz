@@ -2,6 +2,7 @@
   <text x="0" y="22" font-family="Unifont" font-size="24" fill="#FF0000" font-weight="700" font-style="italic" xml:space="preserve">
     <tspan x="0 12 24 36 48 60 72 84 96 108 120">Styled Text</tspan>
   </text>
+  <line x1="0" y1="24" x2="132" y2="24" stroke="#FF0000" stroke-width="1" />
 <!-- debug overlay -->
   <rect x="0" y="0" width="132" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

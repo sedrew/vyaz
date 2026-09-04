@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="224" height="48" viewBox="286 -10 224 48">
+  <rect x="368" y="1" width="72" height="24" fill="#FFFF00" />
+  <text x="296" y="22" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="296 308 320 332 344">Right</tspan>
+    <tspan x="356"> </tspan>
+  </text>
+  <text x="296" y="22" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="368 380 392 404 416 428">marked</tspan>
+  </text>
+  <text x="296" y="22" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="440"> </tspan>
+    <tspan x="452 464 476 488">tail</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="296" y="0" width="204" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

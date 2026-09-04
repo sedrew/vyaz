@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="236" height="48" viewBox="132 -10 236 48">
+  <rect x="226" y="1" width="72" height="24" fill="#FFFF00" />
+  <text x="142" y="22" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="142" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000">Center</tspan>
+    <tspan x="214"> </tspan>
+  </text>
+  <text x="142" y="22" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="226" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000">marked</tspan>
+  </text>
+  <text x="142" y="22" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="298" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000"> </tspan>
+    <tspan x="310" font-weight="400" font-style="normal" font-family="Unifont" font-size="24" fill="#000000">tail</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="142" y="0" width="216" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

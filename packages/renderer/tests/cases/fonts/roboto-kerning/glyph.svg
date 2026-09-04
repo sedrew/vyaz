@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="318.7" height="58" viewBox="-10 -10 318.7 58">
+  <text x="0" y="30" font-family="Roboto" font-size="32" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 20.9 41.3 62.1 81.2 102.1 121.8 129.8 158.1 175.5 191 208 216 235 253.3 261.2 280.5">AVATAR Wave To Yo</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="298.7" height="38" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

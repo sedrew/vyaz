@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
+  <text x="0" y="12" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 7 14 21 28 35 42 49 56 63 70 77 84 91 98 105 112 119 126 133 140 147">Alpha beta gamma delta</tspan>
+  </text>
+  <rect x="0" y="15.75" width="42" height="14" fill="#FFFF00" />
+  <text x="0" y="28" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 7 14 21 28 35">marked</tspan>
+  </text>
+  <text x="0" y="28" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="42"> </tspan>
+    <tspan x="49 56 63 70 77 84 91 98 105 112 119 126 133 140 147 154">epsilon zeta eta</tspan>
+    <tspan x="161"> </tspan>
+  </text>
+  <text x="210" y="12" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="210 217 224 231 238 245 252 259 266 273 280 287 294 301 308 315 322 329 336 343 350 357 364 371 378 385">theta iota kappa lambda mu</tspan>
+    <tspan x="392"> </tspan>
+  </text>
+  <text x="210" y="28" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="210 217 224 231 238 245 252 259 266 273 280 287 294 301 308 315 322 329 336 343 350 357 364 371 378 385">nu xi omicron pi rho sigma</tspan>
+    <tspan x="392"> </tspan>
+  </text>
+  <text x="210" y="44" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="210 217 224 231">tau.</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="400" height="200" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="400" height="32" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+  <rect x="400" y="0" width="400" height="48" fill="none" stroke="rgba(0,180,80,0.25)" stroke-width="1" />
+</svg>

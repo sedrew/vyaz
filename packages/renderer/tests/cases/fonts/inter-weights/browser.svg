@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="187.79" height="54" viewBox="-10 -10 187.79 54">
+  <text x="0" y="27" font-family="Inter" font-size="28" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Inter" font-size="28" fill="#000000">Regular</tspan>
+    <tspan x="99.81"> </tspan>
+  </text>
+  <text x="0" y="27" font-family="Inter" font-size="28" fill="#000000" font-weight="700" xml:space="preserve">
+    <tspan x="107.19" font-weight="700" font-style="normal" font-family="Inter" font-size="28" fill="#000000">Bold</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="167.79" height="34" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

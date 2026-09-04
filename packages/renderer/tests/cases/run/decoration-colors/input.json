@@ -1,0 +1,83 @@
+{
+  "profile": "raw",
+  "frame": {
+    "width": 500,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 24,
+            "text": "under",
+            "underline": true,
+            "color": "#CC0000"
+          },
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 24,
+            "text": " strike",
+            "strikethrough": true,
+            "color": "#0044CC"
+          },
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 24,
+            "text": " both",
+            "underline": true,
+            "strikethrough": true,
+            "color": "#008800"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

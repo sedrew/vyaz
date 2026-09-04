@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="224" height="48" viewBox="-10 -10 224 48">
+  <text x="0" y="22" font-family="Unifont" font-size="24" fill="#CC0000" font-weight="400" xml:space="preserve">
+    <tspan x="0 12 24 36 48">under</tspan>
+  </text>
+  <text x="0" y="22" font-family="Unifont" font-size="24" fill="#0044CC" font-weight="400" xml:space="preserve">
+    <tspan x="60"> </tspan>
+    <tspan x="72 84 96 108 120 132">strike</tspan>
+  </text>
+  <text x="0" y="22" font-family="Unifont" font-size="24" fill="#008800" font-weight="400" xml:space="preserve">
+    <tspan x="144"> </tspan>
+    <tspan x="156 168 180 192">both</tspan>
+  </text>
+  <line x1="0" y1="24" x2="60" y2="24" stroke="#CC0000" stroke-width="1" />
+  <line x1="60" y1="13.6" x2="144" y2="13.6" stroke="#0044CC" stroke-width="1" />
+  <line x1="144" y1="24" x2="204" y2="24" stroke="#008800" stroke-width="1" />
+  <line x1="144" y1="13.6" x2="204" y2="13.6" stroke="#008800" stroke-width="1" />
+<!-- debug overlay -->
+  <rect x="0" y="0" width="204" height="28" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

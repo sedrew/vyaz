@@ -17,7 +17,7 @@ import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from '
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { registerUnifont, registerArialVariants, makeParagraph, makeTextFrame } from '../../core/tests/helpers.ts';
+import { registerUnifont, registerArialVariants, registerFixtureFonts, makeParagraph, makeTextFrame } from '../../core/tests/helpers.ts';
 import { layoutTextFrame } from '@vyaz/core';
 import type { TextFrame } from '@vyaz/core';
 import { renderToSVG } from '../src/SVGRenderer.js';
@@ -28,10 +28,11 @@ const UPDATE = process.env.UPDATE === '1';
 beforeAll(async () => {
   await registerUnifont();
   await registerArialVariants();
+  await registerFixtureFonts();
 });
 
 function renderCase(profile: string, frame: TextFrame, r: any): string {
-  const result = layoutTextFrame(frame, { glyphAdvances: r?.preset === 'glyph', mode: r?.mode });
+  const result = layoutTextFrame(frame, { glyphAdvances: r?.preset === 'glyph', mode: r?.mode, shaping: r?.shaping });
   // frame-fit: let renderToSVG derive sizing/width/height from the result;
   // the runner only adds baseline debug boxes + render options.
   if (profile === 'frame-fit') {

@@ -1,0 +1,78 @@
+{
+  "profile": "frame-fit",
+  "frame": {
+    "width": 400,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 14,
+            "text": "Alpha beta gamma delta "
+          },
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 14,
+            "text": "marked",
+            "backgroundColor": "#FFFF00"
+          },
+          {
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 14,
+            "text": " epsilon zeta eta theta iota kappa lambda mu nu xi omicron pi rho sigma tau."
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ],
+    "height": 200,
+    "columns": {
+      "count": 2,
+      "gap": 20
+    }
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "paragraphBox": true,
+        "widthBorder": 1
+      },
+      "preset": "glyph"
+    }
+  }
+}

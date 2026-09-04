@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="147.8" height="49" viewBox="-10 -10 147.8 49">
+  <text x="0" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">H</tspan>
+  </text>
+  <text x="0" y="27" font-family="Unifont" font-size="15.6" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="12">2</tspan>
+  </text>
+  <text x="0" y="21" font-family="Unifont" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="19.8 31.8 43.8 55.8 67.8 79.8 91.8 103.8 115.8">O removed</tspan>
+  </text>
+  <line x1="19.8" y1="12.6" x2="127.8" y2="12.6" stroke="#000000" stroke-width="1" />
+<!-- debug overlay -->
+  <rect x="0" y="0" width="127.8" height="29" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

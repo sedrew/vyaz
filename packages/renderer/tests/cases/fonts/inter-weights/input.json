@@ -1,0 +1,74 @@
+{
+  "profile": "raw",
+  "frame": {
+    "width": 600,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Regular ",
+            "fontFamily": "Inter",
+            "fontSize": 28
+          },
+          {
+            "type": "text",
+            "text": "Bold",
+            "fontFamily": "Inter",
+            "fontSize": 28,
+            "fontWeight": "bold"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat",
+      "shaping": true
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser",
+      "shaping": true
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve",
+      "shaping": true
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}
