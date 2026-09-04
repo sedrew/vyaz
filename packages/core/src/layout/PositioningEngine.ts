@@ -449,7 +449,14 @@ export function positionLines(
     const rightIndent = style.rightIndent || 0;
     const availableWidth = maxWidth - indent - rightIndent;
 
-    const slack = Math.max(0, availableWidth - effectiveLineWidth);
+    // maxWidth is Infinity for an auto-width frame (no explicit width, e.g.
+    // TableLayoutEngine measuring a cell's natural size with wrap:false).
+    // "center"/"right" within an unbounded box is undefined — without this
+    // guard, slack became Infinity and every downstream x/width computation
+    // corrupted to NaN. Falling back to 0 slack (→ left/start alignment)
+    // matches CSS shrink-to-fit: an auto-sized box has no extra room to
+    // center or push right into in the first place.
+    const slack = Number.isFinite(availableWidth) ? Math.max(0, availableWidth - effectiveLineWidth) : 0;
 
     let xOffset = indent;
 

@@ -376,6 +376,25 @@ describe('Different paragraph styles', () => {
     expect(Math.abs(result.lines[0].x - expectedX)).toBeLessThan(2);
   });
 
+  // Regression: an auto-width frame (no `width`, so the inline axis is
+  // Infinity) with center/right/justify used to compute `slack = Infinity`,
+  // corrupting x/width to Infinity/NaN throughout — surfaced by
+  // TableLayoutEngine's natural-width pass (wrap:false, width:undefined) on
+  // any centered/right-aligned cell. "No room to center/push into" now falls
+  // back to left/start, matching CSS shrink-to-fit for an auto-sized box.
+  for (const alignment of ['center', 'right', 'justify'] as const) {
+    test(`${alignment} alignment with no frame.width stays finite (falls back to left)`, () => {
+      const p = makeParagraph('Hello');
+      p.style.alignment = alignment;
+      const result = layoutTextFrame(makeTextFrame([p])); // no width — auto/unconstrained
+
+      expect(Number.isFinite(result.lines[0].x)).toBe(true);
+      expect(Number.isFinite(result.lines[0].width)).toBe(true);
+      expect(Number.isFinite(result.content.width)).toBe(true);
+      expect(result.lines[0].x).toBe(0);
+    });
+  }
+
   test('different lineHeight → lines have different heights', () => {
     const pSmall = makeParagraph('A');
     pSmall.style.lineHeight = 1.0;
