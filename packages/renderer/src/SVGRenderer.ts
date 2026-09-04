@@ -89,6 +89,14 @@ export interface SVGRenderOptions {
    * Ignored by every other preset. Default `true`.
    */
   glyphDecorations?: boolean;
+  /**
+   * Content for inline-box spans, keyed by `span.inlineWidget.id`. Each value is
+   * an SVG fragment already sized to the widget's `width` × `height`; it is
+   * spliced into a `<g>` translated to the box the layout reserved. A span whose
+   * id has no entry gets a light placeholder `<rect>`. Produced by `@vyaz/html`
+   * for `<img>` / `<svg>` / `<progress>` / … ; irrelevant without inline boxes.
+   */
+  inlineBoxes?: Record<string, string>;
 }
 
 type SpacingMode = 'browser' | 'preserve';
@@ -107,6 +115,7 @@ type ResolvedOptions = {
   contentPadding: number;
   debug?: DebugFlags;
   glyphDecorations: boolean;
+  inlineBoxes?: Record<string, string>;
 };
 
 // ── Preset map ───────────────────────────────────────────────────────────
@@ -237,7 +246,7 @@ function resolveOptions(opts: SVGRenderOptions): ResolvedOptions {
     fit = 'text';
   }
 
-  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug, glyphDecorations: opts.glyphDecorations ?? true };
+  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug, glyphDecorations: opts.glyphDecorations ?? true, inlineBoxes: opts.inlineBoxes };
 }
 
 /**
@@ -726,6 +735,28 @@ class SvgAstBuilder {
   }
 
   /**
+   * Paint an inline-box span. `fragment` (from `opts.inlineBoxes[id]`) is
+   * authored at the widget's own `width` × `height`, so it is only translated
+   * into place; with no fragment a light placeholder rect is drawn.
+   */
+  addInlineBox(x: number, y: number, width: number, height: number, fragment?: string): void {
+    this.closeText();
+    if (fragment) {
+      this.root.children.push(rawNode(`  <g transform="translate(${fmt(x)} ${fmt(y)})">${fragment}</g>\n`));
+      return;
+    }
+    this.root.children.push(el('rect', {
+      x: fmt(x),
+      y: fmt(y),
+      width: fmt(width),
+      height: fmt(height),
+      fill: '#ccc',
+      stroke: '#999',
+      'stroke-dasharray': '2,2',
+    }));
+  }
+
+  /**
    * Add a horizontal decoration rule (underline / strikethrough) as a direct
    * child of the root <svg>, painted after the text so it sits on top.
    * Used by the glyph structure, which cannot use SVG `text-decoration`.
@@ -1023,6 +1054,17 @@ export function renderToSVG(
       }
     }
 
+    // Inline boxes (<img> / <svg> / <progress> from @vyaz/html). The layout
+    // reserved `inlineWidget.width` for the span; paint the fragment (or a
+    // placeholder) in that box, baseline-aligned like CanvasRenderer.
+    for (const span of line.spans) {
+      const iw = span.inlineWidget;
+      if (!iw) continue;
+      const ibx = line.x + span.x - bgFirstTextX;
+      const iby = baselineY - iw.height + (iw.baselineOffset || 0);
+      builder.addInlineBox(ibx, iby, iw.width, iw.height, iw.id ? opts.inlineBoxes?.[iw.id] : undefined);
+    }
+
     if (opts.structure === 'glyph') {
       // Per-glyph positioning. Open a new <text> whenever the run index OR the
       // style signature changes (matches flat/expanded) — otherwise a list
@@ -1033,7 +1075,7 @@ export function renderToSVG(
       let currentRunIdx = -1;
       let currentSig = '';
       for (const span of line.spans) {
-        if (!span.text) continue;
+        if (!span.text || span.inlineWidget) continue;
         const runIdx = span.itemIndex;
         const sig = styleSignature(span);
         if (runIdx !== currentRunIdx || sig !== currentSig) {
@@ -1073,7 +1115,7 @@ export function renderToSVG(
           cur = null;
         };
         for (const span of line.spans) {
-          if (!span.text) continue;
+          if (!span.text || span.inlineWidget) continue;
           const u = !!span.style.underline;
           const s = !!span.style.strikethrough;
           if (!u && !s) { flushDeco(); continue; }
@@ -1096,7 +1138,7 @@ export function renderToSVG(
       interface FlatGroup { spans: Span[]; targetY: number; signature: string; fontSize: number }
       const groups: FlatGroup[] = [];
       for (const span of line.spans) {
-        if (!span.text) continue;
+        if (!span.text || span.inlineWidget) continue;
         const offset = span.fontMetrics.baselineOffset || 0;
         const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
         const sig = styleSignature(span);
@@ -1147,7 +1189,7 @@ export function renderToSVG(
       type TspanGroup = { targetY: number; spans: Span[]; signature: string };
       const groups: TspanGroup[] = [];
       for (const span of line.spans) {
-        if (!span.text) continue;
+        if (!span.text || span.inlineWidget) continue;
         const offset = span.fontMetrics.baselineOffset || 0;
         const targetY = Math.round((line.y + line.baseline + offset) * 100) / 100;
         const sig = styleSignature(span);
@@ -1202,7 +1244,7 @@ export function renderToSVG(
 
         let currentStyle: StyleState | null = null;
         for (const span of group.spans) {
-          if (!span.text) continue;
+          if (!span.text || span.inlineWidget) continue;
           const x = span.x + spanDX;
 
           const shouldRender = span.type !== 'space' || opts.spacing === 'preserve';

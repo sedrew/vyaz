@@ -346,6 +346,12 @@ export interface InlineWidget {
    * Negative = widget ascends above the baseline.
    */
   baselineOffset?: number;
+  /**
+   * Opaque key a renderer can use to look up the widget's actual content
+   * (e.g. `renderToSVG`'s `inlineBoxes[id]` SVG fragment). The layout engine
+   * only reserves the `width` × `height` box; it never reads this.
+   */
+  id?: string;
 }
 
 // ── ListStyle (block-level list configuration) ──────────────────────────
