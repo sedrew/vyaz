@@ -377,3 +377,62 @@ describe('TableLayoutEngine — borders + corner radius (T2)', () => {
     expect(bordered.rows[0].cells[0].width).toBe(plain.rows[0].cells[0].width);
   });
 });
+
+describe('TableLayoutEngine — dash patterns + stroke-linecap (T3)', () => {
+  test('no borderPatterns/borderShapes anywhere → border.patterns/shapes are absent', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1 } }] }] });
+    expect(r.rows[0].cells[0].border!.patterns).toBeUndefined();
+    expect(r.rows[0].cells[0].border!.shapes).toBeUndefined();
+  });
+
+  test('a flat number[] pattern applies to all four sides', () => {
+    const r = layoutTableFrame({ rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1, borderPatterns: [4, 2] } }] }] });
+    const p = r.rows[0].cells[0].border!.patterns!;
+    expect(p).toEqual({ top: [4, 2], right: [4, 2], bottom: [4, 2], left: [4, 2] });
+  });
+
+  test('borderPatterns shorthand: [tb,lr] and [t,r,b,l] tuples of arrays', () => {
+    const two = { ...cell('a'), style: { borderWidths: 1, borderPatterns: [[4, 2], [1, 1]] as [number[], number[]] } };
+    const four = { ...cell('b'), style: { borderWidths: 1, borderPatterns: [[1], [2], [3], [4]] as [number[], number[], number[], number[]] } };
+    const r = layoutTableFrame({ rows: [{ cells: [two, four] }] });
+    expect(r.rows[0].cells[0].border!.patterns).toEqual({ top: [4, 2], right: [1, 1], bottom: [4, 2], left: [1, 1] });
+    expect(r.rows[0].cells[1].border!.patterns).toEqual({ top: [1], right: [2], bottom: [3], left: [4] });
+  });
+
+  test('a side with no pattern in a partial tuple is solid (undefined) while others dash', () => {
+    // top/bottom dashed, left/right solid — expressed as the [tb, lr] shorthand with an empty lr pattern
+    const r = layoutTableFrame({
+      rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1, borderPatterns: [[6, 3], []] as [number[], number[]] } }] }],
+    });
+    const p = r.rows[0].cells[0].border!.patterns!;
+    expect(p.top).toEqual([6, 3]);
+    expect(p.left).toEqual([]);
+  });
+
+  test('borderShapes (stroke-linecap) resolves per side, default \'butt\'', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [{ ...cell('a'), style: { borderWidths: 1, borderShapes: ['round', 'square'] as ['round' | 'square', 'round' | 'square'] } }] }],
+    });
+    const s = r.rows[0].cells[0].border!.shapes!;
+    expect(s).toEqual({ top: 'round', right: 'square', bottom: 'round', left: 'square' });
+  });
+
+  test('borderPatterns/borderShapes cascade cell-over-default, same as widths/colors', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [{ ...cell('a'), style: { borderPatterns: [8, 4] } }, cell('b')] }],
+      defaultCellStyle: { borderWidths: 1, borderPatterns: [1, 1], borderShapes: 'round' },
+    });
+    expect(r.rows[0].cells[0].border!.patterns).toEqual({ top: [8, 4], right: [8, 4], bottom: [8, 4], left: [8, 4] });
+    expect(r.rows[0].cells[1].border!.patterns).toEqual({ top: [1, 1], right: [1, 1], bottom: [1, 1], left: [1, 1] }); // falls back to default
+    expect(r.rows[0].cells[1].border!.shapes).toEqual({ top: 'round', right: 'round', bottom: 'round', left: 'round' });
+  });
+
+  test('the table\'s own outer border and row borders resolve patterns/shapes too', () => {
+    const r = layoutTableFrame({
+      rows: [{ cells: [cell('a')], style: { borderWidths: 2, borderPatterns: [2, 2] } }],
+      style: { borderWidths: 3, borderShapes: 'round' },
+    });
+    expect(r.border!.shapes).toEqual({ top: 'round', right: 'round', bottom: 'round', left: 'round' });
+    expect(r.rows[0].border!.patterns).toEqual({ top: [2, 2], right: [2, 2], bottom: [2, 2], left: [2, 2] });
+  });
+});

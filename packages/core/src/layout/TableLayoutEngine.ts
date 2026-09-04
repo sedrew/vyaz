@@ -20,14 +20,17 @@
  *                       deficit-widen rule for row heights and rowSpan cells.
  *   4. position        — column/row offsets accumulated from final sizes.
  *
- * T3 (not yet implemented): border dash patterns, stroke-linecap, asymmetric
- * corner radii — only solid per-side width/color + a uniform rx/ry so far.
+ * Border dash patterns (`borderPatterns`) and per-side `stroke-linecap`
+ * (`borderShapes`) resolve here (`resolveBorder`) but paint in
+ * `@vyaz/renderer`'s `TableRenderer.ts` (`borderMarkup`) — this engine only
+ * produces the resolved per-side values. Asymmetric corner radii (only a
+ * uniform `rx`/`ry` today) remain a possible future addition.
  */
-import type { TableFrame, TableRow, TableCell, TableCellStyle, TableRowStyle, BorderStyles, Widths, ColorsOnWidth } from '../types/TableTypes.js';
+import type { TableFrame, TableRow, TableCell, TableCellStyle, TableRowStyle, BorderStyles, Widths, ColorsOnWidth, BorderLineCap } from '../types/TableTypes.js';
 import type { TextFrameLayoutResult } from './TextFrameLayoutEngine.js';
 import type { VerticalAlignment } from '../types/Document.js';
 import { layoutTextFrame } from './TextFrameLayoutEngine.js';
-import { resolveWidths, resolveColors, type Side } from '../utils/sides.js';
+import { resolveWidths, resolveColors, resolvePatterns, resolveShapes, type Side } from '../utils/sides.js';
 
 // ── Result shape ─────────────────────────────────────────────────────────
 
@@ -35,6 +38,10 @@ import { resolveWidths, resolveColors, type Side } from '../utils/sides.js';
 export interface ResolvedBorder {
   widths: Record<Side, number>;
   colors: Record<Side, string>;
+  /** Present only when at least one side has a non-empty dash pattern. */
+  patterns?: Record<Side, number[] | undefined>;
+  /** Present only when `borderShapes` was set anywhere in the style cascade. */
+  shapes?: Record<Side, BorderLineCap>;
   /** Present only when `rx`/`ry` was set anywhere in the style cascade. */
   rx?: number;
   ry?: number;
@@ -120,6 +127,8 @@ interface ResolvedCellStyle {
   allowOverflow: boolean;
   borderWidths?: Widths;
   borderColors?: ColorsOnWidth;
+  borderPatterns?: BorderStyles['borderPatterns'];
+  borderShapes?: BorderStyles['borderShapes'];
   rx?: number;
   ry?: number;
 }
@@ -129,6 +138,8 @@ interface ResolvedRowStyle {
   bgColor: string;
   borderWidths?: Widths;
   borderColors?: ColorsOnWidth;
+  borderPatterns?: BorderStyles['borderPatterns'];
+  borderShapes?: BorderStyles['borderShapes'];
   rx?: number;
   ry?: number;
 }
@@ -145,6 +156,8 @@ function resolveCellStyle(cell: TableCell, table: TableFrame): ResolvedCellStyle
     allowOverflow: s.allowOverflow ?? d.allowOverflow ?? false,
     borderWidths: s.borderWidths ?? d.borderWidths,
     borderColors: s.borderColors ?? d.borderColors,
+    borderPatterns: s.borderPatterns ?? d.borderPatterns,
+    borderShapes: s.borderShapes ?? d.borderShapes,
     rx: s.rx ?? d.rx,
     ry: s.ry ?? d.ry,
   };
@@ -158,6 +171,8 @@ function resolveRowStyle(row: TableRow, table: TableFrame): ResolvedRowStyle {
     bgColor: s.bgColor ?? d.bgColor ?? '',
     borderWidths: s.borderWidths ?? d.borderWidths,
     borderColors: s.borderColors ?? d.borderColors,
+    borderPatterns: s.borderPatterns ?? d.borderPatterns,
+    borderShapes: s.borderShapes ?? d.borderShapes,
     rx: s.rx ?? d.rx,
     ry: s.ry ?? d.ry,
   };
@@ -170,6 +185,13 @@ function resolveBorder(raw: BorderStyles | undefined): ResolvedBorder | undefine
   if (widths.top === 0 && widths.right === 0 && widths.bottom === 0 && widths.left === 0) return undefined;
   const colors = resolveColors(raw.borderColors, '#000');
   const border: ResolvedBorder = { widths, colors };
+  if (raw.borderPatterns !== undefined) {
+    const patterns = resolvePatterns(raw.borderPatterns);
+    if (patterns.top?.length || patterns.right?.length || patterns.bottom?.length || patterns.left?.length) {
+      border.patterns = patterns;
+    }
+  }
+  if (raw.borderShapes !== undefined) border.shapes = resolveShapes(raw.borderShapes);
   if (raw.rx !== undefined || raw.ry !== undefined) {
     border.rx = raw.rx ?? raw.ry;
     border.ry = raw.ry ?? raw.rx;

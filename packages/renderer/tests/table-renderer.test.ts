@@ -143,4 +143,39 @@ describe('renderTableToSVG', () => {
     expect((wrapped.match(/<svg /g) ?? []).length).toBe(2);
     expect((fragment.match(/<svg /g) ?? []).length).toBe(1);
   });
+
+  test('a uniform dash pattern + linecap stays a single stroked <rect> with both attrs', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [{ ...cell('x'), style: { borderWidths: 2, borderColors: '#123', borderPatterns: [6, 3], borderShapes: 'round' } }] }],
+    };
+    const svg = renderTableToSVG(layoutTableFrame(table));
+    expect(svg).toMatch(/<rect[^>]*stroke="#123"[^>]*stroke-dasharray="6,3"[^>]*stroke-linecap="round"/);
+    expect(svg).not.toContain('<line');
+  });
+
+  test('a per-side-varying dash pattern falls back to four <line>s, each with its own dasharray', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [{ ...cell('x'), style: { borderWidths: 1, borderColors: '#000', borderPatterns: [[6, 3], []] } }] }],
+    };
+    const svg = renderTableToSVG(layoutTableFrame(table));
+    expect((svg.match(/<line /g) ?? []).length).toBe(4);
+    expect((svg.match(/stroke-dasharray="6,3"/g) ?? []).length).toBe(2); // top + bottom
+    expect(svg).not.toMatch(/<rect[^>]*stroke=/); // no uniform-border rect
+  });
+
+  test('borderShapes alone (same width/color, differing linecap) also forces the four-<line> fallback', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [{ ...cell('x'), style: { borderWidths: 1, borderColors: '#000', borderShapes: ['round', 'square'] } }] }],
+    };
+    const svg = renderTableToSVG(layoutTableFrame(table));
+    expect((svg.match(/<line /g) ?? []).length).toBe(4);
+    expect(svg).toContain('stroke-linecap="round"');
+    expect(svg).toContain('stroke-linecap="square"');
+  });
+
+  test('no borderPatterns/borderShapes → no stroke-dasharray/stroke-linecap attrs at all', () => {
+    const svg = renderTableToSVG(layoutTableFrame({ rows: [{ cells: [{ ...cell('x'), style: { borderWidths: 1 } }] }] }));
+    expect(svg).not.toContain('stroke-dasharray');
+    expect(svg).not.toContain('stroke-linecap');
+  });
 });

@@ -12,8 +12,9 @@
  * required from the caller.
  *
  * T0/T1 (this file + TableLayoutEngine.ts): grid sizing + colSpan/rowSpan.
- * T2 (this update): solid per-side borders + uniform corner radius. Dash
- * patterns / stroke-linecap / asymmetric radii are a later phase (T3).
+ * T2: solid per-side borders + uniform corner radius. T3 (this update): dash
+ * patterns + per-side stroke-linecap. Asymmetric corner radii remain a
+ * possible future addition.
  */
 import type { TextFrame, VerticalAlignment } from './Document.js';
 
@@ -32,19 +33,42 @@ export type Widths = Sides<number>;
 /** `Sides<string>` — border colors. */
 export type ColorsOnWidth = Sides<string>;
 
+/** SVG `stroke-linecap` for a border's dash pattern (or its solid ends). */
+export type BorderLineCap = 'butt' | 'round' | 'square';
+
+/**
+ * Per-side SVG `stroke-dasharray`. Not a `Sides<number[]>` — a flat
+ * `number[]` (one pattern for every side) is structurally indistinguishable
+ * from a 2- or 4-element `Sides` tuple once the element type is itself an
+ * array, so this is its own explicit union (same shape svg-table-core's
+ * `PatternArrays` uses, for the same reason): `[a, b]` = one pattern on all
+ * four sides; `[[tb], [lr]]` = top/bottom, left/right; `[[t], [r], [b], [l]]`
+ * = one per side (CSS clockwise order). `undefined` (or an absent side) =
+ * solid.
+ */
+export type BorderPatterns = number[] | [number[], number[]] | [number[], number[], number[], number[]];
+
 /**
  * Solid per-side border + a uniform corner radius. Shared by `TableStyle`
  * (the table's own outer border), `TableRowStyle` and `TableCellStyle`.
  *
- * @see TableTypes.ts header — modelled on svg-table-core's `BorderStyles`,
- *      minus dash patterns / stroke-linecap / asymmetric radii (T3).
+ * @see TableTypes.ts header — modelled on svg-table-core's `BorderStyles`.
+ *      Asymmetric corner radii are a possible future addition; everything
+ *      else in svg-table-core's `BorderStyles` is covered.
  */
 export interface BorderStyles {
   /** Per-side border width, CSS shorthand. `0` (absent) = no border on that side. */
   borderWidths?: Widths;
   /** Per-side border color, CSS shorthand. Default `'#000'` when a width is set. */
   borderColors?: ColorsOnWidth;
-  /** Uniform corner radius (all four corners). Asymmetric radii are T3. */
+  /**
+   * Per-side SVG `stroke-dasharray`. A side with no pattern (or the whole
+   * property absent) is a solid line. `[4, 2]` = 4px dash, 2px gap, repeating.
+   */
+  borderPatterns?: BorderPatterns;
+  /** Per-side `stroke-linecap` for that side's (dashed or solid) line. Default `'butt'`. */
+  borderShapes?: Sides<BorderLineCap>;
+  /** Uniform corner radius (all four corners). Asymmetric radii are a future addition. */
   rx?: number;
   /** Uniform corner radius; defaults to `rx` when only one is given. */
   ry?: number;
