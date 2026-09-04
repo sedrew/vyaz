@@ -252,6 +252,22 @@ describe('frame.width / wrap', () => {
     expect(result.content.width).toBeGreaterThan(50);
   });
 
+  test('wrap=false does not mutate the input paragraph — a later wrap=true call on the same object still wraps', () => {
+    // Regression: layoutTextFrame used to force `p.style.whiteSpace = 'nowrap'`
+    // in place. When a paragraph has no hard breaks, splitParagraphByHardBreaks
+    // returns the *same* paragraph object, so that mutation leaked into the
+    // caller's TextFrame — any later layoutTextFrame() call reusing it (e.g.
+    // TableLayoutEngine measuring a cell unconstrained, then wrapped) stayed
+    // stuck on one line regardless of `wrap: true`.
+    const shared = makeTextFrame([makeParagraph('a rather long piece of text that will need to wrap', { fontSize: 16 })]);
+
+    const unconstrained = layoutTextFrame({ ...shared, width: undefined, wrap: false });
+    expect(unconstrained.lines.length).toBe(1);
+
+    const wrapped = layoutTextFrame({ ...shared, width: 100, wrap: true });
+    expect(wrapped.lines.length).toBeGreaterThan(1);
+  });
+
   test('no width + wrap=true → no constraint, single line', () => {
     const result = layoutTextFrame(makeTextFrame(
       [makeParagraph('Hello World This Is A Long Text')],

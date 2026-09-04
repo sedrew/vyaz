@@ -404,17 +404,21 @@ export function runFlow(
         ? inlineFrameSize - inlinePadStart - inlinePadEnd
         : Infinity;
 
-    // If wrap is disabled, force no-wrap on the paragraph
-    if (frame.wrap === false) {
-      p.style = { ...p.style, whiteSpace: 'nowrap' };
-    }
-
     const listIndex = listIndices[i];
     const listMarkerWidth = listMarkerWidths[i];
 
     // Layout each sub-paragraph
     for (let subIdx = 0; subIdx < subParagraphs.length; subIdx++) {
-      const subPara = subParagraphs[subIdx];
+      // If wrap is disabled, force no-wrap for this call only — clone rather
+      // than mutate `subParagraphs[subIdx]`, which for a paragraph with no hard
+      // breaks is the *same object* as the caller's `frame.paragraphs[i]`
+      // (splitParagraphByHardBreaks returns it unchanged). Mutating `.style`
+      // in place used to leak into that shared object, corrupting any other
+      // layoutTextFrame() call still holding a reference to it (e.g. measuring
+      // the same TextFrame twice, once unconstrained then once wrapped).
+      const subPara = frame.wrap === false && subParagraphs[subIdx].style.whiteSpace !== 'nowrap'
+        ? { ...subParagraphs[subIdx], style: { ...subParagraphs[subIdx].style, whiteSpace: 'nowrap' as const } }
+        : subParagraphs[subIdx];
 
       // Add spaceBefore only for the first sub-paragraph of each original paragraph
       if (subIdx === 0) {
