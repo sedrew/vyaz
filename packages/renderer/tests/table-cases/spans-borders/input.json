@@ -1,0 +1,145 @@
+{
+  "table": {
+    "width": 360,
+    "style": {
+      "margins": 6,
+      "bgColor": "#ffffff",
+      "borderWidths": 2,
+      "borderColors": "#333333",
+      "rx": 6
+    },
+    "defaultCellStyle": {
+      "paddings": 6,
+      "borderWidths": 1,
+      "borderColors": "#cccccc"
+    },
+    "rows": [
+      {
+        "style": {
+          "bgColor": "#eeeeee"
+        },
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "Header",
+                      "fontFamily": "Unifont",
+                      "fontSize": 16,
+                      "fontWeight": "bold",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "colSpan": 2
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "side",
+                      "fontFamily": "Unifont",
+                      "fontSize": 16,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            },
+            "rowSpan": 2
+          },
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "r0c1",
+                      "fontFamily": "Unifont",
+                      "fontSize": 16,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "cells": [
+          {
+            "content": {
+              "wrap": true,
+              "paragraphs": [
+                {
+                  "style": {
+                    "alignment": "left",
+                    "lineHeight": 1.3,
+                    "spaceBefore": 0,
+                    "spaceAfter": 0
+                  },
+                  "children": [
+                    {
+                      "type": "text",
+                      "text": "r1c1",
+                      "fontFamily": "Unifont",
+                      "fontSize": 16,
+                      "fontWeight": "normal",
+                      "fontStyle": "normal",
+                      "color": "#111111"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "renders": {
+    "browser": {
+      "preset": "browser"
+    }
+  }
+}

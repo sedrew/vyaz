@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="74" viewBox="0 0 64 74">
+  <g transform="translate(8 8)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="21" viewBox="0 0 16 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">a1</text>
+</svg>
+</g>
+  <g transform="translate(40 8)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="21" viewBox="0 0 16 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">b1</text>
+</svg>
+</g>
+  <g transform="translate(8 45)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="21" viewBox="0 0 16 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">a2</text>
+</svg>
+</g>
+  <g transform="translate(40 45)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="21" viewBox="0 0 16 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">b2</text>
+</svg>
+</g>
+</svg>

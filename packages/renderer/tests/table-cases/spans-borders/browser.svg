@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="117" viewBox="0 0 360 117">
+  <rect x="0" y="0" width="360" height="117" fill="#ffffff" />
+  <rect x="6" y="6" width="348" height="35" fill="#eeeeee" />
+  <rect x="6.5" y="6.5" width="347" height="34" fill="none" stroke="#cccccc" stroke-width="1" />
+  <rect x="6.5" y="41.5" width="173" height="69" fill="none" stroke="#cccccc" stroke-width="1" />
+  <rect x="180.5" y="41.5" width="173" height="34" fill="none" stroke="#cccccc" stroke-width="1" />
+  <rect x="180.5" y="76.5" width="173" height="34" fill="none" stroke="#cccccc" stroke-width="1" />
+  <rect x="7" y="7" width="346" height="103" fill="none" stroke="#333333" stroke-width="2" rx="6" ry="6" />
+  <g transform="translate(13 13)"><svg xmlns="http://www.w3.org/2000/svg" width="334" height="21" viewBox="0 0 334 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">Header</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(13 48)"><svg xmlns="http://www.w3.org/2000/svg" width="160" height="21" viewBox="0 0 160 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">side</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(187 48)"><svg xmlns="http://www.w3.org/2000/svg" width="160" height="21" viewBox="0 0 160 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">r0c1</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(187 83)"><svg xmlns="http://www.w3.org/2000/svg" width="160" height="21" viewBox="0 0 160 21">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">r1c1</tspan>
+  </text>
+</svg>
+</g>
+</svg>

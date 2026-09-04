@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="121" viewBox="0 0 120 121">
+  <g transform="translate(8 8)"><svg xmlns="http://www.w3.org/2000/svg" width="104" height="105" viewBox="0 0 104 105">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">a rather long</tspan>
+    <tspan x="104"> </tspan>
+  </text>
+  <text x="0" y="37" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">piece of cell</tspan>
+    <tspan x="104"> </tspan>
+  </text>
+  <text x="0" y="58" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">text that</tspan>
+    <tspan x="72"> </tspan>
+  </text>
+  <text x="0" y="79" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">will need to</tspan>
+    <tspan x="96"> </tspan>
+  </text>
+  <text x="0" y="100" font-family="Unifont" font-size="16" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#111111">wrap</tspan>
+  </text>
+</svg>
+</g>
+</svg>
