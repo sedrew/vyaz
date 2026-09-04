@@ -35,7 +35,10 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install dependencies
-        run: cd docs && bun install
+        run: |
+          bun install            # workspace packages — docs aliases @vyaz/* to
+                                 # source, which imports fontkit from packages/core
+          cd docs && bun install # vitepress + playground deps
 
       - name: Build docs
         run: cd docs && bunx --bun vitepress build
