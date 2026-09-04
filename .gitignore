@@ -20,6 +20,11 @@ dist/
 # OS files
 .DS_Store
 
+# MS Office lock files + the loose working copy of the calibration deck
+# (canonical copy lives at scripts/office-metrics/font-metrics.pptx)
+~$*
+/font metrics.pptx
+
 # npm
 npm-debug.log*
 
