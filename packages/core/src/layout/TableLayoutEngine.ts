@@ -239,9 +239,16 @@ interface Placed {
  * that `rowSpan` into this row. Column index within a row advances past any
  * slot still occupied by such a span (an implicit "ignored" cell — we track
  * occupancy instead of materialising placeholder cells).
+ *
+ * `colSpan: 'auto'` needs the table's final `colCount` before it can resolve
+ * to a number, and `colCount` itself depends on every row's placement — so
+ * this runs in two passes: place everything first, treating `'auto'` as `1`
+ * (its own minimum contribution to `colCount`), then widen each `'auto'`
+ * last-cell to `colCount - startCol`.
  */
 function placeCells(rows: TableRow[]): { placed: Placed[]; colCount: number } {
   const placed: Placed[] = [];
+  const autoLastCell: Placed[] = [];
   const occupied: Map<number, Set<number>> = new Map(); // row → set of taken columns
   const isOccupied = (r: number, c: number) => occupied.get(r)?.has(c) ?? false;
   const occupy = (r: number, c: number) => {
@@ -253,22 +260,31 @@ function placeCells(rows: TableRow[]): { placed: Placed[]; colCount: number } {
   let colCount = 0;
   for (let ri = 0; ri < rows.length; ri++) {
     let ci = 0;
-    for (const cell of rows[ri].cells) {
+    const cells = rows[ri].cells;
+    for (let idx = 0; idx < cells.length; idx++) {
+      const cell = cells[idx];
       while (isOccupied(ri, ci)) ci++;
-      const colSpan = Math.max(1, cell.colSpan ?? 1);
+      const isAuto = cell.colSpan === 'auto';
+      const colSpan = cell.colSpan === 'auto' ? 1 : Math.max(1, cell.colSpan ?? 1);
       const rowSpan = Math.max(1, cell.rowSpan ?? 1);
-      placed.push({
+      const p: Placed = {
         cell, startRow: ri, startCol: ci, colSpan, rowSpan,
         // placeholders — filled in by layoutTableFrame
         cs: undefined as any, pad: undefined as any, inset: undefined as any, natural: 0, width: 0,
         content: undefined as any, cellHeight: 0,
-      });
+      };
+      placed.push(p);
+      if (isAuto && idx === cells.length - 1) autoLastCell.push(p);
       for (let dr = 1; dr < rowSpan; dr++) {
         for (let dc = 0; dc < colSpan; dc++) occupy(ri + dr, ci + dc);
       }
       colCount = Math.max(colCount, ci + colSpan);
       ci += colSpan;
     }
+  }
+  // Pass 2: widen every 'auto' last-cell to fill out to the now-known colCount.
+  for (const p of autoLastCell) {
+    if (p.startCol < colCount - 1) p.colSpan = colCount - p.startCol;
   }
   return { placed, colCount };
 }

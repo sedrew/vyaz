@@ -291,6 +291,54 @@ describe('TableLayoutEngine — colSpan / rowSpan (T1)', () => {
     // row 1's only real cell (r1c2) still lands in column 2, past the occupied span
     expect(r.rows[1].cells[0].x).toBe(r.rows[2].cells[2].x);
   });
+
+  test('colSpan: \'auto\' on the last cell of a short row fills every remaining column', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [cell('a'), cell('b'), cell('c')] }, // 3 columns — determines colCount
+        { cells: [cell('short'), { ...cell('fills the rest'), colSpan: 'auto' }] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    expect(r.rows[0].cells.length).toBe(3);
+    const [short, filled] = r.rows[1].cells;
+    expect(filled.colSpan).toBe(2); // columns 1 and 2 (0-indexed) of a 3-column table
+    expect(filled.width).toBeCloseTo(r.rows[0].cells[1].width + r.rows[0].cells[2].width, 1);
+    expect(short.colSpan).toBe(1);
+  });
+
+  test('colSpan: \'auto\' is opt-in — a plain short row keeps its own width, no implicit stretch', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [cell('a'), cell('b'), cell('c')] },
+        { cells: [cell('short')] }, // no 'auto' — this used to be svg-table-core's implicit default
+      ],
+    };
+    const r = layoutTableFrame(table);
+    expect(r.rows[1].cells[0].colSpan).toBe(1);
+    expect(r.rows[1].cells[0].width).toBeCloseTo(r.rows[0].cells[0].width, 1); // not stretched
+  });
+
+  test('colSpan: \'auto\' on a cell that is already the widest row is a no-op (already fills)', () => {
+    const table: TableFrame = {
+      rows: [{ cells: [cell('a'), { ...cell('b'), colSpan: 'auto' as const }] }],
+    };
+    const r = layoutTableFrame(table);
+    expect(r.rows[0].cells[1].colSpan).toBe(1);
+  });
+
+  test('colSpan: \'auto\' on a non-last cell is a no-op (colSpan: 1) — only the trailing cell expands', () => {
+    const table: TableFrame = {
+      rows: [
+        { cells: [cell('a'), cell('b'), cell('c')] },
+        { cells: [{ ...cell('mid'), colSpan: 'auto' as const }, cell('last')] },
+      ],
+    };
+    const r = layoutTableFrame(table);
+    const [mid, last] = r.rows[1].cells;
+    expect(mid.colSpan).toBe(1); // not the row's last cell — 'auto' does nothing
+    expect(last.x).toBe(mid.x + mid.width); // still lands right after mid, no overlap
+  });
 });
 
 describe('TableLayoutEngine — borders + corner radius (T2)', () => {

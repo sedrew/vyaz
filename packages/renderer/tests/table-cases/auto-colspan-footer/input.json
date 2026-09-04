@@ -1,0 +1,27 @@
+{
+  "_comment": "colSpan: 'auto' (opt-in, unlike svg-table-core's implicit-every-row default) on a footer row's last cell, stretching it to fill the remaining columns of a 3-column table so its bottom border lines up with the header/body rows instead of leaving a gap.",
+  "table": {
+    "defaultCellStyle": { "paddings": 8, "borderWidths": 1, "borderColors": "#ccc" },
+    "rows": [
+      { "style": { "bgColor": "#e9ecf2" }, "cells": [
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Item", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "bold", "fontStyle": "normal", "color": "#111111" }] }] } },
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "right", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Qty", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "bold", "fontStyle": "normal", "color": "#111111" }] }] } },
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "right", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Price", "fontFamily": "Unifont", "fontSize": 14, "fontWeight": "bold", "fontStyle": "normal", "color": "#111111" }] }] } }
+      ] },
+      { "cells": [
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Widget", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } },
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "right", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "3", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } },
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "right", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "$9.00", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } }
+      ] },
+      { "cells": [
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Gadget", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } },
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "right", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "1", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } },
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "right", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "$14.50", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "normal", "fontStyle": "normal", "color": "#111111" }] }] } }
+      ] },
+      { "style": { "bgColor": "#fff8e6" }, "cells": [
+        { "content": { "wrap": true, "paragraphs": [{ "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0 }, "children": [{ "type": "text", "text": "Total: $23.50 across 2 line items", "fontFamily": "Unifont", "fontSize": 13, "fontWeight": "bold", "fontStyle": "normal", "color": "#7a5c00" }] }] }, "colSpan": "auto" }
+      ] }
+    ]
+  },
+  "renders": { "browser": { "preset": "browser" } }
+}

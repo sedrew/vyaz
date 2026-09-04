@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="232.5" height="141" viewBox="0 0 232.5 141">
+  <rect x="0" y="0" width="232.5" height="36" fill="#e9ecf2" />
+  <rect x="0" y="106" width="232.5" height="35" fill="#fff8e6" />
+  <rect x="0.5" y="0.5" width="82.5" height="35" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="84" y="0.5" width="64.5" height="35" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="149.5" y="0.5" width="82.5" height="35" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="36.5" width="82.5" height="34" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="84" y="36.5" width="64.5" height="34" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="149.5" y="36.5" width="82.5" height="34" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="71.5" width="82.5" height="34" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="84" y="71.5" width="64.5" height="34" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="149.5" y="71.5" width="82.5" height="34" fill="none" stroke="#ccc" stroke-width="1" />
+  <rect x="0.5" y="106.5" width="231.5" height="34" fill="none" stroke="#ccc" stroke-width="1" />
+  <g transform="translate(9 9)"><svg xmlns="http://www.w3.org/2000/svg" width="65.5" height="18" viewBox="0 0 65.5 18">
+  <text x="0" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">Item</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(92.5 9)"><svg xmlns="http://www.w3.org/2000/svg" width="47.5" height="18" viewBox="0 0 47.5 18">
+  <text x="26.5" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="26.5" font-weight="700" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">Qty</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(158 9)"><svg xmlns="http://www.w3.org/2000/svg" width="65.5" height="18" viewBox="0 0 65.5 18">
+  <text x="30.5" y="13" font-family="Unifont" font-size="14" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="30.5" font-weight="700" font-style="normal" font-family="Unifont" font-size="14" fill="#111111">Price</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(9 45)"><svg xmlns="http://www.w3.org/2000/svg" width="65.5" height="17" viewBox="0 0 65.5 17">
+  <text x="0" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">Widget</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(92.5 45)"><svg xmlns="http://www.w3.org/2000/svg" width="47.5" height="17" viewBox="0 0 47.5 17">
+  <text x="41" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="41" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">3</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(158 45)"><svg xmlns="http://www.w3.org/2000/svg" width="65.5" height="17" viewBox="0 0 65.5 17">
+  <text x="33" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="33" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">$9.00</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(9 80)"><svg xmlns="http://www.w3.org/2000/svg" width="65.5" height="17" viewBox="0 0 65.5 17">
+  <text x="0" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">Gadget</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(92.5 80)"><svg xmlns="http://www.w3.org/2000/svg" width="47.5" height="17" viewBox="0 0 47.5 17">
+  <text x="41" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="41" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">1</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(158 80)"><svg xmlns="http://www.w3.org/2000/svg" width="65.5" height="17" viewBox="0 0 65.5 17">
+  <text x="26.5" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
+    <tspan x="26.5" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">$14.50</tspan>
+  </text>
+</svg>
+</g>
+  <g transform="translate(9 115)"><svg xmlns="http://www.w3.org/2000/svg" width="214.5" height="17" viewBox="0 0 214.5 17">
+  <text x="0" y="12" font-family="Unifont" font-size="13" fill="#7a5c00" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Unifont" font-size="13" fill="#7a5c00">Total: $23.50 across 2 line items</tspan>
+  </text>
+</svg>
+</g>
+</svg>

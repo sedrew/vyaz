@@ -110,8 +110,17 @@ export interface TableCellStyle extends BorderStyles {
  */
 export interface TableCell {
   content: TextFrame;
-  /** Columns this cell spans. Default `1`. */
-  colSpan?: number;
+  /**
+   * Columns this cell spans. Default `1`. `'auto'` — only honoured on the
+   * *last* cell of a row — stretches it to fill every remaining column, so a
+   * ragged/short row lines its trailing border up with the widest row
+   * instead of leaving a gap. Unlike svg-table-core (where the last cell of
+   * *every* row does this implicitly), this is opt-in: a genuinely short
+   * last cell keeps `colSpan: 1` unless you ask for `'auto'`. Elsewhere in a
+   * row (not the last cell) `'auto'` is a no-op (`colSpan: 1`) — expanding a
+   * non-trailing cell would overlap the cells after it.
+   */
+  colSpan?: number | 'auto';
   /** Rows this cell spans. Default `1`. */
   rowSpan?: number;
   style?: Partial<TableCellStyle>;
