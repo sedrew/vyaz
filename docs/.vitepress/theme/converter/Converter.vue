@@ -84,7 +84,16 @@ const debugFlags = computed(() => {
 
 const converted = computed(() => {
   try {
-    return htmlToTextFrame(html.value, { width: frameWidth.value, baseFont: { family: 'Arial', size: 16 } })
+    return htmlToTextFrame(html.value, {
+      width: frameWidth.value,
+      baseFont: { family: 'Arial', size: 16 },
+      // The docs bundle no monospace face. If we emitted the CSS generic
+      // "monospace", the engine would measure it as Roboto (alias) but the
+      // browser would PAINT it with the OS mono font — different advances,
+      // so following runs drift. Emit a concrete family the docs @font-face
+      // actually provides so metrics == paint.
+      monospaceFamily: 'Roboto',
+    })
   } catch (e) {
     return { frame: { wrap: true, paragraphs: [] }, inlineBoxes: {}, warnings: [], dropped: [], error: String(e) } as any
   }
@@ -152,9 +161,9 @@ const stats = computed(() => {
   border: 1px solid var(--vp-c-divider); border-radius: 10px;
   overflow: hidden; background: var(--vp-c-bg);
 }
-/* HTML on top (fixed-ish), SVG below (taller). */
-.cv__pane:first-child { height: 360px; }
-.cv__pane:last-child { height: 640px; }
+/* HTML on top (fixed-ish), SVG below (much taller). */
+.cv__pane:first-child { height: 340px; }
+.cv__pane:last-child { height: 860px; }
 .cv__hd {
   display: flex; align-items: center; gap: 10px;
   padding: 6px 12px; font-size: 11px; font-weight: 600;
@@ -179,6 +188,6 @@ const stats = computed(() => {
 
 @media (max-width: 900px) {
   .cv__pane:first-child { height: 300px; }
-  .cv__pane:last-child { height: 520px; }
+  .cv__pane:last-child { height: 640px; }
 }
 </style>

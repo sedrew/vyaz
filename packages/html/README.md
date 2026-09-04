@@ -35,7 +35,7 @@ htmlToTextFrame(html, { parse: (h) => parseHTML(`<!doctype html><html><body>${h}
 |---|---|---|
 | `width` / `wrap` / `mode` | – / `true` / `'browser'` | forwarded to `TextFrame` |
 | `baseFont` | `{ family: 'Arial', size: 16 }` | root run style |
-| `monospaceFamily` | `'monospace'` | `code` / `kbd` / `samp` / `pre` — register a font under this name |
+| `monospaceFamily` | `'monospace'` | `code` / `kbd` / `samp` / `pre` |
 | `linkColor` | `'#0645ad'` | `<a>` colour (also underlined) |
 | `headingScale` | `{h1:2,h2:1.5,h3:1.25,h4:1.1,h5:1,h6:0.9}` | × `baseFont.size`, + bold + spacing |
 | `hardBreak` | `'newline'` | `<br>` → `\n` in one paragraph (`'paragraph'` = split, not yet implemented) |
@@ -43,6 +43,16 @@ htmlToTextFrame(html, { parse: (h) => parseHTML(`<!doctype html><html><body>${h}
 | `resolveStyle(el)` | – | your own CSS (classes / `<style>`) → `Partial<TextRun>` |
 | `resolveImage(el)` | – | `<img>` → `{ width, height, svg }` *(Phase 4)* |
 | `parse(html)` | – | HTML-string parser when there is no `DOMParser` |
+
+### Fonts must line up with the paint target
+
+Every family name the converter emits (`baseFont.family`, `monospaceFamily`,
+anything from `style="font-family:…"`) must be registered with
+`fontMetricsProvider` **and** resolve to the *same* font wherever the SVG is
+finally painted. The CSS generics (`monospace`, `serif`, `sans-serif`) are a
+trap: a browser paints `<text font-family="monospace">` with the OS mono font
+regardless of any `@font-face`, so if the engine measured it as something else,
+following runs drift. Point `monospaceFamily` at a concrete family you control.
 
 ## Coverage
 
