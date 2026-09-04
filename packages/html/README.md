@@ -1,0 +1,63 @@
+# @vyaz/html
+
+Convert a **formatted-HTML fragment** into a [`@vyaz/core`](../core) `TextFrame`.
+
+Rich-text editor output, CMS bodies, email HTML → positioned lines → SVG. It is a
+*text importer*, **not a web-page renderer**: no box model, no CSS cascade from
+`<style>`/classes, no table grid. Every simplification and every dropped element
+is reported.
+
+```bash
+bun add @vyaz/html @vyaz/core @vyaz/renderer
+```
+
+```ts
+import { htmlToTextFrame } from '@vyaz/html'
+import { layoutTextFrame } from '@vyaz/core'
+import { renderToSVG } from '@vyaz/renderer'
+
+const { frame, inlineBoxes, warnings, dropped } = htmlToTextFrame(html, { width: 600 })
+
+const svg = renderToSVG(layoutTextFrame(frame), { preset: 'browser', inlineBoxes })
+```
+
+`html` may be a **string**, a `Document`, or an `Element`. A string needs a DOM:
+the global `DOMParser` (browsers), otherwise pass `options.parse`:
+
+```ts
+import { parseHTML } from 'linkedom'
+htmlToTextFrame(html, { parse: (h) => parseHTML(`<!doctype html><html><body>${h}</body></html>`).document })
+```
+
+## Options
+
+| option | default | |
+|---|---|---|
+| `width` / `wrap` / `mode` | – / `true` / `'browser'` | forwarded to `TextFrame` |
+| `baseFont` | `{ family: 'Arial', size: 16 }` | root run style |
+| `monospaceFamily` | `'monospace'` | `code` / `kbd` / `samp` / `pre` — register a font under this name |
+| `linkColor` | `'#0645ad'` | `<a>` colour (also underlined) |
+| `headingScale` | `{h1:2,h2:1.5,h3:1.25,h4:1.1,h5:1,h6:0.9}` | × `baseFont.size`, + bold + spacing |
+| `hardBreak` | `'newline'` | `<br>` → `\n` in one paragraph (`'paragraph'` = split, not yet implemented) |
+| `onUnsupported` | `'drop'` | `'drop'` \| `'placeholder'` \| `'throw'` |
+| `resolveStyle(el)` | – | your own CSS (classes / `<style>`) → `Partial<TextRun>` |
+| `resolveImage(el)` | – | `<img>` → `{ width, height, svg }` *(Phase 4)* |
+| `parse(html)` | – | HTML-string parser when there is no `DOMParser` |
+
+## Coverage
+
+**Clean:** `p`, `h1`–`h6`, `blockquote`, `pre`, `address`, `br`, `strong`/`b`,
+`em`/`i`/`cite`/`dfn`/`var`, `ins`/`u`, `del`/`s`, `sup`, `sub`, `small`, `mark`,
+`code`/`kbd`/`samp`, `q`, `abbr`, `a` (style only), `span` + inline `style=""`
+(`color`, `font-*`, `text-decoration`, `text-transform`, `letter-spacing`,
+`background-color`, `text-align`, `vertical-align`). `div`/`section`/… are
+transparent.
+
+**Lossy (with a warning):** `dl`/`dt`/`dd`, `figcaption`, `details`/`summary`,
+`a` href (lost), `abbr` title (lost).
+
+**Dropped (recorded in `dropped[]`):** `table` + cells, `video`/`audio`/`iframe`/
+`canvas`, form controls, `<style>`/class CSS, and — for now — `img`/`svg`/
+`progress`/`meter`/`hr` (arrive in Phase 4 as `inlineBoxes`).
+
+Full plan and phase list: [`PLAN.md`](./PLAN.md).

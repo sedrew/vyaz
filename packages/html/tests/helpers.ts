@@ -1,0 +1,23 @@
+/**
+ * helpers.ts — test setup for @vyaz/html.
+ *
+ * Bun/Node have no global `DOMParser`, so tests parse HTML with linkedom and
+ * hand the converter a `parse` option. Browsers use the native `DOMParser` and
+ * need no dependency.
+ */
+import { parseHTML } from 'linkedom';
+import { htmlToTextFrame, type HtmlConvertOptions, type HtmlConvertResult } from '../src/index.ts';
+
+export function convert(html: string, opts: HtmlConvertOptions = {}): HtmlConvertResult {
+  return htmlToTextFrame(html, {
+    // linkedom's parseHTML is literal — it does NOT auto-wrap a fragment the way
+    // a browser's DOMParser does, so wrap it in a real document ourselves.
+    parse: (h) => parseHTML(`<!doctype html><html><head></head><body>${h}</body></html>`).document as unknown as Document,
+    ...opts,
+  });
+}
+
+/** All run texts of a paragraph joined. */
+export function text(p: { children: { text: string }[] }): string {
+  return p.children.map((r) => r.text).join('');
+}

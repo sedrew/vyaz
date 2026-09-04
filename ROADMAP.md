@@ -14,12 +14,21 @@ Direction, not a schedule. Order within a section is rough priority.
   instead of falling back to `.notdef` / a `0.5em` estimate.
 - **`text-decoration` styles** — dashed / dotted / wavy, custom colour and
   thickness (the types already accept them; the engine ignores them).
+- **SVG-only text effects** — a paint-time pass in `@vyaz/renderer` for features
+  the layout engine cannot position for but SVG renders natively: `overline`,
+  decoration style/colour, `text-shadow`, glyph stroke / gradient fill,
+  small-caps. Emitted as presentation attributes / `<filter>` over the finished
+  `<text>`, metrics untouched.
 - **Canvas renderer** — currently exported but untested and undocumented. Either
   bring it to SVG parity with its own golden corpus, or drop it from the public
   API.
 
 ## Later
 
+- **Grid / table layout** — a real multi-cell grid (column alignment across rows,
+  `colspan` / `rowspan`, header/body/footer bands). Prerequisite for
+  `@vyaz/html` to convert `<table>` (today it drops them). Likely a new
+  `TableFrame` alongside `TextFrame`, each cell an inner `TextFrame`.
 - **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
   `WritingMode` / `direction` are in the type surface; the engine is not.
 - **True vertical writing modes** — `vertical-rl` / `vertical-lr` with per-glyph

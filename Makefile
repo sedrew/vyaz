@@ -1,6 +1,6 @@
 .PHONY: help install build test smoke pack-test lint check-decls check publish-core publish-renderer clean
 
-PACKAGES := core renderer
+PACKAGES := core renderer html
 DIST_TMP := /tmp/vyaz-pack-test
 
 help:

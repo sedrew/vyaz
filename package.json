@@ -4,10 +4,11 @@
   "private": true,
   "workspaces": [
     "packages/core",
-    "packages/renderer"
+    "packages/renderer",
+    "packages/html"
   ],
   "scripts": {
-    "build": "(cd packages/core && bun run build) && (cd packages/renderer && bun run build)",
+    "build": "(cd packages/core && bun run build) && (cd packages/renderer && bun run build) && (cd packages/html && bun run build)",
     "bench": "bun run bench/throughput.ts",
     "docs:dev": "cd docs && bunx vitepress dev",
     "docs:build": "npm run docs:gen && cd docs && bunx vitepress build",
