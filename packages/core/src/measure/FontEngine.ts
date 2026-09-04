@@ -93,16 +93,71 @@ function _getGlyph(raw: any, codePoint: number): any | null {
  * Create a font face from a binary buffer.
  *
  * @param buffer  Font file bytes (ArrayBuffer in browser, Uint8Array/Buffer in Node.js)
+ * @param opts.variation  For a variable font, axis values to instance before use
+ *   (e.g. `{ wght: 700, wdth: 100 }`). Ignored when the font has no axes. Every
+ *   downstream call — `glyphForCodePoint`, `layout`, metric extraction — then
+ *   sees the instanced master, matching what a browser renders for that weight.
  * @returns       Opaque FontFace handle
  */
-export async function createFontFace(buffer: ArrayBuffer | Uint8Array): Promise<FontFace> {
+export async function createFontFace(
+  buffer: ArrayBuffer | Uint8Array,
+  opts?: { variation?: Record<string, number> },
+): Promise<FontFace> {
   const fontkit = await _getFontkit();
-  const raw = fontkit.create(buffer);
+  let raw = fontkit.create(buffer);
+  if (opts?.variation && raw.variationAxes && Object.keys(raw.variationAxes).length > 0) {
+    raw = raw.getVariation(opts.variation);
+  }
   const metrics = _extractMetrics(raw);
   return {
     _raw: raw,
     ...metrics,
   };
+}
+
+// ── Shaping ───────────────────────────────────────────────────────────
+
+/** One shaped glyph: its id and its post-GPOS advance / offset, in font units. */
+export interface ShapedGlyph {
+  glyphId: number;
+  xAdvance: number;
+  xOffset: number;
+}
+
+/** Result of {@link shapeRun}: total advance + per-glyph detail, in font units. */
+export interface ShapedRun {
+  /** Sum of every glyph's xAdvance after kerning / ligature substitution. */
+  advanceWidth: number;
+  glyphs: ShapedGlyph[];
+}
+
+/**
+ * Shape `text` through fontkit's OpenType layout engine — the same GPOS kerning
+ * and GSUB substitutions (`liga`, `clig`, `calt`, `ccmp`) a browser applies by
+ * default. Use this instead of summing {@link getGlyphAdvance} when the measured
+ * width has to line up with what the browser will actually paint.
+ *
+ * Widths are in font units; multiply by `fontSize / unitsPerEm`.
+ *
+ * @param opts.features  OpenType feature overrides, e.g. `{ liga: false }` to
+ *   emulate `text-rendering: optimizeSpeed`. Omit for browser-default behaviour.
+ */
+export function shapeRun(
+  font: FontFace,
+  text: string,
+  opts?: { features?: Record<string, boolean>; script?: string; language?: string },
+): ShapedRun {
+  if (!text) return { advanceWidth: 0, glyphs: [] };
+  const run = font._raw.layout(text, opts?.features, opts?.script, opts?.language);
+  const glyphs: ShapedGlyph[] = [];
+  let advanceWidth = 0;
+  const positions = run.positions ?? [];
+  for (let i = 0; i < run.glyphs.length; i++) {
+    const pos = positions[i] ?? { xAdvance: run.glyphs[i].advanceWidth, xOffset: 0 };
+    advanceWidth += pos.xAdvance;
+    glyphs.push({ glyphId: run.glyphs[i].id, xAdvance: pos.xAdvance, xOffset: pos.xOffset ?? 0 });
+  }
+  return { advanceWidth, glyphs };
 }
 
 /**

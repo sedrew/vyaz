@@ -38,7 +38,10 @@ export { compileParagraph, getParagraphText, makeFontToken, collapseSegmentWhite
 
 // ── Font metrics — stable ───────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
-export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable } from './measure/FontEngine.js';
+export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable, shapeRun } from './measure/FontEngine.js';
+export type { ShapedRun, ShapedGlyph } from './measure/FontEngine.js';
+export { setMeasureProfile, getMeasureProfile, measurePx } from './measure/FontkitMeasureContext.js';
+export type { MeasureProfile } from './measure/FontkitMeasureContext.js';
 export { getFontBuffer } from './utils/font.js';
 
 // ── Errors — stable ─────────────────────────────────────

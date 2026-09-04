@@ -178,7 +178,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
    */
   async registerFont(
     family: string,
-    options: { weight?: string; style?: string },
+    options: { weight?: string; style?: string; variation?: Record<string, number> },
     source: string | ArrayBuffer | Uint8Array,
     sourcePath?: string,
   ): Promise<void> {
@@ -194,7 +194,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
   /** @internal Internal registration logic */
   private async _registerFontInternal(
     family: string,
-    options: { weight?: string; style?: string },
+    options: { weight?: string; style?: string; variation?: Record<string, number> },
     source: string | ArrayBuffer | Uint8Array,
     _sourcePath?: string,
   ): Promise<void> {
@@ -205,7 +205,10 @@ export class FontMetricsProvider implements IFontMetricsProvider {
       source = await getFontBuffer(source);
     }
 
-    const font = await createFontFace(source);
+    // A variable font registered without explicit axes stays on its default
+    // master; pass `variation` (e.g. `{ wght: 700 }`) to pin an instance so
+    // `layout()` and metrics match that weight/width.
+    const font = await createFontFace(source, options.variation ? { variation: options.variation } : undefined);
     const w = options.weight || 'normal';
     const s = options.style || 'normal';
     const vKey = variantKey(w, s);

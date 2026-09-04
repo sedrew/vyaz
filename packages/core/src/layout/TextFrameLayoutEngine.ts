@@ -26,6 +26,7 @@ import { paragraphLayoutEngine, ParagraphLayoutEngine } from './ParagraphLayoutE
 import { splitParagraphByHardBreaks } from '../compile/ParagraphCompiler.js';
 import { applyScale } from './AutoFitEngine.js';
 import { formatListNumber, defaultBulletChar } from '../utils/list.js';
+import { getMeasureProfile, setMeasureProfile } from '../measure/FontkitMeasureContext.js';
 
 /**
  * Result of laying out a full TextFrame.
@@ -148,6 +149,13 @@ export interface LayoutOptions {
    *     entry instead of failing
    */
   onMissingFont?: 'throw' | 'substitute';
+  /**
+   * Measure widths through fontkit's `layout()` — GPOS kerning + GSUB ligatures,
+   * i.e. what a browser paints — instead of the default per-code-point advance
+   * sum. Applies to line breaking and positioning for this call only. Leave off
+   * unless the output is consumed by a browser (SVG `browser` preset).
+   */
+  shaping?: boolean;
 }
 
 /** Autofit outcome, present on the result when {@link LayoutOptions.autofit} was set. */
@@ -177,6 +185,15 @@ export function runFlow(
 ): TextFrameLayoutResult {
   if (options.autofit || frame.autofit?.enabled) {
     return runAutofit(frame, options, engine);
+  }
+  if (options.shaping) {
+    const saved = getMeasureProfile();
+    setMeasureProfile({ engine: 'shape' });
+    try {
+      return runFlow(frame, { ...options, shaping: false }, engine);
+    } finally {
+      setMeasureProfile(saved);
+    }
   }
   const wantGlyphAdvances = options.glyphAdvances === true;
   const mode = options.mode;

@@ -23,7 +23,8 @@ import { compileParagraph } from '../compile/ParagraphCompiler.js';
 import type { PreparedRichInlineItem } from '../compile/ParagraphCompiler.js';
 import { fontMetricsProvider, MISSING_GLYPH_FACTOR } from '../measure/FontMetricsProvider.js';
 import { FontNotFoundError } from '../measure/FontNotFoundError.js';
-import { createFontkitMeasureContext, setMeasureContext } from '../measure/FontkitMeasureContext.js';
+import { createFontkitMeasureContext, setMeasureContext, setProfileChangeHook, getMeasureProfile, measurePx } from '../measure/FontkitMeasureContext.js';
+import { clearMeasurementCaches } from '../vendor/pretext/measurement.js';
 import { positionLines } from './PositioningEngine.js';
 import { resolveFontFamily, type OnMissingFont } from './resolve-font.js';
 import type { LayoutWarning } from '../types/LayoutTypes.js';
@@ -42,6 +43,9 @@ import { prepareRichInline, materializeRichInlineLineRange, walkRichInlineLineRa
 //
 // Escape hatch: `setMeasureContext(null)` puts line breaking back on canvas.
 setMeasureContext(createFontkitMeasureContext(fontMetricsProvider));
+// Pretext caches segment widths by text only; flush that cache whenever the
+// measure profile flips so `shape` and `advance` layouts never cross-feed.
+setProfileChangeHook(clearMeasurementCaches);
 
 // ── Cache key builder ─────────────────────────────────────────────────────
 
@@ -167,8 +171,11 @@ export class ParagraphLayoutEngine {
       }
     }
 
-    // Phase 2: Prepare (cached, bounded LRU keyed on prepare-relevant fields only)
-    const cacheKey = preparedCacheKey(paragraph);
+    // Phase 2: Prepare (cached, bounded LRU keyed on prepare-relevant fields only).
+    // The measure profile changes fragment widths (kerning / ligatures) and thus
+    // line-break points, so it is part of the key.
+    const mp = getMeasureProfile();
+    const cacheKey = `${mp.engine}${mp.features ? JSON.stringify(mp.features) : ''}${preparedCacheKey(paragraph)}`;
     let prepared = this.preparedCache.get(cacheKey);
     if (prepared) {
       // bump recency
@@ -211,6 +218,19 @@ export class ParagraphLayoutEngine {
       fontStyle?: string,
     ): number => {
       if (!text) return 0;
+
+      // `shape` profile: width comes from fontkit layout() (kerning + ligatures)
+      // — the per-code-point advance array can't represent it. Line breaking
+      // (pretext measure context) is on the same profile, so the two agree.
+      const prof = getMeasureProfile();
+      if (prof.engine === 'shape') {
+        const font = fontMetricsProvider.getFont(fontFamily || 'Arial', fontWeight || '400', fontStyle || 'normal');
+        if (font) {
+          const scale = fontSize / font.unitsPerEm;
+          return Math.round(measurePx(font._raw, scale, fontSize, text, prof) * 100) / 100;
+        }
+      }
+
       const key = glyphCacheKey(text, fontSize, fontFamily, fontWeight, fontStyle);
 
       // Check cache first — same text+font may appear across multiple fragments

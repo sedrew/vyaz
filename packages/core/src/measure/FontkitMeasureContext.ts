@@ -45,6 +45,48 @@ export interface FontResolver {
   getFont(family: string, weight?: string, style?: string): FontFace | undefined;
 }
 
+// ── Measure profile ─────────────────────────────────────────────────────
+
+/**
+ * How widths are computed from the font tables.
+ *
+ *   - `'advance'` (default) — Σ per-code-point `advanceWidth`. Fast, and
+ *     shaping-invariant, but ignores kerning and ligatures, so it drifts from
+ *     what a browser paints (up to a few px per word on a kerned Latin font).
+ *   - `'shape'` — fontkit `layout()` advance: GPOS kerning + GSUB (`liga`,
+ *     `clig`, `calt`, `ccmp`), i.e. browser-default behaviour. Use for the SVG
+ *     `browser` preset when on-screen width has to match the layout.
+ */
+export interface MeasureProfile {
+  engine: 'advance' | 'shape';
+  /** `'shape'` only — OpenType feature overrides, e.g. `{ liga: false }`. */
+  features?: Record<string, boolean>;
+}
+
+let profile: MeasureProfile = { engine: 'advance' };
+let onProfileChange: (() => void) | null = null;
+
+/**
+ * Register a callback fired whenever {@link setMeasureProfile} changes the
+ * profile — used to drop pretext's per-segment width cache, which is keyed by
+ * text only and would otherwise serve `advance` widths to a `shape` layout.
+ */
+export function setProfileChangeHook(fn: (() => void) | null): void {
+  onProfileChange = fn;
+}
+
+/** Install the measurement profile used by every fontkit-backed measure path. */
+export function setMeasureProfile(next: MeasureProfile): void {
+  const changed = next.engine !== profile.engine || JSON.stringify(next.features) !== JSON.stringify(profile.features);
+  profile = next;
+  if (changed) onProfileChange?.();
+}
+
+/** The active measurement profile. */
+export function getMeasureProfile(): MeasureProfile {
+  return profile;
+}
+
 // ── Active context ───────────────────────────────────────────────────────
 
 let active: MeasureContextLike | null = null;
@@ -154,6 +196,56 @@ interface MeasureState {
  *
  * @param resolver - font lookup, normally the shared `fontMetricsProvider`
  */
+/**
+ * Pixel width of `text` under `profile`. Shared by the pretext measure context
+ * and `ParagraphLayoutEngine`'s fragment measurement so line breaking and
+ * positioning never disagree.
+ *
+ *   - `advance` — Σ per-code-point `advanceWidth`, surrogate-aware, with the
+ *     `MISSING_GLYPH_FACTOR · fontSize` estimate for absent glyphs.
+ *   - `shape`   — fontkit `layout()` advance (kerning + ligatures). Missing
+ *     glyphs there fall back to the same per-code-point estimate for the
+ *     stretch that produced no advance, so the two profiles agree on
+ *     un-shapeable text.
+ */
+export function measurePx(
+  raw: any,
+  scale: number,
+  fontSize: number,
+  text: string,
+  prof: MeasureProfile = profile,
+): number {
+  if (!text) return 0;
+
+  if (prof.engine === 'shape') {
+    try {
+      const run = raw.layout(text, prof.features);
+      const positions = run.positions ?? [];
+      let units = 0;
+      for (let i = 0; i < run.glyphs.length; i++) {
+        units += positions[i]?.xAdvance ?? run.glyphs[i].advanceWidth ?? 0;
+      }
+      // layout() maps missing code points to .notdef (glyph id 0). If every
+      // shaped glyph is .notdef the run told us nothing — fall through to the
+      // per-code-point estimate rather than trusting a box-width advance.
+      if (run.glyphs.length > 0 && run.glyphs.some((g: any) => g.id !== 0)) {
+        return units * scale;
+      }
+    } catch {
+      // Complex-script shaper threw — fall back to the advance sum.
+    }
+  }
+
+  let width = 0;
+  for (let i = 0; i < text.length; i++) {
+    const cp = text.codePointAt(i)!;
+    const advance = raw.glyphForCodePoint(cp)?.advanceWidth;
+    width += advance != null ? advance * scale : fontSize * MISSING_GLYPH_FACTOR;
+    if (cp > 0xffff) i++;
+  }
+  return width;
+}
+
 export function createFontkitMeasureContext(resolver: FontResolver): MeasureContextLike {
   // Keyed by the raw `font` string: pretext re-assigns the same handful of
   // shorthands thousands of times per document.
@@ -198,22 +290,7 @@ export function createFontkitMeasureContext(resolver: FontResolver): MeasureCont
 
     measureText(text: string): { width: number } {
       if (state === null || text.length === 0) return { width: 0 };
-
-      // Mirrors ParagraphLayoutEngine.computeGlyphAdvances exactly, including
-      // the surrogate-pair skip and the missing-glyph estimate. Keep the two in
-      // step: any divergence reintroduces the break/position width split this
-      // backend exists to close.
-      const raw = state.raw as { glyphForCodePoint(cp: number): { advanceWidth: number } | null };
-      let width = 0;
-
-      for (let i = 0; i < text.length; i++) {
-        const codePoint = text.codePointAt(i)!;
-        const advance = raw.glyphForCodePoint(codePoint)?.advanceWidth;
-        width += advance != null ? advance * state.scale : state.size * MISSING_GLYPH_FACTOR;
-        if (codePoint > 0xffff) i++;
-      }
-
-      return { width };
+      return { width: measurePx(state.raw, state.scale, state.size, text, profile) };
     },
   };
 }

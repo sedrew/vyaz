@@ -119,7 +119,10 @@ export type { PreparedRichInlineItem } from './compile/ParagraphCompiler.js';
 
 // ── Font Engine — stable ────────────────────────────────────────────────
 export type { FontFace } from './measure/FontEngine.js';
-export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable } from './measure/FontEngine.js';
+export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable, shapeRun } from './measure/FontEngine.js';
+export type { ShapedRun, ShapedGlyph } from './measure/FontEngine.js';
+export { setMeasureProfile, getMeasureProfile, measurePx } from './measure/FontkitMeasureContext.js';
+export type { MeasureProfile } from './measure/FontkitMeasureContext.js';
 
 // ── Font metrics — stable ──────────────────────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
