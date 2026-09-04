@@ -38,15 +38,18 @@ export function isInline(tag: string): boolean {
   return tag in INLINE_STYLE || INLINE_SPECIAL.has(tag);
 }
 
-/** Block tags whose content becomes its own paragraph(s). */
-export const BLOCK_TEXT: Set<string> = new Set(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'address', 'figcaption', 'dt', 'dd', 'li']);
+/** Block tags whose content becomes its own paragraph(s). (`li` is handled by the list path.) */
+export const BLOCK_TEXT: Set<string> = new Set(['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre', 'address', 'figcaption', 'dt', 'dd']);
 
 /** Block tags with no visual effect — recurse into children. */
 export const TRANSPARENT: Set<string> = new Set([
   'div', 'section', 'article', 'header', 'footer', 'main', 'aside', 'nav',
   'figure', 'hgroup', 'details', 'summary', 'body', 'html', 'center',
-  'ul', 'ol', 'dl', 'menu', // real list styling arrives in Phase 3
+  'dl', // dt / dd are BLOCK_TEXT and carry the styling
 ]);
+
+/** List containers — each child `<li>` becomes a Paragraph with `listStyle`. */
+export const LIST: Set<string> = new Set(['ul', 'ol', 'menu']);
 
 /** Tags that produce no output (recorded in `dropped[]`). Phases 4–5 move some out. */
 export const DROPPED: Record<string, string> = {

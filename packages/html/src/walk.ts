@@ -10,7 +10,7 @@ import type { ResolvedOptions } from './options.js';
 import { Collector } from './warnings.js';
 import { parseInlineStyle } from './inline-style.js';
 import { NODE_ELEMENT, NODE_TEXT } from './dom.js';
-import { INLINE_STYLE, isInline, BLOCK_TEXT, TRANSPARENT, DROPPED } from './tags.js';
+import { INLINE_STYLE, isInline, BLOCK_TEXT, TRANSPARENT, LIST, DROPPED } from './tags.js';
 
 type RunStyle = Omit<TextRun, 'type' | 'text' | 'inlineWidget'>;
 
@@ -167,9 +167,6 @@ function derive(
   } else if (tag === 'dd') {
     p.leftIndent = (para.leftIndent ?? 0) + Math.round(o.baseSize * 2);
     p.spaceAfter = Math.round(o.baseSize * 0.4);
-  } else if (tag === 'li') {
-    p.leftIndent = (para.leftIndent ?? 0) + Math.round(o.baseSize * 1.5);
-    // Real bullet/number markers land in Phase 3.
   }
 
   // Block-level style="" — only text-align / colour-ish bits we can use.
@@ -184,6 +181,85 @@ function derive(
 
 // dt/dd flattening is lossy — warn once per document.
 let _dlWarned = false;
+let _nestedListWarned = false;
+
+// ── Lists ──────────────────────────────────────────────────────────────
+
+interface ListCtx {
+  type: 'bullet' | 'number';
+  /** 0-based nesting depth → `ListStyle.level`. */
+  level: number;
+  /** `<ol start>` — set on every item so a group break still counts right. */
+  start?: number;
+}
+
+/** One `<li>` → one (or more, if it holds a sub-list) list Paragraph(s). */
+function walkListItem(
+  li: Element,
+  lc: ListCtx,
+  para: ParagraphStyle,
+  run: RunStyle,
+  ctx: Ctx,
+): void {
+  const listStyle = {
+    type: lc.type,
+    level: lc.level,
+    ...(lc.type === 'number' && lc.start !== undefined ? { startNumber: lc.start } : {}),
+  };
+  const liPara: ParagraphStyle = { ...para, listStyle, spaceAfter: Math.round(ctx.opts.baseSize * 0.2) };
+
+  let buffer: TextRun[] = [];
+  const flush = () => {
+    if (hasContent(buffer)) ctx.out.push({ style: { ...liPara }, children: mergeAdjacent(buffer) });
+    buffer = [];
+  };
+
+  for (const node of Array.from(li.childNodes)) {
+    if (node.nodeType === NODE_ELEMENT) {
+      const child = node as Element;
+      const tag = child.tagName.toLowerCase();
+      if (LIST.has(tag)) {
+        flush();
+        if (!_nestedListWarned) {
+          ctx.col.warn('nested-list', tag, 'nested list numbering may restart when a level changes');
+          _nestedListWarned = true;
+        }
+        walkList(child, para, run, ctx, lc.level + 1);
+        continue;
+      }
+    }
+    // text / inline / flattened block → into this item's line
+    appendInline(node, run, buffer, false, ctx);
+  }
+  flush();
+}
+
+function walkList(
+  el: Element,
+  para: ParagraphStyle,
+  run: RunStyle,
+  ctx: Ctx,
+  level: number,
+): void {
+  const type: ListCtx['type'] = el.tagName.toLowerCase() === 'ol' ? 'number' : 'bullet';
+  const startAttr = Number(el.getAttribute?.('start'));
+  const lc: ListCtx = { type, level, start: Number.isFinite(startAttr) && startAttr ? startAttr : undefined };
+
+  for (const node of Array.from(el.childNodes)) {
+    if (node.nodeType !== NODE_ELEMENT) continue;
+    const child = node as Element;
+    const tag = child.tagName.toLowerCase();
+    if (tag === 'li') {
+      walkListItem(child, lc, para, run, ctx);
+      if (lc.start !== undefined) lc.start += 1;
+    } else if (LIST.has(tag)) {
+      walkList(child, para, run, ctx, level + 1); // <ul> directly inside <ul>
+    } else if (tag in DROPPED) {
+      ctx.col.drop(child, DROPPED[tag]);
+    }
+    // stray non-li content in a list is ignored
+  }
+}
 
 /** Walk `el`'s children, emitting paragraphs into `ctx.out`. */
 function processChildren(
@@ -217,6 +293,17 @@ function processChildren(
     }
     if (isInline(tag)) {
       appendInline(child, run, buffer, pre, ctx);
+      continue;
+    }
+    if (LIST.has(tag)) {
+      flush();
+      walkList(child, para, run, ctx, 0);
+      continue;
+    }
+    if (tag === 'li') {
+      // a stray <li> outside a list — treat as a level-0 bullet
+      flush();
+      walkListItem(child, { type: 'bullet', level: 0 }, para, run, ctx);
       continue;
     }
     if (BLOCK_TEXT.has(tag)) {
@@ -274,6 +361,7 @@ function sameStyle(a: TextRun, b: TextRun): boolean {
 
 export function walk(root: Element, opts: ResolvedOptions, col: Collector): Paragraph[] {
   _dlWarned = false;
+  _nestedListWarned = false;
   const out: Paragraph[] = [];
   processChildren(root, baseParaStyle(), baseRunStyle(opts), false, { opts, col, out });
   // Trim leading / trailing spaces on each paragraph — but not in `pre`, where
