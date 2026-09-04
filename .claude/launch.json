@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "playground",
+      "runtimeExecutable": "bunx",
+      "runtimeArgs": ["vitepress", "dev", "docs", "--port", "5175", "--strictPort"],
+      "port": 5175,
+      "autoPort": false,
+      "url": "http://localhost:5175"
+    }
+  ]
+}

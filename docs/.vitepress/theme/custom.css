@@ -1,6 +1,32 @@
-/* Playground: give the doc column more room, but keep the sidebar. */
-.VPDoc:has(.vyaz-pg) .container { max-width: 1180px; }
-.VPDoc:has(.vyaz-pg) .content { max-width: none; }
+/* ── Brand palette — keyed off the logo (#aa413a terracotta) ───────────── */
+:root {
+  --vp-c-brand-1: #aa413a;   /* links, accents (AA on white) */
+  --vp-c-brand-2: #c25850;   /* hover */
+  --vp-c-brand-3: #9a3a33;   /* solid button bg (white text passes AA) */
+  --vp-c-brand-soft: rgba(170, 65, 58, 0.14);
+  --vp-c-brand-softer: rgba(170, 65, 58, 0.07);
+
+  --vp-button-brand-border: transparent;
+  --vp-button-brand-text: #fff;
+  --vp-button-brand-bg: var(--vp-c-brand-3);
+  --vp-button-brand-hover-bg: var(--vp-c-brand-2);
+  --vp-button-brand-active-bg: var(--vp-c-brand-1);
+
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+}
+.dark {
+  --vp-c-brand-1: #e79b94;   /* light terracotta, AA on dark */
+  --vp-c-brand-2: #efb0a9;
+  --vp-c-brand-3: #b8463d;
+  --vp-c-brand-soft: rgba(231, 155, 148, 0.16);
+  --vp-c-brand-softer: rgba(231, 155, 148, 0.08);
+}
+
+/* Playground + Cases: give the doc column more room, but keep the sidebar. */
+.VPDoc:has(.vyaz-pg) .container,
+.VPDoc:has(.ce) .container { max-width: 1180px; }
+.VPDoc:has(.vyaz-pg) .content,
+.VPDoc:has(.ce) .content { max-width: none; }
 
 /* the ported EditorPanel ships its own header — the pane already has one */
 .vyaz-pg .editor-header { display: none; }

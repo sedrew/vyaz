@@ -9,10 +9,16 @@ export default defineConfig({
   base: '/vyaz/',
   ignoreDeadLinks: true,
 
+  head: [
+    ['link', { rel: 'icon', href: '/vyaz/logo.png' }],
+  ],
+
   themeConfig: {
+    logo: '/logo.png',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
       { text: 'Playground', link: '/playground' },
+      { text: 'Cases', link: '/cases' },
       { text: 'API', link: '/api/core' },
     ],
     sidebar: [
@@ -20,7 +26,9 @@ export default defineConfig({
         text: 'Guide',
         items: [
           { text: 'Getting Started', link: '/guide/getting-started' },
+          { text: 'Browser usage', link: '/guide/browser' },
           { text: 'Playground', link: '/playground' },
+          { text: 'Cases', link: '/cases' },
         ],
       },
       {

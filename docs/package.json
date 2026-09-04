@@ -24,6 +24,7 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@tabler/icons-vue": "^3.46.0",
     "vitepress": "^1.6.4"
   }
 }
