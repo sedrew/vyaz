@@ -1,0 +1,32 @@
+{
+  "_comment": "TextRun.data.href — a real <a href> in the browser preset (structure: 'expanded', shared by browser + preserve), ignored entirely by flat (structure: 'flat') and glyph. styleSignature folds href into the grouping key so the linked run never merges into the same <text>/<tspan> group as its plain neighbours.",
+  "profile": "raw",
+  "frame": {
+    "width": 400,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          { "type": "text", "text": "See the ", "fontFamily": "Unifont", "fontSize": 16, "fontWeight": "normal", "fontStyle": "normal", "color": "#000" },
+          {
+            "type": "text",
+            "text": "documentation",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "fontWeight": "normal",
+            "fontStyle": "normal",
+            "color": "#0645ad",
+            "underline": true,
+            "data": { "href": "https://sedrew.github.io/vyaz/" }
+          },
+          { "type": "text", "text": " for details.", "fontFamily": "Unifont", "fontSize": 16, "fontWeight": "normal", "fontStyle": "normal", "color": "#000" }
+        ],
+        "style": { "alignment": "left", "lineHeight": 1.3, "spaceBefore": 0, "spaceAfter": 0, "whiteSpace": "normal" }
+      }
+    ]
+  },
+  "renders": {
+    "browser": { "sizing": "content", "contentPadding": 4, "preset": "browser" },
+    "flat": { "sizing": "content", "contentPadding": 4, "preset": "flat" }
+  }
+}

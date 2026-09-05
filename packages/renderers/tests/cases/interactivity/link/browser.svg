@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="29" viewBox="-4 -4 280 29">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000">See the</tspan>
+    <tspan x="56"> </tspan>
+  </text>
+<a href="https://sedrew.github.io/vyaz/">  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#0645ad" font-weight="400" xml:space="preserve">
+    <tspan x="64" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#0645ad" text-decoration="underline">documentation</tspan>
+  </text>
+</a>  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#000" font-weight="400" xml:space="preserve">
+    <tspan x="168" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000"> </tspan>
+    <tspan x="176" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000">for details.</tspan>
+  </text>
+</svg>

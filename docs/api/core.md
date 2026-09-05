@@ -15,6 +15,7 @@ The engine operates on a **TextFrame → Paragraph → TextRun** hierarchy, foll
 - **Auto-fit** — scale text proportionally to fit the container
 - **Shaping** — opt-in `{ shaping: true }` for GPOS kerning + GSUB ligatures (browser-metrics parity)
 - **Inline widgets** — reserve width for embedded objects (`type: 'inline-box'`) inside the text flow
+- **`TextRun.data`** — open-ended metadata the layout engine ignores, for cross-cutting features like a hyperlink's `href`
 - **Tables** — `TableFrame` grid layout alongside `TextFrame`: measured column widths/row heights, `colSpan`/`rowSpan`, per-side borders (dash patterns, rounded corners), `before`/`after` slots, nested tables — see the [Tables guide](/guide/tables)
 - **Office-compatible mode** — `mode: 'office'` for PowerPoint / DrawingML line boxes
 - **Font metrics** — fontkit-based metric extraction; variable-font instancing; optional system font registry (Node)

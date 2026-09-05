@@ -1,12 +1,13 @@
 /**
  * warnings.ts — non-fatal notes the converter emits.
  *
- * `warnings` = something was mapped but simplified (lost `href`, flattened a
- * definition list). `dropped` = an element produced no output at all.
+ * `warnings` = something was mapped but simplified (a disallowed-scheme
+ * `href` dropped, flattened a definition list). `dropped` = an element
+ * produced no output at all.
  */
 
 export interface HtmlWarning {
-  /** Machine tag, e.g. `'link-href-lost'`, `'dl-flattened'`, `'abbr-title-lost'`. */
+  /** Machine tag, e.g. `'link-href-unsafe'`, `'dl-flattened'`, `'abbr-title-lost'`. */
   code: string;
   /** Lower-case tag name involved. */
   tag: string;

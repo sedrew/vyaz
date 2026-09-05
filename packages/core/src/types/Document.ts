@@ -314,6 +314,21 @@ export interface TextRun {
   fullWidth?: boolean;
   /** Convert small kana to full-size kana. @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */
   fullSizeKana?: boolean;
+
+  // ── Extension data ───────────────────────────────────────────────
+
+  /**
+   * Free-form metadata for features the layout engine itself never
+   * interprets — e.g. `@vyaz/converters` carrying an `<a>`'s `href` through
+   * to `@vyaz/renderer`, which wraps the run's painted output in `<a
+   * href="…">` for the `browser`/`preserve` presets. A key's meaning is a
+   * contract between whichever writer sets it and whichever reader consumes
+   * it; layout treats this purely as opaque pass-through (no effect on
+   * measurement, wrapping, or positioning). Modelled on unist's `data` node
+   * field (the remark/rehype AST spec) for the same reason: keep the base
+   * type lean instead of growing a named field per cross-cutting feature.
+   */
+  data?: Record<string, string>;
 }
 
 /**

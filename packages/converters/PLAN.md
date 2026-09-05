@@ -16,7 +16,7 @@ import { htmlToTextFrame } from '@vyaz/converters'
 const { frame, inlineBoxes, warnings, dropped } = htmlToTextFrame(html, opts)
 //   frame        : TextFrame            → layoutTextFrame(frame)
 //   inlineBoxes  : Record<string,string>→ renderToSVG(result, { inlineBoxes })
-//   warnings     : HtmlWarning[]        → simplified (a:href lost, dl flattened…)
+//   warnings     : HtmlWarning[]        → simplified (unsafe a:href dropped, dl flattened…)
 //   dropped      : DroppedNode[]        → removed (video, form controls, <style>…)
 ```
 
@@ -43,7 +43,7 @@ the global `DOMParser` if present, otherwise `opts.parse(html) => Document`.
 `p`, `h1`–`h6`, `address`, `blockquote`, `pre`, `br`,
 `strong`/`b`, `em`/`i`/`cite`/`dfn`/`var`, `ins`/`u`, `del`/`s`, `sup`, `sub`,
 `small`, `mark`, `code`/`kbd`/`samp`, `q`, `abbr` (title → warning),
-`a` (colour+underline, `href` → warning), `span` + inline `style=""`
+`a` (colour+underline, `href` carried on `TextRun.data.href` — real `<a>` in browser/preserve), `span` + inline `style=""`
 (`color`, `font-*`, `text-decoration`, `text-transform`, `letter-spacing`,
 `background-color`), `ul`/`ol`/`li` (nested via `level`), container elements
 (`div`/`section`/`article`/…) are transparent.

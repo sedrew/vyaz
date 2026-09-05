@@ -50,12 +50,29 @@ describe('inline formatting', () => {
     expect(bi.fontStyle).toBe('italic');
   });
 
-  test('a → link colour + underline + href warning', () => {
+  test('a → link colour + underline + href carried in data (no warning)', () => {
     const r = convert('<p><a href="https://x.test">link</a></p>');
     const run = r.frame.paragraphs[0].children[0];
     expect(run.color).toBe('#0645ad');
     expect(run.underline).toBe(true);
-    expect(r.warnings.some((w) => w.code === 'link-href-lost')).toBe(true);
+    expect(run.data).toEqual({ href: 'https://x.test' });
+    expect(r.warnings.some((w) => w.code === 'link-href-lost')).toBe(false);
+  });
+
+  test('a href with a disallowed scheme is dropped, not carried, with a warning', () => {
+    const r = convert('<p><a href="javascript:alert(1)">link</a></p>');
+    const run = r.frame.paragraphs[0].children[0];
+    expect(run.data?.href).toBeUndefined();
+    expect(r.warnings.some((w) => w.code === 'link-href-unsafe')).toBe(true);
+  });
+
+  test('a href: relative paths, fragments, mailto, and tel are all carried', () => {
+    const cases = ['/path', './rel', '../rel', '#section', 'mailto:a@b.com', 'tel:+123456'];
+    for (const href of cases) {
+      const r = convert(`<p><a href="${href}">link</a></p>`);
+      const run = r.frame.paragraphs[0].children[0];
+      expect(run.data?.href).toBe(href);
+    }
   });
 
   test('q wraps in curly quotes', () => {

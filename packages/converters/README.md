@@ -57,14 +57,29 @@ following runs drift. Point `monospaceFamily` at a concrete family you control.
 
 **Clean:** `p`, `h1`–`h6`, `blockquote`, `pre`, `address`, `br`, `strong`/`b`,
 `em`/`i`/`cite`/`dfn`/`var`, `ins`/`u`, `del`/`s`, `sup`, `sub`, `small`, `mark`,
-`code`/`kbd`/`samp`, `q`, `abbr`, `a` (style only), `span` + inline `style=""`
-(`color`, `font-*`, `text-decoration`, `text-transform`, `letter-spacing`,
-`background-color`, `text-align`, `vertical-align`), **`table`** (`colspan`/
-`rowspan`, `<caption>`, header shading — see below). `div`/`section`/… are
-transparent.
+`code`/`kbd`/`samp`, `q`, `abbr`, **`a`** (colour + underline + `href`, kept as
+real data — see below), `span` + inline `style=""` (`color`, `font-*`,
+`text-decoration`, `text-transform`, `letter-spacing`, `background-color`,
+`text-align`, `vertical-align`), **`table`** (`colspan`/`rowspan`,
+`<caption>`, header shading — see below). `div`/`section`/… are transparent.
 
 **Lossy (with a warning):** `dl`/`dt`/`dd`, `figcaption`, `details`/`summary`,
-`a` href (lost), `abbr` title (lost).
+`a` href with a disallowed scheme (`javascript:`, `data:`, …) dropped, `abbr`
+title (lost).
+
+### Links
+
+`<a href="…">` keeps its `href` — carried on `TextRun.data.href` (a small,
+open-ended metadata bag the layout engine itself never interprets — see
+`@vyaz/core`'s `TextRun.data`). `@vyaz/renderer`'s `browser`/`preserve`
+presets wrap the run's painted output in a real `<a href="…">`, clickable
+when the SVG is inlined directly in an HTML page (not via `<img src>` or a
+data-URI — SVG rendered that way paints links but they aren't interactive).
+`flat`/`glyph` ignore it entirely. Only `http:`/`https:`/`mailto:`/`tel:`
+schemes and relative/fragment URLs are carried through; anything else
+(`javascript:`, `data:`, …) is dropped with a `link-href-unsafe` warning —
+this is untrusted input by design, and an SVG `<a href="javascript:…">` is a
+known XSS vector.
 
 **Dropped (recorded in `dropped[]`):** `video`/`audio`/`iframe`/`canvas`, form
 controls, `<style>`/class CSS, and — for now — `img`/`svg`/`progress`/`meter`/

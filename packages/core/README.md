@@ -46,6 +46,7 @@ console.log(result.lines);
 - **Writing modes** — `horizontal-tb`, `vertical-rl`, `vertical-lr` with text orientation
 - **Auto-fit** — scale text proportionally to fit the container (`AutofitConfig`)
 - **Inline widgets** — embedded objects (icons, images) inside the text flow
+- **`TextRun.data`** — an open-ended metadata bag the layout engine never interprets, for cross-cutting features like a hyperlink's `href` (see `@vyaz/converters`/`@vyaz/renderer`)
 - **Tables** — `TableFrame` grid layout: measured column widths/row heights, `colSpan`/`rowSpan`, per-side borders (solid, dashed, rounded corners), `before`/`after` decorative slots, nested tables
 - **Office-compatible mode** — `mode: 'office'` for PowerPoint/DrawingML rendering
 - **Font metrics** — system font registry with fontkit-based metric extraction

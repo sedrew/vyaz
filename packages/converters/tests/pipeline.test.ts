@@ -35,7 +35,9 @@ describe('full pipeline', () => {
     });
 
     expect(frame.paragraphs.length).toBe(5); // h1, p, blockquote>p, centered p, table widget
-    expect(warnings.some((w) => w.code === 'link-href-lost')).toBe(true);
+    expect(warnings.some((w) => w.code === 'link-href-lost')).toBe(false); // href is carried now, not lost
+    const linkRun = frame.paragraphs.flatMap((p) => p.children).find((r) => r.text === 'link');
+    expect(linkRun?.data).toEqual({ href: '/x' });
     expect(dropped).toEqual([]); // nothing dropped in this sample — the table converts now
     expect(Object.keys(inlineBoxes)).toHaveLength(1);
 

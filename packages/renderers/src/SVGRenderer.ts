@@ -366,7 +366,15 @@ function equalStyle(a: StyleState, b: StyleState): boolean {
  */
 function styleSignature(span: Span): string {
   const s = defaultStyleState(span);
-  return `${s.fontFamily}|${s.fontSize}|${s.fontWeight}|${s.color}|${s.fontStyle}|${s.decoration}|${s.letterSpacing ?? ''}|${s.backgroundColor ?? ''}`;
+  // href is folded into the signature (not a visual style) so a run with a
+  // link never merges into the same <text>/<tspan> group as a run without
+  // one, or one pointing elsewhere — see addTextGroupLink.
+  return `${s.fontFamily}|${s.fontSize}|${s.fontWeight}|${s.color}|${s.fontStyle}|${s.decoration}|${s.letterSpacing ?? ''}|${s.backgroundColor ?? ''}|${span.style.data?.href ?? ''}`;
+}
+
+/** `TextRun.data.href`, when present and safe to embed as an SVG attribute (see `escapeXml`). */
+function hrefOf(span: Span): string | undefined {
+  return span.style.data?.href;
 }
 
 /** Build style string for CSS mode */
@@ -754,6 +762,22 @@ class SvgAstBuilder {
       stroke: '#999',
       'stroke-dasharray': '2,2',
     }));
+  }
+
+  /**
+   * Wrap the next painted `<text>` group in `<a href="…">` (expanded
+   * structure only — `styleSignature` already forces a run with a link into
+   * its own group, so this brackets exactly one `openText…closeText` pair).
+   * Not a real AST parent — a raw open/close tag pushed as siblings of the
+   * `<text>` in `root.children`, same technique as `addInlineBox`'s raw `<g>`.
+   */
+  openLink(href: string): void {
+    this.root.children.push(rawNode(`<a href="${escapeXml(href)}">`));
+  }
+
+  /** @see openLink */
+  closeLink(): void {
+    this.root.children.push(rawNode('</a>'));
   }
 
   /**
@@ -1204,6 +1228,8 @@ export function renderToSVG(
       for (const group of groups) {
         const baseSpan = group.spans.find(f => f.type === 'text' && f.text.length > 0) || group.spans[0];
         if (!baseSpan) continue;
+        const href = hrefOf(baseSpan);
+        if (href) builder.openLink(href);
 
         // Only use yOverride when the group targetY differs from the line baseline
         const lineBaseY = Math.round((line.y + line.baseline) * 100) / 100;
@@ -1256,6 +1282,7 @@ export function renderToSVG(
           }
         }
         builder.closeText();
+        if (href) builder.closeLink();
       }
     }
   }

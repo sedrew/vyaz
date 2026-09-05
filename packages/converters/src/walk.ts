@@ -67,6 +67,17 @@ function mkRun(text: string, s: RunStyle): TextRun {
   return { type: 'text', text, ...s };
 }
 
+/** `<a href>` schemes allowed through to `TextRun.data.href`. Everything else (`javascript:`, `data:`, `vbscript:`, …) is a known XSS vector for a link embedded in SVG output. */
+const ALLOWED_HREF_SCHEMES = new Set(['http:', 'https:', 'mailto:', 'tel:']);
+
+function isSafeHref(href: string): boolean {
+  const trimmed = href.trim();
+  if (trimmed === '' || trimmed.startsWith('#') || trimmed.startsWith('/') || trimmed.startsWith('.')) return true; // fragment / relative
+  const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(trimmed);
+  if (!scheme) return true; // no scheme at all — relative
+  return ALLOWED_HREF_SCHEMES.has(scheme[1].toLowerCase() + ':');
+}
+
 /** Collapse runs of whitespace to a single space (skipped inside <pre>). */
 function collapse(text: string): string {
   return text.replace(WS_RE, ' ');
@@ -114,8 +125,15 @@ function appendInline(
 
   const next = inlineStyleFor(el, tag, style, ctx.opts);
 
-  if (tag === 'a' && el.getAttribute?.('href')) {
-    ctx.col.warn('link-href-lost', 'a', `href="${el.getAttribute('href')}" is not carried by the model`);
+  if (tag === 'a') {
+    const href = el.getAttribute?.('href');
+    if (href) {
+      if (isSafeHref(href)) {
+        next.data = { ...next.data, href };
+      } else {
+        ctx.col.warn('link-href-unsafe', 'a', `href="${href}" has a disallowed scheme, dropped`);
+      }
+    }
   }
   if (tag === 'abbr' && el.getAttribute?.('title')) {
     ctx.col.warn('abbr-title-lost', 'abbr', `title="${el.getAttribute('title')}" dropped`);
