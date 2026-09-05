@@ -30,3 +30,26 @@ item when it closes or advances one.
   dropdown affordance. (`b208621`)
 - New logo (transparent background), home hero image, page footer.
   (`b208621`, `6588282`, `413b46c`)
+
+## [0.4.0] - 2026-09-05
+
+`@vyaz/core` 0.3.0 → 0.4.0, `@vyaz/renderer` 0.3.0 → 0.4.0, `@vyaz/converters`
+**first release** at 0.1.0.
+
+### Added
+
+- **`TextRun.data`** — an open-ended metadata bag on `TextRun` the layout
+  engine itself never reads, modelled on unist's `data` node field. First
+  consumer: `@vyaz/converters` now carries `<a href="...">` into
+  `TextRun.data.href` (only `http:`/`https:`/`mailto:`/`tel:` and
+  relative/fragment URLs — anything else, e.g. `javascript:`, is dropped with
+  a new `link-href-unsafe` warning), and `@vyaz/renderer`'s `browser`/
+  `preserve` SVG presets wrap the linked run's `<text>` in a real `<a href>`.
+  `flat`/`glyph` ignore it. (`74c4c57`)
+- **`@vyaz/converters`: `markdownToTextFrame()`** — Markdown through the same
+  pipeline as HTML (`marked` → the existing `htmlToTextFrame`). (`4574e8d`)
+
+### Changed
+
+- `packages/html` renamed to `packages/converters` (`@vyaz/converters`);
+  `packages/renderer` dir renamed to `renderers`. No API change. (`174ebb3`)
