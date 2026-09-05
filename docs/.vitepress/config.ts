@@ -61,6 +61,10 @@ export default defineConfig({
       },
     ],
     socialLinks: [{ icon: 'github', link: 'https://github.com/sedrew/vyaz' }],
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2026-present Sergei Malygin',
+    },
   },
 
   vite: {
