@@ -4,7 +4,7 @@
  * Identical surface to `index.ts`; the converter is DOM-only and has no
  * node:*-specific paths, so this just re-exports.
  */
-export { htmlToTextFrame } from './index.js';
+export { htmlToTextFrame, markdownToTextFrame } from './index.js';
 export type {
   HtmlConvertResult,
   HtmlConvertOptions,
@@ -12,4 +12,5 @@ export type {
   ResolvedImage,
   HtmlWarning,
   DroppedNode,
+  MarkdownConvertOptions,
 } from './index.js';

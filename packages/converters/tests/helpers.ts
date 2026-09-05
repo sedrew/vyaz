@@ -6,15 +6,19 @@
  * need no dependency.
  */
 import { parseHTML } from 'linkedom';
-import { htmlToTextFrame, type HtmlConvertOptions, type HtmlConvertResult } from '../src/index.ts';
+import { htmlToTextFrame, markdownToTextFrame, type HtmlConvertOptions, type HtmlConvertResult, type MarkdownConvertOptions } from '../src/index.ts';
+
+const linkedomParse = (h: string): Document =>
+  // linkedom's parseHTML is literal — it does NOT auto-wrap a fragment the way
+  // a browser's DOMParser does, so wrap it in a real document ourselves.
+  parseHTML(`<!doctype html><html><head></head><body>${h}</body></html>`).document as unknown as Document;
 
 export function convert(html: string, opts: HtmlConvertOptions = {}): HtmlConvertResult {
-  return htmlToTextFrame(html, {
-    // linkedom's parseHTML is literal — it does NOT auto-wrap a fragment the way
-    // a browser's DOMParser does, so wrap it in a real document ourselves.
-    parse: (h) => parseHTML(`<!doctype html><html><head></head><body>${h}</body></html>`).document as unknown as Document,
-    ...opts,
-  });
+  return htmlToTextFrame(html, { parse: linkedomParse, ...opts });
+}
+
+export function convertMd(markdown: string, opts: MarkdownConvertOptions = {}): HtmlConvertResult {
+  return markdownToTextFrame(markdown, { parse: linkedomParse, ...opts });
 }
 
 /** All run texts of a paragraph joined. */

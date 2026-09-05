@@ -1,6 +1,7 @@
 # @vyaz/converters
 
-Convert a **formatted-HTML fragment** into a [`@vyaz/core`](../core) `TextFrame`.
+Convert a **formatted-HTML fragment** (or **Markdown**) into a
+[`@vyaz/core`](../core) `TextFrame`.
 
 Rich-text editor output, CMS bodies, email HTML → positioned lines → SVG. It is a
 *text importer*, **not a web-page renderer**: no box model, no CSS cascade from
@@ -99,3 +100,38 @@ does not convert. See [`@vyaz/core`'s Tables guide](https://sedrew.github.io/vya
 for what the underlying `TableFrame` grid supports beyond what HTML maps to.
 
 Full plan and phase list: [`PLAN.md`](./PLAN.md).
+
+## Markdown
+
+`markdownToTextFrame(markdown, options)` — same result shape as
+`htmlToTextFrame`, same `options` (plus one `markdown: { gfm?, breaks? }`
+sub-object). It parses Markdown to an HTML string with
+[`marked`](https://www.npmjs.com/package/marked) (CommonMark + GFM by
+default — tables, strikethrough, task lists, autolinks) and hands that
+string to `htmlToTextFrame`. No separate walker: every HTML feature above
+(tables, links, formatting) works here for free, and stays in sync as the
+HTML side grows.
+
+```ts
+import { markdownToTextFrame } from '@vyaz/converters'
+
+const { frame, inlineBoxes } = markdownToTextFrame(`
+# Report
+
+A paragraph with **bold** and a [link](https://example.com).
+
+| Metric | Value |
+|---|---|
+| Uptime | 99.9% |
+`, { width: 600 })
+```
+
+Raw HTML embedded in the Markdown source (CommonMark explicitly allows
+this — an inline `<span style="…">`, a block-level `<table>`) converts too,
+with no special handling: `marked` preserves it verbatim in its HTML output,
+which then flows through `htmlToTextFrame` like any other HTML.
+
+| option | default | |
+|---|---|---|
+| `markdown.gfm` | `true` | GitHub Flavored Markdown (tables, strikethrough, task lists, autolinks) |
+| `markdown.breaks` | `false` | a single `\n` in a paragraph → `<br>` (GitHub-comment style) instead of a space (CommonMark default) |

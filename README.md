@@ -38,7 +38,7 @@ bound tightly into a single decorative band.
 |---|---|
 | **@vyaz/core** | Layout engine — text-frame, paragraph & table (`TableFrame`) layout, font metrics, autofit, compiler |
 | **@vyaz/renderer** | SVG renderer for the layout output — text and tables |
-| **@vyaz/converters** | Converts a formatted-HTML fragment to a `TextFrame` (inline formatting, lists, tables, images as inline boxes) |
+| **@vyaz/converters** | Converts a formatted-HTML fragment or Markdown to a `TextFrame` (inline formatting, lists, tables, links, images as inline boxes) |
 
 The interactive **Playground** (Tiptap editor → live SVG), the HTML → SVG
 **Converter**, and the **Cases** explorer (browse the golden corpus) live in

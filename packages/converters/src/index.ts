@@ -21,6 +21,8 @@ import { walk } from './walk.js';
 
 export type { HtmlConvertOptions, UnsupportedPolicy, ResolvedImage } from './options.js';
 export type { HtmlWarning, DroppedNode } from './warnings.js';
+export { markdownToTextFrame } from './markdown.js';
+export type { MarkdownConvertOptions } from './markdown.js';
 
 /** Result of {@link htmlToTextFrame}. */
 export interface HtmlConvertResult {
