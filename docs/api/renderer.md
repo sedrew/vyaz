@@ -24,9 +24,7 @@ that already has one. Full reference: the [Tables guide](/guide/tables).
 
 ## Generated API Reference
 
-Full API documentation generated from source code:
+Full API documentation generated from source code — every interface, type
+alias and function, one page per symbol:
 
 - [Package index](/api/references/renderer/src/)
-- [Functions](/api/references/renderer/src/functions/)
-- [Interfaces](/api/references/renderer/src/interfaces/)
-- [Type aliases](/api/references/renderer/src/type-aliases/)

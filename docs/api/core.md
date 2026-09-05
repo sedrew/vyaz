@@ -33,9 +33,7 @@ src/
 
 ## Generated API Reference
 
-Full API documentation generated from source code:
+Full API documentation generated from source code — every class, interface,
+type alias and function, one page per symbol:
 
 - [Package index](/api/references/core/src/)
-- [Classes](/api/references/core/src/classes/)
-- [Interfaces](/api/references/core/src/interfaces/)
-- [Functions](/api/references/core/src/functions/)
