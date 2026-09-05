@@ -125,6 +125,22 @@ multiplication-table grid, center-aligned, Unifont. Configurable via env vars
 | 51×51 | 2,601 | 53.2 ms | 15.7 ms |
 | 101×101 | 10,201 | 115.8 ms | 52.9 ms |
 
+`bun run bench:resize` — re-layout cost when only `width` changes (a
+drag-resize), same frame reused each step so the prepare-cache should hit
+every time — vs. a `cold` (unique-content) baseline at the same size, for
+both `TextFrame` and `TableFrame`:
+
+| size | min/step (resize) | cold (fresh) | cold/min |
+|---|---:|---:|---:|
+| 10,000 runs (text) | 8.7 ms | 9.6 ms | 1.1× |
+| 100,000 runs (text) | 87.3 ms | 96.8 ms | 1.1× |
+| 50×50 table (2,601 cells) | 9.9 ms | 15.7 ms | 1.6× |
+| 100×100 table (10,201 cells) | 45.3 ms | 62.3 ms | 1.4× |
+
+The prepare-cache's win here is modest — most of a resize's cost is line
+re-breaking and (for tables) the two-pass column/row re-measurement, neither
+of which is cached across calls.
+
 Column/row sizing is two `layoutTextFrame` passes per cell — algorithmically
 linear in total cell content; see [`bench/table-throughput.ts`](bench/table-throughput.ts).
 

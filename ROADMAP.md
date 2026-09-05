@@ -24,6 +24,20 @@ Direction, not a schedule. Order within a section is rough priority.
 
 ## Later
 
+- **Per-cell segmentation cost at large table sizes** — `bun --cpu-prof-md`
+  profiling of `bench/table-throughput.ts` at 200×200 (40,401 cells) shows the
+  dominant cost isn't GC (heap snapshot: ~78MB live, in line with allocation
+  volume, but CPU self-time has no GC entries near the top) — it's `pretext`'s
+  full UAX segmentation (word/line-break analysis, CJK/Arabic detection,
+  URL/numeric run merging) running on every cell's content, even a 1-3
+  character string. `preparedCacheKey` is keyed on content, so a table with
+  mostly-unique short strings (a multiplication table, e.g.) gets a near-100%
+  cache miss rate — the segmentation setup cost is paid per cell rather than
+  amortized. A fast path that skips the heavy UAX machinery for short,
+  plain-ASCII, no-special-character runs could help; needs care not to break
+  CJK/Arabic/URL/quote handling for the runs that do need it. Not a problem
+  at realistic table sizes (bench/table-throughput.ts's default 100×100 stays
+  near-linear); only shows up in the tens-of-thousands-of-cells range.
 - **Asymmetric table border corner radii** — `TableStyle`/`TableRowStyle`/
   `TableCellStyle` `rx`/`ry` are uniform (all four corners) today; per-corner
   radii are a possible future addition to `BorderStyles`.
