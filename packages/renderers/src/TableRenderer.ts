@@ -7,7 +7,7 @@
  * (from `renderToSVG`), positioned with a `<g transform="translate(…)">` —
  * the same "paint a self-contained SVG fragment into a box" pattern
  * `SVGRenderOptions.inlineBoxes` uses for `<img>`/`<svg>` boxes from
- * `@vyaz/html`. `before`/`after` (`paintSlot`) paint at the absolute
+ * `@vyaz/converters`. `before`/`after` (`paintSlot`) paint at the absolute
  * position `TableLayoutEngine` already resolved for them — no extra
  * padding/border math here, unlike main content.
  *

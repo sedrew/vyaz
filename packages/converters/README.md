@@ -1,4 +1,4 @@
-# @vyaz/html
+# @vyaz/converters
 
 Convert a **formatted-HTML fragment** into a [`@vyaz/core`](../core) `TextFrame`.
 
@@ -7,11 +7,11 @@ Rich-text editor output, CMS bodies, email HTML → positioned lines → SVG. It
 `<style>`/classes. Every simplification and every dropped element is reported.
 
 ```bash
-bun add @vyaz/html @vyaz/core @vyaz/renderer
+bun add @vyaz/converters @vyaz/core @vyaz/renderer
 ```
 
 ```ts
-import { htmlToTextFrame } from '@vyaz/html'
+import { htmlToTextFrame } from '@vyaz/converters'
 import { layoutTextFrame } from '@vyaz/core'
 import { renderToSVG } from '@vyaz/renderer'
 

@@ -4,8 +4,8 @@
  * Each cases/<group>/<case>/input.json declares { profile, frame, renders }.
  * For every render variant it renders SVG and compares to <variant>.svg.
  *
- *   bun test packages/renderer/tests/cases.test.ts          # verify
- *   UPDATE=1 bun test packages/renderer/tests/cases.test.ts # regenerate goldens
+ *   bun test packages/renderers/tests/cases.test.ts          # verify
+ *   UPDATE=1 bun test packages/renderers/tests/cases.test.ts # regenerate goldens
  *
  * Profiles:
  *   raw        — renderToSVG(lines, render) verbatim

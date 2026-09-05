@@ -93,7 +93,7 @@ export interface SVGRenderOptions {
    * Content for inline-box spans, keyed by `span.inlineWidget.id`. Each value is
    * an SVG fragment already sized to the widget's `width` × `height`; it is
    * spliced into a `<g>` translated to the box the layout reserved. A span whose
-   * id has no entry gets a light placeholder `<rect>`. Produced by `@vyaz/html`
+   * id has no entry gets a light placeholder `<rect>`. Produced by `@vyaz/converters`
    * for `<img>` / `<svg>` / `<progress>` / … ; irrelevant without inline boxes.
    */
   inlineBoxes?: Record<string, string>;
@@ -1054,7 +1054,7 @@ export function renderToSVG(
       }
     }
 
-    // Inline boxes (<img> / <svg> / <progress> from @vyaz/html). The layout
+    // Inline boxes (<img> / <svg> / <progress> from @vyaz/converters). The layout
     // reserved `inlineWidget.width` for the span; paint the fragment (or a
     // placeholder) in that box, baseline-aligned like CanvasRenderer.
     for (const span of line.spans) {

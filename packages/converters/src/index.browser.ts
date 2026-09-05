@@ -1,5 +1,5 @@
 /**
- * @vyaz/html — browser entry.
+ * @vyaz/converters — browser entry.
  *
  * Identical surface to `index.ts`; the converter is DOM-only and has no
  * node:*-specific paths, so this just re-exports.

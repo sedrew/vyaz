@@ -6,7 +6,7 @@
   },
   "include": [
     "packages/core/src/**/*",
-    "packages/renderer/src/**/*"
+    "packages/renderers/src/**/*"
   ],
   "exclude": [
     "node_modules",

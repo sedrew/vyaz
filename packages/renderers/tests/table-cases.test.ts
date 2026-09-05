@@ -12,14 +12,14 @@
  *   compose    — { before, table, after, renders, frameWidth? }: the table is
  *     placed as an inline-box widget inside a full TextFrame alongside other
  *     paragraphs (`before`/`after`), through layoutTextFrame + renderToSVG +
- *     inlineBoxes — the actual @vyaz/html handleTable() flow. Exists because
+ *     inlineBoxes — the actual @vyaz/converters handleTable() flow. Exists because
  *     the inline-box line-height fix (a tall widget must push later paragraphs
  *     down, not overlap them — see ParagraphLayoutEngine's inlineWidgetMetrics)
  *     is only reachable through that composition, not standalone table
  *     rendering.
  *
- *   bun test packages/renderer/tests/table-cases.test.ts          # verify
- *   UPDATE=1 bun test packages/renderer/tests/table-cases.test.ts # regenerate goldens
+ *   bun test packages/renderers/tests/table-cases.test.ts          # verify
+ *   UPDATE=1 bun test packages/renderers/tests/table-cases.test.ts # regenerate goldens
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
@@ -54,7 +54,7 @@ function renderStandalone(table: TableFrame, r: any): string {
 
 /**
  * Compose: the table becomes one inline-box paragraph between `before` and
- * `after`, exactly like @vyaz/html's handleTable() — proves a tall table
+ * `after`, exactly like @vyaz/converters's handleTable() — proves a tall table
  * doesn't overlap the paragraph that follows it.
  */
 function renderComposed(input: { frameWidth?: number; before?: Paragraph[]; table: TableFrame; after?: Paragraph[] }, r: any): string {

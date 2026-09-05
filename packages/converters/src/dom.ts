@@ -29,7 +29,7 @@ export function resolveRoot(
     doc = new DOMParser().parseFromString(input, 'text/html');
   } else {
     throw new Error(
-      '@vyaz/html: no DOM available to parse an HTML string. Pass a Document/Element, ' +
+      '@vyaz/converters: no DOM available to parse an HTML string. Pass a Document/Element, ' +
         'or provide options.parse (e.g. parse5 + a DOM shim).',
     );
   }

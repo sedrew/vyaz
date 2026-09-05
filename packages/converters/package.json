@@ -1,0 +1,44 @@
+{
+  "name": "@vyaz/converters",
+  "version": "0.0.0",
+  "description": "Convert a formatted-HTML fragment into a @vyaz/core TextFrame — inline formatting, lists, tables (colspan/rowspan, nested tables), images/SVG as inline boxes.",
+  "keywords": ["html", "text-layout", "table-layout", "converter", "svg"],
+  "license": "MIT",
+  "homepage": "https://sedrew.github.io/vyaz/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sedrew/vyaz.git",
+    "directory": "packages/converters"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "bun": "./src/index.ts",
+      "node": "./dist/index.js",
+      "browser": "./dist/index.browser.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @vyaz/core --external @vyaz/renderer && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core --external @vyaz/renderer && tsc -b",
+    "prepublishOnly": "bun run build"
+  },
+  "dependencies": {
+    "@vyaz/core": "^0.3.0",
+    "@vyaz/renderer": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "linkedom": "^0.18.13",
+    "typescript": "^5.4.0"
+  }
+}

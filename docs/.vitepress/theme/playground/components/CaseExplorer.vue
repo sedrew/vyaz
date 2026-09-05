@@ -48,7 +48,7 @@ import SvgPreview from './SvgPreview.vue'
 
 // ── discover cases (build-time glob over the renderer test corpus) ─────
 const modules = import.meta.glob(
-  '../../../../../packages/renderer/tests/cases/**/input.json',
+  '../../../../../packages/renderers/tests/cases/**/input.json',
   { eager: true, import: 'default' },
 ) as Record<string, any>
 
@@ -107,11 +107,11 @@ watch(jsonText, (t) => {
 }, { immediate: true })
 
 const githubUrl = computed(
-  () => `https://github.com/sedrew/vyaz/blob/main/packages/renderer/tests/cases/${name.value}/input.json`,
+  () => `https://github.com/sedrew/vyaz/blob/main/packages/renderers/tests/cases/${name.value}/input.json`,
 )
 const downloadName = computed(() => 'vyaz-' + name.value.replace(/\//g, '-'))
 
-// ── render (mirrors packages/renderer/tests/cases.test.ts) ────────────
+// ── render (mirrors packages/renderers/tests/cases.test.ts) ────────────
 const ready = ref(false)
 onMounted(async () => {
   try { await loadPlaygroundFonts() } finally { ready.value = true }

@@ -50,13 +50,13 @@ export default defineConfig({
     resolve: {
       alias: {
         '@vyaz/core': r('../../packages/core/src'),
-        '@vyaz/renderer': r('../../packages/renderer/src'),
-        '@vyaz/html': r('../../packages/html/src'),
+        '@vyaz/renderer': r('../../packages/renderers/src'),
+        '@vyaz/converters': r('../../packages/converters/src'),
       },
     },
     optimizeDeps: {
       // @vyaz/* are aliased to TS source; the rest are Node-only and stubbed below
-      exclude: ['@vyaz/core', '@vyaz/renderer', '@vyaz/html', 'get-system-fonts', '@napi-rs/canvas'],
+      exclude: ['@vyaz/core', '@vyaz/renderer', '@vyaz/converters', 'get-system-fonts', '@napi-rs/canvas'],
     },
     ssr: {
       // keep the playground + its heavy deps out of the SSR build

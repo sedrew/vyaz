@@ -198,4 +198,4 @@ renderTableToSVG(result, {
 
 The full style surface above is exercised by the renderer's golden-corpus
 tests — every case renders both the `input.json` and its expected SVG side
-by side: [`packages/renderer/tests/table-cases/`](https://github.com/sedrew/vyaz/tree/main/packages/renderer/tests/table-cases).
+by side: [`packages/renderers/tests/table-cases/`](https://github.com/sedrew/vyaz/tree/main/packages/renderers/tests/table-cases).

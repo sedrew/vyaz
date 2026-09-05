@@ -157,7 +157,7 @@ describe('TextRun.type: "inline-box"', () => {
   // Regression: the line box used to come from the carrier run's *font*
   // metrics only, ignoring inlineWidget.height entirely — invisible for a
   // small icon, but a wide/tall widget (e.g. a rendered <table>, see
-  // @vyaz/html's handleTable()) overlapped the paragraph after it.
+  // @vyaz/converters's handleTable()) overlapped the paragraph after it.
   test('inlineWidget.height sets the line height when taller than the font\'s own line height', () => {
     const result = layoutParagraph(makeParagraph('', { type: 'inline-box', inlineWidget: { width: 20, height: 100 } }));
     expect(result.lines[0].height).toBeGreaterThanOrEqual(100);

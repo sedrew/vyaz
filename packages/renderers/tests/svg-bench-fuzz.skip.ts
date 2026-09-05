@@ -4,7 +4,7 @@
  * Measures average render time + peak memory across 4 presets × 3 data sizes.
  * Uses seeded PRNG for deterministic fuzz data generation.
  *
- * Run: bun test packages/renderer/tests/svg-bench-fuzz.test.ts
+ * Run: bun test packages/renderers/tests/svg-bench-fuzz.test.ts
  */
 
 import { describe, test, beforeAll, expect } from 'bun:test';

@@ -1,4 +1,4 @@
-# `@vyaz/html` — HTML → Vyaz model converter
+# `@vyaz/converters` — HTML → Vyaz model converter
 
 Turns a **semantic formatted-HTML fragment** (rich-text editor output, CMS
 export, email bodies) into a `TextFrame` for `@vyaz/core` + `@vyaz/renderer`.
@@ -11,7 +11,7 @@ and reports everything it simplified or dropped.
 ## API
 
 ```ts
-import { htmlToTextFrame } from '@vyaz/html'
+import { htmlToTextFrame } from '@vyaz/converters'
 
 const { frame, inlineBoxes, warnings, dropped } = htmlToTextFrame(html, opts)
 //   frame        : TextFrame            → layoutTextFrame(frame)
@@ -92,5 +92,5 @@ Rough split: ~70% clean (tables included), ~15% drawn, ~15% dropped.
 | **3** | lists: `ul`/`ol`/`li` (+ `level`), `dl`/`dt`/`dd` |
 | **4** | graphics → SVG box: `img`+`resolveImage`, inline `svg`, `progress`, `meter`, `hr`, `figure`, `details` (static) |
 | **5** | drop zone: `video`/`iframe`/`canvas`/`style`/… → `dropped[]`; full html5-test-page as a coverage test — `table` was planned as a drop-zone item here but was later built instead (grid layout landed as a separate T0–T5 track once `@vyaz/core`'s `TableFrame` existed — see "table" in Coverage above) |
-| **6** | docs `/converter` page (HTML code/preview tabs → live SVG, prominent Download, Debug toggle off by default); README; release `@vyaz/html@0.1.0` *(not yet released — still 0.0.0)* |
+| **6** | docs `/converter` page (HTML code/preview tabs → live SVG, prominent Download, Debug toggle off by default); README; release `@vyaz/converters@0.1.0` *(not yet released — still 0.0.0)* |
 | **7** *(separate track)* | ROADMAP "SVG-only text effects" in `@vyaz/renderer` |

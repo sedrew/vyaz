@@ -114,7 +114,7 @@ export interface TableCellStyle extends BorderStyles {
  * Nesting depth is unbounded here (a `TableFrame` cell can itself contain a
  * cell with a `TableFrame`, and so on) but `layoutTableFrame` throws past a
  * hard ceiling (50) as a guard against a pathological/cyclic structure — see
- * `TableLayoutOptions._depth`. `@vyaz/html`'s own HTML `<table>`-in-`<table>`
+ * `TableLayoutOptions._depth`. `@vyaz/converters`'s own HTML `<table>`-in-`<table>`
  * conversion does not yet build this shape (still a follow-up); this is the
  * `TableFrame`-level primitive it would build on.
  */

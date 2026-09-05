@@ -54,7 +54,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { layoutTextFrame } from '@vyaz/core'
 import { renderToSVG } from '@vyaz/renderer'
-import { htmlToTextFrame } from '@vyaz/html'
+import { htmlToTextFrame } from '@vyaz/converters'
 import { loadPlaygroundFonts, fontBytes } from '../playground/lib/loadPlaygroundFonts'
 import SvgPreview from '../playground/components/SvgPreview.vue'
 import HtmlInput from './HtmlInput.vue'

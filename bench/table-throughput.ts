@@ -16,7 +16,7 @@ import { resolve } from 'node:path';
 
 import { fontMetricsProvider } from '../packages/core/src/measure/FontMetricsProvider.js';
 import { layoutTableFrame } from '../packages/core/src/layout/TableLayoutEngine.js';
-import { renderTableToSVG } from '../packages/renderer/src/TableRenderer.js';
+import { renderTableToSVG } from '../packages/renderers/src/TableRenderer.js';
 import type { TableFrame, TableCell, TableRow } from '../packages/core/src/types/TableTypes.js';
 
 const ROWS = Number(process.env.BENCH_ROWS ?? 100);

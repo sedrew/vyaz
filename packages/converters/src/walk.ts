@@ -270,7 +270,7 @@ function walkList(
 // ── Tables ───────────────────────────────────────────────────────────────
 //
 // A <table> is laid out and rendered right here (not left for the caller to
-// do, like the rest of the model) because @vyaz/html already depends on both
+// do, like the rest of the model) because @vyaz/converters already depends on both
 // @vyaz/core (layoutTableFrame) and @vyaz/renderer (renderTableToSVG) — the
 // result is one pre-rendered SVG dropped into the flow as an inline-box, the
 // same "self-contained SVG fragment in a box" pattern as an <img>/<progress>
@@ -361,7 +361,7 @@ function handleTable(tableEl: Element, para: ParagraphStyle, run: RunStyle, ctx:
     // A table is laid out and rendered right here, during conversion — unlike
     // the rest of the document, which stays plain data until the caller's own
     // layoutTextFrame() call. 'substitute' keeps one unregistered cell font
-    // from failing the whole document; a real @vyaz/html consumer should still
+    // from failing the whole document; a real @vyaz/converters consumer should still
     // register every family it cares about before calling htmlToTextFrame.
     const result = layoutTableFrame(tableFrame, { mode: ctx.opts.mode, onMissingFont: 'substitute' });
     svg = renderTableToSVG(result);
@@ -460,7 +460,7 @@ function processChildren(
 
     // Unknown tag.
     if (ctx.opts.onUnsupported === 'throw') {
-      throw new Error(`@vyaz/html: no mapping for <${tag}>`);
+      throw new Error(`@vyaz/converters: no mapping for <${tag}>`);
     }
     if (ctx.opts.onUnsupported === 'drop') {
       ctx.col.drop(child, 'no mapping');

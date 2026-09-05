@@ -1,14 +1,14 @@
 {
-  "name": "@vyaz/html",
-  "version": "0.0.0",
-  "description": "Convert a formatted-HTML fragment into a @vyaz/core TextFrame — inline formatting, lists, tables (colspan/rowspan, nested tables), images/SVG as inline boxes.",
-  "keywords": ["html", "text-layout", "table-layout", "converter", "svg"],
+  "name": "@vyaz/renderer",
+  "version": "0.3.0",
+  "description": "SVG renderer for @vyaz/core layout output — text lines and TableFrame grids, four presets (flat/browser/preserve/glyph), plus registerFont() for keeping engine metrics and document.fonts in sync.",
+  "keywords": ["svg", "renderer", "text-layout", "table-layout", "typography"],
   "license": "MIT",
   "homepage": "https://sedrew.github.io/vyaz/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sedrew/vyaz.git",
-    "directory": "packages/html"
+    "directory": "packages/renderers"
   },
   "type": "module",
   "main": "./dist/index.js",
@@ -29,16 +29,16 @@
     }
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @vyaz/core --external @vyaz/renderer && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core --external @vyaz/renderer && tsc -b",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core && tsc -b",
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@vyaz/core": "^0.3.0",
-    "@vyaz/renderer": "^0.3.0"
+    "@vyaz/core": "^0.3.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
-    "linkedom": "^0.18.13",
+    "is-svg": "^6.1.0",
+    "svg-parser": "^2.0.4",
     "typescript": "^5.4.0"
   }
 }

@@ -1,8 +1,8 @@
 /**
- * @vyaz/html — HTML → Vyaz model converter.
+ * @vyaz/converters — HTML (and Markdown) → Vyaz model converter.
  *
  * ```ts
- * import { htmlToTextFrame } from '@vyaz/html'
+ * import { htmlToTextFrame } from '@vyaz/converters'
  * import { layoutTextFrame } from '@vyaz/core'
  * import { renderToSVG } from '@vyaz/renderer'
  *

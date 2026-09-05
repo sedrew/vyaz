@@ -1,5 +1,5 @@
 /**
- * helpers.ts — test setup for @vyaz/html.
+ * helpers.ts — test setup for @vyaz/converters.
  *
  * Bun/Node have no global `DOMParser`, so tests parse HTML with linkedom and
  * hand the converter a `parse` option. Browsers use the native `DOMParser` and

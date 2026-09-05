@@ -19,7 +19,7 @@ import { resolve } from 'node:path';
 
 import { fontMetricsProvider } from '../packages/core/src/measure/FontMetricsProvider.js';
 import { layoutTextFrame } from '../packages/core/src/layout/TextFrameLayoutEngine.js';
-import { renderToSVG } from '../packages/renderer/src/SVGRenderer.js';
+import { renderToSVG } from '../packages/renderers/src/SVGRenderer.js';
 import type { TextFrame, Paragraph, TextRun } from '../packages/core/src/types/Document.js';
 
 // ── setup ───────────────────────────────────────────────────────────────

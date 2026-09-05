@@ -41,7 +41,7 @@ Direction, not a schedule. Order within a section is rough priority.
 - **Asymmetric table border corner radii** — `TableStyle`/`TableRowStyle`/
   `TableCellStyle` `rx`/`ry` are uniform (all four corners) today; per-corner
   radii are a possible future addition to `BorderStyles`.
-- **`@vyaz/html` table-nesting depth guard** — `<table>` nested inside a cell
+- **`@vyaz/converters` table-nesting depth guard** — `<table>` nested inside a cell
   already converts (recursively, through the inline-box path), but that path
   has no recursion-depth cap, unlike `@vyaz/core`'s `TableFrame`-in-`TableCell`
   primitive (`TableLayoutOptions._depth`, throws past 50 levels). Low risk in
