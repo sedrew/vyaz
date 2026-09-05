@@ -47,6 +47,9 @@ export default defineConfig({
           { text: 'Getting Started', link: '/guide/getting-started' },
           { text: 'Browser usage', link: '/guide/browser' },
           { text: 'Tables', link: '/guide/tables' },
+          { text: 'Playground', link: '/playground' },
+          { text: 'Converter', link: '/converter' },
+          { text: 'Cases', link: '/cases' },
         ],
       },
       {

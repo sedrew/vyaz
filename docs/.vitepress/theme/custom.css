@@ -22,6 +22,12 @@
   --vp-c-brand-softer: rgba(231, 155, 148, 0.08);
 }
 
+/* Home hero logo — 10% smaller than VPHero's default 320/392/100% steps. */
+.VPHero.has-image .image-container { transform: scale(0.9); }
+@media (min-width: 960px) {
+  .VPHero.has-image .image-container { transform: translate(-32px, -32px) scale(0.9); }
+}
+
 /* Playground + Cases: give the doc column more room, but keep the sidebar. */
 .VPDoc:has(.vyaz-pg) .container,
 .VPDoc:has(.ce) .container { max-width: 1180px; }

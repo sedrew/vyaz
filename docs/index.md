@@ -6,6 +6,9 @@ hero:
   name: "Vyaz"
   text: "Rich text layout engine"
   tagline: TypeScript, isomorphic (browser + Bun/Node.js), pixel-perfect typography
+  image:
+    src: /logo.png
+    alt: Vyaz
   actions:
     - theme: brand
       text: Get Started
