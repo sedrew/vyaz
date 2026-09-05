@@ -34,7 +34,10 @@
 
 /* Toolbar / control widgets — key off VitePress vars so light/dark just work. */
 .vyaz-pg select,
-.vyaz-pg input[type='number'] {
+.cv select,
+.ce__select,
+.vyaz-pg input[type='number'],
+.cv input[type='number'] {
   height: 26px;
   padding: 0 6px;
   border: 1px solid var(--vp-c-divider);
@@ -42,4 +45,23 @@
   background: var(--vp-c-bg);
   color: var(--vp-c-text-1);
   font-size: 12px;
+}
+
+/* Selects lose the native arrow along with the rest of the browser chrome
+   above — without it a <select> reads as plain text. Draw our own chevron
+   so it's obviously a dropdown, the way shiki.style's toolbar selects are. */
+.vyaz-pg select,
+.cv select,
+.ce__select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: 22px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 7px center;
+}
+.vyaz-pg select:hover,
+.cv select:hover,
+.ce__select:hover {
+  border-color: var(--vp-c-text-3);
 }

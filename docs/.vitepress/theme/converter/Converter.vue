@@ -3,11 +3,11 @@
     <div class="cv__format">
       <button
         class="cv__fmt-btn" :class="{ 'is-active': format === 'html' }"
-        @click="format = 'html'"
+        @click="setFormat('html')"
       >HTML</button>
       <button
         class="cv__fmt-btn" :class="{ 'is-active': format === 'markdown' }"
-        @click="format = 'markdown'"
+        @click="setFormat('markdown')"
       >Markdown</button>
     </div>
 
@@ -91,7 +91,18 @@ const loading = ref(true)
 // Debug overlays OFF by default — SvgPreview's dropdown turns them on.
 const debug = reactive<Record<string, boolean | number>>({})
 
+// Lets the nav dropdown link straight into a format: /converter?format=markdown.
+// replaceState (not pushState) so toggling the buttons doesn't spam history.
+function setFormat(f: 'html' | 'markdown') {
+  format.value = f
+  const url = new URL(location.href)
+  if (f === 'markdown') url.searchParams.set('format', 'markdown')
+  else url.searchParams.delete('format')
+  history.replaceState(history.state, '', url)
+}
+
 onMounted(async () => {
+  if (new URLSearchParams(location.search).get('format') === 'markdown') format.value = 'markdown'
   try { await loadPlaygroundFonts() } catch (e) { console.warn('[converter] font load failed', e) }
   loading.value = false
 })
