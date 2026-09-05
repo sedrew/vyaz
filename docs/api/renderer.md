@@ -13,6 +13,15 @@ SVG renderer for Vyaz layout output.
 
 Pass `{ debug: { frameBox, contentBox, baseline, … } }` for overlay boxes.
 
+## Tables
+
+`renderTableToSVG(result, options?)` paints a `layoutTableFrame` result:
+table/row/cell backgrounds, borders (solid, dashed, rounded corners),
+`before`/`after` slots, and tables nested inside a cell — `options.preset`
+above is forwarded to every cell's own text render. `options.fragment: true`
+emits a bare `<g>` instead of an outer `<svg>`, for splicing into a document
+that already has one. Full reference: the [Tables guide](/guide/tables).
+
 ## Generated API Reference
 
 Full API documentation generated from source code:

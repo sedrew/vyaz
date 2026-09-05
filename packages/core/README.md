@@ -46,6 +46,7 @@ console.log(result.lines);
 - **Writing modes** — `horizontal-tb`, `vertical-rl`, `vertical-lr` with text orientation
 - **Auto-fit** — scale text proportionally to fit the container (`AutofitConfig`)
 - **Inline widgets** — embedded objects (icons, images) inside the text flow
+- **Tables** — `TableFrame` grid layout: measured column widths/row heights, `colSpan`/`rowSpan`, per-side borders (solid, dashed, rounded corners), `before`/`after` decorative slots, nested tables
 - **Office-compatible mode** — `mode: 'office'` for PowerPoint/DrawingML rendering
 - **Font metrics** — system font registry with fontkit-based metric extraction
 - **Compiler** — paragraph compilation with token preparation for external renderers
@@ -77,6 +78,40 @@ const frame: TextFrame = {
 const result: TextFrameLayoutResult = layoutTextFrame(frame);
 // → { lines: Line[], frameWidth?, frameHeight?, contentWidth, contentHeight, fitHorizontal, fitVertical }
 ```
+
+### Tables
+
+```ts
+import { layoutTableFrame } from '@vyaz/core';
+import type { TableFrame, TableLayoutResult } from '@vyaz/core';
+
+const cell = (text: string) => ({
+  content: {
+    wrap: true,
+    paragraphs: [{
+      style: { alignment: 'left', lineHeight: 1.3, spaceBefore: 0, spaceAfter: 0 },
+      children: [{ type: 'text', text, fontFamily: 'Arial', fontSize: 14, fontWeight: 'normal', fontStyle: 'normal', color: '#000' }],
+    }],
+  },
+});
+
+const table: TableFrame = {
+  defaultCellStyle: { paddings: 8, borderWidths: 1, borderColors: '#ccc' },
+  rows: [
+    { style: { bgColor: '#eee' }, cells: [cell('Name'), cell('Qty')] },
+    { cells: [cell('Widget'), cell('3')] },
+  ],
+};
+
+const result: TableLayoutResult = layoutTableFrame(table);
+// → { width, height, contentBox, rows: [{ y, height, cells: [{ x, y, width, height, content, ... }] }] }
+```
+
+Column widths and row heights are *measured* from cell content unless
+`columnWidths`/`rowHeights`/`width`/`height` override them. A cell's
+`content` can itself be a `TableFrame` (nested tables). `@vyaz/renderer`'s
+`renderTableToSVG` paints the result — see its README, or the
+[Tables guide](https://sedrew.github.io/vyaz/guide/tables).
 
 ### Autofit
 

@@ -24,10 +24,14 @@ Direction, not a schedule. Order within a section is rough priority.
 
 ## Later
 
-- **Grid / table layout** — a real multi-cell grid (column alignment across rows,
-  `colspan` / `rowspan`, header/body/footer bands). Prerequisite for
-  `@vyaz/html` to convert `<table>` (today it drops them). Likely a new
-  `TableFrame` alongside `TextFrame`, each cell an inner `TextFrame`.
+- **Asymmetric table border corner radii** — `TableStyle`/`TableRowStyle`/
+  `TableCellStyle` `rx`/`ry` are uniform (all four corners) today; per-corner
+  radii are a possible future addition to `BorderStyles`.
+- **`@vyaz/html` table-nesting depth guard** — `<table>` nested inside a cell
+  already converts (recursively, through the inline-box path), but that path
+  has no recursion-depth cap, unlike `@vyaz/core`'s `TableFrame`-in-`TableCell`
+  primitive (`TableLayoutOptions._depth`, throws past 50 levels). Low risk in
+  practice, real risk on untrusted/generated HTML.
 - **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
   `WritingMode` / `direction` are in the type surface; the engine is not.
 - **True vertical writing modes** — `vertical-rl` / `vertical-lr` with per-glyph

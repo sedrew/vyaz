@@ -4,8 +4,7 @@ Convert a **formatted-HTML fragment** into a [`@vyaz/core`](../core) `TextFrame`
 
 Rich-text editor output, CMS bodies, email HTML → positioned lines → SVG. It is a
 *text importer*, **not a web-page renderer**: no box model, no CSS cascade from
-`<style>`/classes, no table grid. Every simplification and every dropped element
-is reported.
+`<style>`/classes. Every simplification and every dropped element is reported.
 
 ```bash
 bun add @vyaz/html @vyaz/core @vyaz/renderer
@@ -60,14 +59,28 @@ following runs drift. Point `monospaceFamily` at a concrete family you control.
 `em`/`i`/`cite`/`dfn`/`var`, `ins`/`u`, `del`/`s`, `sup`, `sub`, `small`, `mark`,
 `code`/`kbd`/`samp`, `q`, `abbr`, `a` (style only), `span` + inline `style=""`
 (`color`, `font-*`, `text-decoration`, `text-transform`, `letter-spacing`,
-`background-color`, `text-align`, `vertical-align`). `div`/`section`/… are
+`background-color`, `text-align`, `vertical-align`), **`table`** (`colspan`/
+`rowspan`, `<caption>`, header shading — see below). `div`/`section`/… are
 transparent.
 
 **Lossy (with a warning):** `dl`/`dt`/`dd`, `figcaption`, `details`/`summary`,
 `a` href (lost), `abbr` title (lost).
 
-**Dropped (recorded in `dropped[]`):** `table` + cells, `video`/`audio`/`iframe`/
-`canvas`, form controls, `<style>`/class CSS, and — for now — `img`/`svg`/
-`progress`/`meter`/`hr` (arrive in Phase 4 as `inlineBoxes`).
+**Dropped (recorded in `dropped[]`):** `video`/`audio`/`iframe`/`canvas`, form
+controls, `<style>`/class CSS, and — for now — `img`/`svg`/`progress`/`meter`/
+`hr` (arrive in Phase 4 as `inlineBoxes`).
+
+### Tables
+
+`<table>` converts to a `@vyaz/core` `TableFrame` and is laid out + rendered
+to SVG *during* conversion (not deferred like the rest of the document), then
+spliced into the surrounding text flow as an inline-box widget — the same
+mechanism `img`/`svg` will use once Phase 4 ships. `<thead>`/`<tbody>`/
+`<tfoot>` collapse to rows; `<th>` cells get header shading; `colspan`/
+`rowspan` map to `TableCell.colSpan`/`rowSpan`; `<caption>` becomes a bold
+paragraph above the table. A `<table>` nested inside a cell converts too
+(recursively, through the same inline-box path); CSS-driven column/row sizing
+does not convert. See [`@vyaz/core`'s Tables guide](https://sedrew.github.io/vyaz/guide/tables)
+for what the underlying `TableFrame` grid supports beyond what HTML maps to.
 
 Full plan and phase list: [`PLAN.md`](./PLAN.md).

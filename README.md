@@ -36,16 +36,19 @@ bound tightly into a single decorative band.
 
 | Package | Description |
 |---|---|
-| **@vyaz/core** | Layout engine — text-frame & paragraph layout, font metrics, autofit, compiler |
-| **@vyaz/renderer** | SVG renderer for the layout output |
+| **@vyaz/core** | Layout engine — text-frame, paragraph & table (`TableFrame`) layout, font metrics, autofit, compiler |
+| **@vyaz/renderer** | SVG renderer for the layout output — text and tables |
+| **@vyaz/html** | Converts a formatted-HTML fragment to a `TextFrame` (inline formatting, lists, tables, images as inline boxes) |
 
-The interactive **Playground** (Tiptap editor → live SVG) and the **Cases**
-explorer (browse the golden corpus) live in the docs site under `docs/`.
+The interactive **Playground** (Tiptap editor → live SVG), the HTML → SVG
+**Converter**, and the **Cases** explorer (browse the golden corpus) live in
+the docs site under `docs/`.
 
 ## Install
 
 ```bash
 bun add @vyaz/core @vyaz/renderer
+# converting HTML? add @vyaz/html too
 ```
 
 ## Quick start
@@ -91,6 +94,10 @@ one thing you have to get right (fonts go to the engine *and* `document.fonts`).
 - **Shaping** — opt-in `{ shaping: true }` measures through fontkit's OpenType layout (GPOS kerning + GSUB ligatures); matches Chrome to a fraction of a pixel on Latin / Cyrillic / Greek
 - **SVG output** — four presets: `flat`, `browser`, `preserve`, `glyph`; CSS or XML style attributes; debug overlays
 - **Pure JS** — the measurement path is fontkit-only; no canvas or native addon required
+- **Tables** — `TableFrame` grid layout: measured columns/rows, `colSpan`/`rowSpan`
+  (including `colSpan: 'auto'`), per-side borders with dash patterns and rounded
+  corners, `before`/`after` decorative slots, nested tables, `renderTableToSVG` —
+  see the [Tables guide](https://sedrew.github.io/vyaz/guide/tables)
 
 ## Benchmark
 
@@ -107,6 +114,19 @@ wrapping), Unifont from the test fixture. `min` of N iterations:
 ≈ **1M styled runs/second** laid out, ≈ 1.2M/s on a warm prepared-line cache.
 `bench/BASELINE.txt` holds reference numbers — re-run and diff after touching the
 layout hot path.
+
+`bun run bench:tables` — `layoutTableFrame` + `renderTableToSVG` on an R×C
+multiplication-table grid, center-aligned, Unifont. Configurable via env vars
+(`BENCH_ROWS`, `BENCH_COLS`, `BENCH_OUT` to also write the SVG):
+
+| grid (rows×cols) | cells | layout | render |
+|---:|---:|---:|---:|
+| 11×11 | 121 | 18.0 ms | 2.4 ms |
+| 51×51 | 2,601 | 53.2 ms | 15.7 ms |
+| 101×101 | 10,201 | 115.8 ms | 52.9 ms |
+
+Column/row sizing is two `layoutTextFrame` passes per cell — algorithmically
+linear in total cell content; see [`bench/table-throughput.ts`](bench/table-throughput.ts).
 
 ## API
 
@@ -179,6 +199,42 @@ import { applyScale, findScale } from '@vyaz/core'
 ```
 
 Prefer the `{ autofit }` layout option above; these stay for manual control.
+
+### `layoutTableFrame(table, options?)` / `renderTableToSVG(result, options?)`
+
+```ts
+import { layoutTableFrame } from '@vyaz/core'
+import { renderTableToSVG } from '@vyaz/renderer'
+import type { TableFrame } from '@vyaz/core'
+
+const cell = (text: string) => ({
+  content: {
+    wrap: true,
+    paragraphs: [{
+      style: { alignment: 'left', lineHeight: 1.3, spaceBefore: 0, spaceAfter: 0 },
+      children: [{ type: 'text', text, fontFamily: 'Inter', fontSize: 14, fontWeight: 'normal', fontStyle: 'normal', color: '#111' }],
+    }],
+  },
+})
+
+const table: TableFrame = {
+  defaultCellStyle: { paddings: 8, borderWidths: 1, borderColors: '#ccc' },
+  rows: [
+    { style: { bgColor: '#eee' }, cells: [cell('Name'), cell('Qty')] },
+    { cells: [cell('Widget'), cell('3')] },
+  ],
+}
+
+const svg = renderTableToSVG(layoutTableFrame(table), { preset: 'browser' })
+```
+
+Column widths and row heights are measured from cell content (each cell's own
+`TextFrame` laid out like any other text box) unless `columnWidths`/
+`rowHeights`/`width`/`height` override them. `colSpan`/`rowSpan` (including
+`colSpan: 'auto'` for a ragged row's last cell), per-side borders (solid,
+dashed via `borderPatterns`/`borderShapes`, rounded via `rx`/`ry`),
+`before`/`after` decorative slots, and nesting a `TableFrame` inside a cell
+are all supported — full reference in the [Tables guide](https://sedrew.github.io/vyaz/guide/tables).
 
 ## Fonts
 

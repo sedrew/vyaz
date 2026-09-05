@@ -17,6 +17,7 @@ export default defineConfig({
     logo: '/logo.png',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
+      { text: 'Tables', link: '/guide/tables' },
       { text: 'Playground', link: '/playground' },
       { text: 'Converter', link: '/converter' },
       { text: 'Cases', link: '/cases' },
@@ -28,6 +29,7 @@ export default defineConfig({
         items: [
           { text: 'Getting Started', link: '/guide/getting-started' },
           { text: 'Browser usage', link: '/guide/browser' },
+          { text: 'Tables', link: '/guide/tables' },
           { text: 'Playground', link: '/playground' },
           { text: 'HTML → SVG', link: '/converter' },
           { text: 'Cases', link: '/cases' },

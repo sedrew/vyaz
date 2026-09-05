@@ -1,6 +1,15 @@
 {
   "name": "@vyaz/renderer",
-  "version": "0.2.1",
+  "version": "0.3.0",
+  "description": "SVG renderer for @vyaz/core layout output — text lines and TableFrame grids, four presets (flat/browser/preserve/glyph), plus registerFont() for keeping engine metrics and document.fonts in sync.",
+  "keywords": ["svg", "renderer", "text-layout", "table-layout", "typography"],
+  "license": "MIT",
+  "homepage": "https://sedrew.github.io/vyaz/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sedrew/vyaz.git",
+    "directory": "packages/renderer"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,7 +33,7 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@vyaz/core": "^0.2.1"
+    "@vyaz/core": "^0.3.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

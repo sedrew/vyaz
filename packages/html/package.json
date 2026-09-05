@@ -1,6 +1,15 @@
 {
   "name": "@vyaz/html",
   "version": "0.0.0",
+  "description": "Convert a formatted-HTML fragment into a @vyaz/core TextFrame — inline formatting, lists, tables (colspan/rowspan, nested tables), images/SVG as inline boxes.",
+  "keywords": ["html", "text-layout", "table-layout", "converter", "svg"],
+  "license": "MIT",
+  "homepage": "https://sedrew.github.io/vyaz/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sedrew/vyaz.git",
+    "directory": "packages/html"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -24,8 +33,8 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "@vyaz/core": "^0.2.1",
-    "@vyaz/renderer": "^0.2.1"
+    "@vyaz/core": "^0.3.0",
+    "@vyaz/renderer": "^0.3.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",

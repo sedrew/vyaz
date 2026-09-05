@@ -3,8 +3,9 @@
 Turns a **semantic formatted-HTML fragment** (rich-text editor output, CMS
 export, email bodies) into a `TextFrame` for `@vyaz/core` + `@vyaz/renderer`.
 
-Not a web-page renderer: no box model, no CSS cascade from `<style>`/classes, no
-table grid, no float/flex/grid/position. The converter is deliberately **lossy**
+Not a web-page renderer: no box model, no CSS cascade from `<style>`/classes,
+no float/flex/grid/position. `<table>` converts (grid sizing, colspan/rowspan,
+header shading — see Coverage below). The converter is deliberately **lossy**
 and reports everything it simplified or dropped.
 
 ## API
@@ -16,7 +17,7 @@ const { frame, inlineBoxes, warnings, dropped } = htmlToTextFrame(html, opts)
 //   frame        : TextFrame            → layoutTextFrame(frame)
 //   inlineBoxes  : Record<string,string>→ renderToSVG(result, { inlineBoxes })
 //   warnings     : HtmlWarning[]        → simplified (a:href lost, dl flattened…)
-//   dropped      : DroppedNode[]        → removed (table, video, <style>…)
+//   dropped      : DroppedNode[]        → removed (video, form controls, <style>…)
 ```
 
 `html` accepts a `string`, a `Document`, or an `Element`. A `string` needs a DOM:
@@ -47,6 +48,16 @@ the global `DOMParser` if present, otherwise `opts.parse(html) => Document`.
 `background-color`), `ul`/`ol`/`li` (nested via `level`), container elements
 (`div`/`section`/`article`/…) are transparent.
 
+### 📐 table — grid layout, rendered during conversion (T0–T5, shipped)
+`table`+`thead`/`tbody`/`tfoot`/`tr`/`th`/`td`/`caption`: converts to a
+`@vyaz/core` `TableFrame`, laid out and rendered to SVG *during* conversion
+(not deferred), then spliced into the flow as an inline-box widget.
+`colspan`/`rowspan`, header shading, `<caption>` (bold paragraph above). A
+`<table>` nested inside a cell converts too, recursively — no depth cap yet
+(see the core `TableLayoutEngine`'s `_depth` for the equivalent guard on the
+`TableFrame`-in-`TableCell` primitive; this HTML path predates and doesn't use
+it). CSS-driven column/row sizing does not convert.
+
 ### ⚠ lossy — converted with a warning
 `dl`/`dt`/`dd` (dt → bold para, dd → indented para), `figure`/`figcaption`,
 `details`/`summary` (flattened, static), nested lists changing type.
@@ -57,13 +68,12 @@ the global `DOMParser` if present, otherwise `opts.parse(html) => Document`.
 `inlineBoxes[id]`; `@vyaz/renderer` splices each into the box the layout reserved.
 
 ### ❌ dropped — recorded in `dropped[]`
-`table`+`thead/tbody/tfoot/tr/th/td/caption` (no grid layout — see ROADMAP),
 `video`/`audio`/`iframe`/`embed`/`object`/`canvas`, form controls,
 `<style>` / class CSS / `position`/`flex`/`grid`/`float`, `:hover`/animation,
 `overline` / decoration style+colour / `text-shadow` / glyph stroke+gradient /
 small-caps (engine ignores — SVG-only pass is a separate ROADMAP item).
 
-Rough split: ~70% clean, ~15% drawn, ~15% dropped.
+Rough split: ~70% clean (tables included), ~15% drawn, ~15% dropped.
 
 ## Enabling changes in the other packages
 
@@ -81,6 +91,6 @@ Rough split: ~70% clean, ~15% drawn, ~15% dropped.
 | **2** | block tags: `h1`–`h6` (+ heading scale), `blockquote`, `pre`, `address`, `br` |
 | **3** | lists: `ul`/`ol`/`li` (+ `level`), `dl`/`dt`/`dd` |
 | **4** | graphics → SVG box: `img`+`resolveImage`, inline `svg`, `progress`, `meter`, `hr`, `figure`, `details` (static) |
-| **5** | drop zone: `table`/`video`/`iframe`/`canvas`/`style`/… → `dropped[]`; full html5-test-page as a coverage test |
-| **6** | docs `/converter` page (HTML code/preview tabs → live SVG, prominent Download, Debug toggle off by default); README; release `@vyaz/html@0.1.0` |
+| **5** | drop zone: `video`/`iframe`/`canvas`/`style`/… → `dropped[]`; full html5-test-page as a coverage test — `table` was planned as a drop-zone item here but was later built instead (grid layout landed as a separate T0–T5 track once `@vyaz/core`'s `TableFrame` existed — see "table" in Coverage above) |
+| **6** | docs `/converter` page (HTML code/preview tabs → live SVG, prominent Download, Debug toggle off by default); README; release `@vyaz/html@0.1.0` *(not yet released — still 0.0.0)* |
 | **7** *(separate track)* | ROADMAP "SVG-only text effects" in `@vyaz/renderer` |
