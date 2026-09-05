@@ -58,3 +58,52 @@ H<sub>2</sub>O with E = mc<sup>2</sup>.</p>
 <input type="text" placeholder="name">
 <address>221B Baker Street, London</address>
 `;
+
+/**
+ * A CommonMark + GFM slice covering the same breadth as SAMPLE_HTML, plus
+ * one thing HTML input can't demonstrate: raw HTML embedded in the
+ * Markdown source (the `<mark>` below) converts too, with no special
+ * handling — see markdownToTextFrame()'s module doc.
+ */
+export const SAMPLE_MARKDOWN = `# Typography & Markdown → SVG
+
+A paragraph with **strong**, _emphasis_, a [hyperlink](https://example.com),
+and some \`inline_code()\`.
+
+Text can be ~~struck through~~, and raw HTML converts too —
+<mark>a highlight</mark> — right in the Markdown source.
+
+## Lists
+
+- Unordered item one
+- Item two, with a nested list:
+  1. nested first
+  2. nested second
+- Item three
+
+### Blockquote & preformatted
+
+> "The details are not the details. They make the design."
+
+\`\`\`
+function greet(name) {
+  return "Hello, " + name;
+}
+\`\`\`
+
+### GFM table
+
+| Feature | Status |
+|---|---|
+| Grid sizing, colspan/rowspan | done |
+| Borders & header shading | done |
+| Raw HTML passthrough | done |
+
+### Dropped on purpose
+
+A video needs playback, a text field needs input — neither survives, even
+embedded as raw HTML in Markdown:
+
+<video src="clip.mp4" controls></video>
+<input type="text" placeholder="name">
+`;

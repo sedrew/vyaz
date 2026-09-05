@@ -1,8 +1,19 @@
 <template>
   <div class="cv">
+    <div class="cv__format">
+      <button
+        class="cv__fmt-btn" :class="{ 'is-active': format === 'html' }"
+        @click="format = 'html'"
+      >HTML</button>
+      <button
+        class="cv__fmt-btn" :class="{ 'is-active': format === 'markdown' }"
+        @click="format = 'markdown'"
+      >Markdown</button>
+    </div>
+
     <section class="cv__pane">
-      <header class="cv__hd">HTML</header>
-      <HtmlInput v-model="html" />
+      <header class="cv__hd">{{ format === 'markdown' ? 'Markdown' : 'HTML' }}</header>
+      <HtmlInput v-model="activeSource" :format="format" />
     </section>
 
     <section class="cv__pane">
@@ -27,7 +38,7 @@
         v-model:width="frameWidth"
         :height="0"
         :font-bytes="fontBytes"
-        download-name="vyaz-html"
+        :download-name="format === 'markdown' ? 'vyaz-markdown' : 'vyaz-html'"
         download-label="Download SVG"
       />
       <div class="cv__loading" v-else>loading fonts…</div>
@@ -52,18 +63,27 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
+import { marked } from 'marked'
 import { layoutTextFrame } from '@vyaz/core'
 import { renderToSVG } from '@vyaz/renderer'
-import { htmlToTextFrame } from '@vyaz/converters'
+import { htmlToTextFrame, markdownToTextFrame } from '@vyaz/converters'
 import { loadPlaygroundFonts, fontBytes } from '../playground/lib/loadPlaygroundFonts'
 import SvgPreview from '../playground/components/SvgPreview.vue'
 import HtmlInput from './HtmlInput.vue'
-import { SAMPLE_HTML } from './sample'
+import { SAMPLE_HTML, SAMPLE_MARKDOWN } from './sample'
 
 const PRESETS = ['browser', 'flat', 'preserve', 'glyph'] as const
 type Preset = (typeof PRESETS)[number]
 
-const html = ref(SAMPLE_HTML)
+const format = ref<'html' | 'markdown'>('html')
+// Separate source per format — switching the toggle doesn't clobber whatever
+// you pasted into the other one.
+const htmlSource = ref(SAMPLE_HTML)
+const markdownSource = ref(SAMPLE_MARKDOWN)
+const activeSource = computed<string>({
+  get: () => (format.value === 'markdown' ? markdownSource.value : htmlSource.value),
+  set: (v) => { if (format.value === 'markdown') markdownSource.value = v; else htmlSource.value = v },
+})
 const frameWidth = ref(640)
 const mode = ref<'browser' | 'office'>('browser')
 const loading = ref(true)
@@ -82,18 +102,22 @@ const debugFlags = computed(() => {
   return Object.keys(d).length ? d : undefined
 })
 
+// The docs bundle no monospace face. If we emitted the CSS generic
+// "monospace", the engine would measure it as Roboto (alias) but the
+// browser would PAINT it with the OS mono font — different advances, so
+// following runs drift. Emit a concrete family the docs @font-face actually
+// provides so metrics == paint.
+const convertOptions = computed(() => ({
+  width: frameWidth.value,
+  baseFont: { family: 'Arial', size: 16 },
+  monospaceFamily: 'Roboto',
+}))
+
 const converted = computed(() => {
   try {
-    return htmlToTextFrame(html.value, {
-      width: frameWidth.value,
-      baseFont: { family: 'Arial', size: 16 },
-      // The docs bundle no monospace face. If we emitted the CSS generic
-      // "monospace", the engine would measure it as Roboto (alias) but the
-      // browser would PAINT it with the OS mono font — different advances,
-      // so following runs drift. Emit a concrete family the docs @font-face
-      // actually provides so metrics == paint.
-      monospaceFamily: 'Roboto',
-    })
+    return format.value === 'markdown'
+      ? markdownToTextFrame(markdownSource.value, convertOptions.value)
+      : htmlToTextFrame(htmlSource.value, convertOptions.value)
   } catch (e) {
     return { frame: { wrap: true, paragraphs: [] }, inlineBoxes: {}, warnings: [], dropped: [], error: String(e) } as any
   }
@@ -101,9 +125,15 @@ const converted = computed(() => {
 const warnings = computed(() => converted.value.warnings)
 const dropped = computed(() => converted.value.dropped)
 
+// For Markdown, count tags in the same HTML `marked` hands to the converter
+// (not the Markdown source itself, which has none) — so "N tags → M
+// converted" stays meaningful in both modes.
 const tagCount = computed(() => {
   if (typeof DOMParser === 'undefined') return 0
-  return new DOMParser().parseFromString(html.value, 'text/html').body?.querySelectorAll('*').length ?? 0
+  const html = format.value === 'markdown'
+    ? (marked.parse(markdownSource.value, { gfm: true, async: false }) as string)
+    : htmlSource.value
+  return new DOMParser().parseFromString(html, 'text/html').body?.querySelectorAll('*').length ?? 0
 })
 
 const layout = computed(() => {
@@ -156,6 +186,17 @@ const stats = computed(() => {
 
 <style scoped>
 .cv { display: flex; flex-direction: column; gap: 16px; margin: 22px 0; }
+.cv__format { display: flex; gap: 6px; }
+.cv__fmt-btn {
+  padding: 6px 14px; border: 1px solid var(--vp-c-divider); border-radius: 8px;
+  background: var(--vp-c-bg); cursor: pointer;
+  font: 13px/1 var(--vp-font-family-base, inherit); color: var(--vp-c-text-2);
+}
+.cv__fmt-btn:hover { color: var(--vp-c-text-1); border-color: var(--vp-c-text-3); }
+.cv__fmt-btn.is-active {
+  color: var(--vp-c-brand-1); background: var(--vp-c-bg-soft);
+  border-color: var(--vp-c-brand-1); font-weight: 600;
+}
 .cv__pane {
   display: flex; flex-direction: column; min-width: 0;
   border: 1px solid var(--vp-c-divider); border-radius: 10px;

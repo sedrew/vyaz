@@ -13,7 +13,7 @@
       spellcheck="false"
       :value="model"
       @input="onInput"
-      placeholder="Paste an HTML fragment…"
+      :placeholder="format === 'markdown' ? 'Paste a Markdown document…' : 'Paste an HTML fragment…'"
     />
 
     <iframe
@@ -21,15 +21,16 @@
       class="hi__frame"
       sandbox=""
       :srcdoc="srcdoc"
-      title="HTML preview"
+      title="Preview"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { marked } from 'marked'
 
-const props = defineProps<{ modelValue: string }>()
+const props = defineProps<{ modelValue: string; format?: 'html' | 'markdown' }>()
 const emit = defineEmits<{ 'update:modelValue': [string] }>()
 
 const tab = ref<'code' | 'preview'>('code')
@@ -42,14 +43,18 @@ function onInput(e: Event) {
   t = setTimeout(() => emit('update:modelValue', v), 200)
 }
 
-// Preview: the raw fragment on a plain white page. sandbox="" blocks scripts,
-// forms, popups — it is only a visual reference for the pasted source.
+// Preview: the raw fragment (or, for Markdown, the same `marked` HTML the
+// converter itself runs on) on a plain white page. sandbox="" blocks
+// scripts, forms, popups — it is only a visual reference for the source.
+const bodyHtml = computed(() =>
+  props.format === 'markdown' ? (marked.parse(props.modelValue, { gfm: true, async: false }) as string) : props.modelValue,
+)
 const srcdoc = computed(
   () =>
     `<!doctype html><meta charset="utf-8"><style>` +
     `html{font:16px/1.5 system-ui,Arial,sans-serif;color:#111;background:#fff;padding:16px}` +
     `img{max-width:100%}table{border-collapse:collapse}td,th{border:1px solid #ccc;padding:4px 8px}` +
-    `</style>${props.modelValue}`,
+    `</style>${bodyHtml.value}`,
 )
 </script>
 
