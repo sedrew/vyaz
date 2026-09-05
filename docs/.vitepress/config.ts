@@ -16,11 +16,28 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.png',
     nav: [
-      { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Tables', link: '/guide/tables' },
-      { text: 'Playground', link: '/playground' },
-      { text: 'Converter', link: '/converter' },
-      { text: 'Cases', link: '/cases' },
+      {
+        text: 'Guide',
+        items: [
+          { text: 'Getting Started', link: '/guide/getting-started' },
+          { text: 'Browser usage', link: '/guide/browser' },
+          { text: 'Tables', link: '/guide/tables' },
+        ],
+      },
+      {
+        text: 'Playground',
+        items: [
+          { text: 'Editor', link: '/playground' },
+          { text: 'Cases', link: '/cases' },
+        ],
+      },
+      {
+        text: 'Converter',
+        items: [
+          { text: 'HTML', link: '/converter?format=html' },
+          { text: 'Markdown', link: '/converter?format=markdown' },
+        ],
+      },
       { text: 'API', link: '/api/core' },
     ],
     sidebar: [
@@ -31,7 +48,7 @@ export default defineConfig({
           { text: 'Browser usage', link: '/guide/browser' },
           { text: 'Tables', link: '/guide/tables' },
           { text: 'Playground', link: '/playground' },
-          { text: 'HTML → SVG', link: '/converter' },
+          { text: 'Converter', link: '/converter' },
           { text: 'Cases', link: '/cases' },
         ],
       },
@@ -44,6 +61,10 @@ export default defineConfig({
       },
     ],
     socialLinks: [{ icon: 'github', link: 'https://github.com/sedrew/vyaz' }],
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2026-present Sergei Malygin',
+    },
   },
 
   vite: {

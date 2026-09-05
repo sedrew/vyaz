@@ -33,9 +33,7 @@ src/
 
 ## Generated API Reference
 
-Full API documentation generated from source code:
+Full API documentation generated from source code — every class, interface,
+type alias and function, one page per symbol:
 
-- [Package index](/vyaz/api/references/core/src/)
-- [Classes](/vyaz/api/references/core/src/classes/)
-- [Interfaces](/vyaz/api/references/core/src/interfaces/)
-- [Functions](/vyaz/api/references/core/src/functions/)
+- [Package index](/api/references/core/src/)
