@@ -35,7 +35,7 @@ src/
 
 Full API documentation generated from source code:
 
-- [Package index](/vyaz/api/references/core/src/)
-- [Classes](/vyaz/api/references/core/src/classes/)
-- [Interfaces](/vyaz/api/references/core/src/interfaces/)
-- [Functions](/vyaz/api/references/core/src/functions/)
+- [Package index](/api/references/core/src/)
+- [Classes](/api/references/core/src/classes/)
+- [Interfaces](/api/references/core/src/interfaces/)
+- [Functions](/api/references/core/src/functions/)

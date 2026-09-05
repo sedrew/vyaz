@@ -26,7 +26,7 @@ that already has one. Full reference: the [Tables guide](/guide/tables).
 
 Full API documentation generated from source code:
 
-- [Package index](/vyaz/api/references/renderer/src/)
-- [Functions](/vyaz/api/references/renderer/src/functions/)
-- [Interfaces](/vyaz/api/references/renderer/src/interfaces/)
-- [Type aliases](/vyaz/api/references/renderer/src/type-aliases/)
+- [Package index](/api/references/renderer/src/)
+- [Functions](/api/references/renderer/src/functions/)
+- [Interfaces](/api/references/renderer/src/interfaces/)
+- [Type aliases](/api/references/renderer/src/type-aliases/)
