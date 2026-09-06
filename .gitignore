@@ -43,3 +43,8 @@ scripts/office-visual-diff/ours/
 scripts/office-visual-diff/refs/
 scripts/office-visual-diff/__diffs__/
 scripts/office-visual-diff/report.md
+
+# office overlay experiment
+scripts/office-visual-diff/overlay/
+scripts/office-visual-diff/_overlay.pptx
+scripts/office-visual-diff/_reference/
