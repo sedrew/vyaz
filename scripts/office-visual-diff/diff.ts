@@ -23,6 +23,16 @@ import {
 } from './lib.ts';
 import { PNG } from 'pngjs';
 
+/** left-align `src` on a white canvas `W` wide (same height) for tidy stacking. */
+function padTo(src: PNG, W: number): PNG {
+  if (src.width >= W) return src;
+  const out = new PNG({ width: W, height: src.height, fill: true });
+  out.data.fill(255);
+  for (let y = 0; y < src.height; y++)
+    src.data.copy(out.data, y * W * 4, y * src.width * 4, (y + 1) * src.width * 4);
+  return out;
+}
+
 /** vyaz ink (dark px) painted magenta over the PowerPoint crop, same size. */
 function overlay(pp: PNG, vy: PNG): PNG {
   const out = new PNG({ width: pp.width, height: pp.height });
@@ -38,6 +48,7 @@ function overlay(pp: PNG, vy: PNG): PNG {
 
 interface Ours {
   name: string; nLines: number; contentWpt: number; contentHpt: number; domFontPt: number;
+  ppp: number;
   lines: { i: number; h: number; ascent: number; descent: number }[];
 }
 interface Ref {
@@ -102,10 +113,18 @@ for (const f of readdirSync(REFS_DIR).filter((f) => f.endsWith('.json') && !f.st
     const b = ref.inkBBoxPx;
     const ppCrop = crop(readPng(resolve(REFS_DIR, `${ref.slug}.png`)),
       { x: b.x - pad, y: b.y - pad, w: b.w + 2 * pad, h: b.h + 2 * pad });
-    const ourPng = readPng(resolve(OURS_DIR, `${ref.slug}.png`));
-    writePng(resolve(DIFFS_DIR, `${ref.slug}.1-pptx.png`), ppCrop);
-    writePng(resolve(DIFFS_DIR, `${ref.slug}.2-vyaz.png`), ourPng);
-    writePng(resolve(DIFFS_DIR, `${ref.slug}.3-overlay.png`), overlay(ppCrop, ourPng));
+
+    // put vyaz in the SAME px/pt as the PowerPoint crop, then left-align both
+    // on one canvas width — a genuine size gap now reads as a size gap, not a
+    // scale artefact.
+    const raw = readPng(resolve(OURS_DIR, `${ref.slug}.png`));
+    const k = ref.pxPerPt / ours.ppp;
+    const vy = k === 1 ? raw : resizePng(raw, Math.max(1, Math.round(raw.width * k)), Math.max(1, Math.round(raw.height * k)));
+    const W = Math.max(ppCrop.width, vy.width);
+
+    writePng(resolve(DIFFS_DIR, `${ref.slug}.1-pptx.png`), padTo(ppCrop, W));
+    writePng(resolve(DIFFS_DIR, `${ref.slug}.2-vyaz.png`), padTo(vy, W));
+    writePng(resolve(DIFFS_DIR, `${ref.slug}.3-overlay.png`), overlay(ppCrop, raw));
   } catch (e) { console.warn(`  – ${ref.slug}: image ${e}`); }
 
   writeFileSync(resolve(DIFFS_DIR, `${ref.slug}.md`), [
