@@ -5,7 +5,7 @@
  * show clean conversion, a few `warnings`, a converted `<table>`, and the
  * `dropped` list (`<video>`, a form control).
  */
-export const SAMPLE_HTML = `<h1>Typography &amp; HTML → SVG</h1>
+export const SAMPLE_HTML = `<h1>Typography &amp; HTML to SVG</h1>
 
 <p>A paragraph with <strong>strong</strong>, <em>emphasis</em>, a
 <a href="https://example.com">hyperlink</a>, some <code>inline_code()</code>,
@@ -65,7 +65,7 @@ H<sub>2</sub>O with E = mc<sup>2</sup>.</p>
  * Markdown source (the `<mark>` below) converts too, with no special
  * handling — see markdownToTextFrame()'s module doc.
  */
-export const SAMPLE_MARKDOWN = `# Typography & Markdown → SVG
+export const SAMPLE_MARKDOWN = `# Typography & Markdown to SVG
 
 A paragraph with **strong**, _emphasis_, a [hyperlink](https://example.com),
 and some \`inline_code()\`.
