@@ -425,8 +425,8 @@ function xmlStyleAttrs(s: StyleState): string {
  *
  * Flat mode (no `<tspan>`) adds them separately in the flat render path.
  */
-function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: string): Record<string, string | number> {
-  const x = line.x;
+function buildTextAttrs(line: Line, span: Span, opts: ResolvedOptions, runId?: string, xOverride?: number): Record<string, string | number> {
+  const x = xOverride ?? line.x;
   const y = line.y + line.baseline;
   const s = defaultStyleState(span);
 
@@ -646,7 +646,7 @@ class SvgAstBuilder {
    * Open a new <text> element.
    * Closes any previously open <text> automatically.
    */
-  openText(line: Line, baseSpan: Span, runId?: string, yOverride?: number, fontSizeOverride?: number): void {
+  openText(line: Line, baseSpan: Span, runId?: string, yOverride?: number, fontSizeOverride?: number, xOverride?: number): void {
     // Close any open text first
     this.closeText();
 
@@ -656,7 +656,7 @@ class SvgAstBuilder {
       // text-decoration and letter-spacing intentionally excluded from <text>
       // to prevent inheritance by child <tspan> elements (expanded mode).
       const s = defaultStyleState(baseSpan);
-      const x = line.x;
+      const x = xOverride ?? line.x;
       const attrs: Record<string, string | number> = {
         x: fmt(x),
         y: fmt(yOverride),
@@ -677,7 +677,7 @@ class SvgAstBuilder {
       }
       textAttrs = attrs;
     } else {
-      textAttrs = buildTextAttrs(line, baseSpan, this.opts, runId);
+      textAttrs = buildTextAttrs(line, baseSpan, this.opts, runId, xOverride);
     }
 
     const fitAttrs = buildFitAttr(line, this.opts);
@@ -1322,6 +1322,14 @@ export function renderToSVG(
             Object.assign(textAttrs, fit);
           }
           builder.openText(line, baseSpan, undefined, group.targetY, fontSize);
+        } else if (href) {
+          // Anchor a link's <text> at the run's real x, not x=0. Chrome draws
+          // a stray underline tick at the x origin of an <a>-wrapped <text x="0">
+          // — it landed under the paragraph's first glyph. Positioning the
+          // <text> moves that (harmless) artefact under the link itself.
+          const firstTextX = line.spans.find(sp => sp.type === 'text' || sp.type === 'marker')?.x ?? 0;
+          const linkX = line.x + (group.spans[0].x - firstTextX);
+          builder.openText(line, baseSpan, undefined, undefined, undefined, linkX);
         } else {
           builder.openText(line, baseSpan);
         }
