@@ -9,6 +9,13 @@ item when it closes or advances one.
 
 ### Fixed
 
+- **Stray underline under the first glyph when a paragraph has a `<a href>`** —
+  the `browser`/`preserve` SVG preset wrapped a link run as
+  `<a href><text x="0"><tspan x="…" text-decoration="underline">`. Chrome draws
+  a spurious underline tick at the x origin of an `<a>`-wrapped `<text x="0">`,
+  which landed under the paragraph's first character. The linked `<text>` is now
+  anchored at the run's real x. (`3957522`)
+
 - **Docs API reference 404s** — `/api/references/<pkg>/src/classes|interfaces|functions/`
   links 404'd two ways at once: VitePress's `base` was being prepended a
   second time on top of a hardcoded `/vyaz` prefix (`/vyaz/vyaz/...`), and
@@ -18,8 +25,16 @@ item when it closes or advances one.
   category links, keeping `Package index` (already lists every symbol with a
   direct link). (`7cc6dbe`, `7fd7093`)
 
+### CI
+
+- Added a `CI` workflow (bun test + build + `make smoke` + browser-bundle
+  check) on every push to `main` and every PR. Fixed the `Makefile` package
+  list, still on the pre-rename `renderer` / `html` names, so `make smoke` /
+  `make check` run again.
+
 ### Docs
 
+- Converter sample headings no longer use the `→` arrow (`Typography & HTML to SVG`).
 - Top nav trimmed to Guide / Playground / Converter / API, each a dropdown;
   Tables and Cases moved under Guide/Playground. Sidebar still lists every
   page. (`b208621`, `6588282`)

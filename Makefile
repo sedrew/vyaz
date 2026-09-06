@@ -1,6 +1,6 @@
 .PHONY: help install build test smoke pack-test lint check-decls check publish-core publish-renderer clean
 
-PACKAGES := core renderer html
+PACKAGES := core renderers converters
 DIST_TMP := /tmp/vyaz-pack-test
 
 help:
@@ -76,15 +76,17 @@ pack-test: build
 	@cd $(DIST_TMP) && npm init -y > /dev/null 2>&1
 	@# Install in dependency order: core first, then renderer
 	@cd $(DIST_TMP) && npm install ./vyaz-core-*.tgz > /dev/null 2>&1
+	@cd $(DIST_TMP) && npm install ./vyaz-converters-*.tgz > /dev/null 2>&1
 	@cd $(DIST_TMP) && npm install ./vyaz-renderer-*.tgz > /dev/null 2>&1
 	@echo "→ Testing imports from clean npm install..."
 	@cd $(DIST_TMP) && node --input-type=module -e " \
 		import('@vyaz/core').then(m => console.log('  ✅ @vyaz/core:', Object.keys(m).length, 'exports')); \
+		import('@vyaz/converters').then(m => console.log('  ✅ @vyaz/converters:', Object.keys(m).length, 'exports')); \
 		import('@vyaz/renderer').then(m => console.log('  ✅ @vyaz/renderer:', Object.keys(m).length, 'exports')); \
 	"
 	@# Also verify .d.ts shipped in the pack
 	@echo "→ Checking .d.ts in packed tarballs..."
-	@for tgz in $(DIST_TMP)/vyaz-core-*.tgz $(DIST_TMP)/vyaz-renderer-*.tgz; do \
+	@for tgz in $(DIST_TMP)/vyaz-core-*.tgz $(DIST_TMP)/vyaz-converters-*.tgz $(DIST_TMP)/vyaz-renderer-*.tgz; do \
 		pkg=$$(basename $$tgz); \
 		if tar -tzf $$tgz | grep -q 'package/dist/index.d.ts'; then \
 			echo "  ✅ $$pkg: contains dist/index.d.ts"; \
@@ -119,7 +121,7 @@ publish-core: check
 
 publish-renderer: check
 	@test -n "$(PART)" || (echo "ERROR: specify PART=patch|minor|major"; exit 1)
-	cd packages/renderer && npm version $(PART) && npm publish --provenance --access public
+	cd packages/renderers && npm version $(PART) && npm publish --provenance --access public
 
 clean:
 	rm -rf packages/*/dist $(DIST_TMP) node_modules packages/*/node_modules
