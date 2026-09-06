@@ -113,7 +113,12 @@ def add_case(slide, frame):
             para.space_before = Pt(float(ps["spaceBefore"]))
         if ps.get("spaceAfter"):
             para.space_after = Pt(float(ps["spaceAfter"]))
-        para.line_spacing = float(ps.get("lineHeight", 1.15))
+        # PowerPoint's line_spacing MULTIPLE is × its own ~1.2 "single", not
+        # × font size. vyaz line box = maxRunPt × lineHeight (flat). Pass it as
+        # absolute points so the two match. lineHeight defaults to 1.0.
+        sz = max([float((r if r.get("fontSize") is not None else d).get("fontSize", 12))
+                  for r in p.get("children", []) if isinstance(r.get("text"), str)] or [12])
+        para.line_spacing = Pt(sz * float(ps.get("lineHeight", 1.0)))
         for r in p.get("children", []):
             if r.get("type") == "inline-box" or not isinstance(r.get("text"), str):
                 continue
