@@ -78,11 +78,18 @@ def skip_reason(inp):
         for r in p.get("children", []):
             if r.get("type") == "inline-box" or r.get("inlineWidget"):
                 return "inline widget"
-            if r.get("script"):
-                return f"script {r['script']}"
-            if r.get("textTransform"):
-                return f"textTransform {r['textTransform']}"
     return None
+
+
+def apply_transform(text, kind):
+    if kind == "uppercase":
+        return text.upper()
+    if kind == "lowercase":
+        return text.lower()
+    if kind == "capitalize":  # vyaz: first letter of each word up, rest untouched
+        import re
+        return re.sub(r"(?<![^\W_])\w", lambda m: m.group().upper(), text)
+    return text
 
 
 def add_case(slide, frame):
@@ -112,7 +119,7 @@ def add_case(slide, frame):
                 continue
             s = {**d, **r}
             run = para.add_run()
-            run.text = r["text"]
+            run.text = apply_transform(r["text"], s.get("textTransform"))
             f = run.font
             f.name = fam(s.get("fontFamily"))
             f.size = Pt(float(s.get("fontSize", 12)))
@@ -126,6 +133,10 @@ def add_case(slide, frame):
                 rPr.set("strike", "sngStrike")
             if s.get("letterSpacing"):
                 rPr.set("spc", str(int(round(float(s["letterSpacing"]) * 100))))
+            if s.get("script") == "super":
+                rPr.set("baseline", "30000")
+            elif s.get("script") == "sub":
+                rPr.set("baseline", "-25000")
 
     box.fill.background()
     box.line.color.rgb = BORDER
