@@ -38,7 +38,7 @@ BORDER = RGBColor(0xFF, 0x00, 0x00)
 ALIGN = {"left": PP_ALIGN.LEFT, "right": PP_ALIGN.RIGHT,
          "center": PP_ALIGN.CENTER, "justify": PP_ALIGN.JUSTIFY}
 
-DEFAULT_TEXT = {"fontFamily": "Arial", "fontSize": 16, "fontWeight": "normal",
+DEFAULT_TEXT = {"fontFamily": "Arial", "fontSize": 12, "fontWeight": "normal",
                 "fontStyle": "normal", "color": "#000000"}
 DEFAULT_PARA = {"alignment": "left", "lineHeight": 1.15, "spaceBefore": 0, "spaceAfter": 0}
 
@@ -115,7 +115,7 @@ def add_case(slide, frame):
             run.text = r["text"]
             f = run.font
             f.name = fam(s.get("fontFamily"))
-            f.size = Pt(float(s.get("fontSize", 16)))
+            f.size = Pt(float(s.get("fontSize", 12)))
             fw = s.get("fontWeight")
             f.bold = fw == "bold" or (isinstance(fw, (int, float)) and fw >= 600)
             f.italic = s.get("fontStyle") == "italic"

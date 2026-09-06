@@ -54,7 +54,7 @@ for (const s of slides) {
     }));
     const domFontPt = Math.max(
       ...frame.paragraphs.flatMap((p: any) =>
-        (p.children ?? []).map((r: any) => Number(r.fontSize) || Number(frame.defaultStyle?.fontSize) || 16)),
+        (p.children ?? []).map((r: any) => Number(r.fontSize) || Number(frame.defaultStyle?.fontSize) || 12)),
     );
 
     const svg = renderToSVG(result, {
