@@ -40,7 +40,10 @@ const { layoutTextFrame } = await import('../../packages/core/src/index.ts');
 const { renderToSVG } = await import('../../packages/renderers/src/index.ts');
 const fontFiles = resvgFontFiles();
 
-const plan: { slug: string; name: string; frameWidth: number | null; contentWpt: number; contentHpt: number; ppp: number }[] = [];
+const plan: {
+  slug: string; name: string; frameWidth: number | null;
+  contentWpt: number; contentHpt: number; firstLeadingPt: number; ppp: number;
+}[] = [];
 
 for (const name of CASES) {
   const input = JSON.parse(readFileSync(resolve(CORPUS, name, 'input.json'), 'utf8'));
@@ -68,11 +71,18 @@ for (const name of CASES) {
   }
   writeFileSync(resolve(OVERLAY_DIR, `${slug(name)}.png`), PNG.sync.write(png));
 
+  // vyaz's content box starts at the first glyph's ascent top; a PowerPoint
+  // text box puts leading ABOVE the first line. Shift the picture down by that
+  // leading so first baselines coincide.
+  const l0 = result.lines[0];
+  const firstLeadingPt = l0 ? Math.max(0, l0.baseline - l0.ascent) : 0;
+
   plan.push({
     slug: slug(name), name,
     frameWidth: input.frame.width ?? null,
     contentWpt: result.content.width,
     contentHpt: result.content.height,
+    firstLeadingPt,
     ppp: PPP,
   });
   console.log(`${name}  content ${result.content.width.toFixed(1)}×${result.content.height.toFixed(1)}pt  ${png.width}×${png.height}px`);

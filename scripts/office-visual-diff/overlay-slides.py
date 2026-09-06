@@ -79,7 +79,7 @@ def add_textbox(slide, frame, left, top, w_pt, h_pt):
         # line_spacing multiple would instead be × its ~1.2 single. lineHeight → 1.0.
         sz = max([float((r if r.get("fontSize") is not None else d).get("fontSize", 12))
                   for r in p.get("children", []) if isinstance(r.get("text"), str)] or [12])
-        para.line_spacing = Pt(sz * float(ps.get("lineHeight", 1.0)))
+        para.line_spacing = Pt(sz * float(ps.get("lineHeight", 1.15)))
         for r in p.get("children", []):
             if r.get("type") == "inline-box" or not isinstance(r.get("text"), str):
                 continue
@@ -121,9 +121,12 @@ def main():
         slide = prs.slides.add_slide(blank)
         # 1 — native text box, sized to vyaz content box
         add_textbox(slide, frame, left, top, w_pt, h_pt)
-        # 2 — vyaz render (red, transparent) same rect, on top
+        # 2 — vyaz render (red, transparent) same rect, nudged down by the
+        #     first-line leading so the two first baselines coincide
         png = os.path.join(OVERLAY, f"{c['slug']}.png")
-        slide.shapes.add_picture(png, left, top, Pt(w_pt), Pt(h_pt))
+        slide.shapes.add_picture(
+            png, left, top + Pt(c.get("firstLeadingPt", 0)), Pt(w_pt), Pt(h_pt)
+        )
 
         # label
         cap = slide.shapes.add_textbox(left, Pt(MARGIN_PT + h_pt + 12), Pt(600), Pt(20))
