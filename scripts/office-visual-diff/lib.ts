@@ -120,35 +120,48 @@ export function resizePng(src: PNG, w: number, h: number): PNG {
   return out;
 }
 
-/** side-by-side [a | b | overlay(b magenta over a)] on white. */
+/**
+ * Stacked panels on white, each separated by a grey rule:
+ *   1  PowerPoint crop
+ *   2  vyaz render (scaled to the same width)
+ *   3  overlay — vyaz ink in magenta over the PowerPoint crop
+ */
 export function triptych(a: PNG, b: PNG): PNG {
-  const h = Math.max(a.height, b.height);
-  const bScaled = b.height === h ? b : resizePng(b, Math.round((b.width * h) / b.height), h);
-  const gap = 12;
-  const w = a.width + gap + bScaled.width + gap + a.width;
+  const w = Math.max(a.width, b.width, 1);
+  const bScaled = b.width === w ? b : resizePng(b, w, Math.max(1, Math.round((b.height * w) / b.width)));
+  const bOverlay = resizePng(b, a.width, a.height);
+  const rule = 3;
+  const panels: { png: PNG; over?: PNG }[] = [{ png: a }, { png: bScaled }, { png: a, over: bOverlay }];
+  const h = panels.reduce((s, p) => s + p.png.height, 0) + rule * (panels.length - 1);
   const out = new PNG({ width: w, height: h, fill: true });
   out.data.fill(255);
-  const blit = (src: PNG, dx: number) => {
-    for (let y = 0; y < src.height; y++)
-      for (let x = 0; x < src.width; x++) {
-        const s = (y * src.width + x) * 4, d = (y * w + dx + x) * 4;
-        out.data[d] = src.data[s]; out.data[d + 1] = src.data[s + 1];
-        out.data[d + 2] = src.data[s + 2]; out.data[d + 3] = 255;
-      }
-  };
-  blit(a, 0);
-  blit(bScaled, a.width + gap);
-  // overlay
-  const ox = a.width + gap + bScaled.width + gap;
-  blit(a, ox);
-  const bo = resizePng(b, a.width, a.height);
-  for (let y = 0; y < a.height; y++)
-    for (let x = 0; x < a.width; x++) {
-      const s = (y * a.width + x) * 4;
-      const dark = bo.data[s] < 160 && bo.data[s + 1] < 160 && bo.data[s + 2] < 160;
-      if (!dark) continue;
-      const d = (y * w + ox + x) * 4;
-      out.data[d] = 230; out.data[d + 1] = 20; out.data[d + 2] = 130;
+
+  let y0 = 0;
+  for (const [i, p] of panels.entries()) {
+    if (i > 0) {
+      for (let y = y0; y < y0 + rule; y++)
+        for (let x = 0; x < w; x++) {
+          const d = (y * w + x) * 4;
+          out.data[d] = out.data[d + 1] = out.data[d + 2] = 150; out.data[d + 3] = 255;
+        }
+      y0 += rule;
     }
+    for (let y = 0; y < p.png.height; y++)
+      for (let x = 0; x < p.png.width; x++) {
+        const s = (y * p.png.width + x) * 4, d = ((y0 + y) * w + x) * 4;
+        out.data[d] = p.png.data[s]; out.data[d + 1] = p.png.data[s + 1];
+        out.data[d + 2] = p.png.data[s + 2]; out.data[d + 3] = 255;
+      }
+    if (p.over) {
+      for (let y = 0; y < Math.min(p.over.height, p.png.height); y++)
+        for (let x = 0; x < Math.min(p.over.width, p.png.width); x++) {
+          const s = (y * p.over.width + x) * 4;
+          if (!(p.over.data[s] < 160 && p.over.data[s + 1] < 160 && p.over.data[s + 2] < 160)) continue;
+          const d = ((y0 + y) * w + x) * 4;
+          out.data[d] = 230; out.data[d + 1] = 20; out.data[d + 2] = 130;
+        }
+    }
+    y0 += p.png.height;
+  }
   return out;
 }
