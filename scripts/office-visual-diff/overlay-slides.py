@@ -128,11 +128,15 @@ def main():
         slide = prs.slides.add_slide(blank)
         # 1 — native text box, sized to vyaz content box
         add_textbox(slide, frame, left, top, w_pt, h_pt)
-        # 2 — vyaz render (red, transparent) same rect, nudged down by the
-        #     first-line leading so the two first baselines coincide
+        # 2 — vyaz render (red, transparent). Size the picture from ITS OWN
+        #     rect (pngWpt/pngHpt), not the content box — otherwise a rotated
+        #     render (writing-mode/rotate-*) gets squashed into a portrait box.
+        #     NOTE: rotation is only faithful for the clockwise / rotate-180
+        #     cases; sideways-lr (CCW) via a:bodyPr vert270 is approximate.
         png = os.path.join(OVERLAY, f"{c['slug']}.png")
+        pw, ph = c.get("pngWpt", w_pt), c.get("pngHpt", h_pt)
         slide.shapes.add_picture(
-            png, left, top + Pt(c.get("firstLeadingPt", 0)), Pt(w_pt), Pt(h_pt)
+            png, left, top + Pt(c.get("firstLeadingPt", 0)), Pt(pw), Pt(ph)
         )
 
         # label

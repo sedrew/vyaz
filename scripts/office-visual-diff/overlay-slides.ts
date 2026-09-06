@@ -41,7 +41,9 @@ const fontFiles = resvgFontFiles();
 
 const plan: {
   slug: string; name: string; frameWidth: number | null;
-  contentWpt: number; contentHpt: number; firstLeadingPt: number; ppp: number;
+  contentWpt: number; contentHpt: number;
+  pngWpt: number; pngHpt: number;   // the RED picture's own rect — use for add_picture (no squish)
+  firstLeadingPt: number; ppp: number;
 }[] = [];
 
 for (const name of CASES) {
@@ -81,6 +83,8 @@ for (const name of CASES) {
     frameWidth: input.frame.width ?? null,
     contentWpt: result.content.width,
     contentHpt: result.content.height,
+    pngWpt: png.width / PPP,
+    pngHpt: png.height / PPP,
     firstLeadingPt,
     ppp: PPP,
   });
