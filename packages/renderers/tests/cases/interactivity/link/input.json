@@ -1,5 +1,5 @@
 {
-  "_comment": "TextRun.data.href — a real <a href> in the browser preset (structure: 'expanded', shared by browser + preserve), ignored entirely by flat (structure: 'flat') and glyph. styleSignature folds href into the grouping key so the linked run never merges into the same <text>/<tspan> group as its plain neighbours.",
+  "_comment": "TextRun.data.href — a real <a href> in the browser preset (structure: 'expanded', shared by browser + preserve), ignored entirely by flat (structure: 'flat') and glyph. styleSignature folds href into the grouping key so the linked run never merges into the same <text>/<tspan> group as its plain neighbours. The linked <text> is anchored at the run's real x (here x=64), NOT x=0: Chrome draws a stray underline tick at the x origin of an <a>-wrapped <text x=\"0\"> — it landed under the paragraph's first glyph ('S' of 'See'). Regression guard for that.",
   "profile": "raw",
   "frame": {
     "width": 400,

@@ -3,7 +3,7 @@
     <tspan x="0" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#000">See the</tspan>
     <tspan x="56"> </tspan>
   </text>
-<a href="https://sedrew.github.io/vyaz/">  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#0645ad" font-weight="400" xml:space="preserve">
+<a href="https://sedrew.github.io/vyaz/">  <text x="64" y="16" font-family="Unifont" font-size="16" fill="#0645ad" font-weight="400" xml:space="preserve">
     <tspan x="64" font-weight="400" font-style="normal" font-family="Unifont" font-size="16" fill="#0645ad" text-decoration="underline">documentation</tspan>
   </text>
 </a>  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#000" font-weight="400" xml:space="preserve">
