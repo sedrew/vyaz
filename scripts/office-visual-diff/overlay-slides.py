@@ -75,11 +75,11 @@ def add_textbox(slide, frame, left, top, w_pt, h_pt):
             para.space_before = Pt(float(ps["spaceBefore"]))
         if ps.get("spaceAfter"):
             para.space_after = Pt(float(ps["spaceAfter"]))
-        # absolute points: vyaz line box = maxRunPt × lineHeight; PowerPoint's
-        # line_spacing multiple would instead be × its ~1.2 single. lineHeight → 1.0.
-        sz = max([float((r if r.get("fontSize") is not None else d).get("fontSize", 12))
-                  for r in p.get("children", []) if isinstance(r.get("text"), str)] or [12])
-        para.line_spacing = Pt(sz * float(ps.get("lineHeight", 1.15)))
+        # only when the case explicitly set lineHeight, and as a MULTIPLE of
+        # PowerPoint's per-font "Single"; otherwise leave it native.
+        lh = ps.get("lineHeight")
+        if lh is not None and abs(float(lh) - 1.15) > 1e-6:  # 1.15 = vyaz default
+            para.line_spacing = float(lh)
         for r in p.get("children", []):
             if r.get("type") == "inline-box" or not isinstance(r.get("text"), str):
                 continue
