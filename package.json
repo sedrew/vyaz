@@ -18,7 +18,10 @@
     "docs:gen": "npx typedoc --options typedoc.json --tsconfig tsconfig.typedoc.json --skipErrorChecking packages/core/src/index.ts packages/core/src/debug.ts packages/renderers/src/index.ts --out docs/api/references"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/pngjs": "^6.0.5",
     "linkedom": "^0.18.13",
+    "pngjs": "^7.0.0",
     "satori": "^0.33.4",
     "typedoc": "^0.28.20",
     "typedoc-plugin-markdown": "^4.12.0",
