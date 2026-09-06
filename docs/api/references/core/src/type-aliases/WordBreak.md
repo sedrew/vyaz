@@ -4,7 +4,7 @@
 
 > **WordBreak** = `"normal"` \| `"break-all"` \| `"keep-all"` \| `"break-word"`
 
-Defined in: [core/src/types/Document.ts:69](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L69)
+Defined in: [core/src/types/Document.ts:86](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L86)
 
 **`Experimental`**
 

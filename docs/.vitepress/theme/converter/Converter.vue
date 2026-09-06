@@ -67,7 +67,7 @@ import { marked } from 'marked'
 import { layoutTextFrame } from '@vyaz/core'
 import { renderToSVG } from '@vyaz/renderer'
 import { htmlToTextFrame, markdownToTextFrame } from '@vyaz/converters'
-import { loadPlaygroundFonts, fontBytes } from '../playground/lib/loadPlaygroundFonts'
+import { loadPlaygroundFonts, fontBytes, reportFontWarnings } from '../playground/lib/loadPlaygroundFonts'
 import SvgPreview from '../playground/components/SvgPreview.vue'
 import HtmlInput from './HtmlInput.vue'
 import { SAMPLE_HTML, SAMPLE_MARKDOWN } from './sample'
@@ -154,6 +154,7 @@ const layout = computed(() => {
     const result = layoutTextFrame(converted.value.frame, {
       mode: mode.value, glyphAdvances: true, onMissingFont: 'substitute',
     })
+    reportFontWarnings('converter', result.warnings)
     return { result, ms: Math.round((performance.now() - t) * 100) / 100 }
   } catch (e) {
     console.error('[converter] layout error', e)
@@ -213,9 +214,11 @@ const stats = computed(() => {
   border: 1px solid var(--vp-c-divider); border-radius: 10px;
   overflow: hidden; background: var(--vp-c-bg);
 }
-/* HTML on top (fixed-ish), SVG below (much taller). */
-.cv__pane:first-child { height: 340px; }
-.cv__pane:last-child { height: 860px; }
+/* HTML on top (fixed-ish), SVG below (much taller).
+   `:first-child` never matched — `.cv__format` is the first child — so the
+   input pane had no height; use `:first-of-type`. */
+.cv__pane:first-of-type { height: 480px; }
+.cv__pane:last-of-type { height: 860px; }
 .cv__hd {
   display: flex; align-items: center; gap: 10px;
   padding: 6px 12px; font-size: 11px; font-weight: 600;
@@ -239,7 +242,7 @@ const stats = computed(() => {
 .cv__list code { font-size: 11px; }
 
 @media (max-width: 900px) {
-  .cv__pane:first-child { height: 300px; }
-  .cv__pane:last-child { height: 640px; }
+  .cv__pane:first-of-type { height: 420px; }
+  .cv__pane:last-of-type { height: 640px; }
 }
 </style>

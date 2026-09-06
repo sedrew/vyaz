@@ -6,12 +6,13 @@ SVG renderer for Vyaz layout output.
 
 | Preset | Structure | Use case |
 |--------|-----------|----------|
-| `flat` | Single `<text>` with concatenated text | **PowerPoint / OOXML export** |
-| `browser` | `<text>` + `<tspan>` per run | **Web / browser display** |
-| `preserve` | `<text>` + `<tspan>` + `textLength` | **Pixel-perfect rendering** |
-| `glyph` | `<tspan x="x0 x1 ...">` per glyph | **Selection / cursor positioning** |
+| `flat` | Single `<text>` per run, no `<tspan>` | Smallest output; viewer has the exact font |
+| `browser` | `<text>` + `<tspan>` per run | Web display; inspect / hand-edit |
+| `preserve` | `browser` + `textLength` per fragment | Portable — holds up under a substitute font |
+| `glyph` | `<tspan x="x0 x1 …">` per glyph | Fully baked in; archival / no text engine |
 
-Pass `{ debug: { frameBox, contentBox, baseline, … } }` for overlay boxes.
+The [**SVG rendering** guide](/guide/render) has the annotated markup for each,
+plus `style` / `fit` / `sizing` and the `debug` overlay flags.
 
 ## Tables
 

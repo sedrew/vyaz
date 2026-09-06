@@ -4,6 +4,6 @@
 
 > `const` **DEFAULT\_PARAGRAPH\_STYLE**: [`ParagraphStyle`](../interfaces/ParagraphStyle.md)
 
-Defined in: [core/src/index.ts:51](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L51)
+Defined in: [core/src/index.ts:65](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L65)
 
 **`Internal`**

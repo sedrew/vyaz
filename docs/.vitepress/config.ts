@@ -21,6 +21,7 @@ export default defineConfig({
         items: [
           { text: 'Getting Started', link: '/guide/getting-started' },
           { text: 'Browser usage', link: '/guide/browser' },
+          { text: 'SVG rendering', link: '/guide/render' },
           { text: 'Tables', link: '/guide/tables' },
         ],
       },
@@ -46,6 +47,7 @@ export default defineConfig({
         items: [
           { text: 'Getting Started', link: '/guide/getting-started' },
           { text: 'Browser usage', link: '/guide/browser' },
+          { text: 'SVG rendering', link: '/guide/render' },
           { text: 'Tables', link: '/guide/tables' },
           { text: 'Playground', link: '/playground' },
           { text: 'Converter', link: '/converter' },

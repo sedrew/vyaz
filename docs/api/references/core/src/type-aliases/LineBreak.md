@@ -4,7 +4,7 @@
 
 > **LineBreak** = `"auto"` \| `"loose"` \| `"normal"` \| `"strict"` \| `"anywhere"`
 
-Defined in: [core/src/types/Document.ts:77](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L77)
+Defined in: [core/src/types/Document.ts:94](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L94)
 
 **`Experimental`**
 

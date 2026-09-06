@@ -4,7 +4,7 @@
 
 > **shapeRun**(`font`, `text`, `opts?`): [`ShapedRun`](../interfaces/ShapedRun.md)
 
-Defined in: [core/src/measure/FontEngine.ts:145](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L145)
+Defined in: [core/src/measure/FontEngine.ts:151](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L151)
 
 Shape `text` through fontkit's OpenType layout engine — the same GPOS kerning
 and GSUB substitutions (`liga`, `clig`, `calt`, `ccmp`) a browser applies by

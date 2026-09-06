@@ -34,6 +34,28 @@
 .VPDoc:has(.vyaz-pg) .content,
 .VPDoc:has(.ce) .content { max-width: none; }
 
+/* SVG rendering guide: the preset legend needs room for the code column.
+   The `.has-aside` variant carries extra specificity to beat VitePress's own
+   `.VPDoc.has-aside .content-container { max-width: 688px }`. */
+.VPDoc:has(.pl) .container { max-width: 1280px; }
+.VPDoc:has(.pl) .content { max-width: 1080px; }
+.VPDoc:has(.pl) .content-container,
+.VPDoc:has(.pl).has-aside .content-container { max-width: 760px; }
+
+/* ── Collapsible sidebar (desktop) — toggled by <NavCollapse> ───────────
+   `html.` prefix lifts specificity past VitePress's own scoped
+   `.VPSidebar[data-v-…]` rule so the collapsed transform wins. */
+.VPSidebar { transition: transform 0.25s ease; }
+@media (min-width: 960px) {
+  html.vyaz-nav-collapsed .VPSidebar { transform: translateX(-100%) !important; }
+  html.vyaz-nav-collapsed .VPContent.has-sidebar { padding-left: 0 !important; }
+  html.vyaz-nav-collapsed .VPNavBar.has-sidebar .content { padding-left: 32px !important; }
+  html.vyaz-nav-collapsed .VPNavBar .divider { display: none; }
+}
+@media (min-width: 1440px) {
+  html.vyaz-nav-collapsed .VPContent.has-sidebar { margin: 0 auto !important; padding-left: 0 !important; }
+}
+
 /* the ported EditorPanel ships its own header — the pane already has one */
 .vyaz-pg .editor-header { display: none; }
 .vyaz-pg .editor-panel { border-right: 0; }

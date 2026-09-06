@@ -97,6 +97,21 @@ export interface SVGRenderOptions {
    * for `<img>` / `<svg>` / `<progress>` / … ; irrelevant without inline boxes.
    */
   inlineBoxes?: Record<string, string>;
+  /**
+   * What to do with a character no registered font covers (`Span.notdefRanges`
+   * from the layout — set automatically for the `glyph` preset, otherwise via
+   * `layoutTextFrame({ markMissingGlyphs: true })`):
+   *   - `'keep'` (default) — emit the raw character; the viewer paints it from
+   *     its own fallback stack, whose width Vyaz could not predict.
+   *   - `'box'` — omit the character and draw a hollow `.notdef` rectangle in
+   *     the slot the layout reserved, so painted width == measured width in
+   *     every viewer.
+   *
+   * Currently honoured by the `glyph` preset only (it positions every
+   * character, so the box lands exactly); `flat` / `browser` / `preserve`
+   * ignore it and emit the raw character.
+   */
+  missingGlyph?: 'keep' | 'box';
 }
 
 type SpacingMode = 'browser' | 'preserve';
@@ -116,6 +131,7 @@ type ResolvedOptions = {
   debug?: DebugFlags;
   glyphDecorations: boolean;
   inlineBoxes?: Record<string, string>;
+  missingGlyph: 'keep' | 'box';
 };
 
 // ── Preset map ───────────────────────────────────────────────────────────
@@ -246,7 +262,7 @@ function resolveOptions(opts: SVGRenderOptions): ResolvedOptions {
     fit = 'text';
   }
 
-  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug, glyphDecorations: opts.glyphDecorations ?? true, inlineBoxes: opts.inlineBoxes };
+  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug, glyphDecorations: opts.glyphDecorations ?? true, inlineBoxes: opts.inlineBoxes, missingGlyph: opts.missingGlyph ?? 'keep' };
 }
 
 /**
@@ -713,16 +729,37 @@ class SvgAstBuilder {
   /**
    * Add a glyph-positioned <tspan> node to the current <text> element.
    */
-  addGlyphTspan(span: Span, lineX: number): void {
+  addGlyphTspan(span: Span, lineX: number, textOverride?: string): void {
     const positions = buildGlyphPositions(span, lineX);
     const attrs: Record<string, string | number> = {};
     if (positions) {
       attrs.x = positions;
     }
-    const tspan = el('tspan', attrs, [textNode(span.text)]);
+    const tspan = el('tspan', attrs, [textNode(textOverride ?? span.text)]);
     if (this.currentText) {
       this.currentText.children.push(tspan);
     }
+  }
+
+  /**
+   * Draw a hollow `.notdef` box for a run of code points no font covered
+   * (`missingGlyph: 'box'`). `x`/`advance` are the slot the layout reserved,
+   * so nothing after it shifts. Sits on the baseline, ~cap-height tall, with a
+   * small side bearing — the shape most fonts use for their own `.notdef`.
+   */
+  addNotdefBox(x: number, advance: number, baselineY: number, fontSize: number, color: string): void {
+    this.closeText();
+    const inset = Math.min(advance * 0.12, fontSize * 0.08);
+    const h = fontSize * 0.66;
+    this.root.children.push(el('rect', {
+      x: fmt(x + inset),
+      y: fmt(baselineY - h),
+      width: fmt(Math.max(advance - inset * 2, 0.5)),
+      height: fmt(h),
+      fill: 'none',
+      stroke: color,
+      'stroke-width': Math.max(1, Math.round(fontSize / 20)),
+    }));
   }
 
   /**
@@ -1098,6 +1135,8 @@ export function renderToSVG(
       const glyphSpanDX = line.x - glyphFirstTextX;
       let currentRunIdx = -1;
       let currentSig = '';
+      // missingGlyph: 'box' — deferred so the <rect>s land after closeText()
+      const notdefBoxes: { x: number; advance: number; baseY: number; fs: number; color: string }[] = [];
       for (const span of line.spans) {
         if (!span.text || span.inlineWidget) continue;
         const runIdx = span.itemIndex;
@@ -1118,9 +1157,35 @@ export function renderToSVG(
           currentRunIdx = runIdx;
           currentSig = sig;
         }
-        builder.addGlyphTspan(span, glyphSpanDX);
+
+        const ranges = opts.missingGlyph === 'box' ? span.notdefRanges : undefined;
+        if (ranges && ranges.length && span.glyphAdvances && span.glyphAdvances.length) {
+          const adv = span.glyphAdvances;
+          const ls = span.style.letterSpacing || 0;
+          const baseX = span.x + glyphSpanDX;
+          const offset = span.fontMetrics.baselineOffset || 0;
+          const baseY = Math.round((line.y + line.baseline + offset) * 100) / 100;
+          // prefix sums so each range's slot x/width is exact
+          for (const r of ranges) {
+            let x = baseX;
+            for (let i = 0; i < r.start && i < adv.length; i++) x += adv[i] + ls;
+            let w = 0;
+            for (let i = r.start; i < r.end && i < adv.length; i++) w += adv[i] + (i > r.start ? ls : 0);
+            notdefBoxes.push({ x, advance: w, baseY, fs: span.fontMetrics.fontSize, color: span.style.color || '#000000' });
+          }
+          // draw the surviving characters; blank the missing ones so their
+          // per-glyph x slot is preserved but nothing is painted there
+          let blanked = '';
+          for (let i = 0; i < span.text.length; i++) {
+            blanked += ranges.some((r) => i >= r.start && i < r.end) ? ' ' : span.text[i];
+          }
+          builder.addGlyphTspan(span, glyphSpanDX, blanked);
+        } else {
+          builder.addGlyphTspan(span, glyphSpanDX);
+        }
       }
       builder.closeText();
+      for (const b of notdefBoxes) builder.addNotdefBox(b.x, b.advance, b.baseY, b.fs, b.color);
 
       // Decoration pass. The glyph path positions every character with its own
       // <tspan x="…">, so SVG `text-decoration` can't be used (it would re-anchor

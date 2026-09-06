@@ -2,7 +2,7 @@
 
 # Interface: ShapedRun
 
-Defined in: [core/src/measure/FontEngine.ts:128](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L128)
+Defined in: [core/src/measure/FontEngine.ts:134](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L134)
 
 Result of [shapeRun](../functions/shapeRun.md): total advance + per-glyph detail, in font units.
 
@@ -12,7 +12,7 @@ Result of [shapeRun](../functions/shapeRun.md): total advance + per-glyph detail
 
 > **advanceWidth**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:130](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L130)
+Defined in: [core/src/measure/FontEngine.ts:136](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L136)
 
 Sum of every glyph's xAdvance after kerning / ligature substitution.
 
@@ -22,4 +22,4 @@ Sum of every glyph's xAdvance after kerning / ligature substitution.
 
 > **glyphs**: [`ShapedGlyph`](ShapedGlyph.md)[]
 
-Defined in: [core/src/measure/FontEngine.ts:131](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L131)
+Defined in: [core/src/measure/FontEngine.ts:137](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L137)

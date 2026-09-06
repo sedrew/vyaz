@@ -1,0 +1,40 @@
+[vyaz-monorepo](../../../index.md) / [renderers/src](../index.md) / renderResultToSVG
+
+# Function: renderResultToSVG()
+
+> **renderResultToSVG**(`result`, `options?`): `string`
+
+Defined in: [renderers/src/SVGRenderer.ts:1426](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/SVGRenderer.ts#L1426)
+
+Render a ParagraphLayoutResult to SVG, auto-passing dimensions.
+
+Uses `result.width` and `result.height` as the SVG canvas size.
+This is the recommended way to render when you have a layout result
+and want `sizing: 'frame'` with correct dimensions.
+
+## Parameters
+
+### result
+
+`ParagraphLayoutResult`
+
+— layout result from ParagraphLayoutEngine.layout()
+
+### options?
+
+[`SVGRenderOptions`](../interfaces/SVGRenderOptions.md)
+
+— rendering options (preset, style, fit, etc.)
+
+## Returns
+
+`string`
+
+SVG string
+
+## Example
+
+```ts
+const result = paragraphLayoutEngine.layout(paragraph, 300);
+const svg = renderResultToSVG(result, { preset: 'preserve' });
+```

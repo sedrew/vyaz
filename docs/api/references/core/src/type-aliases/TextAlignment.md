@@ -4,7 +4,7 @@
 
 > **TextAlignment** = `"left"` \| `"center"` \| `"right"` \| `"justify"`
 
-Defined in: [core/src/types/Document.ts:53](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L53)
+Defined in: [core/src/types/Document.ts:70](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L70)
 
 Horizontal text alignment within a line.
 

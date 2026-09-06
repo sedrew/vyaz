@@ -190,6 +190,15 @@ export interface LayoutOptions {
    * unless the output is consumed by a browser (SVG `browser` preset).
    */
   shaping?: boolean;
+  /**
+   * Fill `Span.notdefRanges` on every text span — the character ranges no
+   * registered font covers. The SVG `glyph` preset always does this (it
+   * resolves the same font anyway); set this to get it for the flat / browser
+   * / preserve presets, which `renderToSVG({ missingGlyph: 'box' })` reads to
+   * draw an explicit placeholder instead of passing the raw code point to the
+   * viewer's fallback. Cheap: a cmap lookup per character, no glyph objects.
+   */
+  markMissingGlyphs?: boolean;
 }
 
 /** Autofit outcome, present on the result when {@link LayoutOptions.autofit} was set. */
@@ -230,6 +239,7 @@ export function runFlow(
     }
   }
   const wantGlyphAdvances = options.glyphAdvances === true;
+  const markMissingGlyphs = options.markMissingGlyphs === true;
   const mode = options.mode;
   const onMissingFont = options.onMissingFont ?? 'throw';
   const warnings: LayoutWarning[] = [];
@@ -375,6 +385,7 @@ export function runFlow(
       wantGlyphAdvances,
       mode,
       onMissingFont,
+      markMissingGlyphs,
     );
 
     return {

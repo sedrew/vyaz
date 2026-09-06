@@ -41,6 +41,15 @@ export interface Span {
   glyphAdvances?: number[] | Float32Array;
 
   /**
+   * Half-open `[start, end)` ranges of `text` (character indices) that no
+   * registered font covers — fontkit mapped them to `.notdef`. Contiguous
+   * misses are merged. Filled when per-glyph advances are computed (SVG
+   * `glyph` preset) or `LayoutOptions.markMissingGlyphs` is set; absent when
+   * every character resolved. Consumers: `renderToSVG({ missingGlyph: 'box' })`.
+   */
+  notdefRanges?: { start: number; end: number }[];
+
+  /**
    * Span type:
    * - `'text'` — regular text
    * - `'space'` — whitespace span

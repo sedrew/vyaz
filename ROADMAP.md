@@ -61,6 +61,19 @@ Direction, not a schedule. Order within a section is rough priority.
 
 - A React / Vue `<VyazText>` wrapper package.
 - PDF output from the same `LayoutResult`.
+- **`path` SVG preset — font-independent glyph outlines.** Every glyph as an
+  actual `<path>` (via fontkit's `glyph.path`, already decoded/memoized per
+  glyph internally) instead of `<text>` referencing a font by name — same
+  idea as Satori's OG-image output (see `bench/vs-satori.ts`), self-contained
+  SVG that needs no font at paint time, at the cost of a much larger payload.
+  The expensive step isn't outline decoding (fontkit caches that per glyph)
+  but `Path.toSVG()`'s string serialization, which fontkit does *not* cache —
+  needs its own cache in `FontEngine`/`FontMetricsProvider`, in font units,
+  keyed by `(variantKey, glyphId)` (not fontSize — scale via `transform`),
+  computed opt-in at layout time like `glyphAdvances`. `SVGRenderer` would
+  also need a `<defs>`/`<use>` dedup pass so a repeated glyph doesn't repeat
+  its full path data — without it, output runs 40–50× larger than `flat`/
+  `glyph` for exactly that reason.
 - **`office` line-box model — open question.** Today `mode: 'office'` uses
   `ascent/descent = winAscent/winDescent × 1.078` (fitted to Arial:
   `1.117 × 1.078 ≈ 1.2`). Calibrating against real PowerPoint on macOS

@@ -4,7 +4,7 @@
 
 > **DominantBaseline** = `"auto"` \| `"text-bottom"` \| `"alphabetic"` \| `"ideographic"` \| `"middle"` \| `"central"` \| `"mathematical"` \| `"hanging"` \| `"text-top"`
 
-Defined in: [core/src/types/Document.ts:108](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L108)
+Defined in: [core/src/types/Document.ts:125](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L125)
 
 **`Experimental`**
 

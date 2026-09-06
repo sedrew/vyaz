@@ -2,7 +2,7 @@
 
 # Interface: AutofitConfig
 
-Defined in: [core/src/types/Document.ts:200](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L200)
+Defined in: [core/src/types/Document.ts:217](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L217)
 
 Configuration for automatic font-size reduction (autofit).
 
@@ -26,7 +26,7 @@ of **all** runs proportionally so the text fits inside the frame's
 
 > `optional` **baseFontSize?**: `number`
 
-Defined in: [core/src/types/Document.ts:220](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L220)
+Defined in: [core/src/types/Document.ts:237](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L237)
 
 Base font size used as a reference when `TextRun.fontSize`
 is interpreted as a relative scale factor.
@@ -42,7 +42,7 @@ Currently `TextRun.fontSize` is absolute px.
 
 > **enabled**: `boolean`
 
-Defined in: [core/src/types/Document.ts:202](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L202)
+Defined in: [core/src/types/Document.ts:219](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L219)
 
 Whether autofit is active.
 
@@ -52,7 +52,7 @@ Whether autofit is active.
 
 > `optional` **maxFontSize?**: `number`
 
-Defined in: [core/src/types/Document.ts:212](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L212)
+Defined in: [core/src/types/Document.ts:229](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L229)
 
 Maximum font size in px.
 The engine will never grow text above this threshold.
@@ -63,7 +63,7 @@ The engine will never grow text above this threshold.
 
 > `optional` **minFontSize?**: `number`
 
-Defined in: [core/src/types/Document.ts:207](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L207)
+Defined in: [core/src/types/Document.ts:224](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L224)
 
 Minimum font size in px.
 The engine will never shrink text below this threshold.

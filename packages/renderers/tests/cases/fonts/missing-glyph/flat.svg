@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="210.7" height="107" viewBox="-10 -10 210.7 107">
+  <text x="0" y="32" font-family="Roboto" font-size="34" fill="#000000" font-weight="400" xml:space="preserve">HTML → SVG</text>
+  <text x="0" y="80" font-family="Unifont" font-size="28" fill="#000000" font-weight="400" xml:space="preserve">treble 𝄞 </text>
+  <text x="126" y="80" font-family="Unifont" font-size="28" fill="#aa413a" font-weight="700" xml:space="preserve">clef</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="190.7" height="87" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

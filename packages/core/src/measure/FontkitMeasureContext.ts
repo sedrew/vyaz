@@ -239,7 +239,9 @@ export function measurePx(
   let width = 0;
   for (let i = 0; i < text.length; i++) {
     const cp = text.codePointAt(i)!;
-    const advance = raw.glyphForCodePoint(cp)?.advanceWidth;
+    // `glyphForCodePoint` never returns null — an unmapped code point yields
+    // `.notdef`, whose box advance is not what a browser fallback paints.
+    const advance = raw.hasGlyphForCodePoint(cp) ? raw.glyphForCodePoint(cp).advanceWidth : null;
     width += advance != null ? advance * scale : fontSize * MISSING_GLYPH_FACTOR;
     if (cp > 0xffff) i++;
   }

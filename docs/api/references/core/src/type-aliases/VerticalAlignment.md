@@ -4,7 +4,7 @@
 
 > **VerticalAlignment** = `"top"` \| `"middle"` \| `"bottom"`
 
-Defined in: [core/src/types/Document.ts:125](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L125)
+Defined in: [core/src/types/Document.ts:142](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L142)
 
 Vertical alignment of the whole text block inside the frame.
 

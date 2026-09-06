@@ -2,7 +2,7 @@
 
 # Interface: TextFrame
 
-Defined in: [core/src/types/Document.ts:582](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L582)
+Defined in: [core/src/types/Document.ts:620](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L620)
 
 Root text container — a text box on a canvas.
 
@@ -34,7 +34,7 @@ It holds geometry, text flow settings, and the paragraph array.
 
 > `optional` **autofit?**: [`AutofitConfig`](AutofitConfig.md)
 
-Defined in: [core/src/types/Document.ts:604](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L604)
+Defined in: [core/src/types/Document.ts:642](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L642)
 
 Autofit (auto font-size reduction) configuration.
 
@@ -44,7 +44,7 @@ Autofit (auto font-size reduction) configuration.
 
 > `optional` **columns?**: [`MultiColumnConfig`](MultiColumnConfig.md)
 
-Defined in: [core/src/types/Document.ts:651](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L651)
+Defined in: [core/src/types/Document.ts:703](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L703)
 
 **`Experimental`**
 
@@ -58,7 +58,7 @@ When set, paragraphs are automatically broken into columns.
 
 > `optional` **defaultStyle?**: `Partial`\<`Omit`\<[`TextRun`](TextRun.md), `"type"` \| `"text"` \| `"inlineWidget"`\>\>
 
-Defined in: [core/src/types/Document.ts:658](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L658)
+Defined in: [core/src/types/Document.ts:710](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L710)
 
 Default style inherited by all `TextRun` children.
 Any field omitted in a `TextRun` will fall back to this value.
@@ -69,7 +69,7 @@ Any field omitted in a `TextRun` will fall back to this value.
 
 > `optional` **direction?**: `"ltr"` \| `"rtl"`
 
-Defined in: [core/src/types/Document.ts:619](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L619)
+Defined in: [core/src/types/Document.ts:671](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L671)
 
 Base text direction (important for bidi).
 `'ltr'` = left-to-right, `'rtl'` = right-to-left.
@@ -80,7 +80,7 @@ Base text direction (important for bidi).
 
 > `optional` **dominantBaseline?**: [`DominantBaseline`](../type-aliases/DominantBaseline.md)
 
-Defined in: [core/src/types/Document.ts:626](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L626)
+Defined in: [core/src/types/Document.ts:678](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L678)
 
 **`Experimental`**
 
@@ -93,7 +93,7 @@ Dominant baseline for inline alignment.
 
 > `optional` **height?**: `number`
 
-Defined in: [core/src/types/Document.ts:596](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L596)
+Defined in: [core/src/types/Document.ts:634](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L634)
 
 Container height in px.
 
@@ -106,7 +106,7 @@ When set — may clip content or trigger autofit. When `undefined` — auto
 
 > `optional` **lineFitEdge?**: [`LineFitEdge`](../type-aliases/LineFitEdge.md)
 
-Defined in: [core/src/types/Document.ts:631](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L631)
+Defined in: [core/src/types/Document.ts:683](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L683)
 
 **`Experimental`**
 
@@ -119,7 +119,7 @@ Font metric edge used for line box height.
 
 > `optional` **padding?**: `object`
 
-Defined in: [core/src/types/Document.ts:636](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L636)
+Defined in: [core/src/types/Document.ts:688](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L688)
 
 Inner padding of the frame.
 Text layout starts at `x + padding.left`, `y + padding.top`.
@@ -154,9 +154,29 @@ Top padding in px.
 
 > **paragraphs**: [`Paragraph`](Paragraph.md)[]
 
-Defined in: [core/src/types/Document.ts:653](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L653)
+Defined in: [core/src/types/Document.ts:705](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L705)
 
 Paragraphs forming the text content.
+
+***
+
+### rotation?
+
+> `optional` **rotation?**: `number`
+
+Defined in: [core/src/types/Document.ts:666](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L666)
+
+Rigid clockwise rotation of the **whole** text block, in degrees, applied
+after layout as an affine transform about the frame-box centre. This does
+**not** affect line breaking, measurement or positioning — only the final
+render transform. Mirrors PowerPoint's shape rotation (`<a:xfrm rot>`).
+
+Composes with `writingMode: 'sideways-*'` (which contributes its own ±90°).
+`0`, `90`, `180`, `270` are the exercised values; other angles are accepted
+and rotate about the centre without expanding the canvas bounding box.
+
+The engine folds this together with the writing-mode rotation and reports
+the result on `TextFrameLayoutResult.transform`.
 
 ***
 
@@ -164,7 +184,7 @@ Paragraphs forming the text content.
 
 > `optional` **textOrientation?**: [`TextOrientation`](../type-aliases/TextOrientation.md)
 
-Defined in: [core/src/types/Document.ts:614](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L614)
+Defined in: [core/src/types/Document.ts:652](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L652)
 
 Character orientation in vertical mode.
 Ignored when `writingMode === 'horizontal-tb'`.
@@ -175,7 +195,7 @@ Ignored when `writingMode === 'horizontal-tb'`.
 
 > `optional` **verticalAlignment?**: [`VerticalAlignment`](../type-aliases/VerticalAlignment.md)
 
-Defined in: [core/src/types/Document.ts:621](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L621)
+Defined in: [core/src/types/Document.ts:673](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L673)
 
 Vertical alignment of the content block inside the frame.
 
@@ -185,7 +205,7 @@ Vertical alignment of the content block inside the frame.
 
 > `optional` **width?**: `number`
 
-Defined in: [core/src/types/Document.ts:589](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L589)
+Defined in: [core/src/types/Document.ts:627](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L627)
 
 Container width in px.
 
@@ -198,7 +218,7 @@ for horizontal-tb writing mode. When `undefined` — auto (fit-content).
 
 > **wrap**: `boolean`
 
-Defined in: [core/src/types/Document.ts:602](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L602)
+Defined in: [core/src/types/Document.ts:640](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L640)
 
 Whether line wrapping is enabled.
 `true` = lines break when they exceed `width` (or `height` in vertical mode).
@@ -210,7 +230,7 @@ Whether line wrapping is enabled.
 
 > `optional` **writingMode?**: [`WritingMode`](../type-aliases/WritingMode.md)
 
-Defined in: [core/src/types/Document.ts:609](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L609)
+Defined in: [core/src/types/Document.ts:647](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L647)
 
 Writing mode (block flow direction).
 Defaults to `'horizontal-tb'` when absent.

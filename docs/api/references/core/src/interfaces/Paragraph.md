@@ -2,7 +2,7 @@
 
 # Interface: Paragraph
 
-Defined in: [core/src/types/Document.ts:513](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L513)
+Defined in: [core/src/types/Document.ts:551](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L551)
 
 A single paragraph (block-level text container).
 
@@ -27,7 +27,7 @@ Contains one or more `TextRun` children that form the paragraph content.
 
 > **children**: [`TextRun`](TextRun.md)[]
 
-Defined in: [core/src/types/Document.ts:519](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L519)
+Defined in: [core/src/types/Document.ts:557](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L557)
 
 Inline-level text runs forming the paragraph.
 
@@ -37,7 +37,7 @@ Inline-level text runs forming the paragraph.
 
 > `optional` **id?**: `string`
 
-Defined in: [core/src/types/Document.ts:515](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L515)
+Defined in: [core/src/types/Document.ts:553](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L553)
 
 Unique identifier for this paragraph (optional, for debugging).
 
@@ -47,6 +47,6 @@ Unique identifier for this paragraph (optional, for debugging).
 
 > **style**: [`ParagraphStyle`](ParagraphStyle.md)
 
-Defined in: [core/src/types/Document.ts:517](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L517)
+Defined in: [core/src/types/Document.ts:555](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L555)
 
 Block-level paragraph style.

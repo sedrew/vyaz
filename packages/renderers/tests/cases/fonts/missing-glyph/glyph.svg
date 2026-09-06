@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="211.4" height="107" viewBox="-10 -10 211.4 107">
+  <text x="0" y="32" font-family="Roboto" font-size="34" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 24.3 44.5 74.2 92.5 101 118 126.4 146.6 168.2">HTML → SVG</tspan>
+  </text>
+  <text x="0" y="80" font-family="Unifont" font-size="28" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 14 28 42 56 70 84 98 112">treble 𝄞</tspan>
+    <tspan x="112"> </tspan>
+  </text>
+  <text x="0" y="80" font-family="Unifont" font-size="28" fill="#aa413a" font-weight="700" xml:space="preserve">
+    <tspan x="126 140 154 168">clef</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="191.4" height="87" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

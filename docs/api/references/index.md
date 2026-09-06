@@ -4,4 +4,4 @@
 
 - [core/src](core/src/index.md)
 - [core/src/debug](core/src/debug/index.md)
-- [renderer/src](renderer/src/index.md)
+- [renderers/src](renderers/src/index.md)

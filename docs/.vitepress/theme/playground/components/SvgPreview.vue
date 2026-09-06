@@ -7,6 +7,8 @@
           v-for="p in presets" :key="p"
           class="sp__tab" :class="{ 'is-active': active === p }"
           @click="active = p"
+          @mouseenter="openTip(p, $event)" @mouseleave="tip = null"
+          @focus="openTip(p, $event)" @blur="tip = null"
         >{{ p }}</button>
       </div>
 
@@ -62,12 +64,20 @@
         </template>
       </div>
     </div>
+
+    <PresetTip
+      v-if="tip && tipAnchor && presetNames.has(tip)"
+      :preset="(tip as PresetName)"
+      :anchor="tipAnchor"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { IconBug, IconCode, IconDownload, IconChevronDown } from '@tabler/icons-vue'
+import PresetTip from './PresetTip.vue'
+import { PRESET_ORDER, type PresetName } from '../lib/presetInfo'
 
 interface Stats {
   lines: number; runs: number; cw: number; ch: number
@@ -101,6 +111,16 @@ const DEBUG_FLAGS = [
 const active = ref<string>(props.presets.includes('browser') ? 'browser' : props.presets[0])
 watch(() => props.presets, (ps) => { if (!ps.includes(active.value)) active.value = ps[0] })
 
+// ── preset explainer card (hover / focus a tab) ──────────────────────
+const tip = ref<string | null>(null)
+const tipAnchor = ref<DOMRect | null>(null)
+const presetNames = new Set<string>(PRESET_ORDER)
+function openTip(p: string, e: Event) {
+  if (!presetNames.has(p)) return
+  tipAnchor.value = (e.currentTarget as HTMLElement).getBoundingClientRect()
+  tip.value = p
+}
+
 const currentSvg = computed(() => props.svgByPreset[active.value] ?? props.svgByPreset[props.presets[0]] ?? '')
 const activeCount = computed(() => DEBUG_FLAGS.filter((k) => props.debug[k]).length)
 const resizable = computed(() => props.width != null && props.height != null)
@@ -114,8 +134,18 @@ const showCode = ref(false)
 function onDocClick(e: MouseEvent) {
   if (menuOpen.value && menuEl.value && !menuEl.value.contains(e.target as Node)) menuOpen.value = false
 }
-onMounted(() => document.addEventListener('mousedown', onDocClick))
-onBeforeUnmount(() => document.removeEventListener('mousedown', onDocClick))
+// the preset card is anchored to a tab's screen rect — drop it if the page moves
+function dropTip() { tip.value = null }
+onMounted(() => {
+  document.addEventListener('mousedown', onDocClick)
+  window.addEventListener('scroll', dropTip, { passive: true })
+  window.addEventListener('resize', dropTip)
+})
+onBeforeUnmount(() => {
+  document.removeEventListener('mousedown', onDocClick)
+  window.removeEventListener('scroll', dropTip)
+  window.removeEventListener('resize', dropTip)
+})
 
 // ── resize handles ───────────────────────────────────────────────────
 const canvasEl = ref<HTMLElement | null>(null)

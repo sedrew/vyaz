@@ -43,7 +43,7 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { layoutTextFrame } from '@vyaz/core'
 import { renderToSVG } from '@vyaz/renderer'
-import { loadPlaygroundFonts, fontBytes } from '../lib/loadPlaygroundFonts'
+import { loadPlaygroundFonts, fontBytes, reportFontWarnings } from '../lib/loadPlaygroundFonts'
 import SvgPreview from './SvgPreview.vue'
 
 // ── discover cases (build-time glob over the renderer test corpus) ─────
@@ -158,6 +158,7 @@ const stats = computed(() => {
   try {
     const t = performance.now()
     const r = layoutTextFrame(p.frame, { onMissingFont: 'substitute' })
+    reportFontWarnings(`case ${name.value}`, r.warnings)
     return {
       lines: r.lines.length,
       runs: r.lines.reduce((n: number, ln: any) => n + ln.spans.filter((s: any) => s.type === 'text').length, 0),

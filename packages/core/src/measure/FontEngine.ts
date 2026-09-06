@@ -81,10 +81,16 @@ function _extractMetrics(raw: any): {
 
 /**
  * Get a glyph handle for a code point.
- * Returns null when the glyph is not present (e.g. .notdef).
+ * Returns null when the glyph is not present.
+ *
+ * fontkit's `glyphForCodePoint` never returns null — an unmapped code point
+ * yields the `.notdef` glyph (id 0), whose `advanceWidth` is a font-specific
+ * box width unrelated to what a browser will paint from its fallback stack.
+ * Gate on `hasGlyphForCodePoint` so callers can apply {@link MISSING_GLYPH_FACTOR}
+ * instead of trusting that box width.
  */
 function _getGlyph(raw: any, codePoint: number): any | null {
-  return raw.glyphForCodePoint(codePoint) ?? null;
+  return raw.hasGlyphForCodePoint(codePoint) ? raw.glyphForCodePoint(codePoint) : null;
 }
 
 // ── Public API ─────────────────────────────────────────────────────────

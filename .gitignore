@@ -3,7 +3,7 @@ node_modules/
 fonts/
 # ...except committed test / demo font assets
 !docs/.vitepress/theme/playground/fonts/
-!packages/renderer/tests/cases/fonts/
+!packages/renderers/tests/cases/fonts/
 
 dist/
 

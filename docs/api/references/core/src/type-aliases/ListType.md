@@ -4,7 +4,7 @@
 
 > **ListType** = `"bullet"` \| `"number"` \| `"none"`
 
-Defined in: [core/src/types/Document.ts:157](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L157)
+Defined in: [core/src/types/Document.ts:174](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L174)
 
 Type of list marker.
 

@@ -215,6 +215,21 @@ Or set `layoutTextFrame(frame, { onMissingFont: 'substitute' })` to fall back to
 any registered family (with a `result.warnings` entry) instead of throwing
 `FontNotFoundError`.
 
+### Missing glyphs (not a missing family)
+
+`onMissingFont` is family-level. A *single* code point absent from an otherwise
+registered font (an arrow, a symbol, an emoji) is mapped to `.notdef`: the
+engine reserves `MISSING_GLYPH_FACTOR × fontSize` for it and — under
+`missingGlyph: 'keep'` (the default) — emits the raw character, which a browser
+then paints from its own fallback at an unpredictable width. In the `glyph`
+preset that shows up as an overlap.
+
+Real fix: register a font that has the glyph. Failing that, render with
+`renderToSVG(result, { preset: 'glyph', missingGlyph: 'box' })` — a hollow box
+in the reserved slot, so what's painted is what was measured. `result.warnings`
+does **not** flag glyph-level misses; read `span.notdefRanges` (filled by the
+`glyph` preset, or `layoutTextFrame(frame, { markMissingGlyphs: true })`).
+
 ### Timing
 
 `registerFont` is async; so is `FontFace.load()`. Await every registration and

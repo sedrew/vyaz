@@ -4,7 +4,7 @@
 
 > `const` **defaultBulletChar**: (`level`) => `string` = `_dbc`
 
-Defined in: [core/src/index.ts:112](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L112)
+Defined in: [core/src/index.ts:130](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L130)
 
 **`Internal`**
 

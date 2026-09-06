@@ -4,7 +4,7 @@
 
 > **TextOrientation** = `"mixed"` \| `"upright"` \| `"sideways"`
 
-Defined in: [core/src/types/Document.ts:46](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L46)
+Defined in: [core/src/types/Document.ts:63](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L63)
 
 Character orientation inside a vertical line.
 

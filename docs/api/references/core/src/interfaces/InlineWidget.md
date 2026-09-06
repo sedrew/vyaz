@@ -2,7 +2,7 @@
 
 # Interface: InlineWidget
 
-Defined in: [core/src/types/Document.ts:321](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L321)
+Defined in: [core/src/types/Document.ts:353](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L353)
 
 Data for an inline widget (embedded object inside text flow).
 
@@ -22,7 +22,7 @@ An inline icon (24×24 px) embedded in a sentence:
 
 > `optional` **baselineOffset?**: `number`
 
-Defined in: [core/src/types/Document.ts:331](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L331)
+Defined in: [core/src/types/Document.ts:363](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L363)
 
 Offset from the baseline (in px).
 Positive = widget descends below the baseline.
@@ -34,9 +34,21 @@ Negative = widget ascends above the baseline.
 
 > **height**: `number`
 
-Defined in: [core/src/types/Document.ts:325](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L325)
+Defined in: [core/src/types/Document.ts:357](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L357)
 
 Height of the widget in px.
+
+***
+
+### id?
+
+> `optional` **id?**: `string`
+
+Defined in: [core/src/types/Document.ts:369](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L369)
+
+Opaque key a renderer can use to look up the widget's actual content
+(e.g. `renderToSVG`'s `inlineBoxes[id]` SVG fragment). The layout engine
+only reserves the `width` × `height` box; it never reads this.
 
 ***
 
@@ -44,6 +56,6 @@ Height of the widget in px.
 
 > **width**: `number`
 
-Defined in: [core/src/types/Document.ts:323](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L323)
+Defined in: [core/src/types/Document.ts:355](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L355)
 
 Width of the widget in px.

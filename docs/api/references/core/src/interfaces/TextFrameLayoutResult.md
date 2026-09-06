@@ -104,10 +104,34 @@ with no frame size. Use it to decide auto-grow vs clip vs autofit.
 
 ***
 
+### transform?
+
+> `optional` **transform?**: [`FrameTransform`](FrameTransform.md)
+
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:67](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L67)
+
+Post-layout rigid transform to realise `writingMode: 'sideways-*'` and/or
+`TextFrame.rotation`. Omitted when the net rotation is a multiple of 360°
+(nothing to apply). `lines`, `content` bbox aside, live in pre-rotation
+layout space; `content` / `overflow` are reported in **visual** space.
+
+***
+
 ### warnings?
 
 > `optional` **warnings?**: [`LayoutWarning`](LayoutWarning.md)[]
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:57](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L57)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:69](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L69)
 
 Non-fatal issues (font fallback / substitution). Omitted when empty.
+
+***
+
+### writingMode
+
+> **writingMode**: [`WritingMode`](../type-aliases/WritingMode.md)
+
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L60)
+
+Block flow direction this layout was produced for — echoes
+`TextFrame.writingMode`, defaulting to `'horizontal-tb'`.

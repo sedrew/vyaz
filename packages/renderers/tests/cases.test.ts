@@ -87,3 +87,47 @@ describe('renderToSVG(result) vs renderToSVG(lines)', () => {
     expect(viaResult).toBe(viaLines);
   });
 });
+
+// ── missingGlyph: 'box' (glyph preset) ─────────────────────────────────
+describe('missingGlyph', () => {
+  // "AB → CD" in Roboto: the arrow (U+2192) is not in Roboto → .notdef.
+  const frame = () => makeTextFrame([makeParagraph('AB → CD', { fontFamily: 'Roboto', fontSize: 40 })]);
+  const glyphOpts = { preset: 'glyph' as const, sizing: 'content' as const, contentPadding: 4 };
+
+  test("'keep' (default) passes the character through", () => {
+    const svg = renderToSVG(layoutTextFrame(frame(), { glyphAdvances: true }).lines, glyphOpts);
+    expect(svg).toContain('→');
+    expect(svg).not.toContain('<rect'); // no debug boxes here
+  });
+
+  test("'box' drops the character and draws one hollow rect", () => {
+    const result = layoutTextFrame(frame(), { glyphAdvances: true });
+    const span = result.lines[0].spans.find((s) => s.type === 'text')!;
+    expect(span.notdefRanges).toEqual([{ start: 3, end: 4 }]);
+
+    const svg = renderToSVG(result.lines, { ...glyphOpts, missingGlyph: 'box' });
+    expect(svg).not.toContain('→');
+    const rects = [...svg.matchAll(/<rect [^>]*fill="none"[^>]*\/>/g)];
+    expect(rects).toHaveLength(1);
+    expect(rects[0][0]).toMatch(/stroke="#000000"/);
+  });
+
+  test("'box' keeps the slot — text after the missing glyph does not move", () => {
+    const result = layoutTextFrame(frame(), { glyphAdvances: true });
+    const keep = renderToSVG(result.lines, glyphOpts);
+    const box = renderToSVG(result.lines, { ...glyphOpts, missingGlyph: 'box' });
+    // the per-glyph x list is identical; only the tspan text and the extra rect differ
+    const xList = (s: string) => s.match(/<tspan x="([^"]+)"/)![1];
+    expect(xList(box)).toBe(xList(keep));
+  });
+
+  test("'box' is a no-op without notdefRanges (all-covered text)", () => {
+    const result = layoutTextFrame(
+      makeTextFrame([makeParagraph('plain', { fontFamily: 'Roboto', fontSize: 40 })]),
+      { glyphAdvances: true },
+    );
+    const box = renderToSVG(result.lines, { ...glyphOpts, missingGlyph: 'box' });
+    expect(box).not.toContain('<rect');
+    expect(box).toContain('>plain<');
+  });
+});

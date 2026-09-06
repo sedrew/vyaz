@@ -4,7 +4,7 @@
 
 > **OverflowWrap** = `"normal"` \| `"break-word"` \| `"anywhere"`
 
-Defined in: [core/src/types/Document.ts:85](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L85)
+Defined in: [core/src/types/Document.ts:102](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L102)
 
 **`Experimental`**
 

@@ -4,7 +4,7 @@
 
 > **WhiteSpace** = `"normal"` \| `"nowrap"` \| `"pre"` \| `"pre-line"` \| `"pre-wrap"`
 
-Defined in: [core/src/types/Document.ts:148](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L148)
+Defined in: [core/src/types/Document.ts:165](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L165)
 
 CSS `white-space` equivalent.
 

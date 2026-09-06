@@ -18,7 +18,9 @@
 import type { Paragraph, ListStyle } from '../types/Document.js';
 import type { FontMetrics } from '../types/FontTypes.js';
 import type { IFontMetricsProvider } from '../types/FontTypes.js';
-import type { ParagraphLayoutResult } from '../types/LayoutTypes.js';
+import type { ParagraphLayoutResult, Span } from '../types/LayoutTypes.js';
+
+type NotdefRange = NonNullable<Span['notdefRanges']>[number];
 import { compileParagraph } from '../compile/ParagraphCompiler.js';
 import type { PreparedRichInlineItem } from '../compile/ParagraphCompiler.js';
 import { fontMetricsProvider, MISSING_GLYPH_FACTOR } from '../measure/FontMetricsProvider.js';
@@ -164,6 +166,7 @@ export class ParagraphLayoutEngine {
     wantGlyphAdvances: boolean = false,
     mode?: 'browser' | 'office',
     onMissingFont: OnMissingFont = 'throw',
+    markMissingGlyphs: boolean = false,
   ): ParagraphLayoutResult {
     const provider = fontProvider || fontMetricsProvider;
 
@@ -234,6 +237,8 @@ export class ParagraphLayoutEngine {
     // Per-layout glyph cache: map<text+font+size, Float32Array>
     // Lives only for the duration of one layout() call.
     const glyphCache = new Map<string, Float32Array>();
+    // Same lifetime — `null` means "scanned, no misses".
+    const notdefCache = new Map<string, NotdefRange[] | null>();
 
     // Build measureText callback: single fontkit pass, caches advances.
     const measureTextFn = (
@@ -303,29 +308,36 @@ export class ParagraphLayoutEngine {
     // Phase 4b: Fill per-glyph advances — opt-in (SVG "glyph" preset, hit-testing).
     // Skipped by default: it costs O(chars) fontkit lookups + O(chars) array
     // allocation on every layout, and flat/browser/preserve render + plain
-    // stacking never read it.
-    if (wantGlyphAdvances)
+    // stacking never read it. `notdefRanges` rides along for free — the glyph
+    // path already resolves the same font, and `renderToSVG({ missingGlyph })`
+    // needs it. `markMissingGlyphs` requests just the notdef scan for the
+    // other presets, without paying for the advance array.
+    if (wantGlyphAdvances || markMissingGlyphs)
     for (const line of lines) {
       for (const span of line.spans) {
-        if (span.type === 'text' && span.text.length > 0 && !span.inlineWidget && !span.glyphAdvances) {
-          const key = glyphCacheKey(
-            span.text,
-            span.fontMetrics.fontSize,
-            span.style.fontFamily,
-            String(span.style.fontWeight || 400),
-            span.style.fontStyle || 'normal',
-          );
+        if (span.type !== 'text' || span.text.length === 0 || span.inlineWidget) continue;
+        const weight = String(span.style.fontWeight || 400);
+        const style = span.style.fontStyle || 'normal';
+
+        if (wantGlyphAdvances && !span.glyphAdvances) {
+          const key = glyphCacheKey(span.text, span.fontMetrics.fontSize, span.style.fontFamily, weight, style);
           const cached = glyphCache.get(key);
           // Keep the Float32Array — half the memory of a boxed number[] and no
           // copy. Consumers (SVGRenderer glyph path, interactive.ts) index it
           // directly. Identical text+font spans share one read-only instance.
           span.glyphAdvances = cached ?? this.computeGlyphAdvances(
-            span.text,
-            span.fontMetrics.fontSize,
-            span.style.fontFamily,
-            String(span.style.fontWeight || 400),
-            span.style.fontStyle || 'normal',
+            span.text, span.fontMetrics.fontSize, span.style.fontFamily, weight, style,
           );
+        }
+
+        if (!span.notdefRanges) {
+          const nkey = `${span.style.fontFamily} ${weight} ${style} ${span.text}`;
+          let ranges = notdefCache.get(nkey);
+          if (ranges === undefined) {
+            ranges = this.scanNotdefRanges(span.text, span.style.fontFamily, weight, style) ?? null;
+            notdefCache.set(nkey, ranges);
+          }
+          if (ranges) span.notdefRanges = ranges;
         }
       }
     }
@@ -384,18 +396,54 @@ export class ParagraphLayoutEngine {
     const scale = fontSize / font.unitsPerEm;
     const advances = new Float32Array(text.length);
 
+    const raw = font._raw;
     for (let i = 0; i < text.length; i++) {
       const codePoint = text.codePointAt(i)!;
-      const advance = font._raw.glyphForCodePoint(codePoint)?.advanceWidth;
-      if (advance != null) {
-        advances[i] = advance * scale;
-      } else {
-        advances[i] = fontSize * MISSING_GLYPH_FACTOR;
-      }
+      // `glyphForCodePoint` maps an unmapped code point to `.notdef`; its box
+      // advance has nothing to do with the fallback glyph the browser paints,
+      // so the per-glyph `x` would collide with the next character. Reserve
+      // the shared estimate instead (see FontEngine `_getGlyph`).
+      const advance = raw.hasGlyphForCodePoint(codePoint)
+        ? raw.glyphForCodePoint(codePoint).advanceWidth
+        : null;
+      advances[i] = advance != null ? advance * scale : fontSize * MISSING_GLYPH_FACTOR;
       if (codePoint > 0xffff) i++;
     }
 
     return advances;
+  }
+
+  /**
+   * Half-open `[start, end)` UTF-16 ranges of `text` that the resolved font
+   * does not cover (fontkit maps them to `.notdef`). Adjacent misses merge.
+   * Returns `undefined` when nothing is missing or the family itself is
+   * unregistered (that path is reported via `result.warnings`, not here).
+   *
+   * Char indices, not code points — a surrogate pair spans two units so the
+   * renderer can `text.slice(start, end)` directly.
+   */
+  private scanNotdefRanges(
+    text: string,
+    fontFamily?: string,
+    fontWeight?: string,
+    fontStyle?: string,
+  ): NotdefRange[] | undefined {
+    const font = fontMetricsProvider.getFont(fontFamily || 'Arial', fontWeight || '400', fontStyle || 'normal');
+    if (!font) return undefined;
+    const raw = font._raw;
+
+    let ranges: NotdefRange[] | undefined;
+    for (let i = 0; i < text.length; i++) {
+      const cp = text.codePointAt(i)!;
+      const units = cp > 0xffff ? 2 : 1;
+      if (!raw.hasGlyphForCodePoint(cp)) {
+        const last = ranges && ranges[ranges.length - 1];
+        if (last && last.end === i) last.end = i + units;
+        else (ranges ??= []).push({ start: i, end: i + units });
+      }
+      if (units === 2) i++;
+    }
+    return ranges;
   }
 }
 

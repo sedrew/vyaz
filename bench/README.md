@@ -65,3 +65,40 @@ actually worth for this scenario — in practice a modest 1.1×–1.9×, not the
 dramatic win the cache gives `throughput.ts`'s cold/warm split, because most
 of a resize's cost is line re-breaking and (for tables) the two-pass
 column/row re-measurement, neither of which the prepare-cache touches.
+
+## vs. Satori
+
+```bash
+bun run bench:satori                            # 50 … 10,000 words
+BENCH_MAX=2000 bun run bench:satori             # cap the largest size
+BENCH_SIZES=50,500,5000 bun run bench:satori
+```
+
+`vs-satori.ts` compares vyaz against [Vercel's Satori](https://github.com/vercel/satori)
+on the same job — styled paragraph text in, an SVG string out — using one
+shared word/style generator so both engines see identical content (see the
+file's own header comment for exactly how, and why it isn't fed the same
+HTML string despite both nominally being "HTML → SVG": Satori's own input is
+a vnode tree, not HTML, and the community HTML shim that bridges that gap
+throws under Bun). Static PT Sans (`bench/fixtures/`, OFL) is registered with
+both engines, since Satori's `opentype.js` fork can't parse variable-font
+`fvar` tables — no `Inter-Variable.ttf` here.
+
+Per word count, `min` of N iterations for the full pipeline (parse + layout +
+serialize to SVG for vyaz; `satori()` for Satori) plus output size:
+
+| words | vyaz total | vyaz svg | satori total | satori svg | time ratio | size ratio |
+|---:|---:|---:|---:|---:|---:|---:|
+| 50 | 0.4 ms | 3.8 KB | 3.8 ms | 142 KB | 10.1× | 37.2× |
+| 500 | 1.5 ms | 35 KB | 31.6 ms | 1.58 MB | 20.9× | 45.1× |
+| 2,000 | 4.2 ms | 139 KB | 126.5 ms | 6.77 MB | 30.4× | 48.6× |
+| 10,000 | 17.4 ms | 698 KB | 698.7 ms | 35.8 MB | 40.1× | 51.3× |
+
+**Not an apples-to-apples output**, and the ratios say so, not just "vyaz is
+faster": vyaz emits `<text>`/`<tspan>` referencing the font by name (small,
+font-dependent at paint time); Satori converts every glyph to an outlined
+`<path>` via `opentype.js` (font-independent, but the payload — and the
+per-glyph path-extraction cost — grows with glyph complexity, not just
+count). Satori is built for fixed-size OG-image generation; vyaz is a text
+*layout* engine. Read the time/size ratios as the cost of that different
+contract, not a verdict on either library.

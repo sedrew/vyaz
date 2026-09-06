@@ -33,7 +33,7 @@ import { layoutTextFrame } from '@vyaz/core'
 import type { TextFrameLayoutResult } from '@vyaz/core'
 import { renderToSVG } from '@vyaz/renderer'
 import { proseMirrorToVyaz } from '../lib/proseMirrorToVyaz'
-import { loadPlaygroundFonts, fontBytes } from '../lib/loadPlaygroundFonts'
+import { loadPlaygroundFonts, fontBytes, reportFontWarnings } from '../lib/loadPlaygroundFonts'
 import SvgPreview from './SvgPreview.vue'
 
 const props = defineProps<{ proseJson: unknown }>()
@@ -81,6 +81,7 @@ const layout = computed<{ result: TextFrameLayoutResult; ms: number } | null>(()
       onMissingFont: 'substitute',
       autofit: autofit.value ? { minFontSize: 6 } : undefined,
     })
+    reportFontWarnings('playground', result.warnings)
     return { result, ms: Math.round((performance.now() - t) * 100) / 100 }
   } catch (e) {
     console.error('[playground] layout error', e)

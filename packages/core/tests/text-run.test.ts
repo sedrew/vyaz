@@ -29,6 +29,7 @@ import {
   engine,
   registerUnifont,
   registerArialVariants,
+  registerFixtureFonts,
   hasCanvas,
   makeParagraph,
   makeStyledParagraph,
@@ -45,6 +46,7 @@ import {
 import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
 import { FontNotFoundError } from '../src/measure/FontNotFoundError.js';
 import { compileParagraph } from '../src/compile/ParagraphCompiler.js';
+import { fontMetricsProvider, MISSING_GLYPH_FACTOR } from '../src/measure/FontMetricsProvider.js';
 
 beforeAll(async () => {
   await registerUnifont();
@@ -622,6 +624,100 @@ describe('Span.glyphAdvances — Arial proportional', () => {
         expect(Math.abs(span.glyphAdvances.reduce((a, b) => a + b, 0) - span.width)).toBeLessThan(2);
       }
     }
+  });
+});
+
+// ── 17c. Span.glyphAdvances — unmapped code point ───────────────────────
+//
+// fontkit's `glyphForCodePoint` returns `.notdef` (a font-specific box width)
+// for a code point the font does not cover, never null. The per-glyph `x`
+// path must not trust that box width — it reserves `MISSING_GLYPH_FACTOR *
+// fontSize` instead, so the next character does not collide with the fallback
+// glyph the browser paints. Regression guard for the "→ overlaps letters"
+// bug in the SVG `glyph` preset.
+
+describe('Span.glyphAdvances — unmapped code point', () => {
+  beforeAll(async () => {
+    await registerFixtureFonts(); // Roboto — has no U+2192 RIGHTWARDS ARROW
+  });
+
+  const FS = 40;
+  const ARROW = '→';
+
+  test('Roboto really lacks the arrow (fixture precondition)', () => {
+    // If this ever fails, pick another code point Roboto does not cover.
+    const font = fontMetricsProvider.getFont('Roboto', '400', 'normal')!;
+    expect(font._raw.hasGlyphForCodePoint(0x2192)).toBe(false);
+  });
+
+  test('missing glyph reserves MISSING_GLYPH_FACTOR·fontSize, not the .notdef box', () => {
+    const p = makeStyledParagraph(`A${ARROW}B`, { fontFamily: 'Roboto', fontSize: FS });
+    const span = allTextSpans(layoutGlyphParagraph(p))[0];
+    expect(span.glyphAdvances).toBeDefined();
+
+    const [advA, advArrow, advB] = span.glyphAdvances!;
+    expect(advArrow).toBeCloseTo(FS * MISSING_GLYPH_FACTOR, 3);
+
+    // the old code returned the .notdef box (~0.44·em in this Roboto build);
+    // the fixed reservation (0.5·em) must differ from it.
+    const raw = fontMetricsProvider.getFont('Roboto', '400', 'normal')!._raw;
+    const notdefPx = (raw.glyphForCodePoint(0x2192).advanceWidth / raw.unitsPerEm) * FS;
+    expect(advArrow).not.toBeCloseTo(notdefPx, 1);
+
+    // neighbours are real, mapped glyphs
+    expect(advA).toBeGreaterThan(0);
+    expect(advB).toBeGreaterThan(0);
+    expect(advA).not.toBeCloseTo(FS * MISSING_GLYPH_FACTOR, 1);
+  });
+
+  test('per-glyph x stays monotonic across the missing glyph', () => {
+    const p = makeStyledParagraph(`HTML ${ARROW} SVG`, { fontFamily: 'Roboto', fontSize: FS });
+    const span = allTextSpans(layoutGlyphParagraph(p))[0];
+    let x = 0;
+    for (const adv of span.glyphAdvances!) {
+      expect(adv).toBeGreaterThan(0);
+      x += adv;
+    }
+    expect(Math.abs(x - span.width)).toBeLessThan(2);
+  });
+});
+
+// ── 17d. Span.notdefRanges ──────────────────────────────────────────────
+
+describe('Span.notdefRanges', () => {
+  beforeAll(async () => { await registerFixtureFonts(); });
+
+  test('glyph preset fills it; plain layout does not', () => {
+    const p = () => makeStyledParagraph('A → B', { fontFamily: 'Roboto', fontSize: 20 });
+    expect(allTextSpans(layoutParagraph(p()))[0].notdefRanges).toBeUndefined();
+    const g = allTextSpans(layoutGlyphParagraph(p()))[0];
+    // "A → B" → the arrow is char index 2
+    expect(g.notdefRanges).toEqual([{ start: 2, end: 3 }]);
+    expect('A → B'.slice(2, 3)).toBe('→');
+  });
+
+  test('markMissingGlyphs requests it without per-glyph advances', () => {
+    const frame = makeTextFrame([makeStyledParagraph('go → far', { fontFamily: 'Roboto', fontSize: 20 })]);
+    const spans = layoutTextFrame(frame, { markMissingGlyphs: true }).lines.flatMap((l) => l.spans);
+    const span = spans.find((s) => s.type === 'text')!;
+    expect(span.notdefRanges).toEqual([{ start: 3, end: 4 }]);
+    expect(span.glyphAdvances).toBeUndefined();
+  });
+
+  test('all-covered text → undefined', () => {
+    const span = allTextSpans(layoutGlyphParagraph(makeStyledParagraph('plain text', { fontFamily: 'Roboto', fontSize: 20 })))[0];
+    expect(span.notdefRanges).toBeUndefined();
+  });
+
+  test('astral surrogate pair → a 2-unit range', () => {
+    // U+1D11E MUSICAL SYMBOL G CLEF — absent from the BMP-only Unifont fixture
+    const span = allTextSpans(layoutGlyphParagraph(makeParagraph('ab\u{1D11E}cd', { fontFamily: 'Unifont', fontSize: 20 })))[0];
+    expect(span.notdefRanges).toEqual([{ start: 2, end: 4 }]);
+  });
+
+  test('adjacent misses merge into one range', () => {
+    const span = allTextSpans(layoutGlyphParagraph(makeStyledParagraph('x →→ y', { fontFamily: 'Roboto', fontSize: 20 })))[0];
+    expect(span.notdefRanges).toEqual([{ start: 2, end: 4 }]);
   });
 });
 

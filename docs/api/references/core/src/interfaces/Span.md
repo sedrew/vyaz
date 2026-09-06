@@ -10,7 +10,7 @@ Defined in: [core/src/types/LayoutTypes.ts:14](https://github.com/sedrew/vyaz/bl
 
 > `optional` **breakType?**: `"soft"` \| `"hard"`
 
-Defined in: [core/src/types/LayoutTypes.ts:68](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L68)
+Defined in: [core/src/types/LayoutTypes.ts:77](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L77)
 
 Line break mode after this span.
 'soft' — soft line break (insufficient space)
@@ -59,6 +59,28 @@ Index of the source run in the paragraph's `children` array.
 
 ***
 
+### notdefRanges?
+
+> `optional` **notdefRanges?**: `object`[]
+
+Defined in: [core/src/types/LayoutTypes.ts:50](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L50)
+
+Half-open `[start, end)` ranges of `text` (character indices) that no
+registered font covers — fontkit mapped them to `.notdef`. Contiguous
+misses are merged. Filled when per-glyph advances are computed (SVG
+`glyph` preset) or `LayoutOptions.markMissingGlyphs` is set; absent when
+every character resolved. Consumers: `renderToSVG({ missingGlyph: 'box' })`.
+
+#### end
+
+> **end**: `number`
+
+#### start
+
+> **start**: `number`
+
+***
+
 ### pIdx
 
 > **pIdx**: `number`
@@ -104,7 +126,7 @@ Span text (or " " for justify spaces)
 
 > `optional` **trailing?**: `boolean`
 
-Defined in: [core/src/types/LayoutTypes.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L60)
+Defined in: [core/src/types/LayoutTypes.ts:69](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L69)
 
 Trailing whitespace flag.
 - true: span is at end of line, does not participate in line advance
@@ -120,7 +142,7 @@ and Parley LineItemData::has_trailing_whitespace.
 
 > **type**: `"text"` \| `"space"` \| `"marker"`
 
-Defined in: [core/src/types/LayoutTypes.ts:49](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L49)
+Defined in: [core/src/types/LayoutTypes.ts:58](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L58)
 
 Span type:
 - `'text'` — regular text

@@ -1,0 +1,50 @@
+{
+  "_comment": "Code points no font covers. P1: U+2192 RIGHTWARDS ARROW is absent from Roboto (the original '-> overlaps letters' report). P2: U+1D11E MUSICAL SYMBOL G CLEF is astral (surrogate pair) and absent even from the BMP-only Unifont fixture, sitting one char before a run boundary so run composition is exercised. fontkit maps both to .notdef; the engine reserves MISSING_GLYPH_FACTOR*fontSize (not the .notdef box) so the glyph preset's per-character x stays put. The glyph-box variant adds renderToSVG({ missingGlyph: 'box' }): the character is dropped and a hollow rect is drawn in the reserved slot, so painted width == measured width in every viewer. missingGlyph is a no-op for flat/browser/preserve today.",
+  "profile": "raw",
+  "frame": {
+    "width": 420,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          { "type": "text", "text": "HTML → SVG", "fontFamily": "Roboto", "fontSize": 34 }
+        ],
+        "style": { "alignment": "left", "lineHeight": 1.2, "spaceBefore": 0, "spaceAfter": 12, "whiteSpace": "normal" }
+      },
+      {
+        "children": [
+          { "type": "text", "text": "treble 𝄞 ", "fontFamily": "Unifont", "fontSize": 28 },
+          { "type": "text", "text": "clef", "fontFamily": "Unifont", "fontSize": 28, "fontWeight": "bold", "color": "#aa413a" }
+        ],
+        "style": { "alignment": "left", "lineHeight": 1.2, "spaceBefore": 0, "spaceAfter": 0, "whiteSpace": "normal" }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content", "contentPadding": 10,
+      "debug": { "frameBox": true, "contentBox": true },
+      "preset": "flat", "shaping": true
+    },
+    "browser": {
+      "sizing": "content", "contentPadding": 10,
+      "debug": { "frameBox": true, "contentBox": true },
+      "preset": "browser", "shaping": true
+    },
+    "preserve": {
+      "sizing": "content", "contentPadding": 10,
+      "debug": { "frameBox": true, "contentBox": true },
+      "preset": "preserve", "shaping": true
+    },
+    "glyph": {
+      "sizing": "content", "contentPadding": 10,
+      "debug": { "frameBox": true, "contentBox": true },
+      "preset": "glyph"
+    },
+    "glyph-box": {
+      "sizing": "content", "contentPadding": 10,
+      "debug": { "frameBox": true, "contentBox": true },
+      "preset": "glyph", "missingGlyph": "box"
+    }
+  }
+}

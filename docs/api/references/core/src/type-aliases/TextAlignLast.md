@@ -4,7 +4,7 @@
 
 > **TextAlignLast** = `"auto"` \| `"start"` \| `"end"` \| `"left"` \| `"right"` \| `"center"` \| `"justify"`
 
-Defined in: [core/src/types/Document.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L61)
+Defined in: [core/src/types/Document.ts:78](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L78)
 
 **`Experimental`**
 
