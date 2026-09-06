@@ -24,12 +24,11 @@ const slug = (n: string) => n.replace(/\//g, '__');
 const CASES = process.argv.slice(2).length
   ? process.argv.slice(2)
   : [
-      'fonts/roboto-cyrillic',      // single line, plain — baseline
-      'run/hello-world',            // 2 runs, no fontSize (→ 12)
-      'text-frame/wrap',            // wrap at frame.width
-      'text-frame/pre-line-multiline', // wrap + explicit newlines
-      'text-frame/two-paragraphs',  // paragraph spacing
-      'fonts/greatvibes-ligatures', // ligature width
+      'rich-text-v1/frame',          // covers ~everything (42 paragraphs)
+      'writing-mode/rotate-180',     // frame rotation
+      'writing-mode/rotate-270',
+      'writing-mode/sideways-lr',    // vertical placement inside frame
+      'writing-mode/sideways-rl',
     ];
 
 /** px per pt for the rendered overlay — must match overlay-slides.py's DPI note */

@@ -31,6 +31,15 @@ from pptx.dml.color import RGBColor
 HERE = os.path.dirname(os.path.abspath(__file__))
 CORPUS = os.path.normpath(os.path.join(HERE, "../../packages/renderers/tests/cases"))
 
+# Only these cases (VD_ONLY="a/b,c/d" overrides). The rich case covers "everything";
+# writing-mode covers rotation + placement inside the frame.
+ONLY = (os.environ.get("VD_ONLY") or
+        "rich-text-v1/frame,"
+        "writing-mode/rotate-180,writing-mode/rotate-270,"
+        "writing-mode/sideways-lr,writing-mode/sideways-rl").split(",")
+
+VERT = {"sideways-rl": "vert", "sideways-lr": "vert270"}  # CSS → a:bodyPr@vert
+
 SLIDE_W_PT, SLIDE_H_PT = 960.0, 540.0
 MARGIN_PT = 24.0
 BORDER = RGBColor(0xFF, 0x00, 0x00)
@@ -66,19 +75,15 @@ def skip_reason(inp):
     if fr.get("columns"):
         return "multi-column"
     wm = fr.get("writingMode")
-    if wm and wm != "horizontal-tb":
+    if wm and wm not in ("horizontal-tb", "sideways-lr", "sideways-rl"):
         return f"writingMode {wm}"
-    if fr.get("rotation"):
-        return f"rotation {fr['rotation']}"
     if (fr.get("autofit") or {}).get("enabled"):
         return "autofit"
     for p in fr["paragraphs"]:
-        if (p.get("style") or {}).get("listStyle"):
-            return "list marker"
         for r in p.get("children", []):
             if r.get("type") == "inline-box" or r.get("inlineWidget"):
                 return "inline widget"
-    return None
+    return None  # list markers render as plain paragraphs (marker dropped)
 
 
 def apply_transform(text, kind):
@@ -143,6 +148,12 @@ def add_case(slide, frame):
             elif s.get("script") == "sub":
                 rPr.set("baseline", "-25000")
 
+    if frame.get("rotation"):
+        box.rotation = float(frame["rotation"])
+    vert = VERT.get(frame.get("writingMode"))
+    if vert:
+        tf._txBody.bodyPr.set("vert", vert)
+
     box.fill.background()
     box.line.color.rgb = BORDER
     box.line.width = Pt(0.75)
@@ -166,6 +177,8 @@ def main():
 
     slides, skipped = [], []
     for name in names:
+        if name not in ONLY:
+            continue
         inp = json.load(open(os.path.join(CORPUS, name, "input.json")))
         why = skip_reason(inp)
         if why:

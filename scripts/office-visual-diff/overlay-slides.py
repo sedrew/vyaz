@@ -30,6 +30,7 @@ OVERLAY = os.path.join(HERE, "overlay")
 SLIDE_W_PT, SLIDE_H_PT, MARGIN_PT = 960.0, 540.0, 24.0
 ALIGN = {"left": PP_ALIGN.LEFT, "right": PP_ALIGN.RIGHT,
          "center": PP_ALIGN.CENTER, "justify": PP_ALIGN.JUSTIFY}
+VERT = {"sideways-rl": "vert", "sideways-lr": "vert270"}
 DEFAULT_TEXT = {"fontFamily": "Arial", "fontSize": 12, "fontWeight": "normal",
                 "fontStyle": "normal", "color": "#000000"}
 
@@ -103,6 +104,12 @@ def add_textbox(slide, frame, left, top, w_pt, h_pt):
                 rPr.set("baseline", "30000")
             elif s.get("script") == "sub":
                 rPr.set("baseline", "-25000")
+
+    if frame.get("rotation"):
+        box.rotation = float(frame["rotation"])
+    vert = VERT.get(frame.get("writingMode"))
+    if vert:
+        tf._txBody.bodyPr.set("vert", vert)
     return box
 
 
