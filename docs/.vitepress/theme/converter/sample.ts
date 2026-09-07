@@ -2,9 +2,12 @@
  * sample.ts — default input for the Converter page.
  *
  * A trimmed slice of the html5-test-page (caseyamcl/9260337) — enough tags to
- * show clean conversion, a few `warnings`, a converted `<table>`, and the
- * `dropped` list (`<video>`, a form control).
+ * show clean conversion, a few `warnings`, a converted `<table>`, an inline
+ * `<img>` (the Vyaz mark, as a self-contained `data:` URI), and the `dropped`
+ * list (`<video>`, a form control).
  */
+import { LOGO_DATA_URI } from './sample-logo';
+
 export const SAMPLE_HTML = `<h1>Typography &amp; HTML to SVG</h1>
 
 <p>A paragraph with <strong>strong</strong>, <em>emphasis</em>, a
@@ -42,6 +45,12 @@ H<sub>2</sub>O with E = mc<sup>2</sup>.</p>
   <dd>A styled inline fragment.</dd>
 </dl>
 
+<h3>Images</h3>
+<p>The <img src="${LOGO_DATA_URI}" width="20" height="20" alt="Vyaz logo"> mark
+sits inline — a <code>data:</code> source is spliced straight into the SVG. A
+lone image takes a line to itself:</p>
+<img src="${LOGO_DATA_URI}" width="44" height="44" alt="Vyaz logo">
+
 <h3>Table</h3>
 <table>
   <caption>Converter coverage</caption>
@@ -72,6 +81,9 @@ and some \`inline_code()\`.
 
 Text can be ~~struck through~~, and raw HTML converts too —
 <mark>a highlight</mark> — right in the Markdown source.
+
+An inline logo ![Vyaz logo][logo] embeds straight into the SVG — a Markdown
+image runs through the same \`<img>\` path under the hood.
 
 ## Lists
 
@@ -106,4 +118,6 @@ embedded as raw HTML in Markdown:
 
 <video src="clip.mp4" controls></video>
 <input type="text" placeholder="name">
+
+[logo]: ${LOGO_DATA_URI}
 `;
