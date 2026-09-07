@@ -124,7 +124,13 @@ export function resolveImg(el: Element, opts: ResolvedOptions, col: Collector): 
 
 // ── Intrinsic-size sniffing (data: images only) ─────────────────────────────
 
-/** Decode the payload of a `data:` URI to bytes (base64 or percent-encoded). */
+/** Decode the payload of a `data:` URI to bytes (base64 or percent-encoded).
+ *
+ * PERF: decodes the *whole* payload even though sniffing only needs a small
+ * header (~24 B for PNG/GIF, a short marker scan for JPEG, ~2 KB of text for
+ * SVG). Wasteful on a large photo data URI. See ROADMAP — "data: image
+ * size-sniffing cost": bound the decode to a prefix and/or memoize by `src`.
+ * Only runs when an `<img>` omits both `width` and `height`. */
 function decodeDataPayload(src: string): { bytes: Uint8Array; text: string; mime: string } | null {
   const comma = src.indexOf(',');
   if (comma < 0) return null;

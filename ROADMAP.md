@@ -46,6 +46,15 @@ Direction, not a schedule. Order within a section is rough priority.
   has no recursion-depth cap, unlike `@vyaz/core`'s `TableFrame`-in-`TableCell`
   primitive (`TableLayoutOptions._depth`, throws past 50 levels). Low risk in
   practice, real risk on untrusted/generated HTML.
+- **`@vyaz/converters` `data:` image size-sniffing cost** — `sniffDataImageSize`
+  (`src/image.ts`, the fallback when an `<img>` has no `width`/`height`) fully
+  base64-decodes the entire payload into a `Uint8Array` just to read a header:
+  ~24 bytes for PNG/GIF, a short marker scan for JPEG, the first ~2 KB of text
+  for SVG. On a large photo data URI that is a needless full decode + a
+  same-size allocation per image. Decode only a bounded prefix instead (slice
+  the base64 to a 4-char boundary — a few KB covers every format's header),
+  and/or memoize by `src`. Only bites when authors omit the dimension
+  attributes on big inline images; harmless with the attributes present.
 - **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
   `WritingMode` / `direction` are in the type surface; the engine is not.
 - **True vertical writing modes** — `vertical-rl` / `vertical-lr` with per-glyph
