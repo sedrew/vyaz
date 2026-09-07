@@ -19,7 +19,7 @@ import { resolveRoot } from './dom.js';
 import { Collector, type HtmlWarning, type DroppedNode } from './warnings.js';
 import { walk } from './walk.js';
 
-export type { HtmlConvertOptions, UnsupportedPolicy, ResolvedImage } from './options.js';
+export type { HtmlConvertOptions, UnsupportedPolicy, ResolvedImage, ImagePolicy } from './options.js';
 export type { HtmlWarning, DroppedNode } from './warnings.js';
 export { markdownToTextFrame } from './markdown.js';
 export type { MarkdownConvertOptions } from './markdown.js';

@@ -13,6 +13,7 @@ import { Collector } from './warnings.js';
 import { parseInlineStyle } from './inline-style.js';
 import { NODE_ELEMENT, NODE_TEXT } from './dom.js';
 import { INLINE_STYLE, isInline, BLOCK_TEXT, TRANSPARENT, LIST, DROPPED } from './tags.js';
+import { resolveImg } from './image.js';
 
 type RunStyle = Omit<TextRun, 'type' | 'text' | 'inlineWidget'>;
 
@@ -111,6 +112,11 @@ function appendInline(
   }
   if (tag === 'wbr') return;
 
+  if (tag === 'img') {
+    handleImg(el, style, buffer, ctx);
+    return;
+  }
+
   if (tag in DROPPED) {
     ctx.col.drop(el, DROPPED[tag]);
     return;
@@ -142,6 +148,32 @@ function appendInline(
   if (tag === 'q') buffer.push(mkRun('“', next));
   for (const child of Array.from(el.childNodes)) appendInline(child, next, buffer, pre, ctx);
   if (tag === 'q') buffer.push(mkRun('”', next));
+}
+
+/**
+ * `<img>` → an inline-box run (the box's SVG fragment goes in `ctx.inlineBoxes`),
+ * or an `alt`-text run when the image can't be resolved. `<img>` is inline, so a
+ * bare one in block flow still lands here (via `isInline`) and gets flushed into
+ * its own paragraph.
+ */
+function handleImg(el: Element, style: RunStyle, buffer: TextRun[], ctx: Ctx): void {
+  const r = resolveImg(el, ctx.opts, ctx.col);
+  if (r.kind === 'box') {
+    const id = `img-${ctx.idSeq.n++}`;
+    ctx.inlineBoxes[id] = r.svg;
+    buffer.push({
+      type: 'inline-box',
+      text: '￼',
+      fontFamily: style.fontFamily,
+      fontSize: style.fontSize,
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+      color: style.color,
+      inlineWidget: { width: r.width, height: r.height, id },
+    });
+  } else if (r.kind === 'text' && r.text) {
+    buffer.push(mkRun(r.text, style));
+  }
 }
 
 /** True when the buffer has any non-whitespace text. */
@@ -492,12 +524,14 @@ function processChildren(
   flush();
 }
 
-/** Coalesce consecutive runs that carry an identical style. */
+/** Coalesce consecutive runs that carry an identical style. `inline-box` runs
+ *  carry an `inlineWidget` and a placeholder `￼` — never fold one into a
+ *  neighbour, or the widget is lost and the text is corrupted. */
 function mergeAdjacent(runs: TextRun[]): TextRun[] {
   const out: TextRun[] = [];
   for (const r of runs) {
     const last = out[out.length - 1];
-    if (last && sameStyle(last, r)) last.text += r.text;
+    if (last && last.type !== 'inline-box' && r.type !== 'inline-box' && sameStyle(last, r)) last.text += r.text;
     else out.push({ ...r });
   }
   return out;

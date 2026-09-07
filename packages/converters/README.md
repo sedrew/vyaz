@@ -40,8 +40,9 @@ htmlToTextFrame(html, { parse: (h) => parseHTML(`<!doctype html><html><body>${h}
 | `headingScale` | `{h1:2,h2:1.5,h3:1.25,h4:1.1,h5:1,h6:0.9}` | × `baseFont.size`, + bold + spacing |
 | `hardBreak` | `'newline'` | `<br>` → `\n` in one paragraph (`'paragraph'` = split, not yet implemented) |
 | `onUnsupported` | `'drop'` | `'drop'` \| `'placeholder'` \| `'throw'` |
+| `images` | `'embed'` | built-in `<img>` encoding — `'embed'` (self-contained) \| `'link'` (`<image href="src">` verbatim). See **Images** below |
 | `resolveStyle(el)` | – | your own CSS (classes / `<style>`) → `Partial<TextRun>` |
-| `resolveImage(el)` | – | `<img>` → `{ width, height, svg }` *(Phase 4)* |
+| `resolveImage(el)` | – | `<img>` takeover, checked before `images` → `{ width, height, svg }`, or `undefined` to fall through |
 | `parse(html)` | – | HTML-string parser when there is no `DOMParser` |
 
 ### Fonts must line up with the paint target
@@ -56,7 +57,7 @@ following runs drift. Point `monospaceFamily` at a concrete family you control.
 
 ## Coverage
 
-**Clean:** `p`, `h1`–`h6`, `blockquote`, `pre`, `address`, `br`, `strong`/`b`,
+**Clean:** `p`, `h1`–`h6`, `blockquote`, `pre`, `address`, `br`, **`img`**, `strong`/`b`,
 `em`/`i`/`cite`/`dfn`/`var`, `ins`/`u`, `del`/`s`, `sup`, `sub`, `small`, `mark`,
 `code`/`kbd`/`samp`, `q`, `abbr`, **`a`** (colour + underline + `href`, kept as
 real data — see below), `span` + inline `style=""` (`color`, `font-*`,
@@ -83,15 +84,37 @@ this is untrusted input by design, and an SVG `<a href="javascript:…">` is a
 known XSS vector.
 
 **Dropped (recorded in `dropped[]`):** `video`/`audio`/`iframe`/`canvas`, form
-controls, `<style>`/class CSS, and — for now — `img`/`svg`/`progress`/`meter`/
-`hr` (arrive in Phase 4 as `inlineBoxes`).
+controls, `<style>`/class CSS, and — for now — `svg`/`progress`/`meter`/`hr`
+(arrive in Phase 4 as `inlineBoxes`).
+
+### Images
+
+`<img>` becomes an inline-box widget: the layout reserves a `width` × `height`
+box and `@vyaz/renderer` splices an `<image>` fragment (from `inlineBoxes[id]`)
+into it — same mechanism as `table`.
+
+- **`resolveImage(el)`** runs first. Return `{ width, height, svg }` to own the
+  image outright (e.g. fetch the bytes yourself and hand back a `data:` URI);
+  return `undefined` to fall through to the built-in handler.
+- **`images: 'embed'`** (default) aims for a self-contained SVG. A `data:` src is
+  spliced in as-is. A remote src *can't* be fetched synchronously here, so it is
+  linked (`<image href="…">`) and an `img-remote-not-embedded` warning is
+  emitted — pre-resolve it in `resolveImage` to truly inline the bytes.
+- **`images: 'link'`** emits `<image href="src">` verbatim for every source, no
+  warning.
+- **Size** comes from the `width`/`height` attributes; with neither, a `data:`
+  image is sniffed (PNG / GIF / JPEG / SVG). If no size can be found the image
+  is dropped and its `alt` text kept as a plain run.
+- **Unsafe** `src` schemes — `javascript:`, non-image `data:`, `blob:` — are
+  dropped with an `img-src-unsafe` warning (untrusted input; an
+  `<image href="javascript:…">` in SVG is an XSS vector).
 
 ### Tables
 
 `<table>` converts to a `@vyaz/core` `TableFrame` and is laid out + rendered
 to SVG *during* conversion (not deferred like the rest of the document), then
 spliced into the surrounding text flow as an inline-box widget — the same
-mechanism `img`/`svg` will use once Phase 4 ships. `<thead>`/`<tbody>`/
+mechanism `img` uses (and `svg` will, once Phase 4 finishes). `<thead>`/`<tbody>`/
 `<tfoot>` collapse to rows; `<th>` cells get header shading; `colspan`/
 `rowspan` map to `TableCell.colSpan`/`rowSpan`; `<caption>` becomes a bold
 paragraph above the table. A `<table>` nested inside a cell converts too

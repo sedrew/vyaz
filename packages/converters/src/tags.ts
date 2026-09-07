@@ -3,8 +3,9 @@
  *
  * Inline formatting, block text and lists are classified here and driven by
  * walk.ts's generic dispatch. `<table>` is a special case — see the DROPPED
- * comment below. Graphics (`<img>`/`<svg>`/`<progress>`/`<meter>`/`<hr>` — a
- * later phase) are still in DROPPED.
+ * comment below. `<img>` is handled inline (walk.ts's `handleImg` → an
+ * inline-box widget); the other graphics (`<svg>`/`<progress>`/`<meter>`/`<hr>`
+ * — a later phase) are still in DROPPED.
  */
 import type { TextRun } from '@vyaz/core';
 
@@ -34,7 +35,7 @@ export const INLINE_STYLE: Record<string, (cur: Partial<TextRun>, mono: string) 
 };
 
 /** Inline tags handled with extra logic in walk.ts (still inline). */
-export const INLINE_SPECIAL: Set<string> = new Set(['a', 'span', 'q', 'abbr', 'br', 'wbr', 'time', 'data', 'bdi', 'bdo', 'ruby', 'rt', 'rp']);
+export const INLINE_SPECIAL: Set<string> = new Set(['a', 'span', 'q', 'abbr', 'br', 'wbr', 'time', 'data', 'bdi', 'bdo', 'ruby', 'rt', 'rp', 'img']);
 
 export function isInline(tag: string): boolean {
   return tag in INLINE_STYLE || INLINE_SPECIAL.has(tag);
@@ -66,7 +67,7 @@ export const DROPPED: Record<string, string> = {
   caption: 'only valid inside <table>', colgroup: 'only valid inside <table>', col: 'only valid inside <table>',
   video: 'media', audio: 'media', iframe: 'embedded document', embed: 'embedded document',
   object: 'embedded document', canvas: 'script-drawn',
-  img: 'image (Phase 4: options.resolveImage)', svg: 'inline svg (Phase 4)',
+  svg: 'inline svg (Phase 4)',
   progress: 'Phase 4', meter: 'Phase 4', hr: 'Phase 4',
   input: 'form control', textarea: 'form control', select: 'form control',
   button: 'form control', form: 'form', fieldset: 'form', legend: 'form', label: 'form',

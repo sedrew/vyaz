@@ -14,6 +14,19 @@ export interface ResolvedImage {
   svg: string;
 }
 
+/**
+ * How the built-in `<img>` handler turns a `src` into inline-box content.
+ * Ignored for any `<img>` that `resolveImage` claims.
+ *
+ * - `'embed'` (default) — aim for a self-contained SVG. A `data:` source is
+ *   spliced in as-is. A remote source can't be fetched synchronously here, so
+ *   it emits an `img-remote-not-embedded` warning and falls back to a linked
+ *   `<image href>` — pre-resolve it in `resolveImage` to truly inline the bytes.
+ * - `'link'` — every source becomes `<image href="<src>">` verbatim (a `data:`
+ *   source is already inline, so it is unaffected).
+ */
+export type ImagePolicy = 'embed' | 'link';
+
 export interface HtmlConvertOptions {
   /** `TextFrame.width`. Omit for auto width. */
   width?: number;
@@ -33,9 +46,16 @@ export interface HtmlConvertOptions {
   hardBreak?: 'newline' | 'paragraph';
   /** Fallback for unmapped elements. Default `'drop'`. */
   onUnsupported?: UnsupportedPolicy;
+  /** How the built-in `<img>` handler encodes `src`. Default `'embed'`. */
+  images?: ImagePolicy;
   /** Plug your own CSS (classes / `<style>`): element → extra run style. */
   resolveStyle?: (el: Element) => Partial<TextRun> | undefined;
-  /** `<img>` → inline-box content. Without it, images are dropped. */
+  /**
+   * `<img>` → inline-box content, checked before the built-in handler. Return
+   * a `ResolvedImage` to take over an image completely (e.g. pre-fetched bytes
+   * as a `data:` URI); return `undefined` to let the built-in `images` policy
+   * handle it.
+   */
   resolveImage?: (el: Element) => ResolvedImage | undefined;
   /** Parse an HTML string into a `Document` when no global `DOMParser` exists. */
   parse?: (html: string) => Document;
@@ -52,6 +72,7 @@ export interface ResolvedOptions {
   headingScale: Record<'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6', number>;
   hardBreak: 'newline' | 'paragraph';
   onUnsupported: UnsupportedPolicy;
+  images: ImagePolicy;
   resolveStyle?: (el: Element) => Partial<TextRun> | undefined;
   resolveImage?: (el: Element) => ResolvedImage | undefined;
   parse?: (html: string) => Document;
@@ -71,6 +92,7 @@ export function resolveOptions(o: HtmlConvertOptions = {}): ResolvedOptions {
     headingScale: { ...DEFAULT_HEADING_SCALE, ...o.headingScale },
     hardBreak: o.hardBreak ?? 'newline',
     onUnsupported: o.onUnsupported ?? 'drop',
+    images: o.images ?? 'embed',
     resolveStyle: o.resolveStyle,
     resolveImage: o.resolveImage,
     parse: o.parse,

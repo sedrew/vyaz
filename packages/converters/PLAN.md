@@ -34,8 +34,9 @@ the global `DOMParser` if present, otherwise `opts.parse(html) => Document`.
 | `headingScale` | `{h1:2, h2:1.5, h3:1.25, h4:1.1, h5:1, h6:0.9}` | × `baseFont.size`, + bold + spacing |
 | `hardBreak` | `'newline'` | `<br>` → `\n` in one paragraph (`'paragraph'` = split) |
 | `onUnsupported` | `'drop'` | `'drop'` \| `'placeholder'` \| `'throw'` |
+| `images` | `'embed'` | built-in `<img>` encoding: `'embed'` (self-contained; remote src can't be fetched sync → linked + warning) \| `'link'` (`<image href="src">` verbatim) |
 | `resolveStyle?(el)` | — | plug your own CSS (classes / `<style>`) → `Partial<TextRun>` |
-| `resolveImage?(el)` | — | `<img>` → `{ width, height, svg }` (e.g. a `<image href="data:…">`) |
+| `resolveImage?(el)` | — | `<img>` takeover, checked before `images`: return `{ width, height, svg }` (e.g. pre-fetched bytes as `<image href="data:…">`), or `undefined` to fall through |
 
 ## Coverage (html5-test-page as the reference)
 
@@ -62,10 +63,15 @@ it). CSS-driven column/row sizing does not convert.
 `dl`/`dt`/`dd` (dt → bold para, dd → indented para), `figure`/`figcaption`,
 `details`/`summary` (flattened, static), nested lists changing type.
 
-### 🖼 drawn into an SVG box (Phase 4)
-`img` (`resolveImage` → base64 `<image>`), inline `svg` (passthrough),
-`progress`, `meter`, `hr`, colour-swatch `span`. Rendered by the converter into
-`inlineBoxes[id]`; `@vyaz/renderer` splices each into the box the layout reserved.
+### 🖼 drawn into an SVG box
+`img` (shipped): inline-box widget backed by an `<image>` fragment in
+`inlineBoxes[id]`. `data:` src spliced in as-is; remote src linked (or, under
+`images:'embed'`, linked with an `img-remote-not-embedded` warning — pre-resolve
+in `resolveImage` to inline the bytes). Size from `width`/`height` attrs, else
+sniffed from a `data:` image (PNG / GIF / JPEG / SVG), else the image is dropped
+and its `alt` kept as text. Unsafe schemes (`javascript:`, non-image `data:`,
+`blob:`) dropped. Still Phase 4: inline `svg` (passthrough), `progress`, `meter`,
+`hr`, colour-swatch `span`.
 
 ### ❌ dropped — recorded in `dropped[]`
 `video`/`audio`/`iframe`/`embed`/`object`/`canvas`, form controls,
@@ -90,7 +96,7 @@ Rough split: ~70% clean (tables included), ~15% drawn, ~15% dropped.
 | **1** | inline formatting tags + `style=""` declaration parser |
 | **2** | block tags: `h1`–`h6` (+ heading scale), `blockquote`, `pre`, `address`, `br` |
 | **3** | lists: `ul`/`ol`/`li` (+ `level`), `dl`/`dt`/`dd` |
-| **4** | graphics → SVG box: `img`+`resolveImage`, inline `svg`, `progress`, `meter`, `hr`, `figure`, `details` (static) |
+| **4** | graphics → SVG box: `img` (+`images` policy, +`resolveImage`, +`data:` size sniff) — shipped; inline `svg`, `progress`, `meter`, `hr` still open. `figure`/`details` already land as lossy paragraphs |
 | **5** | drop zone: `video`/`iframe`/`canvas`/`style`/… → `dropped[]`; full html5-test-page as a coverage test — `table` was planned as a drop-zone item here but was later built instead (grid layout landed as a separate T0–T5 track once `@vyaz/core`'s `TableFrame` existed — see "table" in Coverage above) |
 | **6** | docs `/converter` page (HTML code/preview tabs → live SVG, prominent Download, Debug toggle off by default); README; release `@vyaz/converters@0.1.0` *(not yet released — still 0.0.0)* |
 | **7** *(separate track)* | ROADMAP "SVG-only text effects" in `@vyaz/renderer` |
