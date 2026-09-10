@@ -84,6 +84,19 @@ function resolveBulletIndent(
 // ── PositioningEngine ─────────────────────────────────────────────────
 
 /**
+ * `mode: 'office'` line box = `OFFICE_LINE_BOX_RATIO × maxFontSizeInLine ×
+ * style.lineHeight`. The 1.20 is **font-independent** — PowerPoint's own SVG
+ * exports (packages/renderers/tests/office-cases/) put the pitch at exactly
+ * `spcPct × 1.20 × fontSize` for Roboto, and `scripts/office-metrics/report.md`
+ * gets the same 1.20 box for Great Vibes (OS/2 win ratio 1.75). No single
+ * fontkit metric (win / hhea / typo) yields 1.20 for both, so this is a
+ * measured constant, not a table lookup. Alternative under consideration:
+ * `max(1.20, hheaLineHeight / upm)` — needs a large-`hhea` display font in the
+ * oracle to tell apart (Roboto hhea/upm = 1.17 < 1.20, so it can't here).
+ */
+const OFFICE_LINE_BOX_RATIO = 1.20;
+
+/**
  * `mode: 'office'` — fraction of the line box that sits above the baseline.
  * PowerPoint's own SVG exports (see packages/renderers/tests/office-cases/)
  * place the baseline at 0.75 × lineBox from the box top, on every line
@@ -180,7 +193,6 @@ export function positionLines(
     // ── Build Span[] ────────────────────────────
     let maxAscent = 0;
     let maxDescent = 0;
-    let maxLineHeightBase = 0; // max(ascent + descent) — for Office mode
     const spans: Span[] = [];
 
     for (const frag of ptLine.fragments) {
@@ -197,8 +209,6 @@ export function positionLines(
 
       maxAscent = Math.max(maxAscent, effectiveAscent);
       maxDescent = Math.max(maxDescent, effectiveDescent);
-      // Office: line height base = ascent + descent (OS/2 usWinAscent + usWinDescent, scaled)
-      maxLineHeightBase = Math.max(maxLineHeightBase, metrics.ascent + metrics.descent);
 
       // pretext: gapBefore — inter-word space BEFORE the word
       // occupiedWidth = gapBefore + textWidth
@@ -364,7 +374,6 @@ export function positionLines(
 
       maxAscent = Math.max(maxAscent, markerAscent);
       maxDescent = Math.max(maxDescent, markerDescent);
-      maxLineHeightBase = Math.max(maxLineHeightBase, markerAscent + markerDescent);
 
       // Create a style object for the marker span
       const markerStyle = {
@@ -565,15 +574,11 @@ export function positionLines(
     //   1. lineHeightPx = maxFontSize * style.lineHeight
     //
     // 'office' (MS Office / DrawingML):
-    //   Single-spaced line box = maxLineHeightBase (OS/2 winAscent + winDescent,
-    //   fitted × 1.078). DrawingML `<a:lnSpc><a:spcPct>` (`style.lineHeight`)
-    //   then scales the whole box linearly — PowerPoint SVG exports show the
-    //   line pitch tracking spcPct 1:1 (see office-cases/MIGRATION.md).
-    //   The baseline sits at OFFICE_BASELINE_RATIO × lineBox from the box top,
-    //   every line including the first (PowerPoint's exports land on 0.75, ==
-    //   Roboto's typoAscender / (typoAscender − typoDescender)). The base 1.078
-    //   constant vs PowerPoint's ~1.20 font-independent box is a separate
-    //   calibration question (ROADMAP).
+    //   line box = OFFICE_LINE_BOX_RATIO (1.20, font-independent) × the line's
+    //   max run size × style.lineHeight (`<a:lnSpc><a:spcPct>`). PowerPoint SVG
+    //   exports match this pitch exactly for Roboto at spcPct 1.0 / 1.5 / 2.0
+    //   (see office-cases/MIGRATION.md). Baseline sits at OFFICE_BASELINE_RATIO
+    //   (0.75) × lineBox from the box top, every line including the first.
     const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
     const ascentRounded = Math.round(maxAscent);
@@ -583,7 +588,7 @@ export function positionLines(
     let baseline: number;
 
     if (mode === 'office') {
-      lineBoxHeight = maxLineHeightBase * style.lineHeight;
+      lineBoxHeight = OFFICE_LINE_BOX_RATIO * maxFontSize * style.lineHeight;
       baseline = lineBoxHeight * OFFICE_BASELINE_RATIO;
     } else {
       // Browser: CSS-compatible with leading distribution.

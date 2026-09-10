@@ -70,10 +70,10 @@ describe('office line spacing (spcPct)', () => {
     expect(pitch(2.0) / p1).toBeCloseTo(2.0, 2);
   });
 
-  test('spcPct 1.0 keeps the single-spaced box; baseline is 0.75 of it', () => {
+  test('line box is 1.20 x fontSize (font-independent), baseline 0.75 of it', () => {
     const l = office(1.0).lines[0];
-    expect(l.height).toBeCloseTo(l.ascent + l.descent, 1);   // box unchanged by the fix
-    expect(l.baseline).toBeCloseTo(l.height * 0.75, 1);      // PowerPoint places it here
+    expect(l.height).toBeCloseTo(18 * 1.2, 1);           // PowerPoint's font-independent box
+    expect(l.baseline).toBeCloseTo(l.height * 0.75, 1);
   });
 
   test('the baseline stays at 0.75 of the line box as spcPct grows', () => {

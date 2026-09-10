@@ -1,20 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="139.72" viewBox="0 0 200 139.72">
-  <text x="0" y="26.2" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="129.6" viewBox="0 0 200 129.6">
+  <text x="0" y="24.3" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 11.1 21.4 31.5 41.7 47.6 57.9 62.3 72.6 78.9 85.1 89.5 98.9 108.5 112.9 117.3 121.7 131.6">Roboto office line</tspan>
     <tspan x="141.2"> </tspan>
   </text>
-  <text x="0" y="61.13" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="56.7" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 9.3 19.4 29.2 38.6 43 52.9 63 67.5 76.8 86.6 102.4 112.5 116.9 126.4 130.9 136.7 146.3 155.2 161.1 165.6 171.5 181.4 191.2">spacing sample text that</tspan>
     <tspan x="197.1"> </tspan>
   </text>
-  <text x="0" y="96.06" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="89.1" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 13.5 19.6 29.4 39.5 48.8 53.3 63.5 73.5 79.4 89.6 94.1 103.4 112.9 121.7 131.2 137.3 147.1 151.5 155.9 160.3 164.7 174.6 184.2">wraps onto several lines</tspan>
     <tspan x="193.5"> </tspan>
   </text>
-  <text x="0" y="130.99" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="121.5" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 9.9 19.5 25.6">here</tspan>
   </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="200" height="139.72" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
-  <rect x="0" y="0" width="201.52" height="139.72" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="200" height="129.6" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="201.52" height="129.6" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

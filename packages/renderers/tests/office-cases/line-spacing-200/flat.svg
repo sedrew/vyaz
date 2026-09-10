@@ -1,9 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="200" height="186.32" viewBox="0 0 200 186.32">
-  <text x="0" y="34.93" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">Roboto office line </text>
-  <text x="0" y="81.51" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">spacing sample text that </text>
-  <text x="0" y="128.09" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">wraps onto several lines </text>
-  <text x="0" y="174.67" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">here</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="172.8" viewBox="0 0 200 172.8">
+  <text x="0" y="32.4" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">Roboto office line </text>
+  <text x="0" y="75.6" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">spacing sample text that </text>
+  <text x="0" y="118.8" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">wraps onto several lines </text>
+  <text x="0" y="162" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">here</text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="200" height="186.32" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
-  <rect x="0" y="0" width="201.52" height="186.32" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="200" height="172.8" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="201.52" height="172.8" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

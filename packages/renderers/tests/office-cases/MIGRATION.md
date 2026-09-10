@@ -14,13 +14,25 @@ against the vyaz goldens (`flat.svg` / `glyph.svg`) in the same folders.
 > `Pt(200)` box) is what is committed here — its wrap column now matches the
 > goldens exactly.
 
-> **Status — fix 1 + M2 applied** (0.4.1 / 0.4.2). `PositioningEngine.ts` office
-> branch scales the line box by `style.lineHeight` (spcPct), and places the
-> baseline at `OFFICE_BASELINE_RATIO × lineBox` = **0.75 × box** from the top,
-> on every line. Remaining gap on 150 / 200 / stacked / mixed is a **consistent
-> ~+8 %** — the base constant (`winAsc+winDesc × 1.078` = 1.294 for Roboto) vs
-> PowerPoint's font-independent ~1.20 (M1). Now that M2 matches, M1 is the one
-> knob left for full parity. ROADMAP "office line-box model — open question".
+> **Status — fix 1 + M2 + M1 applied** (0.4.1 / 0.4.2 / 0.4.3). The
+> `PositioningEngine.ts` office branch is now
+> `lineBox = OFFICE_LINE_BOX_RATIO (1.20) × maxFontSizeInLine × style.lineHeight`,
+> `baseline = OFFICE_BASELINE_RATIO (0.75) × lineBox`. Against the batch-2
+> exports (with the correct scale `k = 165/36` from the 36 pt run — PowerPoint
+> rounded 18 pt to `font-size="83"`, so `83/18` was ~0.4 % high):
+>
+> | case | vyaz pitch | PowerPoint pitch | Δ |
+> |---|--:|--:|--:|
+> | line-spacing-100 (spcPct 1.0) | 21.60 pt | 21.60 pt | **0.00** |
+> | line-spacing-150 (spcPct 1.5) | 32.40 pt | 32.4 pt (149/148 px wobble) | <0.11 |
+> | line-spacing-200 (spcPct 2.0) | 43.20 pt | 43.20 pt | **0.00** |
+> | stacked ¶2→¶3 seam | 40.50 pt | 40.58 pt | 0.08 |
+>
+> Frame bbox height = `1.20 × size × spcPct × lines` exactly (86.4 / 129.6 /
+> 172.8 pt). Still open: **stacked ¶1→¶2 seam** off 0.9 pt (PowerPoint grid-snap
+> at the 1.0→1.5 transition), and **`mixed`** — PowerPoint word-wraps the 36 pt
+> run more eagerly (5 lines vs 3), so those goldens diverge by wrap, not by the
+> line box. See §7.
 
 ---
 
@@ -214,11 +226,11 @@ group level, plain `x`/`y` on each line.
 
 | # | gap | now | target | blocker |
 |---|---|---|---|---|
-| M1 | **base constant** | `maxLineHeightBase` = `(winAsc+winDesc)/upm × 1.078` = **1.294**·size (Roboto) | `1.20 × maxFontSizeInLine`, **font-independent** (`report.md`: Great Vibes == Roboto) | pick model **A** `1.20` flat vs **B** `max(1.20, hhea/upm)`; needs a large-`hhea` display font in the oracle |
+| M1 | **base constant** | ✅ **done (0.4.3)** — `OFFICE_LINE_BOX_RATIO` = `1.20 × maxFontSizeInLine`, font-independent (was `(winAsc+winDesc)/upm × 1.078` = 1.294 for Roboto) | — | went with model **A** (flat 1.20); model **B** `max(1.20, hhea/upm)` still needs a large-`hhea` display font to justify — Roboto hhea/upm = 1.17 < 1.20 so it can't here |
 | M2 | **baseline in box** | ✅ **done (0.4.2)** — `OFFICE_BASELINE_RATIO × lineBox` = `0.75 × H`, every line incl. first | — | `report.md` guessed `winAsc/(winAsc+winDesc)` ≈ 0.792; the exports say **0.75** (= Roboto `typoAsc/(typoAsc−typoDesc)`, and its typo sum is exactly 1 em). Still want a font where 0.75 ≠ typo-ratio ≠ win-ratio to prove it is typo-ratio based, not a flat 0.75 |
-| M3 | **cross-line / ¶ seam** | `currentY += H(line)`, each baseline independent | `Δbaseline = 0.25·H(prev) + 0.75·H(cur)` at every line *and* paragraph boundary | none — carry per-line `H`, apply at the seam. Confirmed by `mixed` (40.1 vs 40.5) and `stacked` ¶2→¶3 (40.3 vs 40.5) |
+| M3 | **cross-line / ¶ seam** | ✅ **falls out of M1+M2** — `currentY += H` then `baseline = 0.75·H` yields `Δbaseline = 0.25·H(prev) + 0.75·H(cur)` at every seam for free (`mixed` line2→3 = 40.5 exact, `stacked` ¶2→¶3 = 40.50 vs PP 40.58; only ¶1→¶2 is 0.9 pt off, PP grid-snap) | — | — |
 | M4 | **`<a:spcPts>`** (exact-point spacing) | only the `%` multiplier exists (`style.lineHeight`) | `H = pts` flat, no font metrics | needs a `lineHeightUnit` / `lineHeightPts` on `ParagraphStyle` (`Document.ts:458` `@todo`) |
-| M5 | **spcPct < 100 %** | box shrinks, baseline pinned at ascent (fix-1 `max(0,…)`) | PP floors near real ascent+descent, not linear | no sub-100 % sample in the oracle yet |
+| M5 | **spcPct < 100 %** | linear (`1.20 × size × spcPct`), no floor | PP floors near the real ascent+descent, not linear below ~100 % | no sub-100 % sample in the oracle yet |
 | M6 | **DrawingML insets** | `TextFrame.padding` exists but the office deck sets 0; real decks default `lIns/rIns` 7.2 pt, `tIns/bIns` 3.6 pt | map DrawingML insets → `TextFrame.padding` in whatever builds office `TextFrame`s | converter-side, not layout |
 
 ### 7b. The export-padding problem (why absolute `y` can't be trusted)
