@@ -7,6 +7,25 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.4] - 2026-09-10
+
+`@vyaz/core` 0.4.3 → 0.4.4, `@vyaz/renderer` 0.4.3 → 0.4.4. `@vyaz/converters`
+unchanged at 0.1.0.
+
+### Added
+
+- **`TextFrameLayoutResult.textBox`** — a `{ x, y, width, height }` box that
+  hugs the text, next to the existing `content` (the CSS box: every line's full
+  `lineHeight` box plus padding). `textBox` keeps the same top / left / right
+  but drops the bottom to the **last line's baseline + real font descent**, so a
+  `lineHeight` > 1 no longer trails empty space after the text
+  (`content.height − textBox.height` — ~0.5 pt at 18 pt / spacing 1.0, ~6 pt at
+  spacing 2.0). Output-format generators use it directly for frame sizing (PDF,
+  and PPTX when PowerPoint's own autofit trims) instead of re-deriving the
+  trailing leading from font metrics. `scripts/office-metrics/RESULTS.md` +
+  `textframe-fit-run.ts` / `gen-textframe-fit.py` are the round-trip harness
+  that checks vyaz's box against PowerPoint's. (`a34c97e`)
+
 ## [0.4.3] - 2026-09-10
 
 `@vyaz/core` 0.4.2 → 0.4.3, `@vyaz/renderer` 0.4.2 → 0.4.3. `@vyaz/converters`
