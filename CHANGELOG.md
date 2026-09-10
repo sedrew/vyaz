@@ -22,7 +22,7 @@ item when it closes or advances one.
   `office-cases/MIGRATION.md`. The base constant (1.294 for Roboto vs
   PowerPoint's font-independent ~1.20) and the cross-line / paragraph-seam
   leading split are still open — see [Roadmap](ROADMAP.md) "office line-box
-  model". (`94a79fc`)
+  model". (`4e23250`)
 
 - **Stray underline under the first glyph when a paragraph has a `<a href>`** —
   the `browser`/`preserve` SVG preset wrapped a link run as
