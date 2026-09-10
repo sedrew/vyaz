@@ -1,0 +1,30 @@
+{
+  "_comment": "office mode, line spacing 1.0 (DrawingML spcPct 100000). Single wrapped paragraph, Roboto 18. Baseline for the 150/200 siblings and the stacked case — same text, width and font, only style.lineHeight differs. Oracle: scripts/office-metrics/line-spacing.pptx group 'ls-100'.",
+  "frame": {
+    "wrap": true,
+    "width": 200,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Roboto office line spacing sample text that wraps onto several lines here",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": { "debug": { "frameBox": true, "contentBox": true }, "preset": "flat" },
+    "glyph": { "debug": { "frameBox": true, "contentBox": true }, "preset": "glyph" }
+  }
+}

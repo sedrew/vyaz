@@ -9,6 +9,21 @@ item when it closes or advances one.
 
 ### Fixed
 
+- **`mode: 'office'` ignored the paragraph line-spacing multiplier** — the
+  office (DrawingML) line-box branch in `PositioningEngine` used `winAscent +
+  winDescent` verbatim and never read `style.lineHeight`
+  (`<a:lnSpc><a:spcPct>`), so PowerPoint content set to 1.5 / 2.0 line spacing
+  rendered single-spaced. The line box now scales linearly with
+  `style.lineHeight` and the extra leading sits ~0.75 above the baseline, which
+  matches PowerPoint's own SVG exports; `spcPct` 1.0 output is byte-identical to
+  before. New golden corpus `packages/renderers/tests/office-cases/` with the
+  PowerPoint exports as oracle (`scripts/office-metrics/gen-line-spacing.py`),
+  core cover in `layout-mode.test.ts`, and analysis in
+  `office-cases/MIGRATION.md`. The base constant (1.294 for Roboto vs
+  PowerPoint's font-independent ~1.20) and the cross-line / paragraph-seam
+  leading split are still open — see [Roadmap](ROADMAP.md) "office line-box
+  model". (`94a79fc`)
+
 - **Stray underline under the first glyph when a paragraph has a `<a href>`** —
   the `browser`/`preserve` SVG preset wrapped a link run as
   `<a href><text x="0"><tspan x="…" text-decoration="underline">`. Chrome draws

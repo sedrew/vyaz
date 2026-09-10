@@ -553,11 +553,14 @@ export function positionLines(
     // 'browser' (CSS-compatible, parley/Chrome matching):
     //   1. lineHeightPx = maxFontSize * style.lineHeight
     //
-    // 'office' (MS Office / DrawingML pixel-perfect):
-    //   PowerPoint has no line-height multiplier for single lines.
-    //   Line height strictly = ascent + descent (OS/2.usWinAscent + usWinDescent).
-    //   Baseline = Top + ascent without any half-leading additions.
-    //   See pixel-perfect-text-layout.md §1 and ECMA-376.
+    // 'office' (MS Office / DrawingML):
+    //   Single-spaced line box = maxLineHeightBase (OS/2 winAscent + winDescent,
+    //   fitted × 1.078). DrawingML `<a:lnSpc><a:spcPct>` (`style.lineHeight`)
+    //   then scales the whole box linearly — PowerPoint SVG exports show the
+    //   line pitch tracking spcPct 1:1 (see office-cases/MIGRATION.md). The
+    //   extra room from spcPct > 100 % sits mostly above the baseline
+    //   (PowerPoint ≈ 0.75 of it). The base 1.078 constant vs PowerPoint's
+    //   ~1.20 font-independent box is a separate calibration question (ROADMAP).
     const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
     const ascentRounded = Math.round(maxAscent);
@@ -567,12 +570,10 @@ export function positionLines(
     let baseline: number;
 
     if (mode === 'office') {
-      // DrawingML: lineHeight = ascent + descent, no lineHeight ×1.15 and no leading.
-      // DrawingML: base line height = OS/2 (usWinAscent + usWinDescent), without
-      // sum of rounded ascent/descent — that formula caused pixel-perfect
-      // mismatch with PowerPoint, so we use maxLineHeightBase.
-      lineBoxHeight = maxLineHeightBase;
-      baseline = ascentRounded;
+      const singleSpaced = maxLineHeightBase;
+      lineBoxHeight = singleSpaced * style.lineHeight;
+      const extraLeading = Math.max(0, lineBoxHeight - singleSpaced);
+      baseline = ascentRounded + extraLeading * 0.75;
     } else {
       // Browser: CSS-compatible with leading distribution.
       const lineHeightPx = maxFontSize * style.lineHeight;

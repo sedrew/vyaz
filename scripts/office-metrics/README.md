@@ -11,10 +11,22 @@ Counterpart to `scripts/browser-metrics/` (which calibrates *width* vs Chrome).
 | `parse-pptx.ts` | pulls each group's runs (`a:latin` / `a:rPr@sz`) and the rect size (EMU → px/pt, via the group `a:xfrm` transform) |
 | `report.ts` | scores fontkit line-box / width formulas against the deck; writes `report.md` |
 | `report.md` | generated — the current findings table |
+| `gen-line-spacing.py` | builds `line-spacing.pptx` — isolates the paragraph **line-spacing multiplier** (`<a:spcPct>` 1.0 / 1.5 / 2.0), separately and stacked. Needs `python-pptx` + Roboto installed |
+| `line-spacing.pptx` | generated; **5 slides, one plain TextBox each** (no groups, no marker rects). Open in PowerPoint, let it re-wrap, save, then per slide File ▸ Export ▸ SVG → `office-cases/<case>/powerpoint.svg` |
 
 ```bash
-bun scripts/office-metrics/report.ts
+bun scripts/office-metrics/report.ts               # width / single-line line-box (font-metrics.pptx)
+python3 scripts/office-metrics/gen-line-spacing.py  # regenerate line-spacing.pptx
 ```
+
+`line-spacing.pptx` is a **pure SVG-export** oracle, not parsed by `parse-pptx.ts`
+(that one is for the grouped `font-metrics.pptx`). Its slides mirror the golden
+corpus in `packages/renderers/tests/office-cases/line-spacing-*` one-to-one (same
+text, 200 pt column, Roboto 18, line spacing 1.0 / 1.5 / 2.0) — slide order =
+case order, don't swap `stacked` / `mixed`. In vyaz today `mode: 'office'`
+ignores the multiplier, so 100/150/200 render at the same height; the export
+says what PowerPoint actually does. See
+`office-cases/MIGRATION.md` for the derived model and the diff.
 
 ## Findings (see `report.md` for the tables)
 

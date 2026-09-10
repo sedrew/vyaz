@@ -1,0 +1,30 @@
+{
+  "_comment": "office mode, line spacing 2.0 (DrawingML spcPct 200000). Same text/width/font as line-spacing-100; only style.lineHeight differs. Oracle: scripts/office-metrics/line-spacing.pptx group 'ls-200'.",
+  "frame": {
+    "wrap": true,
+    "width": 200,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Roboto office line spacing sample text that wraps onto several lines here",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 2.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": { "debug": { "frameBox": true, "contentBox": true }, "preset": "flat" },
+    "glyph": { "debug": { "frameBox": true, "contentBox": true }, "preset": "glyph" }
+  }
+}

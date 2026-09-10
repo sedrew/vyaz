@@ -1,0 +1,42 @@
+{
+  "_comment": "office mode: one paragraph, runs 18 / 36 / 18 pt, line spacing 1.5. Mirrors the oracle deck's 'Lines' sample — per-line box should follow the line's own max run size times the coefficient, not a frame-wide constant. Oracle: scripts/office-metrics/line-spacing.pptx group 'ls-mixed'.",
+  "frame": {
+    "wrap": true,
+    "width": 260,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "small before ",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          },
+          {
+            "type": "text",
+            "text": "BIG MIDDLE",
+            "fontFamily": "Roboto",
+            "fontSize": 36
+          },
+          {
+            "type": "text",
+            "text": " small after wraps here",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.5,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": { "debug": { "frameBox": true, "contentBox": true }, "preset": "flat" },
+    "glyph": { "debug": { "frameBox": true, "contentBox": true }, "preset": "glyph" }
+  }
+}

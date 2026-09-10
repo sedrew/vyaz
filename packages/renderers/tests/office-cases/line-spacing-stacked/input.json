@@ -1,0 +1,64 @@
+{
+  "_comment": "office mode: the 1.0 / 1.5 / 2.0 samples stacked as three paragraphs in ONE frame (spaceBefore/After 0). Checks that each paragraph's line-spacing coefficient is applied independently and that inter-paragraph advance = the previous paragraph's last line box, with no extra leading. Compare block heights against line-spacing-100/150/200 rendered alone. Oracle: scripts/office-metrics/line-spacing.pptx group 'ls-stacked'.",
+  "frame": {
+    "wrap": true,
+    "width": 200,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Roboto office line spacing sample text that wraps onto several lines here",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Roboto office line spacing sample text that wraps onto several lines here",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.5,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Roboto office line spacing sample text that wraps onto several lines here",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 2.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": { "debug": { "frameBox": true, "contentBox": true }, "preset": "flat" },
+    "glyph": { "debug": { "frameBox": true, "contentBox": true }, "preset": "glyph" }
+  }
+}

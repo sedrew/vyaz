@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="139.72" viewBox="0 0 200 139.72">
+  <text x="0" y="26.73" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">Roboto office line </text>
+  <text x="0" y="61.66" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">spacing sample text that </text>
+  <text x="0" y="96.59" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">wraps onto several lines </text>
+  <text x="0" y="131.52" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">here</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="200" height="139.72" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="201.52" height="139.72" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>
