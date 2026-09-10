@@ -7,6 +7,25 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-09-10
+
+`@vyaz/core` 0.4.1 → 0.4.2, `@vyaz/renderer` 0.4.1 → 0.4.2. `@vyaz/converters`
+unchanged at 0.1.0.
+
+### Changed
+
+- **`mode: 'office'` baseline placement** — the office line baseline is now
+  `0.75 × lineBox` from the box top (`OFFICE_BASELINE_RATIO` in
+  `PositioningEngine`), on **every** line. 0.4.1 only lifted 0.75 of the *extra*
+  leading above `round(ascent)`, so at `spcPct` 1.0 (no extra leading) the
+  baseline stayed at `round(ascent)`. PowerPoint's SVG exports put it at
+  `0.75 × box` regardless of spacing; the single-spaced baseline moves up
+  ~0.5 px at 18 pt. Pitch and box height are unchanged from 0.4.1. Goldens in
+  `packages/renderers/tests/office-cases/` regenerated; `office-cases/MIGRATION.md`
+  §7 M2 updated. 0.75 == Roboto's `typoAscender / (typoAscender − typoDescender)`
+  — see [Roadmap](ROADMAP.md) "office line-box model" for the base-constant
+  (~1.20) piece still open. (`48c6be6`)
+
 ## [0.4.1] - 2026-09-10
 
 `@vyaz/core` 0.4.0 → 0.4.1, `@vyaz/renderer` 0.4.0 → 0.4.1. `@vyaz/converters`
