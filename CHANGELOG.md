@@ -7,6 +7,29 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.3] - 2026-09-10
+
+`@vyaz/core` 0.4.2 → 0.4.3, `@vyaz/renderer` 0.4.2 → 0.4.3. `@vyaz/converters`
+unchanged at 0.1.0.
+
+### Changed
+
+- **`mode: 'office'` line box is now `1.20 × fontSize`, font-independent**
+  (`OFFICE_LINE_BOX_RATIO` in `PositioningEngine`), replacing
+  `winAscent + winDescent` (= `1.294 × fontSize` for Roboto, an Arial-fitted
+  `× 1.078`). PowerPoint's own SVG exports put the line pitch at exactly
+  `spcPct × 1.20 × fontSize` for Roboto, and `scripts/office-metrics/report.md`
+  measures the same 1.20 box for Great Vibes (win ratio 1.75) — no fontkit
+  metric yields 1.20 for both, so it is a measured constant. Office line height
+  and frame bbox drop ~7.8 % for Roboto/Inter-class fonts (e.g. −0.13 cm per
+  line at 40 pt) and now match PowerPoint's pitch to <0.1 pt and its frame
+  height exactly on the single-paragraph `office-cases` (`line-spacing-100 /
+  150 / 200`). This closes the base-constant half of the
+  [Roadmap](ROADMAP.md) "office line-box model" item; the cross-line
+  `0.25·H(prev)+0.75·H(cur)` seam now falls out of the box + 0.75 baseline for
+  free. Still open: PowerPoint word-wraps large runs more eagerly (the `mixed`
+  case), and one paragraph seam is grid-snapped ~0.9 pt. (`f26dd7a`)
+
 ## [0.4.2] - 2026-09-10
 
 `@vyaz/core` 0.4.1 → 0.4.2, `@vyaz/renderer` 0.4.1 → 0.4.2. `@vyaz/converters`
