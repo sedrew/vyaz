@@ -14,13 +14,13 @@ against the vyaz goldens (`flat.svg` / `glyph.svg`) in the same folders.
 > `Pt(200)` box) is what is committed here — its wrap column now matches the
 > goldens exactly.
 
-> **Status — fix 1 applied.** `PositioningEngine.ts` office branch now scales
-> the line box by `style.lineHeight` (spcPct) and lifts 0.75 of the extra
-> leading above the baseline. spcPct 1.0 output is byte-identical to before
-> (`line-spacing-100` golden unchanged). Remaining gap on 150/200/stacked/mixed
-> is a **consistent ~+8 %** — the base constant (`winAsc+winDesc × 1.078` =
-> 1.294 for Roboto) vs PowerPoint's font-independent ~1.20. That's **fix 2**
-> (ROADMAP "office line-box model — open question"), not yet done.
+> **Status — fix 1 + M2 applied** (0.4.1 / 0.4.2). `PositioningEngine.ts` office
+> branch scales the line box by `style.lineHeight` (spcPct), and places the
+> baseline at `OFFICE_BASELINE_RATIO × lineBox` = **0.75 × box** from the top,
+> on every line. Remaining gap on 150 / 200 / stacked / mixed is a **consistent
+> ~+8 %** — the base constant (`winAsc+winDesc × 1.078` = 1.294 for Roboto) vs
+> PowerPoint's font-independent ~1.20 (M1). Now that M2 matches, M1 is the one
+> knob left for full parity. ROADMAP "office line-box model — open question".
 
 ---
 
@@ -186,12 +186,12 @@ group level, plain `x`/`y` on each line.
 
 ## 6. Concrete changes this points to
 
-1. **`PositioningEngine.ts`, office branch** — replace
-   `lineBoxHeight = maxLineHeightBase` with
-   `H = style.lineHeight * 1.20 * maxRunSizeInLine` (candidate model A;
-   `report.md` has the clamped model B alternative).
-2. **Baseline** — `baseline = 0.75 * H` (from `typoAscender / (typoAscender −
-   typoDescender)`), not `round(maxAscent)`. First line included.
+1. **`PositioningEngine.ts`, office branch** — spcPct multiplier applied
+   (0.4.1). Still open: replace `maxLineHeightBase` (1.294·size for Roboto) with
+   `1.20 * maxFontSizeInLine`, font-independent (candidate model A; `report.md`
+   has the clamped model B alternative). = M1 above.
+2. ✅ **Baseline** — `0.75 * lineBox` every line incl. first (0.4.2,
+   `OFFICE_BASELINE_RATIO`).
 3. **Multi-size lines** — carry per-line `H` and place baselines as
    `0.25·H(prev) + 0.75·H(cur)`; drop the browser-mode half-leading path for
    office.
@@ -215,7 +215,7 @@ group level, plain `x`/`y` on each line.
 | # | gap | now | target | blocker |
 |---|---|---|---|---|
 | M1 | **base constant** | `maxLineHeightBase` = `(winAsc+winDesc)/upm × 1.078` = **1.294**·size (Roboto) | `1.20 × maxFontSizeInLine`, **font-independent** (`report.md`: Great Vibes == Roboto) | pick model **A** `1.20` flat vs **B** `max(1.20, hhea/upm)`; needs a large-`hhea` display font in the oracle |
-| M2 | **baseline in box** | `round(maxAscent)` + `0.75 ×` *added* leading (fix 1) | `0.75 × H` **outright**, every line incl. first | `report.md` guessed `winAsc/(winAsc+winDesc)` ≈ **0.792**; the exports say **0.75** (= Roboto `typoAsc/(typoAsc−typoDesc)`, and its typo sum is exactly 1 em). Need a font where 0.75 ≠ typo-ratio ≠ win-ratio to pin the rule. ~1.8 pt effect at 18 pt / spcPct 1.0 |
+| M2 | **baseline in box** | ✅ **done (0.4.2)** — `OFFICE_BASELINE_RATIO × lineBox` = `0.75 × H`, every line incl. first | — | `report.md` guessed `winAsc/(winAsc+winDesc)` ≈ 0.792; the exports say **0.75** (= Roboto `typoAsc/(typoAsc−typoDesc)`, and its typo sum is exactly 1 em). Still want a font where 0.75 ≠ typo-ratio ≠ win-ratio to prove it is typo-ratio based, not a flat 0.75 |
 | M3 | **cross-line / ¶ seam** | `currentY += H(line)`, each baseline independent | `Δbaseline = 0.25·H(prev) + 0.75·H(cur)` at every line *and* paragraph boundary | none — carry per-line `H`, apply at the seam. Confirmed by `mixed` (40.1 vs 40.5) and `stacked` ¶2→¶3 (40.3 vs 40.5) |
 | M4 | **`<a:spcPts>`** (exact-point spacing) | only the `%` multiplier exists (`style.lineHeight`) | `H = pts` flat, no font metrics | needs a `lineHeightUnit` / `lineHeightPts` on `ParagraphStyle` (`Document.ts:458` `@todo`) |
 | M5 | **spcPct < 100 %** | box shrinks, baseline pinned at ascent (fix-1 `max(0,…)`) | PP floors near real ascent+descent, not linear | no sub-100 % sample in the oracle yet |

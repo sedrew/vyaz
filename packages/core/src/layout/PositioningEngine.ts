@@ -83,6 +83,17 @@ function resolveBulletIndent(
 
 // ── PositioningEngine ─────────────────────────────────────────────────
 
+/**
+ * `mode: 'office'` — fraction of the line box that sits above the baseline.
+ * PowerPoint's own SVG exports (see packages/renderers/tests/office-cases/)
+ * place the baseline at 0.75 × lineBox from the box top, on every line
+ * including the first. 0.75 == Roboto's `typoAscender / (typoAscender −
+ * typoDescender)` (its typo asc+desc sum to exactly 1 em); a font whose typo
+ * sum ≠ 1 em is still needed to confirm the rule is typo-ratio based rather
+ * than a flat 0.75.
+ */
+const OFFICE_BASELINE_RATIO = 0.75;
+
 /** Round to 2 decimal places — the precision every emitted geometry value carries. */
 function round2(value: number): number {
   return Math.round(value * 100) / 100;
@@ -557,10 +568,12 @@ export function positionLines(
     //   Single-spaced line box = maxLineHeightBase (OS/2 winAscent + winDescent,
     //   fitted × 1.078). DrawingML `<a:lnSpc><a:spcPct>` (`style.lineHeight`)
     //   then scales the whole box linearly — PowerPoint SVG exports show the
-    //   line pitch tracking spcPct 1:1 (see office-cases/MIGRATION.md). The
-    //   extra room from spcPct > 100 % sits mostly above the baseline
-    //   (PowerPoint ≈ 0.75 of it). The base 1.078 constant vs PowerPoint's
-    //   ~1.20 font-independent box is a separate calibration question (ROADMAP).
+    //   line pitch tracking spcPct 1:1 (see office-cases/MIGRATION.md).
+    //   The baseline sits at OFFICE_BASELINE_RATIO × lineBox from the box top,
+    //   every line including the first (PowerPoint's exports land on 0.75, ==
+    //   Roboto's typoAscender / (typoAscender − typoDescender)). The base 1.078
+    //   constant vs PowerPoint's ~1.20 font-independent box is a separate
+    //   calibration question (ROADMAP).
     const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
     const ascentRounded = Math.round(maxAscent);
@@ -570,10 +583,8 @@ export function positionLines(
     let baseline: number;
 
     if (mode === 'office') {
-      const singleSpaced = maxLineHeightBase;
-      lineBoxHeight = singleSpaced * style.lineHeight;
-      const extraLeading = Math.max(0, lineBoxHeight - singleSpaced);
-      baseline = ascentRounded + extraLeading * 0.75;
+      lineBoxHeight = maxLineHeightBase * style.lineHeight;
+      baseline = lineBoxHeight * OFFICE_BASELINE_RATIO;
     } else {
       // Browser: CSS-compatible with leading distribution.
       const lineHeightPx = maxFontSize * style.lineHeight;

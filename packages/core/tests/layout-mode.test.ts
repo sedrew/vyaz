@@ -70,18 +70,17 @@ describe('office line spacing (spcPct)', () => {
     expect(pitch(2.0) / p1).toBeCloseTo(2.0, 2);
   });
 
-  test('spcPct 1.0 is the single-spaced box: height == ascent+descent, baseline == round(ascent)', () => {
+  test('spcPct 1.0 keeps the single-spaced box; baseline is 0.75 of it', () => {
     const l = office(1.0).lines[0];
-    expect(l.height).toBeCloseTo(l.ascent + l.descent, 1);
-    expect(l.baseline).toBe(Math.round(l.ascent));
+    expect(l.height).toBeCloseTo(l.ascent + l.descent, 1);   // box unchanged by the fix
+    expect(l.baseline).toBeCloseTo(l.height * 0.75, 1);      // PowerPoint places it here
   });
 
-  test('extra leading from spcPct > 1 sits ~0.75 above the baseline', () => {
-    const a = office(1.0).lines[0];
-    const b = office(2.0).lines[0];
-    const extra = b.height - a.height;
-    expect(extra).toBeGreaterThan(a.height * 0.9);        // ~1× the box was added
-    expect(b.baseline - a.baseline).toBeCloseTo(extra * 0.75, 1);
+  test('the baseline stays at 0.75 of the line box as spcPct grows', () => {
+    for (const lh of [1.0, 1.5, 2.0]) {
+      const l = office(lh).lines[0];
+      expect(l.baseline / l.height).toBeCloseTo(0.75, 3);
+    }
   });
 
   test('browser mode is unaffected — its own CSS leading model, different geometry', () => {

@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="200" height="186.32" viewBox="0 0 200 186.32">
-  <text x="0" y="35.47" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="34.93" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 11.1 21.4 31.5 41.7 47.6 57.9 62.3 72.6 78.9 85.1 89.5 98.9 108.5 112.9 117.3 121.7 131.6">Roboto office line</tspan>
     <tspan x="141.2"> </tspan>
   </text>
-  <text x="0" y="82.05" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="81.51" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 9.3 19.4 29.2 38.6 43 52.9 63 67.5 76.8 86.6 102.4 112.5 116.9 126.4 130.9 136.7 146.3 155.2 161.1 165.6 171.5 181.4 191.2">spacing sample text that</tspan>
     <tspan x="197.1"> </tspan>
   </text>
-  <text x="0" y="128.63" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="128.09" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 13.5 19.6 29.4 39.5 48.8 53.3 63.5 73.5 79.4 89.6 94.1 103.4 112.9 121.7 131.2 137.3 147.1 151.5 155.9 160.3 164.7 174.6 184.2">wraps onto several lines</tspan>
     <tspan x="193.5"> </tspan>
   </text>
-  <text x="0" y="175.21" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="174.67" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 9.9 19.5 25.6">here</tspan>
   </text>
 <!-- debug overlay -->
