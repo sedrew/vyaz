@@ -7,6 +7,11 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-09-10
+
+`@vyaz/core` 0.4.0 → 0.4.1, `@vyaz/renderer` 0.4.0 → 0.4.1. `@vyaz/converters`
+unchanged at 0.1.0.
+
 ### Fixed
 
 - **`mode: 'office'` ignored the paragraph line-spacing multiplier** — the
