@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="338.33" height="62" viewBox="-10 -10 338.33 62">
+  <rect x="0" y="1.08" width="49.89" height="17.58" fill="#FFD54F" />
+  <rect x="49.89" y="1.08" width="46.06" height="17.58" fill="#FF8A65" />
+  <rect x="240.72" y="1.08" width="73.89" height="17.58" fill="#A5D6A7" />
+  <rect x="314.61" y="1.08" width="3.72" height="17.58" fill="#A5D6A7" />
+  <text x="0" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Sunrise</text>
+  <text x="49.89" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Sunset</text>
+  <text x="95.95" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve"> and a long stretch of </text>
+  <text x="240.72" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">highlighted </text>
+  <rect x="0" y="21.08" width="225.01" height="17.58" fill="#A5D6A7" />
+  <rect x="272.56" y="25.95" width="5.48" height="11.43" fill="#B3E5FC" />
+  <text x="0" y="35" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">phrase that crosses the line break</text>
+  <text x="225.01" y="35" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve"> then H</text>
+  <text x="272.56" y="38.75" font-family="Roboto" font-size="9.75" fill="#333333" font-weight="400" xml:space="preserve">2</text>
+  <text x="278.04" y="35" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">O tail</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="318.33" height="42" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

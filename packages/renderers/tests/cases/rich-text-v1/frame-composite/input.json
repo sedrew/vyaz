@@ -1,0 +1,258 @@
+{
+  "_comment": "Compact realistic frame (title, subtitle, mixed-style body, bullet list, closing line) with deterministic fonts — the rich-text-v1/frame scenario at ~1/5 the size, and unlike v1 it actually runs (no env:arial skip).",
+  "profile": "raw",
+  "frame": {
+    "width": 560,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "Quarterly Type Review",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 24,
+            "color": "#111111",
+            "fontWeight": "bold"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.2,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Prepared for the design system guild",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 13,
+            "color": "#777777"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.3,
+          "spaceBefore": 0,
+          "spaceAfter": 10,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "This paragraph mixes a ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "bold lead-in",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "fontWeight": "bold"
+          },
+          {
+            "text": ", an ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "italic aside",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "fontStyle": "italic"
+          },
+          {
+            "text": ", a ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "highlighted term",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "backgroundColor": "#FFE066"
+          },
+          {
+            "text": ", and a footnote marker",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "1",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "script": "super"
+          },
+          {
+            "text": ".",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 6,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "First takeaway — ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "kerning",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "fontStyle": "italic"
+          },
+          {
+            "text": " matters at display sizes.",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 0,
+            "position": "outside"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Second takeaway with a ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "link-styled",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#1A0DAB",
+            "underline": true
+          },
+          {
+            "text": " run.",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 0,
+            "position": "outside"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "— end of sample",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 13,
+            "color": "#777777",
+            "fontStyle": "italic"
+          }
+        ],
+        "style": {
+          "alignment": "right",
+          "lineHeight": 1.3,
+          "spaceBefore": 8,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

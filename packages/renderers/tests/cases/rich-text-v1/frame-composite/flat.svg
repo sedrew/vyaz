@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="580" height="197" viewBox="-10 -10 580 197">
+  <text x="0" y="22" font-family="Roboto" font-size="24" fill="#111111" font-weight="700" xml:space="preserve">Quarterly Type Review</text>
+  <text x="0" y="43" font-family="Roboto" font-size="13" fill="#777777" font-weight="400" xml:space="preserve">Prepared for the design system guild</text>
+  <rect x="356.57" y="59.08" width="108.71" height="17.58" fill="#FFE066" />
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">This paragraph mixes a </text>
+  <text x="159.76" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="700" xml:space="preserve">bold lead-in</text>
+  <text x="239.64" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">, an </text>
+  <text x="266.48" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve">italic aside</text>
+  <text x="338.02" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">, a </text>
+  <text x="356.57" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">highlighted term</text>
+  <text x="465.29" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">, and a </text>
+  <text x="0" y="94" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">footnote marker</text>
+  <text x="107.69" y="88" font-family="Roboto" font-size="9.75" fill="#333333" font-weight="400" xml:space="preserve">1</text>
+  <text x="113.17" y="94" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">.</text>
+  <text x="14.58" y="121" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">•</text>
+  <text x="22.5" y="121" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">First takeaway — </text>
+  <text x="138.35" y="121" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve">kerning</text>
+  <text x="187.63" y="121" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve"> matters at display sizes.</text>
+  <text x="14.58" y="144" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">•</text>
+  <text x="22.5" y="144" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Second takeaway with a </text>
+  <text x="186.95" y="144" font-family="Roboto" font-size="15" fill="#1A0DAB" font-weight="400" text-decoration="underline" xml:space="preserve">link-styled</text>
+  <text x="254.08" y="144" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve"> run.</text>
+  <text x="464.3" y="172" font-family="Roboto" font-size="13" fill="#777777" font-weight="400" font-style="italic" xml:space="preserve">— end of sample</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="560" height="177" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

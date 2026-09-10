@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="225.72" height="133" viewBox="-3.64 -10 225.72 133">
+  <rect x="168.77" y="1.08" width="38.08" height="17.58" fill="#FFF59D" />
+  <text x="14.58" y="15" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="14.6">•</tspan>
+  </text>
+  <text x="14.58" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="22.5 32.7 37.8 46.4 54.2 62.2 67.2 70.9 78.8 86.6">Groceries:</tspan>
+    <tspan x="90.2"> </tspan>
+  </text>
+  <text x="14.58" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="700" xml:space="preserve">
+    <tspan x="93.9 106.9 110.9 114.9">milk</tspan>
+  </text>
+  <text x="14.58" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="122.9">,</tspan>
+    <tspan x="125.8"> </tspan>
+  </text>
+  <text x="14.58" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="129.6 137.5 145.9 154.4">eggs</tspan>
+  </text>
+  <text x="14.58" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="162.1">,</tspan>
+    <tspan x="165.1"> </tspan>
+  </text>
+  <text x="14.58" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="168.8 177.2 182.3 190.2 198.4">bread</tspan>
+  </text>
+  <text x="14.58" y="38" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="14.6">•</tspan>
+  </text>
+  <text x="14.58" y="38" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="22.5 32 35.6 43.8 47.4 55.7 59.4 67.2 75.1 83 91.5 99.8 108.3 112 115.6 120.5 128.5">Plain second item</tspan>
+  </text>
+  <text x="33.48" y="61" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="33.5">○</tspan>
+  </text>
+  <text x="33.48" y="61" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="45 55.7 63.7 71.4 76.3 84.3">Nested</tspan>
+    <tspan x="92.7"> </tspan>
+  </text>
+  <text x="33.48" y="61" font-family="Roboto" font-size="15" fill="#C81E3A" font-weight="400" xml:space="preserve">
+    <tspan x="96.4 104.7 113.3 118.2">note</tspan>
+  </text>
+  <text x="33.48" y="61" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="126.1"> </tspan>
+    <tspan x="129.9 138.3 146.8 154.8 162.5 166.3 174.7 182.7 190.6 199 207">goes deeper</tspan>
+  </text>
+  <text x="6.36" y="84" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="6.4">1.</tspan>
+    <tspan x="22.5 31.4 36.3 44.3 52.7 56.4 65 73.2 81.2 84.9 96.2 99.8 104.8">Step one with</tspan>
+    <tspan x="113"> </tspan>
+  </text>
+  <text x="6.36" y="84" font-family="Roboto" font-size="15" fill="#333333" font-weight="700" font-style="italic" xml:space="preserve">
+    <tspan x="116.7 124.8 137.8 146.3 154.7 162.7 170.4 174.4">emphasis</tspan>
+  </text>
+  <text x="6.36" y="107" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="6.4">2.</tspan>
+    <tspan x="22.5 31.4 36.3 44.3 52.7 56.4 61.3 72.6">Step two</tspan>
+    <tspan x="81.2"> </tspan>
+  </text>
+  <text x="6.36" y="107" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="84.9 93.1 101.4 109.9 117.8 122.9 126.6 130.2 138.5 146.5">underlined</tspan>
+  </text>
+  <line x1="84.87" y1="109" x2="154.91" y2="109" stroke="#333333" stroke-width="1" />
+<!-- debug overlay -->
+  <rect x="6.36" y="0" width="205.72" height="113" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

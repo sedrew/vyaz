@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="641.41" height="76" viewBox="-10 -10 641.41 76">
+  <rect x="236.79" y="9.16" width="3.97" height="18.75" fill="#FFE066" />
+  <rect x="240.76" y="9.16" width="61.31" height="18.75" fill="#FFE066" />
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">plain</text>
+  <text x="34.3" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="700" xml:space="preserve"> bold</text>
+  <text x="69.55" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve"> italic</text>
+  <text x="107.5" y="24" font-family="Roboto" font-size="24" fill="#333333" font-weight="400" xml:space="preserve"> big</text>
+  <text x="144.26" y="24" font-family="Roboto" font-size="11" fill="#333333" font-weight="400" xml:space="preserve"> small</text>
+  <text x="174.89" y="24" font-family="Roboto" font-size="16" fill="#C81E3A" font-weight="400" xml:space="preserve"> crimson</text>
+  <text x="236.79" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve"> highlight</text>
+  <text x="302.07" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" text-decoration="underline" xml:space="preserve"> underline</text>
+  <text x="371.73" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" text-decoration="line-through" xml:space="preserve"> strike</text>
+  <text x="415.1" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" letter-spacing="3" xml:space="preserve"> spread</text>
+  <text x="485.94" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" letter-spacing="-1" xml:space="preserve"> tight</text>
+  <text x="517.07" y="17.6" font-family="Roboto" font-size="10.4" fill="#333333" font-weight="400" xml:space="preserve"> super</text>
+  <text x="547.02" y="28" font-family="Roboto" font-size="10.4" fill="#333333" font-weight="400" xml:space="preserve"> sub</text>
+  <text x="567.92" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve"> UPPER</text>
+  <text x="0" y="50" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">Capitalize</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="621.41" height="56" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

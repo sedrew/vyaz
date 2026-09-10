@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="583.27" height="73" viewBox="-10 -10 583.27 73">
+  <rect x="322.9" y="1.16" width="3.97" height="18.75" fill="#CDE7FF" />
+  <rect x="326.87" y="1.16" width="136.08" height="18.75" fill="#CDE7FF" />
+  <text x="0" y="16" font-family="Roboto" font-size="16" fill="#333333" font-weight="700" font-style="italic" xml:space="preserve">bold+italic</text>
+  <text x="75.02" y="16" font-family="Roboto" font-size="16" fill="#1B5E20" font-weight="700" text-decoration="underline" xml:space="preserve"> bold+underline+green</text>
+  <text x="236.47" y="16" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" font-style="italic" text-decoration="line-through" xml:space="preserve"> italic+strike</text>
+  <text x="322.9" y="16" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" text-decoration="underline" xml:space="preserve"> underline+highlight</text>
+  <text x="462.94" y="16" font-family="Roboto" font-size="16" fill="#333333" font-weight="700" letter-spacing="2" xml:space="preserve"> BOLDER</text>
+  <text x="538.46" y="9.6" font-family="Roboto" font-size="10.4" fill="#C81E3A" font-weight="700" xml:space="preserve"> note</text>
+  <text x="0" y="44" font-family="Roboto" font-size="22" fill="#333333" font-weight="400" font-style="italic" text-decoration="underline" xml:space="preserve">big+italic+underline</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="563.27" height="53" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

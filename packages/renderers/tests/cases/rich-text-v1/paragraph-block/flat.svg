@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="505.28" height="275" viewBox="-10 -10 505.28 275">
+  <text x="0" y="14" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Left, line-height 1.0. The quick brown fox jumps over the lazy dog </text>
+  <text x="0" y="32" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">near the riverbank.</text>
+  <text x="1.49" y="60" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Centred, line-height 1.5. The quick brown fox jumps over the lazy dog </text>
+  <text x="168.25" y="83" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">near the riverbank.</text>
+  <text x="12.48" y="108" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Right, line-height 1.15. The quick brown fox jumps over the lazy dog </text>
+  <text x="336.5" y="126" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">near the riverbank.</text>
+  <text x="0" y="155" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Justified, line-height 1.4. The quick brown fox jumps over the lazy </text>
+  <text x="0" y="176" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">dog near the riverbank. The quick brown fox jumps over the lazy dog </text>
+  <text x="0" y="197" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">near the riverbank.</text>
+  <text x="40" y="228" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">First-line indent 24, left/right indent 16. The quick brown fox jumps </text>
+  <text x="16" y="249" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">over the lazy dog near the riverbank.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="485.28" height="255" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

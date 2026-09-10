@@ -1,0 +1,141 @@
+{
+  "_comment": "Block-level ParagraphStyle sweep: alignment (l/c/r/justify), lineHeight (1.0/1.15/1.5), space before/after, first-line indent + left/right indent. No per-run styling, so the diff isolates paragraph geometry.",
+  "profile": "raw",
+  "frame": {
+    "width": 460,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "Left, line-height 1.0. The quick brown fox jumps over the lazy dog near the riverbank.",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 4,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Centred, line-height 1.5. The quick brown fox jumps over the lazy dog near the riverbank.",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "center",
+          "lineHeight": 1.5,
+          "spaceBefore": 4,
+          "spaceAfter": 4,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Right, line-height 1.15. The quick brown fox jumps over the lazy dog near the riverbank.",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "right",
+          "lineHeight": 1.15,
+          "spaceBefore": 0,
+          "spaceAfter": 4,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Justified, line-height 1.4. The quick brown fox jumps over the lazy dog near the riverbank. The quick brown fox jumps over the lazy dog near the riverbank.",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "justify",
+          "lineHeight": 1.4,
+          "spaceBefore": 6,
+          "spaceAfter": 4,
+          "whiteSpace": "normal"
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "First-line indent 24, left/right indent 16. The quick brown fox jumps over the lazy dog near the riverbank.",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 6,
+          "spaceAfter": 0,
+          "whiteSpace": "normal",
+          "indent": 24,
+          "leftIndent": 16,
+          "rightIndent": 16
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

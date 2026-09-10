@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="338.33" height="62" viewBox="-10 -10 338.33 62">
+  <rect x="0" y="1.08" width="49.89" height="17.58" fill="#FFD54F" />
+  <rect x="49.89" y="1.08" width="46.06" height="17.58" fill="#FF8A65" />
+  <rect x="240.72" y="1.08" width="73.89" height="17.58" fill="#A5D6A7" />
+  <rect x="314.61" y="1.08" width="3.72" height="17.58" fill="#A5D6A7" />
+  <text x="0" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="49.89">Sunrise</tspan>
+  </text>
+  <text x="0" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="49.89" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="46.06">Sunset</tspan>
+  </text>
+  <text x="0" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="95.95" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="3.72"> </tspan>
+    <tspan x="99.67" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="137.33">and a long stretch of</tspan>
+    <tspan x="237" textLength="3.72"> </tspan>
+  </text>
+  <text x="0" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="240.72" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="73.89">highlighted</tspan>
+    <tspan x="314.61" textLength="3.72"> </tspan>
+  </text>
+  <rect x="0" y="21.08" width="225.01" height="17.58" fill="#A5D6A7" />
+  <rect x="272.56" y="25.95" width="5.48" height="11.43" fill="#B3E5FC" />
+  <text x="0" y="35" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="225.01">phrase that crosses the line break</tspan>
+  </text>
+  <text x="0" y="35" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="225.01" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="3.72"> </tspan>
+    <tspan x="228.73" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="29.41">then</tspan>
+    <tspan x="258.13" textLength="3.72"> </tspan>
+    <tspan x="261.86" textLength="10.7">H</tspan>
+  </text>
+  <text x="0" y="38.75" font-family="Roboto" font-size="9.75" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="272.56" font-weight="400" font-style="normal" font-family="Roboto" font-size="9.75" fill="#333333" textLength="5.48">2</tspan>
+  </text>
+  <text x="0" y="35" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="278.04" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="34.4">O tail</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="318.33" height="42" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

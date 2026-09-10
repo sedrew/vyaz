@@ -1,0 +1,232 @@
+{
+  "_comment": "List items (bullet, nested bullet, numbered) whose text carries mixed inline styles — the marker must stay anchored while run styling varies inside the item.",
+  "profile": "raw",
+  "frame": {
+    "width": 480,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "Groceries: ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "milk",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "fontWeight": "bold"
+          },
+          {
+            "text": ", ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "eggs",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "fontStyle": "italic"
+          },
+          {
+            "text": ", ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "bread",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "backgroundColor": "#FFF59D"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 0,
+            "position": "outside"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Plain second item",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 0,
+            "position": "outside"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Nested ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "note",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#C81E3A"
+          },
+          {
+            "text": " goes deeper",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "bullet",
+            "level": 1,
+            "position": "outside"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Step one with ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "emphasis",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "fontWeight": "bold",
+            "fontStyle": "italic"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "position": "outside"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "text": "Step two ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "underlined",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "underline": true
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 2,
+          "whiteSpace": "normal",
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "position": "outside"
+          }
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

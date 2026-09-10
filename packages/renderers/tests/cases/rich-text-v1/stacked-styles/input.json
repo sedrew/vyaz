@@ -1,0 +1,165 @@
+{
+  "_comment": "Each run stacks 2-3 style axes at once — decoration + weight + transform + script interactions the single-axis sweep can't reach (super suppresses underline; strike rides the italic slant; letter-spacing under uppercase+bold).",
+  "profile": "raw",
+  "frame": {
+    "width": 640,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "bold+italic",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "fontWeight": "bold",
+            "fontStyle": "italic"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "bold+underline+green",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#1B5E20",
+            "fontWeight": "bold",
+            "underline": true
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "italic+strike",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "fontStyle": "italic",
+            "strikethrough": true
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "underline+highlight",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "underline": true,
+            "backgroundColor": "#CDE7FF"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "BOLDER",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "fontWeight": "bold",
+            "textTransform": "uppercase",
+            "letterSpacing": 2
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "note",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#C81E3A",
+            "script": "super",
+            "fontWeight": "bold"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "big+italic+underline",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 22,
+            "color": "#333333",
+            "fontStyle": "italic",
+            "underline": true
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 6,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

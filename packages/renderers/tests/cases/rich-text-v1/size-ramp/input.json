@@ -1,0 +1,122 @@
+{
+  "_comment": "Five runs 9->40px sharing one baseline on one line (wide frame, no wrap) — isolates baseline alignment and line-box growth, the axis where PPTX / PDF / HTML diverge most.",
+  "profile": "raw",
+  "frame": {
+    "width": 900,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "9px",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 9,
+            "color": "#333333"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "12px",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 12,
+            "color": "#333333"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "18px",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 18,
+            "color": "#333333"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "28px",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 28,
+            "color": "#333333"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "40px",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 40,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 6,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

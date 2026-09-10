@@ -1,0 +1,273 @@
+{
+  "_comment": "One paragraph, one style axis per word — the rich-run coverage sweep. Every TextRun property that changes glyph paint or metrics, isolated: weight, style, size up/down, colour, highlight, underline, strikethrough, letter-spacing spread/tight, super, sub, uppercase, capitalize.",
+  "profile": "raw",
+  "frame": {
+    "width": 640,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "plain",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "bold",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "fontWeight": "bold"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "italic",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "fontStyle": "italic"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "big",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 24,
+            "color": "#333333"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "small",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 11,
+            "color": "#333333"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "crimson",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#C81E3A"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "highlight",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "backgroundColor": "#FFE066"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "underline",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "underline": true
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "strike",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "strikethrough": true
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "spread",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "letterSpacing": 3
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "tight",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "letterSpacing": -1
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "super",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "script": "super"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "sub",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "script": "sub"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "upper",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "textTransform": "uppercase"
+          },
+          {
+            "text": " ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333"
+          },
+          {
+            "text": "capitalize",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "color": "#333333",
+            "textTransform": "capitalize"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 6,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

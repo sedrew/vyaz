@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="484" height="42" viewBox="-10 -10 484 42">
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#222222" font-weight="400" xml:space="preserve">
+    <tspan x="0 8 16 24 32">Latin</tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#999999" font-weight="400" xml:space="preserve">
+    <tspan x="40"> </tspan>
+    <tspan x="48">·</tspan>
+    <tspan x="56"> </tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#222222" font-weight="700" xml:space="preserve">
+    <tspan x="64 72 80 88 96 104 112 120 128">Кириллица</tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#999999" font-weight="400" xml:space="preserve">
+    <tspan x="136"> </tspan>
+    <tspan x="144">·</tspan>
+    <tspan x="152"> </tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#222222" font-weight="400" xml:space="preserve">
+    <tspan x="160 168 176 184 192 200 208 216">Ελληνικά</tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#999999" font-weight="400" xml:space="preserve">
+    <tspan x="224"> </tspan>
+    <tspan x="232">·</tspan>
+    <tspan x="240"> </tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#222222" font-weight="400" xml:space="preserve">
+    <tspan x="248 264 280 296">中文示例</tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#999999" font-weight="400" xml:space="preserve">
+    <tspan x="312"> </tspan>
+    <tspan x="320">·</tspan>
+    <tspan x="328"> </tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#222222" font-weight="400" xml:space="preserve">
+    <tspan x="336 344 352 360 368 376 384">العربية</tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#999999" font-weight="400" xml:space="preserve">
+    <tspan x="392"> </tspan>
+    <tspan x="400">·</tspan>
+    <tspan x="408"> </tspan>
+  </text>
+  <text x="0" y="16" font-family="Unifont" font-size="16" fill="#222222" font-weight="400" xml:space="preserve">
+    <tspan x="416 432 432 448 448 464">हिन्दी</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="464" height="22" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="580" height="197" viewBox="-10 -10 580 197">
+  <text x="0" y="22" font-family="Roboto" font-size="24" fill="#111111" font-weight="700" xml:space="preserve">
+    <tspan x="0" font-weight="700" font-style="normal" font-family="Roboto" font-size="24" fill="#111111">Quarterly Type Review</tspan>
+  </text>
+  <text x="0" y="43" font-family="Roboto" font-size="13" fill="#777777" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="13" fill="#777777">Prepared for the design system guild</tspan>
+  </text>
+  <rect x="356.57" y="59.08" width="108.71" height="17.58" fill="#FFE066" />
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">This paragraph mixes a</tspan>
+    <tspan x="156.04"> </tspan>
+  </text>
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="700" xml:space="preserve">
+    <tspan x="159.76" font-weight="700" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">bold lead-in</tspan>
+  </text>
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="239.64" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">, an</tspan>
+    <tspan x="262.76"> </tspan>
+  </text>
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="266.48" font-weight="400" font-style="italic" font-family="Roboto" font-size="15" fill="#333333">italic aside</tspan>
+  </text>
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="338.02" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">, a</tspan>
+    <tspan x="352.85"> </tspan>
+  </text>
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="356.57" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">highlighted term</tspan>
+  </text>
+  <text x="0" y="73" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="465.29" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">, and a</tspan>
+    <tspan x="508.74"> </tspan>
+  </text>
+  <text x="0" y="94" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">footnote marker</tspan>
+  </text>
+  <text x="0" y="88" font-family="Roboto" font-size="9.75" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="107.69" font-weight="400" font-style="normal" font-family="Roboto" font-size="9.75" fill="#333333">1</tspan>
+  </text>
+  <text x="0" y="94" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="113.17" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">.</tspan>
+  </text>
+  <text x="14.58" y="121" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="14.58" font-weight="400" font-style="normal" font-family="Roboto" font-size="13.5" fill="#333333">•</tspan>
+  </text>
+  <text x="14.58" y="121" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="22.5" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">First takeaway —</tspan>
+    <tspan x="134.63"> </tspan>
+  </text>
+  <text x="14.58" y="121" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="138.35" font-weight="400" font-style="italic" font-family="Roboto" font-size="15" fill="#333333">kerning</tspan>
+  </text>
+  <text x="14.58" y="121" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="187.63" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333"> </tspan>
+    <tspan x="191.35" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">matters at display sizes.</tspan>
+  </text>
+  <text x="14.58" y="144" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="14.58" font-weight="400" font-style="normal" font-family="Roboto" font-size="13.5" fill="#333333">•</tspan>
+  </text>
+  <text x="14.58" y="144" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="22.5" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">Second takeaway with a</tspan>
+    <tspan x="183.23"> </tspan>
+  </text>
+  <text x="14.58" y="144" font-family="Roboto" font-size="15" fill="#1A0DAB" font-weight="400" xml:space="preserve">
+    <tspan x="186.95" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#1A0DAB" text-decoration="underline">link-styled</tspan>
+  </text>
+  <text x="14.58" y="144" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="254.08" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333"> </tspan>
+    <tspan x="257.81" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">run.</tspan>
+  </text>
+  <text x="464.3" y="172" font-family="Roboto" font-size="13" fill="#777777" font-weight="400" font-style="italic" xml:space="preserve">
+    <tspan x="464.3" font-weight="400" font-style="italic" font-family="Roboto" font-size="13" fill="#777777">— end of sample</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="560" height="177" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="296.85" height="76" viewBox="-10 -10 296.85 76">
+  <text x="0" y="41" font-family="Roboto" font-size="9" fill="#333333" font-weight="400" xml:space="preserve">9px</text>
+  <text x="14.58" y="41" font-family="Roboto" font-size="16" fill="#999999" font-weight="400" xml:space="preserve"> ·</text>
+  <text x="22.73" y="41" font-family="Roboto" font-size="12" fill="#999999" font-weight="400" xml:space="preserve"> </text>
+  <text x="26.69" y="41" font-family="Roboto" font-size="12" fill="#333333" font-weight="400" xml:space="preserve">12px</text>
+  <text x="52.87" y="41" font-family="Roboto" font-size="16" fill="#999999" font-weight="400" xml:space="preserve"> ·</text>
+  <text x="61.02" y="41" font-family="Roboto" font-size="18" fill="#999999" font-weight="400" xml:space="preserve"> </text>
+  <text x="64.99" y="41" font-family="Roboto" font-size="18" fill="#333333" font-weight="400" xml:space="preserve">18px</text>
+  <text x="104.26" y="41" font-family="Roboto" font-size="16" fill="#999999" font-weight="400" xml:space="preserve"> ·</text>
+  <text x="112.41" y="41" font-family="Roboto" font-size="28" fill="#999999" font-weight="400" xml:space="preserve"> </text>
+  <text x="116.38" y="41" font-family="Roboto" font-size="28" fill="#333333" font-weight="400" xml:space="preserve">28px</text>
+  <text x="177.46" y="41" font-family="Roboto" font-size="16" fill="#999999" font-weight="400" xml:space="preserve"> ·</text>
+  <text x="185.61" y="41" font-family="Roboto" font-size="40" fill="#999999" font-weight="400" xml:space="preserve"> </text>
+  <text x="189.58" y="41" font-family="Roboto" font-size="40" fill="#333333" font-weight="400" xml:space="preserve">40px</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="276.85" height="56" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

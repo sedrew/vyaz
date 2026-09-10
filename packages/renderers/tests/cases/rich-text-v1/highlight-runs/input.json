@@ -1,0 +1,120 @@
+{
+  "_comment": "Adjacent different-colour highlights with no gap, a highlight that spans a soft-wrap break, and a highlight under a subscript run — background-rect anchoring across presets and across the wrap.",
+  "profile": "raw",
+  "frame": {
+    "width": 360,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "Sunrise",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "backgroundColor": "#FFD54F"
+          },
+          {
+            "text": "Sunset",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "backgroundColor": "#FF8A65"
+          },
+          {
+            "text": " and a long stretch of ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "highlighted phrase that crosses the line break",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "backgroundColor": "#A5D6A7"
+          },
+          {
+            "text": " then ",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "H",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          },
+          {
+            "text": "2",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333",
+            "script": "sub",
+            "backgroundColor": "#B3E5FC"
+          },
+          {
+            "text": "O tail",
+            "type": "text",
+            "fontFamily": "Roboto",
+            "fontSize": 15,
+            "color": "#333333"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 6,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

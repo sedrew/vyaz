@@ -1,0 +1,137 @@
+{
+  "_comment": "Six scripts inline in one paragraph (Latin / Cyrillic / Greek / CJK / Arabic / Devanagari), all through Unifont — per-run shaping and mixed advance widths; the glyph preset stresses per-glyph x across scripts. One run bold to check weight attr on non-Latin.",
+  "profile": "raw",
+  "frame": {
+    "width": 640,
+    "wrap": true,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "text": "Latin",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#222222"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "Кириллица",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#222222",
+            "fontWeight": "bold"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "Ελληνικά",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#222222"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "中文示例",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#222222"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "العربية",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#222222"
+          },
+          {
+            "text": " · ",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#999999"
+          },
+          {
+            "text": "हिन्दी",
+            "type": "text",
+            "fontFamily": "Unifont",
+            "fontSize": 16,
+            "color": "#222222"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.4,
+          "spaceBefore": 0,
+          "spaceAfter": 6,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "browser": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "browser"
+    },
+    "preserve": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "preserve"
+    },
+    "glyph": {
+      "sizing": "content",
+      "contentPadding": 10,
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="225.72" height="133" viewBox="-3.64 -10 225.72 133">
+  <rect x="168.77" y="1.08" width="38.08" height="17.58" fill="#FFF59D" />
+  <text x="14.58" y="15" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">•</text>
+  <text x="22.5" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Groceries: </text>
+  <text x="93.94" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="700" xml:space="preserve">milk</text>
+  <text x="122.89" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">, </text>
+  <text x="129.56" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve">eggs</text>
+  <text x="162.1" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">, </text>
+  <text x="168.77" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">bread</text>
+  <text x="14.58" y="38" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">•</text>
+  <text x="22.5" y="38" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Plain second item</text>
+  <text x="33.48" y="61" font-family="Roboto" font-size="13.5" fill="#333333" font-weight="400" xml:space="preserve">○</text>
+  <text x="45" y="61" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">Nested </text>
+  <text x="96.44" y="61" font-family="Roboto" font-size="15" fill="#C81E3A" font-weight="400" xml:space="preserve">note</text>
+  <text x="126.14" y="61" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve"> goes deeper</text>
+  <text x="6.36" y="84" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">1.Step one with </text>
+  <text x="116.73" y="84" font-family="Roboto" font-size="15" fill="#333333" font-weight="700" font-style="italic" xml:space="preserve">emphasis</text>
+  <text x="6.36" y="107" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">2.Step two </text>
+  <text x="84.87" y="107" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" text-decoration="underline" xml:space="preserve">underlined</text>
+<!-- debug overlay -->
+  <rect x="6.36" y="0" width="205.72" height="113" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>
