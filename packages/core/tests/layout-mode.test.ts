@@ -114,3 +114,42 @@ describe('office line spacing (spcPct)', () => {
     expect(noWrap(big36(1.5)).height / noWrap(big36(1.0)).height).toBeCloseTo(1.5, 2);
   });
 });
+
+// ── result.textBox — glyph-tight box vs the CSS-style content box ──────
+describe('layoutTextFrame result.textBox', () => {
+  const para = (lineHeight: number): Paragraph => ({
+    style: { alignment: 'left', lineHeight, spaceBefore: 0, spaceAfter: 0, whiteSpace: 'normal' },
+    children: [{
+      type: 'text',
+      text: 'Roboto textBox versus content box wrapped over a few lines here',
+      fontFamily: 'Roboto', fontSize: 18,
+    } as any],
+  });
+  const lay = (lineHeight: number) =>
+    layoutTextFrame({ width: 200, wrap: true, paragraphs: [para(lineHeight)] }, { mode: 'office' });
+
+  test('top = first line box top, bottom = last baseline + real descent', () => {
+    const r = lay(2.0);
+    const last = r.lines[r.lines.length - 1];
+    expect(r.textBox.y).toBeCloseTo(Math.min(...r.lines.map((l) => l.y)), 2);
+    expect(r.textBox.y + r.textBox.height).toBeCloseTo(last.y + last.baseline + last.descent, 1);
+    expect(r.textBox.x).toBeCloseTo(Math.min(...r.lines.map((l) => l.x)), 2);
+    expect(r.textBox.width).toBeLessThanOrEqual(r.content.width + 0.01);
+  });
+
+  test('content keeps the trailing leading that textBox trims — grows with spcPct', () => {
+    const slack = (lh: number) => {
+      const r = lay(lh);
+      return r.content.height - r.textBox.height; // trimmed space below the last line
+    };
+    expect(slack(1.0)).toBeGreaterThanOrEqual(0);
+    expect(slack(1.0)).toBeLessThan(2);            // barely anything at single spacing
+    expect(slack(2.0)).toBeGreaterThan(5);         // ~6 pt at 18 pt / spacing 2.0
+    expect(slack(2.0)).toBeGreaterThan(slack(1.0) + 4);
+  });
+
+  test('empty frame → all-zero textBox', () => {
+    const r = layoutTextFrame({ width: 200, wrap: true, paragraphs: [] }, { mode: 'office' });
+    expect(r.textBox).toEqual({ x: 0, y: 0, width: 0, height: 0 });
+  });
+});

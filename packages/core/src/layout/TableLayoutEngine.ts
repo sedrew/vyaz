@@ -174,6 +174,7 @@ function placeholderContentFor(nested: TableLayoutResult): TextFrameLayoutResult
   return {
     lines: [],
     content: { width: nested.width, height: nested.height },
+    textBox: { x: 0, y: 0, width: nested.width, height: nested.height },
     frame: { width: nested.width, height: nested.height },
     overflow: { horizontal: false, vertical: false },
     fit: { horizontal: 'content', vertical: 'content' },

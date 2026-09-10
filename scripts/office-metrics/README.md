@@ -13,10 +13,16 @@ Counterpart to `scripts/browser-metrics/` (which calibrates *width* vs Chrome).
 | `report.md` | generated — the current findings table |
 | `gen-line-spacing.py` | builds `line-spacing.pptx` — isolates the paragraph **line-spacing multiplier** (`<a:spcPct>` 1.0 / 1.5 / 2.0), separately and stacked. Needs `python-pptx` + Roboto installed |
 | `line-spacing.pptx` | generated; **5 slides, one plain TextBox each** (no groups, no marker rects). Open in PowerPoint, let it re-wrap, save, then per slide File ▸ Export ▸ SVG → `office-cases/<case>/powerpoint.svg` |
+| `textframe-fit-run.ts` | **vyaz side** of the fixed-rectangle round-trip: feeds `(text, width)` to `layoutTextFrame(…, {mode:'office'})`, records `content.height` (where the last line box ends) + the line breaks / baselines, writes `textframe-fit.json`. Input matrix (`WIDTHS_PT` / `VARIANTS`) at the top |
+| `gen-textframe-fit.py` | **PowerPoint side**: reads `textframe-fit.json`, builds a TextBox at **exactly** each `width_pt × height_pt` (wrap-only `<a:bodyPr wrap="square">`, no autofit element, insets 0). Open, save, export per slide — if vyaz's height is right, the last line is flush with the bottom, nothing clipped |
+| `textframe-fit.json` | round-trip manifest: per frame `{ width_pt, height_pt (vyaz), font_size_pt, line_spacing, text, vyaz.lines[…] }` — matches each exported SVG back to the `layoutTextFrame` call |
+| `RESULTS.md` | the office line-box calibration outcome (v0.4.1 → v0.4.3): the model, the constants, measured vyaz↔PowerPoint agreement, what is still open |
 
 ```bash
-bun scripts/office-metrics/report.ts               # width / single-line line-box (font-metrics.pptx)
-python3 scripts/office-metrics/gen-line-spacing.py  # regenerate line-spacing.pptx
+bun scripts/office-metrics/report.ts                # width / single-line line-box (font-metrics.pptx)
+python3 scripts/office-metrics/gen-line-spacing.py   # regenerate line-spacing.pptx
+bun scripts/office-metrics/textframe-fit-run.ts      # vyaz -> textframe-fit.json
+python3 scripts/office-metrics/gen-textframe-fit.py  # textframe-fit.json -> textframe-fit.pptx
 ```
 
 `line-spacing.pptx` is a **pure SVG-export** oracle, not parsed by `parse-pptx.ts`

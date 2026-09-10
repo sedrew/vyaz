@@ -37,8 +37,27 @@ import { getMeasureProfile, setMeasureProfile } from '../measure/FontkitMeasureC
  */
 export interface TextFrameLayoutResult {
   lines: Line[];
-  /** Intrinsic content box — the text bounding box. */
+  /**
+   * CSS-style content box: every line's full `lineHeight` box summed, plus
+   * padding. Reported in visual (post-rotation) space. Use it for flow-level
+   * stacking / auto-grow — a `lineHeight` > 1 leaves half-leading above the
+   * first line and below the last, exactly as a browser block would.
+   */
   content: { width: number; height: number };
+   /**
+   * Text box with the last line's trailing leading trimmed off, in the same
+   * (pre-rotation) coordinate space as `lines`, `x` / `y` from the frame origin
+   * (padding kept in the offset). Top / left / right are the first line's box
+   * top and the widest line's advance extent — unchanged from `content`,
+   * because PowerPoint keeps the leading above the first line too. The bottom
+   * is the **last line's baseline + its real font descent**, so a
+   * `lineHeight` > 1 no longer leaves empty space after the text
+   * (`content.height − textBox.height` is that trimmed slack, ~6 pt at 18 pt /
+   * spacing 2.0). Use it for PDF / PPTX frame sizing; use `content` / `frame`
+   * for flow-level stacking. All zeroes when there are no lines. Callers
+   * handling `transform` apply it to this box just like to `lines`.
+   */
+  textBox: { x: number; y: number; width: number; height: number };
   /** Frame box as given on the input; an axis is omitted when its size was not set. */
   frame: { width?: number; height?: number };
   /**
@@ -529,6 +548,22 @@ export function runFlow(
     ? lastLine.y + lastLine.height + bottomPad
     : bottomPad;
 
+  // textBox: content box with the last line's trailing leading trimmed.
+  // Top/left/right track the line boxes (PowerPoint keeps the leading above
+  // line 1); bottom drops to the last baseline + real font descent.
+  let boxTop = Infinity, tbLeft = Infinity, tbRight = -Infinity, inkBottom = -Infinity;
+  for (const l of allLines) {
+    if (l.y < boxTop) boxTop = l.y;
+    if (l.x < tbLeft) tbLeft = l.x;
+    if (l.x + l.width > tbRight) tbRight = l.x + l.width;
+    const bottom = l.y + l.baseline + l.descent;
+    if (bottom > inkBottom) inkBottom = bottom;
+  }
+  const r2 = (n: number) => Math.round(n * 100) / 100;
+  const textBox = allLines.length > 0
+    ? { x: r2(tbLeft), y: r2(boxTop), width: r2(tbRight - tbLeft), height: r2(inkBottom - boxTop) }
+    : { x: 0, y: 0, width: 0, height: 0 };
+
   // ── Post-layout rigid transform (writing-mode + rotation) ────────
   // `sideways-rl` turns the block 90° CW, `sideways-lr` 90° CCW (≡ 270° CW);
   // `frame.rotation` adds on top. `lines` / the `contentWidth`×`contentHeight`
@@ -554,6 +589,7 @@ export function runFlow(
   return {
     lines: allLines,
     content: { width: visualContentWidth, height: visualContentHeight },
+    textBox,
     frame: { width: frame.width, height: frame.height },
     overflow: {
       horizontal: frame.width !== undefined && visualContentWidth > frame.width + 0.01,
