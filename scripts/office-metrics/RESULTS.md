@@ -139,3 +139,61 @@ Generator picks: **HTML** → `frame` / `content`; **PDF** → `textBox`; **PPTX
    stays linear. No sub-100 % sample yet.
 5. **model A vs B** — flat `1.20` vs `max(1.20, hhea/upm)`. Needs a large-`hhea`
    display font (Lobster, Pacifico, Alfa Slab One) in the oracle.
+
+## `OFFICE_BASELINE_RATIO` at spcPct = 100 % is font-specific, not flat 0.75 (v0.4.5)
+
+Resolves the "needs a font whose typo sum ≠ 1 em" caveat above item 5 — Arial
+is that font (`typoAsc+typoDesc = 0.938em`, vs Roboto's exactly `1.000em`).
+
+Oracle: `scripts/office-metrics/arial-diagnostic.pptx` (`gen-arial-diagnostic.ts`)
+— 15 single-line Arial cases (12/18/24/32/40pt, regular + bold, all-caps
+twins, mixed-size, spcPct 100/125/150/175/200 %), each a fixed (non-autofit)
+box with underlined text + a red outline at `content` size, exported and
+measured by hand (baseline read off the SVG `transform` y, box top off the
+`rect`).
+
+**Empirical `baseline / content.height` ratio, 8 single-size points
+(12–40pt, regular + bold, caps + non-caps — capitalisation made zero
+difference, ruling out descenders as a factor):**
+
+| spcPct | ratio | n |
+|--:|--:|--:|
+| 100 % | **0.7826** (σ 0.0015) | 8 |
+| 125 % | 0.7475 | 1 |
+| 150 % | 0.7441 | 1 |
+| 175 % | 0.7475 | 1 |
+| 200 % | 0.7500 | 1 |
+
+Not a smooth progression — a step right at 100 %, then a flat ~0.745–0.750
+plateau for every spcPct > 100 % tested (within noise of the current flat
+`0.75`). Arial's own `typoAsc/(typoAsc−typoDesc)` = **0.7758** — close to the
+measured 0.7826 (residual ~0.9 %, inside the ±0.4–1 % noise band this whole
+doc uses elsewhere) but not exact; the flat-`1.20`/`hhea`-vs-`typo` question
+(item 5) is presumably entangled here too.
+
+Independent corroboration this isn't a vyaz-only artifact: a *different*
+PPTX-rendering project hit the identical shape of bug, also on Arial —
+[office2pdf#1254](https://github.com/developer0hye/office2pdf/issues/1254)
+("a spcPct paragraph above 100% seats its first baseline up to 2.1pt below
+PowerPoint's") and [#1177](https://github.com/developer0hye/office2pdf/issues/1177)
+(measures Arial's "gap-inclusive natural line" at 1.1499em, again well under
+flat 1.20). Neither issue has a closed-form fix yet either.
+
+Mixed-size lines (small text framing one big run) measured **higher** still —
+`arial-mixed-12-32` / `-18-36` and their caps twins: ratio ≈ **0.806–0.810**,
+suspiciously close to Arial's `winAscent/(winAscent+winDescent)` = **0.8103**
+(typo vs win metric depending on line homogeneity?) — only 2 independent
+values, not fixed in code (see below).
+
+**Fix landed** (`PositioningEngine.ts`, `OFFICE_BASELINE_RATIO`): at
+`style.lineHeight === 1` exactly, the baseline ratio is now the dominant
+run's own font `typoAscFrac` (`FontMetrics.typoAscFrac`, threaded from
+`FontEngine.ts`'s `OS/2.typoAscender/typoDescender`) instead of the flat
+`0.75` — falls back to `0.75` when the font has no OS/2 table. **No-op for
+Roboto** (`typoAscFrac` = 0.75 exactly — every existing office-cases golden
+is byte-identical, no `UPDATE=1` needed). `lineHeight !== 1` is untouched
+(flat `0.75` already agrees with the 125–200 % Arial data within noise).
+Mixed-size lines are **not** special-cased — 2 points isn't enough to commit
+a second ratio to code; they keep using the single-size (`typoAscFrac`)
+value and so still under-shoot by ~1–1.2pt, same as before this fix, tracked
+here rather than silently "fixed" on thin evidence.

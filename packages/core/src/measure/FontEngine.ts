@@ -39,6 +39,9 @@ export interface FontFace {
   readonly capHeight: number;
   readonly winAscent: number | null;
   readonly winDescent: number | null;
+  /** OS/2 typoAscender / typoDescender (font units) — null when the font has no OS/2 table. */
+  readonly typoAscent: number | null;
+  readonly typoDescent: number | null;
 }
 
 // ── FontEngine ─────────────────────────────────────────────────────────
@@ -67,6 +70,8 @@ function _extractMetrics(raw: any): {
   capHeight: number;
   winAscent: number | null;
   winDescent: number | null;
+  typoAscent: number | null;
+  typoDescent: number | null;
 } {
   const os2 = raw['OS/2'];
   return {
@@ -76,6 +81,8 @@ function _extractMetrics(raw: any): {
     capHeight: raw.capHeight ?? raw.ascent,
     winAscent: os2?.winAscent ?? null,
     winDescent: os2?.winDescent ?? null,
+    typoAscent: os2?.typoAscender ?? null,
+    typoDescent: os2?.typoDescender ?? null,
   };
 }
 
@@ -183,6 +190,14 @@ export function getGlyphAdvance(font: FontFace, codePoint: number): number | nul
 export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'browser' | 'office'): FontMetrics {
   const scale = fontSize / font.unitsPerEm;
 
+  // Unitless — no scaling. Guarded against a broken/placeholder OS/2 table
+  // (typoDescender >= typoAscender would divide by <= 0).
+  let typoAscFrac: number | undefined;
+  if (font.typoAscent != null && font.typoDescent != null) {
+    const span = font.typoAscent - font.typoDescent;
+    if (span > 0) typoAscFrac = font.typoAscent / span;
+  }
+
   if (mode === 'office' && font.winAscent != null && font.winDescent != null) {
     return {
       ascent: font.winAscent * scale * 1.078,
@@ -190,6 +205,7 @@ export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'bro
       capHeight: (font.capHeight ?? font.ascent) * scale,
       unitsPerEm: font.unitsPerEm,
       sourceTable: 'OS/2',
+      typoAscFrac,
     };
   }
 
@@ -200,6 +216,7 @@ export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'bro
     capHeight: (font.capHeight ?? font.ascent) * scale,
     unitsPerEm: font.unitsPerEm,
     sourceTable: 'hhea',
+    typoAscFrac,
   };
 }
 

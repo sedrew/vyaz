@@ -193,6 +193,12 @@ export function positionLines(
     // ── Build Span[] ────────────────────────────
     let maxAscent = 0;
     let maxDescent = 0;
+    // Track alongside maxAscent/maxDescent: the typoAscFrac belonging to
+    // whichever item carries this line's largest fontSize — same "dominant
+    // run" `maxFontSize` picks below for lineBoxHeight. Only consumed by
+    // `mode: 'office'` at `style.lineHeight === 1` (see OFFICE_BASELINE_RATIO).
+    let maxFontSizeSeen = 0;
+    let dominantTypoAscFrac: number | undefined;
     const spans: Span[] = [];
 
     for (const frag of ptLine.fragments) {
@@ -209,6 +215,11 @@ export function positionLines(
 
       maxAscent = Math.max(maxAscent, effectiveAscent);
       maxDescent = Math.max(maxDescent, effectiveDescent);
+
+      if (item.metadata.effectiveFontSize >= maxFontSizeSeen) {
+        maxFontSizeSeen = item.metadata.effectiveFontSize;
+        dominantTypoAscFrac = metrics.typoAscFrac;
+      }
 
       // pretext: gapBefore — inter-word space BEFORE the word
       // occupiedWidth = gapBefore + textWidth
@@ -578,7 +589,15 @@ export function positionLines(
     //   max run size × style.lineHeight (`<a:lnSpc><a:spcPct>`). PowerPoint SVG
     //   exports match this pitch exactly for Roboto at spcPct 1.0 / 1.5 / 2.0
     //   (see office-cases/MIGRATION.md). Baseline sits at OFFICE_BASELINE_RATIO
-    //   (0.75) × lineBox from the box top, every line including the first.
+    //   (0.75) × lineBox from the box top, every line including the first —
+    //   *except* at spcPct = 100% (style.lineHeight === 1), where real
+    //   PowerPoint measurably tracks the dominant run's own font instead of
+    //   the flat constant (scripts/office-metrics/RESULTS.md, Arial
+    //   diagnostic decks: 8/8 single-size Arial points land on ≈0.782, not
+    //   0.75; Roboto's typoAscFrac is 0.75 exactly, so this is a no-op for
+    //   it). No fresh spcPct≠100% data contradicts flat 0.75 there — Arial's
+    //   own ls125–ls200 points land within ~0.2pt of it — so only the
+    //   lineHeight===1 case is switched.
     const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
     const ascentRounded = Math.round(maxAscent);
@@ -588,8 +607,12 @@ export function positionLines(
     let baseline: number;
 
     if (mode === 'office') {
+      const baselineRatio =
+        style.lineHeight === 1 && dominantTypoAscFrac != null && dominantTypoAscFrac > 0 && dominantTypoAscFrac < 1
+          ? dominantTypoAscFrac
+          : OFFICE_BASELINE_RATIO;
       lineBoxHeight = OFFICE_LINE_BOX_RATIO * maxFontSize * style.lineHeight;
-      baseline = lineBoxHeight * OFFICE_BASELINE_RATIO;
+      baseline = lineBoxHeight * baselineRatio;
     } else {
       // Browser: CSS-compatible with leading distribution.
       const lineHeightPx = maxFontSize * style.lineHeight;

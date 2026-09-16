@@ -7,6 +7,20 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+### Fixed
+
+- **`mode: 'office'` baseline ratio at `lineHeight === 1`** — was a flat `0.75`
+  (`OFFICE_BASELINE_RATIO`), calibrated on Roboto (whose OS/2
+  `typoAscender/(typoAscender−typoDescender)` is exactly 0.75 by coincidence).
+  Real PowerPoint measurably uses each font's *own* ratio at spcPct = 100 %
+  (Arial's is ≈0.776–0.783, not 0.75 — see `scripts/office-metrics/RESULTS.md`
+  "OFFICE_BASELINE_RATIO at spcPct = 100 % is font-specific"). Now reads
+  `FontMetrics.typoAscFrac` (new field, threaded from `FontEngine.ts`'s
+  `OS/2.typoAscender/typoDescender`) for the line's dominant run when
+  `style.lineHeight === 1`, falling back to the flat `0.75` otherwise (and
+  when the font has no OS/2 table). No-op for Roboto — every existing
+  office-cases golden is unchanged.
+
 ## [0.4.4] - 2026-09-10
 
 `@vyaz/core` 0.4.3 → 0.4.4, `@vyaz/renderer` 0.4.3 → 0.4.4. `@vyaz/converters`

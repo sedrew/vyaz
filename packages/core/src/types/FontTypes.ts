@@ -26,6 +26,17 @@ export interface FontMetrics {
    *   'fallback' — empirical formula
    */
   sourceTable?: 'hhea' | 'OS/2' | 'canvas' | 'fallback';
+  /**
+   * `OS/2.typoAscender / (OS/2.typoAscender − OS/2.typoDescender)` — the font's
+   * own ascent-side share of its typo em-box. `undefined` when the font has no
+   * OS/2 table (e.g. canvas-fallback metrics). Used in `mode: 'office'` at
+   * `style.lineHeight === 1` to place the baseline (see
+   * `OFFICE_BASELINE_RATIO` in PositioningEngine.ts) — Roboto's is exactly
+   * 0.75 (the flat constant it was originally derived from); Arial's is
+   * ≈0.776 and real PowerPoint measurably agrees with Arial's own ratio, not
+   * the flat one (scripts/office-metrics/RESULTS.md).
+   */
+  typoAscFrac?: number;
 }
 
 /** Metrics provider — isomorphic interface */

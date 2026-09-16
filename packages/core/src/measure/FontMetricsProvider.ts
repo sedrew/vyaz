@@ -404,12 +404,22 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         sourceTable = 'hhea';
       }
 
+      // Unitless ratio — no scaling needed. Guarded: some fonts carry a
+      // typoDescender >= typoAscender (broken/placeholder OS/2 table), which
+      // would divide by <= 0; skip those rather than emit garbage.
+      let typoAscFrac: number | undefined;
+      if (font.typoAscent != null && font.typoDescent != null) {
+        const span = font.typoAscent - font.typoDescent;
+        if (span > 0) typoAscFrac = font.typoAscent / span;
+      }
+
       const metrics: FontMetrics = {
         ascent,
         descent,
         capHeight: (font.capHeight ?? font.ascent) * scale,
         unitsPerEm: font.unitsPerEm,
         sourceTable,
+        typoAscFrac,
       };
 
       this.metricsCache.set(metricsKey, metrics);
