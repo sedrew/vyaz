@@ -11,18 +11,25 @@ Counterpart to `scripts/browser-metrics/` (which calibrates *width* vs Chrome).
 | `parse-pptx.ts` | pulls each group's runs (`a:latin` / `a:rPr@sz`) and the rect size (EMU → px/pt, via the group `a:xfrm` transform) |
 | `report.ts` | scores fontkit line-box / width formulas against the deck; writes `report.md` |
 | `report.md` | generated — the current findings table |
-| `gen-line-spacing.py` | builds `line-spacing.pptx` — isolates the paragraph **line-spacing multiplier** (`<a:spcPct>` 1.0 / 1.5 / 2.0), separately and stacked. Needs `python-pptx` + Roboto installed |
+| `gen-line-spacing.py` / `gen-line-spacing.ts` | builds `line-spacing.pptx` — isolates the paragraph **line-spacing multiplier** (`<a:spcPct>` 1.0 / 1.5 / 2.0), separately and stacked. `.py` needs `python-pptx` + Roboto; `.ts` needs only `bun` + `pptxgenjs` (a repo devDependency) + Roboto — same shapes, same output filename, pick one. Kept both: `.py` is the original reference if a pptxgenjs quirk is ever suspected |
 | `line-spacing.pptx` | generated; **5 slides, one plain TextBox each** (no groups, no marker rects). Open in PowerPoint, let it re-wrap, save, then per slide File ▸ Export ▸ SVG → `office-cases/<case>/powerpoint.svg` |
 | `textframe-fit-run.ts` | **vyaz side** of the fixed-rectangle round-trip: feeds `(text, width)` to `layoutTextFrame(…, {mode:'office'})`, records `content.height` (where the last line box ends) + the line breaks / baselines, writes `textframe-fit.json`. Input matrix (`WIDTHS_PT` / `VARIANTS`) at the top |
-| `gen-textframe-fit.py` | **PowerPoint side**: reads `textframe-fit.json`, builds a TextBox at **exactly** each `width_pt × height_pt` (wrap-only `<a:bodyPr wrap="square">`, no autofit element, insets 0). Open, save, export per slide — if vyaz's height is right, the last line is flush with the bottom, nothing clipped |
+| `gen-textframe-fit.py` / `gen-textframe-fit.ts` | **PowerPoint side**: reads `textframe-fit.json`, builds a TextBox at **exactly** each `width_pt × height_pt` (wrap-only, no autofit element, insets 0) plus a `<name>@fit` twin (`<a:spAutoFit/>`, PowerPoint rewrites its `cy` on save). Same `.py`/`.ts` split as above |
 | `textframe-fit.json` | round-trip manifest: per frame `{ width_pt, height_pt (vyaz), font_size_pt, line_spacing, text, vyaz.lines[…] }` — matches each exported SVG back to the `layoutTextFrame` call |
+| `read-powerpoint-bounds.ts` | drives **real** PowerPoint via AppleScript: opens a `.pptx`, saves it (recomputes every `@fit` shape's `cy`), and reads back each shape's width/height + `get rotated text bounds` (PowerPoint's own text ink-box, in pt) — no SVG export, no pixel-scanning. **Must be run from a normal interactive Terminal**, not from an agent/headless session (see the file header for why) |
+| `check-textframe-fit.ts` | reads `textframe-fit.json` + `textframe-fit.bounds.json` (from `read-powerpoint-bounds.ts`) and prints a numeric PASS/FAIL table: vyaz `content.height` / `textBox.height` vs PowerPoint's own `@fit` height and text-ink bounds. Replaces the manual "export SVG, eyeball it" step for this specific question |
 | `RESULTS.md` | the office line-box calibration outcome (v0.4.1 → v0.4.3): the model, the constants, measured vyaz↔PowerPoint agreement, what is still open |
 
 ```bash
-bun scripts/office-metrics/report.ts                # width / single-line line-box (font-metrics.pptx)
-python3 scripts/office-metrics/gen-line-spacing.py   # regenerate line-spacing.pptx
-bun scripts/office-metrics/textframe-fit-run.ts      # vyaz -> textframe-fit.json
-python3 scripts/office-metrics/gen-textframe-fit.py  # textframe-fit.json -> textframe-fit.pptx
+bun scripts/office-metrics/report.ts                   # width / single-line line-box (font-metrics.pptx)
+bun scripts/office-metrics/gen-line-spacing.ts          # regenerate line-spacing.pptx (or gen-line-spacing.py)
+bun scripts/office-metrics/textframe-fit-run.ts         # vyaz -> textframe-fit.json
+bun scripts/office-metrics/gen-textframe-fit.ts         # textframe-fit.json -> textframe-fit.pptx (or .py)
+
+# from a normal (non-headless) Terminal — automates the PowerPoint side of the
+# textBox round-trip, no manual SVG export needed:
+bun scripts/office-metrics/read-powerpoint-bounds.ts textframe-fit.pptx
+bun scripts/office-metrics/check-textframe-fit.ts
 ```
 
 `line-spacing.pptx` is a **pure SVG-export** oracle, not parsed by `parse-pptx.ts`
