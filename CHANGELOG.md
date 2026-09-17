@@ -7,8 +7,22 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.6] - 2026-09-17
+
+`@vyaz/core` 0.4.5 → 0.4.6, `@vyaz/renderer` 0.4.5 → 0.4.6. `@vyaz/converters`
+unchanged at 0.1.0.
+
 ### Fixed
 
+- **`mode: 'office'` baseline ratio at `lineHeight === 1` is
+  `(typoAscFrac + winAscFrac) / 2`, not a single font ratio** — corrects
+  0.4.5's fix, which used the font's own `typoAscFrac` alone. A 4-font corpus
+  (Roboto/Arial/Unifont/Times New Roman × 11 sizes) showed even Roboto (whose
+  `typoAscFrac` is exactly the old flat `0.75`) measured off that value —
+  the averaged ratio fits all three "normal" fonts within ~1%. New
+  `FontMetrics.winAscFrac` / `useTypoMetrics` fields. Fonts with OS/2
+  `fsSelection.useTypoMetrics` set (Unifont, the one such font tested) fall
+  back to the flat `0.75`. See `scripts/office-metrics/RESULTS.md`.
 - **`mode: 'office'` width measurement defaults to shaped (kerned)** —
   `LayoutOptions.shaping` used to default to `false` (plain per-code-point
   advance sum) for every mode; real PowerPoint applies GPOS kerning, so
