@@ -4,6 +4,24 @@ Direction, not a schedule. Order within a section is rough priority.
 
 ## Next
 
+- **Simpler, more reliable font registration.** `fontMetricsProvider.registerFont(family, {weight, style}, buffer)`
+  today needs the caller to already have: the font's bytes in hand, its own
+  correct weight/style labels, and — for a system font — the right file path
+  for the current OS (every ad-hoc script in `scripts/office-metrics/` this
+  cycle hand-rolled its own `firstExisting(['/Library/Fonts/X.ttf',
+  '/System/Library/Fonts/Supplemental/X.ttf'])`, macOS-only, no Windows/Linux
+  paths at all). A working, cross-platform version of exactly this already
+  exists as a **test-only** helper
+  (`packages/core/tests/helpers.ts` `registerArialVariants` — uses
+  `get-system-fonts` + fontkit's `subfamilyName` to auto-detect weight/style
+  per file) but was never promoted to the public API. Candidate shape:
+  `registerSystemFont(familyName, opts?)` — locate every installed weight/
+  style variant of a family by name (`get-system-fonts`, already a
+  dependency), auto-detect weight/style per file instead of requiring them
+  up front, register all variants in one call, and surface a clear error
+  (not a silent miss) when the family isn't installed. Node/Bun-only
+  (system font discovery doesn't apply in a browser bundle;
+  `registerFont(family, opts, buffer)` stays the primitive both build on).
 - **Shaping by default** for the `browser` / `preserve` SVG presets — distinct
   from `LayoutOptions.shaping`, which already defaults to `true` for
   `mode: 'office'` as of v0.4.6 (kerned width; PowerPoint fidelity). This item
@@ -14,6 +32,13 @@ Direction, not a schedule. Order within a section is rough priority.
   naive).
 - ~~**`registerWebFont(family, url, opts)`** — one call that feeds both the metrics
   engine and `document.fonts`.~~ Shipped as `registerFont` in `@vyaz/renderer`.
+- **Turkish-correct `text-transform`** — `transformText()` (`utils/textTransform.ts`)
+  uses locale-independent `.toUpperCase()`/`.toLowerCase()`; Turkish's dotted/
+  dotless I needs locale casing instead (confirmed: `'i'.toUpperCase()` → `'I'`,
+  `'i'.toLocaleUpperCase('tr')` → `'İ'`; same the other way for `'I'`→`'ı'`).
+  Silently wrong today for any `uppercase`/`lowercase`/`capitalize` run tagged
+  Turkish — needs a `lang`/locale signal on the run (not in `TextRun` today)
+  to know when to use `tr` casing instead of the default.
 - **Per-glyph font fallback** — walk a family chain for a missing code point
   instead of falling back to `.notdef` / a `0.5em` estimate.
 - **`text-decoration` styles** — dashed / dotted / wavy, custom colour and
@@ -60,14 +85,19 @@ Direction, not a schedule. Order within a section is rough priority.
   the base64 to a 4-char boundary — a few KB covers every format's header),
   and/or memoize by `src`. Only bites when authors omit the dimension
   attributes on big inline images; harmless with the attributes present.
-- **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
-  `WritingMode` / `direction` are in the type surface; the engine is not.
-- **True vertical writing modes** — `vertical-rl` / `vertical-lr` with per-glyph
-  `text-orientation` (`mixed` / `upright`), vertical advance metrics, block-axis
-  line breaking. (`sideways-rl` / `sideways-lr` and frame `rotation` already ship
-  as a post-layout rigid transform on `TextFrameLayoutResult.transform`.)
-- **Complex-script shaping parity** — fontkit's Indic / Arabic / Thai shapers are
-  simpler than HarfBuzz. Evaluate a HarfBuzz-wasm path for those scripts.
+- *Not currently prioritized — current script scope is Cyrillic / Latin /
+  Turkish, all left-to-right, no complex shaping. Re-open if that scope
+  changes.*
+  - **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
+    `WritingMode` / `direction` are in the type surface; the engine is not.
+  - **True vertical writing modes** — `vertical-rl` / `vertical-lr` with
+    per-glyph `text-orientation` (`mixed` / `upright`), vertical advance
+    metrics, block-axis line breaking. (`sideways-rl` / `sideways-lr` and
+    frame `rotation` already ship as a post-layout rigid transform on
+    `TextFrameLayoutResult.transform`.)
+  - **Complex-script shaping parity** — fontkit's Indic / Arabic / Thai
+    shapers are simpler than HarfBuzz. Evaluate a HarfBuzz-wasm path for
+    those scripts.
 - **Dictionary hyphenation** (soft hyphens already break).
 - **Incremental / streaming layout** for very large documents.
 
