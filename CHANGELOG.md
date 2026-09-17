@@ -7,6 +7,11 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.5] - 2026-09-17
+
+`@vyaz/core` 0.4.4 → 0.4.5, `@vyaz/renderer` 0.4.4 → 0.4.5. `@vyaz/converters`
+unchanged at 0.1.0.
+
 ### Fixed
 
 - **`mode: 'office'` baseline ratio at `lineHeight === 1`** — was a flat `0.75`
@@ -19,7 +24,7 @@ item when it closes or advances one.
   `OS/2.typoAscender/typoDescender`) for the line's dominant run when
   `style.lineHeight === 1`, falling back to the flat `0.75` otherwise (and
   when the font has no OS/2 table). No-op for Roboto — every existing
-  office-cases golden is unchanged.
+  office-cases golden is unchanged. (`a499f4c`)
 
 ## [0.4.4] - 2026-09-10
 
