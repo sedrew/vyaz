@@ -19,9 +19,11 @@
  * width, so cells line up into a real grid rather than each row hugging its
  * own text.
  *
- * Same visual language as gen-arial-diagnostic.ts: red outline = vyaz
- * `content` box (fit:'none', exact size), text underlined (baseline
- * reference), thin blue bar at `textBox.height`.
+ * Red outline = vyaz `textBox` box (fit:'none', exact size — the trimmed
+ * box: same top/left/right as `content`, bottom at last baseline + real font
+ * descent, no trailing half-leading), text underlined (baseline reference).
+ * `content`'s own height is still in the object name (`__c<content>_t<textBox>`)
+ * for reference, just no longer what the shape is sized to.
  *
  * ⚠ Rows run tall — the full 11-row grid is ~760pt, well past one slide's
  * 540pt (7.5in) height. That's fine, PowerPoint keeps and exports off-slide
@@ -109,10 +111,10 @@ async function main() {
     let yIn = yStartIn + PT2IN(28); // room for the font-name label above row 1
     let printed = 0;
     for (const size of SIZES) {
-      // row height = tallest cell in the row = largest spacing (content.height
-      // scales linearly with lineHeight; 2.0 is always the tallest column)
+      // row height = tallest cell in the row = largest spacing (both content.height
+      // and textBox.height scale linearly with lineHeight; 2.0 is always tallest)
       const tallest = layoutCell(f.name, `${size}pt`, size, SPACINGS[SPACINGS.length - 1]);
-      const rowHeightIn = PT2IN(tallest.content.height);
+      const rowHeightIn = PT2IN(tallest.textBox.height);
 
       let xIn = xStartIn;
       for (const spacing of SPACINGS) {
@@ -123,11 +125,14 @@ async function main() {
         const textBoxH = r.textBox.height;
         const objectName = `${f.name.replace(/\s+/g, '')}_${size}pt_sp${String(spacing).replace(/\.0$/, '').replace('.', '_')}__c${contentH.toFixed(2)}_t${textBoxH.toFixed(2)}`;
 
+        // box sized to textBox (trimmed: baseline + real descent), not content
+        // (content, which included the trailing half-leading, is still in the
+        // object name above for reference)
         slide.addText(text, {
           x: xIn,
           y: yIn,
           w: PT2IN(contentW),
-          h: PT2IN(contentH),
+          h: PT2IN(textBoxH),
           fontFace: f.name,
           fontSize: size,
           lineSpacingMultiple: spacing,
@@ -140,16 +145,6 @@ async function main() {
           objectName,
           line: { color: 'FF0000', width: 1 },
         } as pptxgen.TextPropsOptions);
-
-        slide.addShape('rect', {
-          x: xIn,
-          y: yIn + PT2IN(textBoxH) - PT2IN(0.5),
-          w: PT2IN(contentW),
-          h: PT2IN(1),
-          fill: { color: '0000FF' },
-          line: { type: 'none' },
-          objectName: `${objectName}__textBoxMarker`,
-        });
 
         xIn += colPitchIn;
         printed++;
