@@ -178,7 +178,13 @@ async function main() {
 
     const text: pptxgen.TextProps[] = c.runs.map((run) => ({
       text: run.text,
-      options: { fontFace: 'Arial', fontSize: run.sizePt, bold: !!run.bold, underline: { style: 'sng' } },
+      options: {
+        fontFace: 'Arial',
+        fontSize: run.sizePt,
+        bold: !!run.bold,
+        underline: { style: 'sng' },
+        highlight: 'FFFF00',
+      },
     }));
 
     slide.addText(text, {

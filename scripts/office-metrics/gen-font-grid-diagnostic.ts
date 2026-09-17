@@ -136,6 +136,7 @@ async function main() {
           valign: 'top',
           margin: 0,
           underline: { style: 'sng' },
+          highlight: 'FFFF00',
           objectName,
           line: { color: 'FF0000', width: 1 },
         } as pptxgen.TextPropsOptions);
