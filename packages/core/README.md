@@ -77,8 +77,16 @@ const frame: TextFrame = {
 };
 
 const result: TextFrameLayoutResult = layoutTextFrame(frame);
-// → { lines: Line[], frameWidth?, frameHeight?, contentWidth, contentHeight, fitHorizontal, fitVertical }
+// → { lines, content: {width,height}, textBox: {x,y,width,height}, frame: {width?,height?}, overflow, fit, ... }
 ```
+
+**`content` vs `textBox`** — two box sizes on every result, pick per use case:
+
+| Use case | Use | Why |
+|---|---|---|
+| Line positioning, cursor, selection, where the next paragraph starts | `content` | The CSS content-box: every line's full `lineHeight`, leading kept above the first line and below the last — matches how the text will keep flowing if you append more |
+| Auto-size a shape to its text ("resize to fit"), export to PDF/PPTX, anything that shouldn't show a dangling gap below the last line | `textBox` | Trimmed: same top/left/right as `content`, bottom at the **last line's baseline + real font descent** — hugs the visible text |
+| Snap/align a border or adjacent element to the visible bottom of the text | `textBox.height` | It's the tight box, not the line-box |
 
 ### Tables
 

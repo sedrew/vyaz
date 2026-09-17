@@ -857,6 +857,861 @@
           }
         ]
       }
+    },
+    {
+      "slide": 10,
+      "name": "w140__18pt_sp1_arial",
+      "width_pt": 140,
+      "height_pt": 302.4,
+      "font_family": "Arial",
+      "font_size_pt": 18,
+      "line_spacing": 1,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 14,
+        "content_height": 302.4,
+        "textbox_height": 301.67,
+        "slack": 0.73,
+        "lines": [
+          {
+            "text": "The quick brown ",
+            "y": 0,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 16.76
+          },
+          {
+            "text": "fox jumps over ",
+            "y": 21.6,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 38.36
+          },
+          {
+            "text": "the lazy dog ",
+            "y": 43.2,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 59.96
+          },
+          {
+            "text": "while a ",
+            "y": 64.8,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 81.56
+          },
+          {
+            "text": "TextFrame ",
+            "y": 86.4,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 103.16
+          },
+          {
+            "text": "measures every ",
+            "y": 108,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 124.76
+          },
+          {
+            "text": "line box and ",
+            "y": 129.6,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 146.36
+          },
+          {
+            "text": "decides where ",
+            "y": 151.2,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 167.96
+          },
+          {
+            "text": "each word wraps ",
+            "y": 172.8,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 189.56
+          },
+          {
+            "text": "inside the given ",
+            "y": 194.4,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 211.16
+          },
+          {
+            "text": "rectangle, with ",
+            "y": 216,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 232.76
+          },
+          {
+            "text": "no autofit ",
+            "y": 237.6,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 254.36
+          },
+          {
+            "text": "shrinking the text ",
+            "y": 259.2,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 275.96
+          },
+          {
+            "text": "to make it fit.",
+            "y": 280.8,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 297.56
+          }
+        ]
+      }
+    },
+    {
+      "slide": 11,
+      "name": "w140__18pt_sp2_arial",
+      "width_pt": 140,
+      "height_pt": 604.8,
+      "font_family": "Arial",
+      "font_size_pt": 18,
+      "line_spacing": 2,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 14,
+        "content_height": 604.8,
+        "textbox_height": 598.11,
+        "slack": 6.69,
+        "lines": [
+          {
+            "text": "The quick brown ",
+            "y": 0,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 32.4
+          },
+          {
+            "text": "fox jumps over ",
+            "y": 43.2,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 75.6
+          },
+          {
+            "text": "the lazy dog ",
+            "y": 86.4,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 118.8
+          },
+          {
+            "text": "while a ",
+            "y": 129.6,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 162
+          },
+          {
+            "text": "TextFrame ",
+            "y": 172.8,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 205.2
+          },
+          {
+            "text": "measures every ",
+            "y": 216,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 248.4
+          },
+          {
+            "text": "line box and ",
+            "y": 259.2,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 291.6
+          },
+          {
+            "text": "decides where ",
+            "y": 302.4,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 334.8
+          },
+          {
+            "text": "each word wraps ",
+            "y": 345.6,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 378
+          },
+          {
+            "text": "inside the given ",
+            "y": 388.8,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 421.2
+          },
+          {
+            "text": "rectangle, with ",
+            "y": 432,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 464.4
+          },
+          {
+            "text": "no autofit ",
+            "y": 475.2,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 507.6
+          },
+          {
+            "text": "shrinking the text ",
+            "y": 518.4,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 550.8
+          },
+          {
+            "text": "to make it fit.",
+            "y": 561.6,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 594
+          }
+        ]
+      }
+    },
+    {
+      "slide": 12,
+      "name": "w140__24pt_sp1_arial",
+      "width_pt": 140,
+      "height_pt": 576,
+      "font_family": "Arial",
+      "font_size_pt": 24,
+      "line_spacing": 1,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 20,
+        "content_height": 576,
+        "textbox_height": 575.02,
+        "slack": 0.98,
+        "lines": [
+          {
+            "text": "The quick ",
+            "y": 0,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 22.34
+          },
+          {
+            "text": "brown fox ",
+            "y": 28.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 51.14
+          },
+          {
+            "text": "jumps over ",
+            "y": 57.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 79.94
+          },
+          {
+            "text": "the lazy dog ",
+            "y": 86.4,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 108.74
+          },
+          {
+            "text": "while a ",
+            "y": 115.2,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 137.54
+          },
+          {
+            "text": "TextFrame ",
+            "y": 144,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 166.34
+          },
+          {
+            "text": "measures ",
+            "y": 172.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 195.14
+          },
+          {
+            "text": "every line ",
+            "y": 201.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 223.94
+          },
+          {
+            "text": "box and ",
+            "y": 230.4,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 252.74
+          },
+          {
+            "text": "decides ",
+            "y": 259.2,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 281.54
+          },
+          {
+            "text": "where each ",
+            "y": 288,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 310.34
+          },
+          {
+            "text": "word wraps ",
+            "y": 316.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 339.14
+          },
+          {
+            "text": "inside the ",
+            "y": 345.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 367.94
+          },
+          {
+            "text": "given ",
+            "y": 374.4,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 396.74
+          },
+          {
+            "text": "rectangle, ",
+            "y": 403.2,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 425.54
+          },
+          {
+            "text": "with no ",
+            "y": 432,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 454.34
+          },
+          {
+            "text": "autofit ",
+            "y": 460.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 483.14
+          },
+          {
+            "text": "shrinking the ",
+            "y": 489.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 511.94
+          },
+          {
+            "text": "text to make ",
+            "y": 518.4,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 540.74
+          },
+          {
+            "text": "it fit.",
+            "y": 547.2,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 569.54
+          }
+        ]
+      }
+    },
+    {
+      "slide": 13,
+      "name": "w200__18pt_sp1_arial",
+      "width_pt": 200,
+      "height_pt": 194.4,
+      "font_family": "Arial",
+      "font_size_pt": 18,
+      "line_spacing": 1,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 9,
+        "content_height": 194.4,
+        "textbox_height": 193.67,
+        "slack": 0.73,
+        "lines": [
+          {
+            "text": "The quick brown fox ",
+            "y": 0,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 16.76
+          },
+          {
+            "text": "jumps over the lazy dog ",
+            "y": 21.6,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 38.36
+          },
+          {
+            "text": "while a TextFrame ",
+            "y": 43.2,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 59.96
+          },
+          {
+            "text": "measures every line box ",
+            "y": 64.8,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 81.56
+          },
+          {
+            "text": "and decides where each ",
+            "y": 86.4,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 103.16
+          },
+          {
+            "text": "word wraps inside the ",
+            "y": 108,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 124.76
+          },
+          {
+            "text": "given rectangle, with no ",
+            "y": 129.6,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 146.36
+          },
+          {
+            "text": "autofit shrinking the text ",
+            "y": 151.2,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 167.96
+          },
+          {
+            "text": "to make it fit.",
+            "y": 172.8,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 189.56
+          }
+        ]
+      }
+    },
+    {
+      "slide": 14,
+      "name": "w200__18pt_sp2_arial",
+      "width_pt": 200,
+      "height_pt": 388.8,
+      "font_family": "Arial",
+      "font_size_pt": 18,
+      "line_spacing": 2,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 9,
+        "content_height": 388.8,
+        "textbox_height": 382.11,
+        "slack": 6.69,
+        "lines": [
+          {
+            "text": "The quick brown fox ",
+            "y": 0,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 32.4
+          },
+          {
+            "text": "jumps over the lazy dog ",
+            "y": 43.2,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 75.6
+          },
+          {
+            "text": "while a TextFrame ",
+            "y": 86.4,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 118.8
+          },
+          {
+            "text": "measures every line box ",
+            "y": 129.6,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 162
+          },
+          {
+            "text": "and decides where each ",
+            "y": 172.8,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 205.2
+          },
+          {
+            "text": "word wraps inside the ",
+            "y": 216,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 248.4
+          },
+          {
+            "text": "given rectangle, with no ",
+            "y": 259.2,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 291.6
+          },
+          {
+            "text": "autofit shrinking the text ",
+            "y": 302.4,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 334.8
+          },
+          {
+            "text": "to make it fit.",
+            "y": 345.6,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 378
+          }
+        ]
+      }
+    },
+    {
+      "slide": 15,
+      "name": "w200__24pt_sp1_arial",
+      "width_pt": 200,
+      "height_pt": 374.4,
+      "font_family": "Arial",
+      "font_size_pt": 24,
+      "line_spacing": 1,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 13,
+        "content_height": 374.4,
+        "textbox_height": 373.42,
+        "slack": 0.98,
+        "lines": [
+          {
+            "text": "The quick brown ",
+            "y": 0,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 22.34
+          },
+          {
+            "text": "fox jumps over the ",
+            "y": 28.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 51.14
+          },
+          {
+            "text": "lazy dog while a ",
+            "y": 57.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 79.94
+          },
+          {
+            "text": "TextFrame ",
+            "y": 86.4,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 108.74
+          },
+          {
+            "text": "measures every ",
+            "y": 115.2,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 137.54
+          },
+          {
+            "text": "line box and ",
+            "y": 144,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 166.34
+          },
+          {
+            "text": "decides where ",
+            "y": 172.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 195.14
+          },
+          {
+            "text": "each word wraps ",
+            "y": 201.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 223.94
+          },
+          {
+            "text": "inside the given ",
+            "y": 230.4,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 252.74
+          },
+          {
+            "text": "rectangle, with no ",
+            "y": 259.2,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 281.54
+          },
+          {
+            "text": "autofit shrinking ",
+            "y": 288,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 310.34
+          },
+          {
+            "text": "the text to make it ",
+            "y": 316.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 339.14
+          },
+          {
+            "text": "fit.",
+            "y": 345.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 367.94
+          }
+        ]
+      }
+    },
+    {
+      "slide": 16,
+      "name": "w300__18pt_sp1_arial",
+      "width_pt": 300,
+      "height_pt": 129.6,
+      "font_family": "Arial",
+      "font_size_pt": 18,
+      "line_spacing": 1,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 6,
+        "content_height": 129.6,
+        "textbox_height": 128.87,
+        "slack": 0.73,
+        "lines": [
+          {
+            "text": "The quick brown fox jumps over the ",
+            "y": 0,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 16.76
+          },
+          {
+            "text": "lazy dog while a TextFrame ",
+            "y": 21.6,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 38.36
+          },
+          {
+            "text": "measures every line box and decides ",
+            "y": 43.2,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 59.96
+          },
+          {
+            "text": "where each word wraps inside the ",
+            "y": 64.8,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 81.56
+          },
+          {
+            "text": "given rectangle, with no autofit ",
+            "y": 86.4,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 103.16
+          },
+          {
+            "text": "shrinking the text to make it fit.",
+            "y": 108,
+            "height": 21.6,
+            "baseline_in_box": 16.76,
+            "baseline_abs": 124.76
+          }
+        ]
+      }
+    },
+    {
+      "slide": 17,
+      "name": "w300__18pt_sp2_arial",
+      "width_pt": 300,
+      "height_pt": 259.2,
+      "font_family": "Arial",
+      "font_size_pt": 18,
+      "line_spacing": 2,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 6,
+        "content_height": 259.2,
+        "textbox_height": 252.51,
+        "slack": 6.69,
+        "lines": [
+          {
+            "text": "The quick brown fox jumps over the ",
+            "y": 0,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 32.4
+          },
+          {
+            "text": "lazy dog while a TextFrame ",
+            "y": 43.2,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 75.6
+          },
+          {
+            "text": "measures every line box and decides ",
+            "y": 86.4,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 118.8
+          },
+          {
+            "text": "where each word wraps inside the ",
+            "y": 129.6,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 162
+          },
+          {
+            "text": "given rectangle, with no autofit ",
+            "y": 172.8,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 205.2
+          },
+          {
+            "text": "shrinking the text to make it fit.",
+            "y": 216,
+            "height": 43.2,
+            "baseline_in_box": 32.4,
+            "baseline_abs": 248.4
+          }
+        ]
+      }
+    },
+    {
+      "slide": 18,
+      "name": "w300__24pt_sp1_arial",
+      "width_pt": 300,
+      "height_pt": 230.4,
+      "font_family": "Arial",
+      "font_size_pt": 24,
+      "line_spacing": 1,
+      "text": "The quick brown fox jumps over the lazy dog while a TextFrame measures every line box and decides where each word wraps inside the given rectangle, with no autofit shrinking the text to make it fit.",
+      "vyaz": {
+        "line_count": 8,
+        "content_height": 230.4,
+        "textbox_height": 229.42,
+        "slack": 0.98,
+        "lines": [
+          {
+            "text": "The quick brown fox jumps ",
+            "y": 0,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 22.34
+          },
+          {
+            "text": "over the lazy dog while a ",
+            "y": 28.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 51.14
+          },
+          {
+            "text": "TextFrame measures every ",
+            "y": 57.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 79.94
+          },
+          {
+            "text": "line box and decides where ",
+            "y": 86.4,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 108.74
+          },
+          {
+            "text": "each word wraps inside the ",
+            "y": 115.2,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 137.54
+          },
+          {
+            "text": "given rectangle, with no ",
+            "y": 144,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 166.34
+          },
+          {
+            "text": "autofit shrinking the text to ",
+            "y": 172.8,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 195.14
+          },
+          {
+            "text": "make it fit.",
+            "y": 201.6,
+            "height": 28.8,
+            "baseline_in_box": 22.34,
+            "baseline_abs": 223.94
+          }
+        ]
+      }
     }
   ]
 }

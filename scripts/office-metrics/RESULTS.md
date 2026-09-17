@@ -3,7 +3,7 @@
 Outcome of the `mode: 'office'` line-box work (branch
 `fix/office-spcpct-line-spacing`, v0.4.1 → v0.4.3). Oracle: PowerPoint SVG
 exports in `packages/renderers/tests/office-cases/*/powerpoint.svg`, built from
-`gen-line-spacing.py`. Full derivation: `office-cases/MIGRATION.md`.
+`gen-line-spacing.ts`. Full derivation: `office-cases/MIGRATION.md`.
 
 ## The model PowerPoint uses
 
@@ -67,7 +67,7 @@ To check the height vyaz computes (not just the per-line pitch):
 1. `bun textframe-fit-run.ts` — vyaz lays out `text` at `width`, `mode: 'office'`,
    and reports `content.height` = bottom of the last line box, plus the line
    breaks it chose. Written to `textframe-fit.json`.
-2. `python3 gen-textframe-fit.py` — one PowerPoint TextBox per frame at
+2. `bun gen-textframe-fit.ts` — one PowerPoint TextBox per frame at
    **exactly** `width × content.height`, wrap-only (no autofit element).
 3. Export each slide. Pass: PowerPoint wraps to the same breaks, the last line
    sits flush with the bottom edge, nothing is clipped and there is no slack.
@@ -139,3 +139,119 @@ Generator picks: **HTML** → `frame` / `content`; **PDF** → `textBox`; **PPTX
    stays linear. No sub-100 % sample yet.
 5. **model A vs B** — flat `1.20` vs `max(1.20, hhea/upm)`. Needs a large-`hhea`
    display font (Lobster, Pacifico, Alfa Slab One) in the oracle.
+
+## `OFFICE_BASELINE_RATIO` at spcPct = 100 % is `(typoAscFrac + winAscFrac) / 2`, not flat 0.75 (v0.4.6)
+
+Resolves the "needs a font whose typo sum ≠ 1 em" caveat above item 5 — Arial
+is that font (`typoAsc+typoDesc = 0.938em`, vs Roboto's exactly `1.000em`).
+
+First pass (an Arial-only 15-case deck, `gen-arial-diagnostic.ts` — since
+deleted, superseded by the tool below) found spcPct = 100 % measuring
+**0.7826** (σ 0.0015, 8 single-size points, 12–40pt, regular + bold, caps +
+non-caps — capitalisation made zero difference, ruling out descenders) vs
+Arial's own `typoAscFrac` of 0.7758 — close but a consistent ~0.9 % residual.
+spcPct 125–200 % measured a flat **~0.745–0.750**, matching the existing
+constant within noise, so only `lineHeight === 1` needed a formula.
+
+Independent corroboration this class of bug isn't vyaz-only: a *different*
+PPTX-rendering project hit the identical shape of it, also on Arial —
+[office2pdf#1254](https://github.com/developer0hye/office2pdf/issues/1254)
+("a spcPct paragraph above 100% seats its first baseline up to 2.1pt below
+PowerPoint's") and [#1177](https://github.com/developer0hye/office2pdf/issues/1177)
+(measures Arial's "gap-inclusive natural line" at 1.1499em, again well under
+flat 1.20). Neither issue has a closed-form fix either.
+
+**Second pass — `gen-font-grid-diagnostic.ts`** (current tool; one slide per
+font × 11 sizes × 5 spcPct) tested Roboto, Arial, Times New Roman and Unifont
+together and overturned "use the font's own `typoAscFrac`": Roboto's
+`typoAscFrac` is exactly 0.75 (where the original flat constant came from),
+yet Roboto measured **0.7777** at spcPct 100 % — just as far from its own
+typo ratio as Arial was from its. Every earlier check that seemed to confirm
+flat `0.75` for Roboto used same-size multi-line pitch, which is
+*algebraically insensitive* to this ratio (`Δbaseline = (1−r)·H(prev) + r·H(cur)`
+= `H` whenever `H(prev) = H(cur)`, for any `r`) — so it was never actually
+tested until this deck.
+
+Brute-forced ~15 candidate ratios (from `typoAscFrac`, `winAscFrac`,
+`hheaAscFrac`, `capHeight/upm`, `xHeight/upm`, `yMax/upm` and combinations)
+against the measured per-font values for Roboto / Arial / Times New Roman
+(sizes ≥ 14pt, less px-rounding noise):
+
+| font | typoAscFrac | winAscFrac | `avg(typo,win)` | measured | Δ |
+|---|--:|--:|--:|--:|--:|
+| Roboto | 0.7500 | 0.7917 | 0.7709 | 0.7777 | −0.008 |
+| Arial | 0.7758 | 0.8103 | 0.7930 | 0.7840 | +0.009 |
+| Times New Roman | 0.7626 | 0.8047 | 0.7836 | 0.7817 | +0.002 |
+
+`(typoAscFrac + winAscFrac) / 2` won by a wide margin (max residual ~1 %; any
+single ratio alone is off 2–3 %). A weight-search over `w·typo + (1−w)·win`
+landed on `w ≈ 0.52` — near enough to a plain average that the extra
+precision isn't worth fitting on 3 points.
+
+**Unifont was the outlier that never fit any of the above** (predicted
+ratio always came back ≈ its own metrics, 0.875 — nothing close to its
+measured ~0.796) — until checking `OS/2.fsSelection`: Unifont is the only one
+of the four with **`useTypoMetrics` set**, the standard OpenType bit telling
+renderers "trust my typo metrics for line spacing, ignore win/hhea." Roboto,
+Arial and Times New Roman all have it unset (legacy win/hhea-based spacing
+applies to them). This isn't a upm=64 quirk (my first guess) — it's the font
+file explicitly asking for different treatment. Only one `useTypoMetrics`
+font has been measured, not enough to derive its own rule.
+
+**Fix landed** (`PositioningEngine.ts`, `OFFICE_BASELINE_RATIO`): at
+`style.lineHeight === 1`, when the dominant run's font has a normal OS/2
+table (`useTypoMetrics` not `true`), the baseline ratio is
+`(typoAscFrac + winAscFrac) / 2` (new `FontMetrics.winAscFrac` /
+`useTypoMetrics` fields, threaded from `FontEngine.ts`). Falls back to the
+flat `0.75` when `useTypoMetrics` is `true`, the OS/2 table is missing, or
+`lineHeight !== 1` (that branch already agreed with the 125–200 % Arial data
+within noise). **Not a no-op for Roboto this time** — office-cases goldens at
+spcPct 100 % shifted (up to ~0.45pt per baseline) and needed `UPDATE=1` +
+review; `layout-mode.test.ts`'s two `baseline === 0.75×height` assertions
+were rewritten to compute the expected ratio from `fontMetricsProvider`
+instead of a hardcoded `0.75`.
+
+Mixed-size lines (small text framing one big run) still measured **higher**
+than same-size lines — Arial `mixed-12-32` / `-18-36` and their caps twins:
+ratio ≈ **0.806–0.810**, close to Arial's `winAscFrac` alone (0.8103) — not
+re-checked against the grid corpus, not fixed in code, still open.
+
+## `shaping` now defaults to `true` for `mode: 'office'` (v0.4.7)
+
+Found while building `gen-wrap-diagnostic.ts` (per-font wrap-point corpus,
+see that file): a "fit box exactly to `content.width` / `textBox.width`, no
+slack" case — the same shape as a real "shrink shape to fit text" feature —
+wrapped in real PowerPoint for Roboto but not Arial, same text, same column.
+
+Root cause: `content.width` (and `textBox.width`, same number) was measured
+via `LayoutOptions.shaping`'s *old* default of `false` — plain
+per-code-point advance sum, no GPOS kerning. Measured directly with fontkit
+on `"Short line here."` 18pt:
+
+| font | advance (unshaped) | shape (kerned) | Δ |
+|---|--:|--:|--:|
+| Roboto | 119.874pt | **120.146pt** | **+0.272pt** |
+| Arial | 122.071pt | 122.071pt | 0.000pt |
+
+Arial happens to have zero GPOS kern pairs for that exact string, so its
+unshaped `content.width` was already correct — Roboto's wasn't, by the full
+kern amount. Real PowerPoint's own render needs the *shaped* width; a box
+built from the *unshaped* one is measurably too narrow whenever the font has
+any kerning for that text — invisible with any layout slack, but decides
+whether text wraps at zero slack (exactly a "fit box to text" scenario).
+
+Old doc comment on `shaping` said "leave off unless the output is consumed
+by a browser" — true for `mode: 'browser'`, but wrong for `mode: 'office'`:
+PowerPoint kerns too, so `office` mode's whole reason to exist (PowerPoint
+fidelity) needs it. `report.md`'s "Width needs no calibration — ±0.4% match"
+finding was itself only ever measured with shaping *explicitly* requested,
+not vyaz's default.
+
+**Fix**: `runFlow()` (`TextFrameLayoutEngine.ts`) now computes
+`useShaping = options.shaping ?? (options.mode === 'office')` — unset
+`shaping` defaults to `true` for `mode: 'office'`, unchanged (`false`) for
+`mode: 'browser'`/no mode. An explicit `shaping: true` or `shaping: false`
+always wins either way. Not a no-op: any office-mode text with GPOS kern
+pairs gets slightly (usually sub-point) different widths/wrap points now —
+office-cases goldens shifted again (`UPDATE=1` + review) on top of the
+baseline-ratio change above.

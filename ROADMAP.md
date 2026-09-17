@@ -4,11 +4,41 @@ Direction, not a schedule. Order within a section is rough priority.
 
 ## Next
 
-- **Shaping by default** for the `browser` / `preserve` SVG presets. The `glyph`
-  preset gets shaped per-cluster advances so ligature-heavy fonts position
-  correctly (today its per-character `x` is naive).
+- **Simpler, more reliable font registration.** `fontMetricsProvider.registerFont(family, {weight, style}, buffer)`
+  today needs the caller to already have: the font's bytes in hand, its own
+  correct weight/style labels, and — for a system font — the right file path
+  for the current OS (every ad-hoc script in `scripts/office-metrics/` this
+  cycle hand-rolled its own `firstExisting(['/Library/Fonts/X.ttf',
+  '/System/Library/Fonts/Supplemental/X.ttf'])`, macOS-only, no Windows/Linux
+  paths at all). A working, cross-platform version of exactly this already
+  exists as a **test-only** helper
+  (`packages/core/tests/helpers.ts` `registerArialVariants` — uses
+  `get-system-fonts` + fontkit's `subfamilyName` to auto-detect weight/style
+  per file) but was never promoted to the public API. Candidate shape:
+  `registerSystemFont(familyName, opts?)` — locate every installed weight/
+  style variant of a family by name (`get-system-fonts`, already a
+  dependency), auto-detect weight/style per file instead of requiring them
+  up front, register all variants in one call, and surface a clear error
+  (not a silent miss) when the family isn't installed. Node/Bun-only
+  (system font discovery doesn't apply in a browser bundle;
+  `registerFont(family, opts, buffer)` stays the primitive both build on).
+- **Shaping by default** for the `browser` / `preserve` SVG presets — distinct
+  from `LayoutOptions.shaping`, which already defaults to `true` for
+  `mode: 'office'` as of v0.4.6 (kerned width; PowerPoint fidelity). This item
+  is the SVG-preset side: `browser`/`preserve` still default to unshaped
+  per-character positioning, so ligature-heavy fonts don't paint quite what a
+  real browser would. The `glyph` preset gets shaped per-cluster advances so
+  ligature-heavy fonts position correctly (today its per-character `x` is
+  naive).
 - ~~**`registerWebFont(family, url, opts)`** — one call that feeds both the metrics
   engine and `document.fonts`.~~ Shipped as `registerFont` in `@vyaz/renderer`.
+- **Turkish-correct `text-transform`** — `transformText()` (`utils/textTransform.ts`)
+  uses locale-independent `.toUpperCase()`/`.toLowerCase()`; Turkish's dotted/
+  dotless I needs locale casing instead (confirmed: `'i'.toUpperCase()` → `'I'`,
+  `'i'.toLocaleUpperCase('tr')` → `'İ'`; same the other way for `'I'`→`'ı'`).
+  Silently wrong today for any `uppercase`/`lowercase`/`capitalize` run tagged
+  Turkish — needs a `lang`/locale signal on the run (not in `TextRun` today)
+  to know when to use `tr` casing instead of the default.
 - **Per-glyph font fallback** — walk a family chain for a missing code point
   instead of falling back to `.notdef` / a `0.5em` estimate.
 - **`text-decoration` styles** — dashed / dotted / wavy, custom colour and
@@ -55,14 +85,19 @@ Direction, not a schedule. Order within a section is rough priority.
   the base64 to a 4-char boundary — a few KB covers every format's header),
   and/or memoize by `src`. Only bites when authors omit the dimension
   attributes on big inline images; harmless with the attributes present.
-- **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
-  `WritingMode` / `direction` are in the type surface; the engine is not.
-- **True vertical writing modes** — `vertical-rl` / `vertical-lr` with per-glyph
-  `text-orientation` (`mixed` / `upright`), vertical advance metrics, block-axis
-  line breaking. (`sideways-rl` / `sideways-lr` and frame `rotation` already ship
-  as a post-layout rigid transform on `TextFrameLayoutResult.transform`.)
-- **Complex-script shaping parity** — fontkit's Indic / Arabic / Thai shapers are
-  simpler than HarfBuzz. Evaluate a HarfBuzz-wasm path for those scripts.
+- *Not currently prioritized — current script scope is Cyrillic / Latin /
+  Turkish, all left-to-right, no complex shaping. Re-open if that scope
+  changes.*
+  - **RTL & BiDi** — UAX #9 resolution, `direction: rtl`, mirrored alignment.
+    `WritingMode` / `direction` are in the type surface; the engine is not.
+  - **True vertical writing modes** — `vertical-rl` / `vertical-lr` with
+    per-glyph `text-orientation` (`mixed` / `upright`), vertical advance
+    metrics, block-axis line breaking. (`sideways-rl` / `sideways-lr` and
+    frame `rotation` already ship as a post-layout rigid transform on
+    `TextFrameLayoutResult.transform`.)
+  - **Complex-script shaping parity** — fontkit's Indic / Arabic / Thai
+    shapers are simpler than HarfBuzz. Evaluate a HarfBuzz-wasm path for
+    those scripts.
 - **Dictionary hyphenation** (soft hyphens already break).
 - **Incremental / streaming layout** for very large documents.
 
@@ -83,19 +118,37 @@ Direction, not a schedule. Order within a section is rough priority.
   also need a `<defs>`/`<use>` dedup pass so a repeated glyph doesn't repeat
   its full path data — without it, output runs 40–50× larger than `flat`/
   `glyph` for exactly that reason.
-- **`office` line-box model — open question.** Today `mode: 'office'` uses
-  `ascent/descent = winAscent/winDescent × 1.078` (fitted to Arial:
-  `1.117 × 1.078 ≈ 1.2`). Calibrating against real PowerPoint on macOS
-  (`scripts/office-metrics/` — `font-metrics.pptx` oracle + `report.ts`)
-  suggests the line box may actually be a **font-independent `1.2 × fontSize`**:
-  Great Vibes (OS/2 win ratio ≈ 1.75) got the *same* ~1.2× box as Roboto, and a
-  10-line wrapped stack landed on 1.201/line. No single fontkit table field
-  yields ~1.2 for both faces. Not changed yet — `1.078` matches the fonts we
-  care about and the alternative (`1.2 × maxRunSizeInLine × lnSpc%`, or
-  `max(1.2, hhea/upm) × …`) needs more oracle data (a display/script font with a
-  large `hhea`) and a decision on `lnSpc%` handling before it's worth the
-  `office`-mode break. Width already matches PowerPoint to ±0.4% and needs
-  nothing.
+- **`office` line-box model — open questions (v0.4.6 status).** The line box
+  itself is settled and shipped: font-independent `1.2 × maxRunSizeInLine ×
+  lnSpc%` (`OFFICE_LINE_BOX_RATIO`), and the `lineHeight === 1` baseline ratio
+  is `(typoAscFrac + winAscFrac) / 2` of the dominant run's own font
+  (`OFFICE_BASELINE_RATIO`), both calibrated against real PowerPoint —
+  see `scripts/office-metrics/RESULTS.md`. Genuinely still open:
+  - **Model A vs B for the `1.2` constant** — flat, or `max(1.2, hhea/upm)`?
+    Every oracle font tested so far (Roboto, Arial, Great Vibes, Unifont,
+    Times New Roman) has `hhea/upm < 1.2`, so it still can't be told apart.
+    Needs a large-`hhea` display/script font (Lobster, Pacifico, Alfa Slab
+    One) in `scripts/office-metrics/gen-font-grid-diagnostic.ts`.
+  - **`useTypoMetrics` fonts' own baseline formula** — fonts with OS/2
+    `fsSelection.useTypoMetrics` set don't fit the averaged ratio above and
+    fall back to the flat `0.75` (unverified for that case). Only Unifont
+    tested; needs a second such font to derive a real rule instead of a guess.
+  - **Mixed-size-line baseline ratio** — a small run framing one large run in
+    the same line measured *higher* than same-size lines (~0.81 for Arial,
+    close to `winAscFrac` alone) but only 2 data points; not in code.
+  - **Does PowerPoint wrap where vyaz wraps?** `gen-wrap-diagnostic.ts` — a
+    reproduction of the original "5 lines vs 3" mismatch (a large run in a
+    narrow column) plus 7 other width/length cases per font — sent for
+    real-PowerPoint verification, result pending.
+  - **`<a:spcPts>`** (absolute-point line spacing, vs. today's `spcPct`-only
+    multiplier) — needs a `lineHeightPts` / `lineHeightUnit` on
+    `ParagraphStyle`.
+  - **`spcPct < 100%`** — no oracle sample yet; PowerPoint is suspected to
+    floor near the real ascent+descent rather than scale linearly.
+  - Width matches PowerPoint to ±0.4% **once `shaping` is on** — default for
+    `mode: 'office'` as of v0.4.6 (real PowerPoint kerns; the plain
+    advance-sum default used to under-measure any kerned run, invisible with
+    layout slack but decisive at a zero-slack "shrink shape to fit text" box).
 
 ---
 
