@@ -42,6 +42,14 @@ export interface FontFace {
   /** OS/2 typoAscender / typoDescender (font units) — null when the font has no OS/2 table. */
   readonly typoAscent: number | null;
   readonly typoDescent: number | null;
+  /**
+   * OS/2 `fsSelection` bit 7 — the font's own declaration that renderers
+   * should use its typo metrics (not win/hhea) for line spacing. `null` when
+   * the font has no OS/2 table. See FontTypes.ts `FontMetrics.useTypoMetrics`
+   * for why this matters (it's why Unifont, the one oracle font with this bit
+   * set, doesn't fit the same office-mode baseline-ratio formula as the rest).
+   */
+  readonly useTypoMetrics: boolean | null;
 }
 
 // ── FontEngine ─────────────────────────────────────────────────────────
@@ -72,6 +80,7 @@ function _extractMetrics(raw: any): {
   winDescent: number | null;
   typoAscent: number | null;
   typoDescent: number | null;
+  useTypoMetrics: boolean | null;
 } {
   const os2 = raw['OS/2'];
   return {
@@ -83,6 +92,7 @@ function _extractMetrics(raw: any): {
     winDescent: os2?.winDescent ?? null,
     typoAscent: os2?.typoAscender ?? null,
     typoDescent: os2?.typoDescender ?? null,
+    useTypoMetrics: os2?.fsSelection?.useTypoMetrics ?? null,
   };
 }
 
@@ -191,12 +201,18 @@ export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'bro
   const scale = fontSize / font.unitsPerEm;
 
   // Unitless — no scaling. Guarded against a broken/placeholder OS/2 table
-  // (typoDescender >= typoAscender would divide by <= 0).
+  // (typoDescender >= typoAscender, or winAscent+winDescent <= 0, would divide by <= 0).
   let typoAscFrac: number | undefined;
   if (font.typoAscent != null && font.typoDescent != null) {
     const span = font.typoAscent - font.typoDescent;
     if (span > 0) typoAscFrac = font.typoAscent / span;
   }
+  let winAscFrac: number | undefined;
+  if (font.winAscent != null && font.winDescent != null) {
+    const span = font.winAscent + font.winDescent;
+    if (span > 0) winAscFrac = font.winAscent / span;
+  }
+  const useTypoMetrics = font.useTypoMetrics ?? undefined;
 
   if (mode === 'office' && font.winAscent != null && font.winDescent != null) {
     return {
@@ -206,6 +222,8 @@ export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'bro
       unitsPerEm: font.unitsPerEm,
       sourceTable: 'OS/2',
       typoAscFrac,
+      winAscFrac,
+      useTypoMetrics,
     };
   }
 
@@ -217,6 +235,8 @@ export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'bro
     unitsPerEm: font.unitsPerEm,
     sourceTable: 'hhea',
     typoAscFrac,
+    winAscFrac,
+    useTypoMetrics,
   };
 }
 

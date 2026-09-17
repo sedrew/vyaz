@@ -97,13 +97,17 @@ function resolveBulletIndent(
 const OFFICE_LINE_BOX_RATIO = 1.20;
 
 /**
- * `mode: 'office'` — fraction of the line box that sits above the baseline.
- * PowerPoint's own SVG exports (see packages/renderers/tests/office-cases/)
- * place the baseline at 0.75 × lineBox from the box top, on every line
- * including the first. 0.75 == Roboto's `typoAscender / (typoAscender −
- * typoDescender)` (its typo asc+desc sum to exactly 1 em); a font whose typo
- * sum ≠ 1 em is still needed to confirm the rule is typo-ratio based rather
- * than a flat 0.75.
+ * `mode: 'office'` — fallback fraction of the line box that sits above the
+ * baseline, used at `style.lineHeight !== 1` (flat 0.75 there matches real
+ * PowerPoint within ~0.2pt for every spcPct tested: 125/150/175/200%), and
+ * as the last-resort fallback at `style.lineHeight === 1` when the dominant
+ * run's font has no usable OS/2 table, or sets `fsSelection.useTypoMetrics`
+ * (only one such font tested — Unifont — not enough to derive its own rule).
+ *
+ * At `style.lineHeight === 1` with a normal (non-`useTypoMetrics`) OS/2
+ * table, this constant is **not** used — see the `baselineRatio` computation
+ * below, `(typoAscFrac + winAscFrac) / 2` of the dominant run's own font
+ * instead (scripts/office-metrics/RESULTS.md "font-grid" corpus).
  */
 const OFFICE_BASELINE_RATIO = 0.75;
 
@@ -193,12 +197,14 @@ export function positionLines(
     // ── Build Span[] ────────────────────────────
     let maxAscent = 0;
     let maxDescent = 0;
-    // Track alongside maxAscent/maxDescent: the typoAscFrac belonging to
+    // Track alongside maxAscent/maxDescent: the OS/2 ratios belonging to
     // whichever item carries this line's largest fontSize — same "dominant
     // run" `maxFontSize` picks below for lineBoxHeight. Only consumed by
     // `mode: 'office'` at `style.lineHeight === 1` (see OFFICE_BASELINE_RATIO).
     let maxFontSizeSeen = 0;
     let dominantTypoAscFrac: number | undefined;
+    let dominantWinAscFrac: number | undefined;
+    let dominantUseTypoMetrics: boolean | undefined;
     const spans: Span[] = [];
 
     for (const frag of ptLine.fragments) {
@@ -219,6 +225,8 @@ export function positionLines(
       if (item.metadata.effectiveFontSize >= maxFontSizeSeen) {
         maxFontSizeSeen = item.metadata.effectiveFontSize;
         dominantTypoAscFrac = metrics.typoAscFrac;
+        dominantWinAscFrac = metrics.winAscFrac;
+        dominantUseTypoMetrics = metrics.useTypoMetrics;
       }
 
       // pretext: gapBefore — inter-word space BEFORE the word
@@ -591,13 +599,19 @@ export function positionLines(
     //   (see office-cases/MIGRATION.md). Baseline sits at OFFICE_BASELINE_RATIO
     //   (0.75) × lineBox from the box top, every line including the first —
     //   *except* at spcPct = 100% (style.lineHeight === 1), where real
-    //   PowerPoint measurably tracks the dominant run's own font instead of
-    //   the flat constant (scripts/office-metrics/RESULTS.md, Arial
-    //   diagnostic decks: 8/8 single-size Arial points land on ≈0.782, not
-    //   0.75; Roboto's typoAscFrac is 0.75 exactly, so this is a no-op for
-    //   it). No fresh spcPct≠100% data contradicts flat 0.75 there — Arial's
-    //   own ls125–ls200 points land within ~0.2pt of it — so only the
-    //   lineHeight===1 case is switched.
+    //   PowerPoint measurably tracks `(typoAscFrac + winAscFrac) / 2` of the
+    //   dominant run's own font instead of the flat constant — neither ratio
+    //   alone (scripts/office-metrics/RESULTS.md "font-grid" corpus, 4 fonts
+    //   × 11 sizes: the average lands within ~1%, either ratio alone off by
+    //   2–3%, including for Roboto — 0.75 was never an exact match for it
+    //   either, that just never showed up because every earlier check used
+    //   same-size line pitch, which cancels the ratio out algebraically).
+    //   Fonts with OS/2 `fsSelection.useTypoMetrics` set (only Unifont so
+    //   far) don't fit this formula and fall back to the flat constant — one
+    //   data point isn't enough to derive their own rule (still open). No
+    //   fresh spcPct≠100% data contradicts flat 0.75 there — Arial's own
+    //   ls125–ls200 points land within ~0.2pt of it — so only the
+    //   lineHeight===1, non-useTypoMetrics case is switched.
     const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
     const ascentRounded = Math.round(maxAscent);
@@ -607,10 +621,16 @@ export function positionLines(
     let baseline: number;
 
     if (mode === 'office') {
-      const baselineRatio =
-        style.lineHeight === 1 && dominantTypoAscFrac != null && dominantTypoAscFrac > 0 && dominantTypoAscFrac < 1
-          ? dominantTypoAscFrac
-          : OFFICE_BASELINE_RATIO;
+      let baselineRatio = OFFICE_BASELINE_RATIO;
+      if (style.lineHeight === 1 && dominantUseTypoMetrics !== true) {
+        const t = dominantTypoAscFrac;
+        const w = dominantWinAscFrac;
+        if (t != null && t > 0 && t < 1 && w != null && w > 0 && w < 1) {
+          baselineRatio = (t + w) / 2;
+        } else if (t != null && t > 0 && t < 1) {
+          baselineRatio = t; // OS/2 present but winAscent/winDescent missing
+        }
+      }
       lineBoxHeight = OFFICE_LINE_BOX_RATIO * maxFontSize * style.lineHeight;
       baseline = lineBoxHeight * baselineRatio;
     } else {

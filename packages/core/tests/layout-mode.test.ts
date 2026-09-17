@@ -70,16 +70,27 @@ describe('office line spacing (spcPct)', () => {
     expect(pitch(2.0) / p1).toBeCloseTo(2.0, 2);
   });
 
-  test('line box is 1.20 x fontSize (font-independent), baseline 0.75 of it', () => {
+  // At spcPct 100% real PowerPoint tracks (typoAscFrac + winAscFrac) / 2 of
+  // the dominant run's own font, not a flat 0.75 — 0.75 only happens to be
+  // Roboto's own typoAscFrac, which isn't the whole story (RESULTS.md
+  // "OFFICE_BASELINE_RATIO at spcPct = 100% is (typoAscFrac + winAscFrac) / 2").
+  const roboto18OfficeMetrics = () => fontMetricsProvider.getMetrics('Roboto', 18, 'normal', 'normal', 'office');
+
+  test('line box is 1.20 x fontSize (font-independent), baseline (typoAscFrac + winAscFrac)/2 of it at spcPct 100%', () => {
     const l = office(1.0).lines[0];
     expect(l.height).toBeCloseTo(18 * 1.2, 1);           // PowerPoint's font-independent box
-    expect(l.baseline).toBeCloseTo(l.height * 0.75, 1);
+    const m = roboto18OfficeMetrics();
+    const expectedRatio = (m.typoAscFrac! + m.winAscFrac!) / 2;
+    expect(l.baseline).toBeCloseTo(l.height * expectedRatio, 1);
   });
 
-  test('the baseline stays at 0.75 of the line box as spcPct grows', () => {
+  test('the baseline ratio is flat 0.75 once spcPct > 100%, but (typoAscFrac + winAscFrac)/2 at spcPct = 100%', () => {
+    const m = roboto18OfficeMetrics();
+    const spc100Ratio = (m.typoAscFrac! + m.winAscFrac!) / 2;
+    const expected: Record<number, number> = { 1.0: spc100Ratio, 1.5: 0.75, 2.0: 0.75 };
     for (const lh of [1.0, 1.5, 2.0]) {
       const l = office(lh).lines[0];
-      expect(l.baseline / l.height).toBeCloseTo(0.75, 3);
+      expect(l.baseline / l.height).toBeCloseTo(expected[lh], 3);
     }
   });
 

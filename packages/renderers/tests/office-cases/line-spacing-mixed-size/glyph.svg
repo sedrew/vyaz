@@ -3,11 +3,11 @@
     <tspan x="0 9.3 25.1 34.9 39.2 43.6 48.1 58.2 67.7 74 84.3 90.4">small before</tspan>
   </text>
   <text x="0" y="48.6" font-family="Roboto" font-size="36" fill="#000000" font-weight="400" xml:space="preserve">
-    <tspan x="99.9"> </tspan>
+    <tspan x="99.7"> </tspan>
   </text>
   <text x="0" y="48.6" font-family="Roboto" font-size="36" fill="#000000" font-weight="400" xml:space="preserve">
-    <tspan x="104.4 126.8 136.6">BIG</tspan>
-    <tspan x="161.1"> </tspan>
+    <tspan x="104.2 126.6 136.4">BIG</tspan>
+    <tspan x="160.9"> </tspan>
   </text>
   <text x="0" y="113.4" font-family="Roboto" font-size="36" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 31.4 41.2 64.8 88.5 107.9">MIDDLE</tspan>

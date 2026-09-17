@@ -7,6 +7,24 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+### Fixed
+
+- **`mode: 'office'` width measurement defaults to shaped (kerned)** —
+  `LayoutOptions.shaping` used to default to `false` (plain per-code-point
+  advance sum) for every mode; real PowerPoint applies GPOS kerning, so
+  `content.width` / `textBox.width` could be measurably narrower than what
+  PowerPoint actually needs (e.g. Roboto `"Short line here."` 18pt: 119.87pt
+  unshaped vs 120.15pt shaped — Arial has zero kern pairs for that string, so
+  it never showed the gap). Usually inside a layout's slack and invisible,
+  but decisive at zero slack — a shape sized exactly to `content.width`
+  (a real "shrink shape to fit text" pattern) could wrap in PowerPoint when
+  vyaz predicted one line. `shaping` now defaults to `true` when
+  `mode: 'office'` (`false` elsewhere, unchanged); pass it explicitly to
+  override either way. Not a no-op — office-cases goldens with kerned runs
+  shifted (sub-point) and needed `UPDATE=1`. See
+  `scripts/office-metrics/RESULTS.md` "`shaping` now defaults to `true` for
+  `mode: 'office'`".
+
 ## [0.4.5] - 2026-09-17
 
 `@vyaz/core` 0.4.4 → 0.4.5, `@vyaz/renderer` 0.4.4 → 0.4.5. `@vyaz/converters`
@@ -17,14 +35,17 @@ unchanged at 0.1.0.
 - **`mode: 'office'` baseline ratio at `lineHeight === 1`** — was a flat `0.75`
   (`OFFICE_BASELINE_RATIO`), calibrated on Roboto (whose OS/2
   `typoAscender/(typoAscender−typoDescender)` is exactly 0.75 by coincidence).
-  Real PowerPoint measurably uses each font's *own* ratio at spcPct = 100 %
-  (Arial's is ≈0.776–0.783, not 0.75 — see `scripts/office-metrics/RESULTS.md`
-  "OFFICE_BASELINE_RATIO at spcPct = 100 % is font-specific"). Now reads
-  `FontMetrics.typoAscFrac` (new field, threaded from `FontEngine.ts`'s
-  `OS/2.typoAscender/typoDescender`) for the line's dominant run when
-  `style.lineHeight === 1`, falling back to the flat `0.75` otherwise (and
-  when the font has no OS/2 table). No-op for Roboto — every existing
-  office-cases golden is unchanged. (`a499f4c`)
+  Real PowerPoint measurably tracks `(typoAscFrac + winAscFrac) / 2` of the
+  dominant run's own font at spcPct = 100 % — neither ratio alone (checked
+  across Roboto/Arial/Times New Roman/Unifont, see
+  `scripts/office-metrics/RESULTS.md` "OFFICE_BASELINE_RATIO at spcPct = 100 %
+  is `(typoAscFrac + winAscFrac) / 2`"). New `FontMetrics.winAscFrac` /
+  `useTypoMetrics` fields (threaded from `FontEngine.ts`'s OS/2 table) join
+  the existing `typoAscFrac`. Falls back to the flat `0.75` when the OS/2
+  table is missing, the font sets `fsSelection.useTypoMetrics` (only Unifont
+  measured so far, not enough to derive its own rule), or `lineHeight !== 1`.
+  **Not a no-op for Roboto** — office-cases goldens at spcPct = 100 % shifted
+  (up to ~0.45pt per baseline) and needed `UPDATE=1` + review.
 
 ## [0.4.4] - 2026-09-10
 

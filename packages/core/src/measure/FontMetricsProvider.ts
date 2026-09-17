@@ -412,6 +412,12 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         const span = font.typoAscent - font.typoDescent;
         if (span > 0) typoAscFrac = font.typoAscent / span;
       }
+      let winAscFrac: number | undefined;
+      if (font.winAscent != null && font.winDescent != null) {
+        const span = font.winAscent + font.winDescent;
+        if (span > 0) winAscFrac = font.winAscent / span;
+      }
+      const useTypoMetrics = font.useTypoMetrics ?? undefined;
 
       const metrics: FontMetrics = {
         ascent,
@@ -420,6 +426,8 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         unitsPerEm: font.unitsPerEm,
         sourceTable,
         typoAscFrac,
+        winAscFrac,
+        useTypoMetrics,
       };
 
       this.metricsCache.set(metricsKey, metrics);

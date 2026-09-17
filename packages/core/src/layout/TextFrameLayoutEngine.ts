@@ -203,10 +203,23 @@ export interface LayoutOptions {
    */
   onMissingFont?: 'throw' | 'substitute';
   /**
-   * Measure widths through fontkit's `layout()` — GPOS kerning + GSUB ligatures,
-   * i.e. what a browser paints — instead of the default per-code-point advance
-   * sum. Applies to line breaking and positioning for this call only. Leave off
-   * unless the output is consumed by a browser (SVG `browser` preset).
+   * Measure widths through fontkit's `layout()` — GPOS kerning + GSUB ligatures
+   * — instead of the default per-code-point advance sum. Applies to line
+   * breaking and positioning for this call only.
+   *
+   * Defaults to `true` when `mode: 'office'`, `false` otherwise — pass it
+   * explicitly to override either way. Real PowerPoint applies kerning too
+   * (confirmed empirically: a kerned string measured 0.27pt narrower via
+   * plain advance-sum than fontkit's shaped width, for Roboto; PowerPoint's
+   * own render needed the shaped width — see
+   * scripts/office-metrics/RESULTS.md), so `mode: 'office'`'s whole point —
+   * PowerPoint fidelity — needs shaping on by default. That 0.27pt is inside
+   * most layouts' slack and invisible, but it can flip a wrap decision at a
+   * zero-slack width (a shape sized exactly to `content.width` / `textBox.width`
+   * with no margin, e.g. "shrink shape to fit text").
+   * `mode: 'browser'` keeps the previous default (`false`) — pass `true`
+   * there too when the output must match what a browser paints (SVG
+   * `browser` preset).
    */
   shaping?: boolean;
   /**
@@ -248,7 +261,10 @@ export function runFlow(
   if (options.autofit || frame.autofit?.enabled) {
     return runAutofit(frame, options, engine);
   }
-  if (options.shaping) {
+  // Default: shaped (kerned) width for mode:'office' (real PowerPoint applies
+  // kerning), plain advance-sum otherwise — explicit `shaping` always wins.
+  const useShaping = options.shaping ?? options.mode === 'office';
+  if (useShaping) {
     const saved = getMeasureProfile();
     setMeasureProfile({ engine: 'shape' });
     try {
