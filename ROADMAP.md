@@ -4,9 +4,14 @@ Direction, not a schedule. Order within a section is rough priority.
 
 ## Next
 
-- **Shaping by default** for the `browser` / `preserve` SVG presets. The `glyph`
-  preset gets shaped per-cluster advances so ligature-heavy fonts position
-  correctly (today its per-character `x` is naive).
+- **Shaping by default** for the `browser` / `preserve` SVG presets — distinct
+  from `LayoutOptions.shaping`, which already defaults to `true` for
+  `mode: 'office'` as of v0.4.6 (kerned width; PowerPoint fidelity). This item
+  is the SVG-preset side: `browser`/`preserve` still default to unshaped
+  per-character positioning, so ligature-heavy fonts don't paint quite what a
+  real browser would. The `glyph` preset gets shaped per-cluster advances so
+  ligature-heavy fonts position correctly (today its per-character `x` is
+  naive).
 - ~~**`registerWebFont(family, url, opts)`** — one call that feeds both the metrics
   engine and `document.fonts`.~~ Shipped as `registerFont` in `@vyaz/renderer`.
 - **Per-glyph font fallback** — walk a family chain for a missing code point
@@ -83,19 +88,37 @@ Direction, not a schedule. Order within a section is rough priority.
   also need a `<defs>`/`<use>` dedup pass so a repeated glyph doesn't repeat
   its full path data — without it, output runs 40–50× larger than `flat`/
   `glyph` for exactly that reason.
-- **`office` line-box model — open question.** Today `mode: 'office'` uses
-  `ascent/descent = winAscent/winDescent × 1.078` (fitted to Arial:
-  `1.117 × 1.078 ≈ 1.2`). Calibrating against real PowerPoint on macOS
-  (`scripts/office-metrics/` — `font-metrics.pptx` oracle + `report.ts`)
-  suggests the line box may actually be a **font-independent `1.2 × fontSize`**:
-  Great Vibes (OS/2 win ratio ≈ 1.75) got the *same* ~1.2× box as Roboto, and a
-  10-line wrapped stack landed on 1.201/line. No single fontkit table field
-  yields ~1.2 for both faces. Not changed yet — `1.078` matches the fonts we
-  care about and the alternative (`1.2 × maxRunSizeInLine × lnSpc%`, or
-  `max(1.2, hhea/upm) × …`) needs more oracle data (a display/script font with a
-  large `hhea`) and a decision on `lnSpc%` handling before it's worth the
-  `office`-mode break. Width already matches PowerPoint to ±0.4% and needs
-  nothing.
+- **`office` line-box model — open questions (v0.4.6 status).** The line box
+  itself is settled and shipped: font-independent `1.2 × maxRunSizeInLine ×
+  lnSpc%` (`OFFICE_LINE_BOX_RATIO`), and the `lineHeight === 1` baseline ratio
+  is `(typoAscFrac + winAscFrac) / 2` of the dominant run's own font
+  (`OFFICE_BASELINE_RATIO`), both calibrated against real PowerPoint —
+  see `scripts/office-metrics/RESULTS.md`. Genuinely still open:
+  - **Model A vs B for the `1.2` constant** — flat, or `max(1.2, hhea/upm)`?
+    Every oracle font tested so far (Roboto, Arial, Great Vibes, Unifont,
+    Times New Roman) has `hhea/upm < 1.2`, so it still can't be told apart.
+    Needs a large-`hhea` display/script font (Lobster, Pacifico, Alfa Slab
+    One) in `scripts/office-metrics/gen-font-grid-diagnostic.ts`.
+  - **`useTypoMetrics` fonts' own baseline formula** — fonts with OS/2
+    `fsSelection.useTypoMetrics` set don't fit the averaged ratio above and
+    fall back to the flat `0.75` (unverified for that case). Only Unifont
+    tested; needs a second such font to derive a real rule instead of a guess.
+  - **Mixed-size-line baseline ratio** — a small run framing one large run in
+    the same line measured *higher* than same-size lines (~0.81 for Arial,
+    close to `winAscFrac` alone) but only 2 data points; not in code.
+  - **Does PowerPoint wrap where vyaz wraps?** `gen-wrap-diagnostic.ts` — a
+    reproduction of the original "5 lines vs 3" mismatch (a large run in a
+    narrow column) plus 7 other width/length cases per font — sent for
+    real-PowerPoint verification, result pending.
+  - **`<a:spcPts>`** (absolute-point line spacing, vs. today's `spcPct`-only
+    multiplier) — needs a `lineHeightPts` / `lineHeightUnit` on
+    `ParagraphStyle`.
+  - **`spcPct < 100%`** — no oracle sample yet; PowerPoint is suspected to
+    floor near the real ascent+descent rather than scale linearly.
+  - Width matches PowerPoint to ±0.4% **once `shaping` is on** — default for
+    `mode: 'office'` as of v0.4.6 (real PowerPoint kerns; the plain
+    advance-sum default used to under-measure any kerned run, invisible with
+    layout slack but decisive at a zero-slack "shrink shape to fit text" box).
 
 ---
 
