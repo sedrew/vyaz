@@ -7,6 +7,32 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.7] - 2026-09-18
+
+`@vyaz/core` 0.4.6 → 0.4.7, `@vyaz/renderer` 0.4.6 → 0.4.7. `@vyaz/converters`
+unchanged at 0.1.0.
+
+### Fixed
+
+- **`overflowWrap` now defaults to CSS `'normal'`, not a forced grapheme
+  break** — a `<Text>`/paragraph with a single short unbreakable word (e.g.
+  `"Hi"`) measured under an intrinsic-width (min-content) probe came out
+  narrower than the word's own natural width: the vendored line-breaker
+  (`@chenglou/pretext`) hardcodes `overflow-wrap: break-word`
+  unconditionally, with no option to disable it. Any word wider than the
+  available width got sliced at grapheme boundaries — in both `mode:
+  'office'` and `'browser'`, for a single word and for each word of a
+  multi-word phrase alike. `ParagraphStyle.overflowWrap` (previously a
+  no-op) now actually gates this: `'normal'` (the default, matching real
+  browsers/PowerPoint) lets an atomic word overflow the line instead;
+  explicit `'break-word'`/`'anywhere'` restore the old fallback. Patches
+  `layout.js`/`rich-inline.js` (vendored, anchored in `vendor-pretext.ts` so
+  the patch survives re-vendoring — see `VENDOR.json`). Also fixes a
+  cache-correctness bug this surfaced: `ParagraphLayoutEngine`'s
+  prepared-line LRU cache didn't key on `overflowWrap`, so two paragraphs
+  with identical text/font but different `overflowWrap` could share a stale
+  cached result.
+
 ## [0.4.6] - 2026-09-17
 
 `@vyaz/core` 0.4.5 → 0.4.6, `@vyaz/renderer` 0.4.5 → 0.4.6. `@vyaz/converters`
