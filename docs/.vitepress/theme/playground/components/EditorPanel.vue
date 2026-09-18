@@ -4,7 +4,65 @@
       <h2>Editor</h2>
     </div>
     <div class="toolbar" v-if="editor">
-      <!-- Inline formatting -->
+      <!-- History -->
+      <div class="toolbar-group">
+        <button class="toolbar-btn" @click="editor.chain().focus().undo().run()" title="Undo (Ctrl+Z)">
+          <IconArrowBackUp :size="18" :stroke="1.75" />
+        </button>
+        <button class="toolbar-btn" @click="editor.chain().focus().redo().run()" title="Redo (Ctrl+Shift+Z)">
+          <IconArrowForwardUp :size="18" :stroke="1.75" />
+        </button>
+      </div>
+
+      <div class="toolbar-separator"></div>
+
+      <!-- Structure: headings -->
+      <div class="toolbar-group">
+        <button
+          class="toolbar-btn text-btn"
+          :class="{ active: editor.isActive('heading', { level: 1 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+          title="Heading 1"
+        >H1</button>
+        <button
+          class="toolbar-btn text-btn"
+          :class="{ active: editor.isActive('heading', { level: 2 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+          title="Heading 2"
+        >H2</button>
+        <button
+          class="toolbar-btn text-btn"
+          :class="{ active: editor.isActive('heading', { level: 3 }) }"
+          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+          title="Heading 3"
+        >H3</button>
+      </div>
+
+      <div class="toolbar-separator"></div>
+
+      <!-- Structure: font -->
+      <div class="toolbar-group">
+        <select
+          class="toolbar-select"
+          :value="tb.fontFamily"
+          @change="setFontFamily(($event.target as HTMLSelectElement).value)"
+          title="Font family"
+        >
+          <option v-for="f in fontFamilies" :key="f" :value="f">{{ f }}</option>
+        </select>
+        <select
+          class="toolbar-select toolbar-select--narrow"
+          :value="tb.fontSize"
+          @change="setFontSize(Number(($event.target as HTMLSelectElement).value))"
+          title="Font size"
+        >
+          <option v-for="s in fontSizes" :key="s" :value="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="toolbar-separator"></div>
+
+      <!-- Character formatting -->
       <div class="toolbar-group">
         <button
           class="toolbar-btn"
@@ -46,6 +104,18 @@
         >
           <IconCode :size="18" :stroke="1.75" />
         </button>
+        <button
+          class="toolbar-btn text-btn"
+          :class="{ active: editor.isActive('subscript') }"
+          @click="editor.chain().focus().toggleSubscript().run()"
+          title="Subscript"
+        >A<sub>2</sub></button>
+        <button
+          class="toolbar-btn text-btn"
+          :class="{ active: editor.isActive('superscript') }"
+          @click="editor.chain().focus().toggleSuperscript().run()"
+          title="Superscript"
+        >A<sup>2</sup></button>
         <div class="color-picker-wrapper">
           <input
             type="color"
@@ -57,95 +127,6 @@
           <IconPalette :size="18" :stroke="1.75" />
         </div>
       </div>
-
-      <div class="toolbar-separator"></div>
-
-      <!-- Headings -->
-      <div class="toolbar-group">
-        <button
-          class="toolbar-btn text-btn"
-          :class="{ active: editor.isActive('heading', { level: 1 }) }"
-          @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
-          title="Heading 1"
-        >H1</button>
-        <button
-          class="toolbar-btn text-btn"
-          :class="{ active: editor.isActive('heading', { level: 2 }) }"
-          @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
-          title="Heading 2"
-        >H2</button>
-        <button
-          class="toolbar-btn text-btn"
-          :class="{ active: editor.isActive('heading', { level: 3 }) }"
-          @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
-          title="Heading 3"
-        >H3</button>
-      </div>
-
-      <div class="toolbar-separator"></div>
-
-      <!-- Block formatting -->
-      <div class="toolbar-group">
-        <button
-          class="toolbar-btn"
-          :class="{ active: editor.isActive('bulletList') }"
-          @click="editor.chain().focus().toggleBulletList().run()"
-          title="Bullet list"
-        >
-          <IconList :size="18" :stroke="1.75" />
-        </button>
-        <button
-          class="toolbar-btn"
-          :class="{ active: editor.isActive('orderedList') }"
-          @click="editor.chain().focus().toggleOrderedList().run()"
-          title="Ordered list"
-        >
-          <IconListNumbers :size="18" :stroke="1.75" />
-        </button>
-        <button
-          class="toolbar-btn"
-          :class="{ active: editor.isActive('blockquote') }"
-          @click="editor.chain().focus().toggleBlockquote().run()"
-          title="Blockquote"
-        >
-          <IconBlockquote :size="18" :stroke="1.75" />
-        </button>
-        <button
-          class="toolbar-btn"
-          @click="editor.chain().focus().setHorizontalRule().run()"
-          title="Horizontal rule"
-        >
-          <IconSeparatorHorizontal :size="18" :stroke="1.75" />
-        </button>
-        <button
-          class="toolbar-btn"
-          :class="{ active: editor.isActive('link') }"
-          @click="toggleLink"
-          title="Link"
-        >
-          <IconLink :size="18" :stroke="1.75" />
-        </button>
-      </div>
-
-      <!-- List options (only when a list is active) -->
-      <template v-if="list.active">
-        <div class="toolbar-separator"></div>
-        <div class="toolbar-group">
-          <select v-if="list.ordered" class="toolbar-select" :value="list.numberFormat"
-            @change="setListAttr('numberFormat', ($event.target as HTMLSelectElement).value)" title="Numbering">
-            <option v-for="f in NUMBER_FORMATS" :key="f" :value="f">{{ f }}</option>
-          </select>
-          <select v-else class="toolbar-select" :value="list.bulletChar"
-            @change="setListAttr('bulletChar', ($event.target as HTMLSelectElement).value)" title="Bullet">
-            <option v-for="c in BULLET_CHARS" :key="c" :value="c">{{ c }}</option>
-          </select>
-          <select class="toolbar-select" :value="list.position"
-            @change="setListAttr('position', ($event.target as HTMLSelectElement).value)" title="Marker position">
-            <option value="outside">outside</option>
-            <option value="inside">inside</option>
-          </select>
-        </div>
-      </template>
 
       <div class="toolbar-separator"></div>
 
@@ -187,53 +168,106 @@
 
       <div class="toolbar-separator"></div>
 
-      <!-- Subscript / Superscript -->
+      <!-- Lists (+ their options, kept in the same group so nothing jumps around) -->
       <div class="toolbar-group">
         <button
-          class="toolbar-btn text-btn"
-          :class="{ active: editor.isActive('subscript') }"
-          @click="editor.chain().focus().toggleSubscript().run()"
-          title="Subscript"
-        >A<sub>2</sub></button>
+          class="toolbar-btn"
+          :class="{ active: editor.isActive('bulletList') }"
+          @click="editor.chain().focus().toggleBulletList().run()"
+          title="Bullet list"
+        >
+          <IconList :size="18" :stroke="1.75" />
+        </button>
         <button
-          class="toolbar-btn text-btn"
-          :class="{ active: editor.isActive('superscript') }"
-          @click="editor.chain().focus().toggleSuperscript().run()"
-          title="Superscript"
-        >A<sup>2</sup></button>
-      </div>
-
-      <div class="toolbar-separator"></div>
-
-      <!-- Font Family -->
-      <div class="toolbar-group">
-        <select
-          class="toolbar-select"
-          :value="tb.fontFamily"
-          @change="setFontFamily(($event.target as HTMLSelectElement).value)"
-          title="Font family"
+          class="toolbar-btn"
+          :class="{ active: editor.isActive('orderedList') }"
+          @click="editor.chain().focus().toggleOrderedList().run()"
+          title="Ordered list"
         >
-          <option v-for="f in fontFamilies" :key="f" :value="f">{{ f }}</option>
-        </select>
+          <IconListNumbers :size="18" :stroke="1.75" />
+        </button>
+
+        <template v-if="list.active">
+          <ToolbarDropdown
+            v-if="list.ordered"
+            :model-value="list.numberFormat"
+            :options="NUMBER_FORMAT_OPTIONS"
+            aria-label="Numbering style"
+            @update:model-value="v => setListAttr('numberFormat', v)"
+          >
+            <template #trigger="{ option }">
+              <span class="list-sample">{{ option?.sample ?? '1.' }}</span>
+            </template>
+            <template #option="{ option }">
+              <span class="list-sample">{{ option.sample }}</span>
+              <span class="list-label">{{ option.label }}</span>
+            </template>
+          </ToolbarDropdown>
+          <ToolbarDropdown
+            v-else
+            :model-value="list.bulletChar"
+            :options="BULLET_OPTIONS"
+            aria-label="Bullet style"
+            @update:model-value="v => setListAttr('bulletChar', v)"
+          >
+            <template #trigger="{ option }">
+              <span class="bullet-sample">{{ option?.value }}</span>
+            </template>
+            <template #option="{ option }">
+              <span class="bullet-sample">{{ option.value }}</span>
+              <span class="list-label">{{ option.label }}</span>
+            </template>
+          </ToolbarDropdown>
+
+          <div class="segmented" role="group" aria-label="Marker position">
+            <button
+              type="button"
+              class="segmented__btn"
+              :class="{ active: list.position === 'outside' }"
+              @click="setListAttr('position', 'outside')"
+            >Outside</button>
+            <button
+              type="button"
+              class="segmented__btn"
+              :class="{ active: list.position === 'inside' }"
+              @click="setListAttr('position', 'inside')"
+            >Inside</button>
+          </div>
+        </template>
       </div>
 
       <div class="toolbar-separator"></div>
 
-      <!-- Font Size -->
+      <!-- Blocks -->
       <div class="toolbar-group">
-        <select
-          class="toolbar-select"
-          :value="tb.fontSize"
-          @change="setFontSize(Number(($event.target as HTMLSelectElement).value))"
-          title="Font size"
+        <button
+          class="toolbar-btn"
+          :class="{ active: editor.isActive('blockquote') }"
+          @click="editor.chain().focus().toggleBlockquote().run()"
+          title="Blockquote"
         >
-          <option v-for="s in fontSizes" :key="s" :value="s">{{ s }}</option>
-        </select>
+          <IconBlockquote :size="18" :stroke="1.75" />
+        </button>
+        <button
+          class="toolbar-btn"
+          @click="editor.chain().focus().setHorizontalRule().run()"
+          title="Horizontal rule"
+        >
+          <IconSeparatorHorizontal :size="18" :stroke="1.75" />
+        </button>
+        <button
+          class="toolbar-btn"
+          :class="{ active: editor.isActive('link') }"
+          @click="toggleLink"
+          title="Link"
+        >
+          <IconLink :size="18" :stroke="1.75" />
+        </button>
       </div>
 
       <div class="toolbar-separator"></div>
 
-      <!-- Letter spacing / line height -->
+      <!-- Advanced spacing -->
       <div class="toolbar-group">
         <label class="toolbar-num" title="Letter spacing (px)">ls
           <input type="number" step="0.5" :value="tb.letterSpacing"
@@ -243,26 +277,6 @@
           <input type="number" step="0.05" min="0.5" :value="tb.lineHeight"
             @change="setLineHeight(Number(($event.target as HTMLInputElement).value))" />
         </label>
-      </div>
-
-      <div class="toolbar-separator"></div>
-
-      <!-- Undo/Redo -->
-      <div class="toolbar-group">
-        <button
-          class="toolbar-btn"
-          @click="editor.chain().focus().undo().run()"
-          title="Undo (Ctrl+Z)"
-        >
-          <IconArrowBackUp :size="18" :stroke="1.75" />
-        </button>
-        <button
-          class="toolbar-btn"
-          @click="editor.chain().focus().redo().run()"
-          title="Redo (Ctrl+Shift+Z)"
-        >
-          <IconArrowForwardUp :size="18" :stroke="1.75" />
-        </button>
       </div>
     </div>
     <div class="editor-wrapper">
@@ -285,6 +299,7 @@ import Superscript from '@tiptap/extension-superscript'
 import FontFamily from '@tiptap/extension-font-family'
 import Link from '@tiptap/extension-link'
 import { watch, onBeforeUnmount, ref, reactive } from 'vue'
+import ToolbarDropdown from './ToolbarDropdown.vue'
 
 const emit = defineEmits<{ update: [json: unknown] }>()
 
@@ -385,8 +400,21 @@ function syncToolbar() {
   textColor.value = tb.color
 }
 
-const NUMBER_FORMATS = ['decimal', 'upper-roman', 'lower-roman', 'upper-alpha', 'lower-alpha']
-const BULLET_CHARS = ['•', '◦', '▪', '–', '·', '★']
+const NUMBER_FORMAT_OPTIONS = [
+  { value: 'decimal', label: 'Decimal', sample: '1.' },
+  { value: 'upper-roman', label: 'Upper roman', sample: 'I.' },
+  { value: 'lower-roman', label: 'Lower roman', sample: 'i.' },
+  { value: 'upper-alpha', label: 'Upper alpha', sample: 'A.' },
+  { value: 'lower-alpha', label: 'Lower alpha', sample: 'a.' },
+]
+const BULLET_OPTIONS = [
+  { value: '•', label: 'Bullet' },
+  { value: '◦', label: 'Circle' },
+  { value: '▪', label: 'Square' },
+  { value: '–', label: 'Dash' },
+  { value: '·', label: 'Dot' },
+  { value: '★', label: 'Star' },
+]
 
 const ListOptions = Extension.create({
   name: 'listOptions',
@@ -468,20 +496,20 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid var(--vp-c-divider);
 }
 
 .editor-header {
   padding: 10px 14px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fafafa;
+  border-bottom: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg-soft);
 }
 
 .editor-header h2 {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #333;
+  color: var(--vp-c-text-2);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -493,8 +521,8 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 4px;
   padding: 6px 8px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fff;
+  border-bottom: 1px solid var(--vp-c-divider);
+  background: var(--vp-c-bg);
   flex-wrap: wrap;
   position: sticky;
   top: 0;
@@ -510,7 +538,7 @@ onBeforeUnmount(() => {
 .toolbar-separator {
   width: 1px;
   height: 24px;
-  background: #e0e0e0;
+  background: var(--vp-c-divider);
   margin: 0 4px;
 }
 
@@ -524,19 +552,19 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   background: transparent;
   cursor: pointer;
-  color: #555;
+  color: var(--vp-c-text-2);
   transition: all 0.12s ease;
 }
 
 .toolbar-btn:hover {
-  background: #f0f0f0;
-  color: #111;
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
 }
 
 .toolbar-btn.active {
-  background: #e0e7ff;
-  color: #2563eb;
-  border-color: #bfdbfe;
+  background: color-mix(in srgb, var(--vp-c-brand-1) 15%, transparent);
+  color: var(--vp-c-brand-1);
+  border-color: color-mix(in srgb, var(--vp-c-brand-1) 35%, transparent);
 }
 
 .toolbar-btn.text-btn {
@@ -548,27 +576,90 @@ onBeforeUnmount(() => {
 
 /* ── Select dropdowns (font family, size) ───────── */
 
-.toolbar-num { display:inline-flex; align-items:center; gap:3px; font-size:11px; color:#666; }
-.toolbar-num input { width:46px; padding:2px 4px; border:1px solid #ccc; border-radius:4px; font-size:11px; }
+.toolbar-num { display:inline-flex; align-items:center; gap:3px; font-size:11px; color: var(--vp-c-text-2); }
+.toolbar-num input {
+  width:46px; padding:2px 4px; border:1px solid var(--vp-c-divider); border-radius:4px;
+  font-size:11px; background: var(--vp-c-bg); color: var(--vp-c-text-1);
+}
 .toolbar-select {
   padding: 3px 6px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--vp-c-divider);
   border-radius: 4px;
   font-size: 12px;
-  background: #fff;
-  color: #333;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-1);
   cursor: pointer;
   outline: none;
   max-width: 120px;
 }
 
+.toolbar-select--narrow {
+  max-width: 62px;
+}
+
 .toolbar-select:hover {
-  border-color: #999;
+  border-color: var(--vp-c-text-3);
 }
 
 .toolbar-select:focus {
-  border-color: #4a90d9;
-  box-shadow: 0 0 0 2px rgba(74, 144, 217, 0.15);
+  border-color: var(--vp-c-brand-1);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--vp-c-brand-1) 20%, transparent);
+}
+
+/* ── List style previews (bullet char / numbering dropdowns) ───────── */
+
+.bullet-sample {
+  font-size: 14px;
+  line-height: 1;
+  min-width: 12px;
+  text-align: center;
+}
+
+.list-sample {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.list-label {
+  color: var(--vp-c-text-2);
+  font-size: 11.5px;
+}
+
+/* ── Segmented control (marker position) ───────── */
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-left: 2px;
+}
+
+.segmented__btn {
+  padding: 4px 9px;
+  font-size: 11.5px;
+  background: var(--vp-c-bg);
+  color: var(--vp-c-text-2);
+  border: none;
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.segmented__btn + .segmented__btn {
+  border-left: 1px solid var(--vp-c-divider);
+}
+
+.segmented__btn:hover {
+  background: var(--vp-c-bg-soft);
+  color: var(--vp-c-text-1);
+}
+
+.segmented__btn.active {
+  background: color-mix(in srgb, var(--vp-c-brand-1) 15%, transparent);
+  color: var(--vp-c-brand-1);
+  font-weight: 600;
 }
 
 /* ── Color picker ───────────────────────────────── */
@@ -615,7 +706,7 @@ onBeforeUnmount(() => {
   min-height: 300px;
   font-size: 16px;
   line-height: 1.6;
-  color: #1a1a1a;
+  color: var(--vp-c-text-1);
 }
 
 :deep(.ProseMirror h1) {
@@ -644,7 +735,7 @@ onBeforeUnmount(() => {
 }
 
 :deep(.ProseMirror code) {
-  background: #f0f0f0;
+  background: var(--vp-c-bg-soft);
   padding: 2px 6px;
   border-radius: 3px;
   font-size: 0.9em;
@@ -666,15 +757,15 @@ onBeforeUnmount(() => {
 }
 
 :deep(.ProseMirror blockquote) {
-  border-left: 3px solid #ccc;
+  border-left: 3px solid var(--vp-c-divider);
   padding-left: 12px;
   margin: 8px 0;
-  color: #666;
+  color: var(--vp-c-text-2);
 }
 
 :deep(.ProseMirror hr) {
   border: none;
-  border-top: 2px solid #e0e0e0;
+  border-top: 2px solid var(--vp-c-divider);
   margin: 16px 0;
 }
 </style>

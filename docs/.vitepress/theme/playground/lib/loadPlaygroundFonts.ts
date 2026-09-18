@@ -10,12 +10,19 @@
 import { registerFont } from '@vyaz/renderer'
 
 import robotoUrl from '../fonts/Roboto-VariableFont_wdth,wght.ttf?url'
+import robotoItalicUrl from '../fonts/Roboto-Italic-VariableFont_wdth,wght.ttf?url'
 import interUrl from '../fonts/Inter-Variable.ttf?url'
+import interItalicUrl from '../fonts/Inter-Italic-Variable.ttf?url'
 import greatVibesUrl from '../fonts/GreatVibes-Regular.ttf?url'
 
-const FONT_FILES: { family: string; url: string; variable: boolean }[] = [
-  { family: 'Roboto', url: robotoUrl, variable: true },
-  { family: 'Inter', url: interUrl, variable: true },
+// `italicUrl` is the real slanted face. Omit it (Great Vibes has none) and the
+// roman bytes are reused for the italic registration — which is exactly the
+// bug this fixes for Roboto/Inter: registering the roman file *as* the italic
+// face tells the browser "this already is italic" and it skips synthesizing
+// a slant, so toggling italic changed the mark but not a single pixel.
+const FONT_FILES: { family: string; url: string; italicUrl?: string; variable: boolean }[] = [
+  { family: 'Roboto', url: robotoUrl, italicUrl: robotoItalicUrl, variable: true },
+  { family: 'Inter', url: interUrl, italicUrl: interItalicUrl, variable: true },
   { family: 'Great Vibes', url: greatVibesUrl, variable: false },
 ]
 
@@ -38,8 +45,11 @@ const ALIASES: Record<string, string> = {
   GreatVibes: 'Great Vibes', 'Arial Black': 'Roboto',
 }
 
-/** family (incl. alias) → raw bytes, kept for the self-contained SVG download */
+/** family (incl. alias) → raw (roman) bytes, kept for the self-contained SVG download */
 export const fontBytes = new Map<string, Uint8Array>()
+
+/** family (incl. alias) → real italic bytes, when a distinct one was loaded */
+const italicFontBytes = new Map<string, Uint8Array>()
 
 /** Every family name the engine + `document.fonts` ended up with. */
 export const registeredFamilies = new Set<string>()
@@ -51,10 +61,12 @@ let started: Promise<void> | null = null
 /** Idempotent: registers every face once, with the engine and with the browser. */
 export function loadPlaygroundFonts(): Promise<void> {
   return (started ??= (async () => {
-    const install = async (family: string, buf: Uint8Array, variable: boolean) => {
-      fontBytes.set(family, buf)
+    const install = async (family: string, bytes: { normal: Uint8Array; italic: Uint8Array }, variable: boolean) => {
+      fontBytes.set(family, bytes.normal)
+      if (bytes.italic !== bytes.normal) italicFontBytes.set(family, bytes.italic)
       // One call per (weight, style) → engine + document.fonts, always in sync.
       for (const style of ['normal', 'italic'] as const) {
+        const buf = style === 'italic' ? bytes.italic : bytes.normal
         for (const weight of [400, 700] as const) {
           try {
             const r = await registerFont(family, buf, {
@@ -82,18 +94,30 @@ export function loadPlaygroundFonts(): Promise<void> {
       try {
         const res = await fetch(f.url)
         if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`)
-        await install(f.family, new Uint8Array(await res.arrayBuffer()), f.variable)
+        const normal = new Uint8Array(await res.arrayBuffer())
+        let italic = normal
+        if (f.italicUrl) {
+          try {
+            const ires = await fetch(f.italicUrl)
+            if (!ires.ok) throw new Error(`HTTP ${ires.status} ${ires.statusText}`)
+            italic = new Uint8Array(await ires.arrayBuffer())
+          } catch (e) {
+            console.error(`${LOG} could not fetch italic "${f.family}" from ${f.italicUrl} — reusing the roman face`, e)
+          }
+        }
+        await install(f.family, { normal, italic }, f.variable)
       } catch (e) {
         console.error(`${LOG} could not fetch "${f.family}" from ${f.url} — it will be missing`, e)
       }
     }
     for (const [alias, target] of Object.entries(ALIASES)) {
-      const buf = fontBytes.get(target)
-      if (!buf) {
+      const normal = fontBytes.get(target)
+      if (!normal) {
         console.error(`${LOG} alias "${alias}" → "${target}", but "${target}" never loaded`)
         continue
       }
-      await install(alias, buf, FONT_FILES.find((f) => f.family === target)!.variable)
+      const italic = italicFontBytes.get(target) ?? normal
+      await install(alias, { normal, italic }, FONT_FILES.find((f) => f.family === target)!.variable)
     }
     try { await (document as any).fonts.ready } catch { /* ignore */ }
     console.info(

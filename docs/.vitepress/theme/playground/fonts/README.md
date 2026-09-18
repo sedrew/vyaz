@@ -11,6 +11,15 @@ provenance). Licenses alongside.
 
 | file | family | license |
 |---|---|---|
-| `Roboto-VariableFont_wdth,wght.ttf` | Roboto | OFL-1.1 (`Roboto-LICENSE.txt`) |
-| `Inter-Variable.ttf` | Inter | OFL-1.1 (`Inter-OFL.txt`) |
+| `Roboto-VariableFont_wdth,wght.ttf` | Roboto (roman) | OFL-1.1 (`Roboto-LICENSE.txt`) |
+| `Roboto-Italic-VariableFont_wdth,wght.ttf` | Roboto (italic) | OFL-1.1 (`Roboto-LICENSE.txt`) |
+| `Inter-Variable.ttf` | Inter (roman) | OFL-1.1 (`Inter-OFL.txt`) |
+| `Inter-Italic-Variable.ttf` | Inter (italic) | OFL-1.1 (`Inter-OFL.txt`) |
 | `GreatVibes-Regular.ttf` | Great Vibes | OFL-1.1 (`GreatVibes-OFL.txt`) |
+
+The italic files are separate upstream faces (real slanted outlines, not a
+CSS synthesis) — registering the roman bytes under `style: 'italic'` used to
+tell the browser "this face already is italic" and silently skip synthetic
+obliquing, so toggling italic changed the mark but not a single pixel. Great
+Vibes has no upstream italic; its roman bytes are reused for the italic
+registration as before.
