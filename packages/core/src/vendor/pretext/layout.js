@@ -225,7 +225,7 @@ function getBreakablePreferredBreaks(text) {
 function addInternalLetterSpacing(width, graphemeCount, letterSpacing) {
     return graphemeCount > 1 ? width + (graphemeCount - 1) * letterSpacing : width;
 }
-function measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing) {
+function measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing, overflowWrap) {
     const engineProfile = getEngineProfile();
     const { cache, emojiCorrection } = getFontMeasurementState(font, textMayContainEmoji(analysis.normalized));
     const discretionaryHyphenWidth = getCorrectedSegmentWidth('-', getSegmentMetrics('-', cache), emojiCorrection) +
@@ -327,7 +327,13 @@ function measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpaci
             }
             continue;
         }
-        pushMeasuredTextSegment(segText, segKind, segStart, segWordLike, true);
+        // vendored: upstream always allowed overflow breaks here (hardcoded
+        // `true`, i.e. `overflow-wrap: break-word` unconditionally — see
+        // VENDOR.json). Gate it on the caller's actual `overflowWrap` /
+        // `wordBreak` instead, so `overflow-wrap: normal` (the real CSS
+        // default) lets an atomic word overflow the line instead of being
+        // sliced at grapheme boundaries.
+        pushMeasuredTextSegment(segText, segKind, segStart, segWordLike, overflowWrap !== 'normal' || wordBreak === 'break-all');
     }
     const chunks = mapAnalysisChunksToPreparedChunks(analysis.chunks, preparedStartByAnalysisIndex, widths.length);
     const segLevels = segStarts === null ? null : computeSegmentLevels(analysis.normalized, segStarts);
@@ -389,8 +395,11 @@ function mapAnalysisChunksToPreparedChunks(chunks, preparedStartByAnalysisIndex,
 function prepareInternal(text, font, includeSegments, options) {
     const wordBreak = options?.wordBreak ?? 'normal';
     const letterSpacing = options?.letterSpacing ?? 0;
+    // vendored: upstream has no such option (always `overflow-wrap:
+    // break-word`) — see VENDOR.json. `'normal'` is the real CSS default.
+    const overflowWrap = options?.overflowWrap ?? 'normal';
     const analysis = analyzeText(text, getEngineProfile(), options?.whiteSpace, wordBreak);
-    return measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing);
+    return measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing, overflowWrap);
 }
 // Prepare text for layout. Segments the text, measures each segment via canvas,
 // and stores the widths for fast relayout at any width. Call once per text block

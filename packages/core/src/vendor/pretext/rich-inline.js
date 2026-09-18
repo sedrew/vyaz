@@ -72,7 +72,13 @@ export function prepareRichInline(items) {
             : hasLeadingWhitespace
                 ? getCollapsedSpaceWidth(item.font, letterSpacing, collapsedSpaceWidthCache)
                 : 0;
-        const prepared = prepareWithSegments(trimmedText, item.font, letterSpacing === 0 ? undefined : { letterSpacing });
+        // vendored: forward overflowWrap (upstream rich-inline.js never read
+        // it — see VENDOR.json) so a per-item `overflow-wrap: normal` reaches
+        // the same word-break fallback gate as the plain prepare() path.
+        const prepareOptions = letterSpacing === 0 && item.overflowWrap === undefined
+            ? undefined
+            : { letterSpacing, overflowWrap: item.overflowWrap };
+        const prepared = prepareWithSegments(trimmedText, item.font, prepareOptions);
         const wholeLine = prepareWholeItemLine(prepared);
         if (wholeLine === null) {
             pendingGapWidth = hasTrailingWhitespace

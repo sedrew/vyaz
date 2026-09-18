@@ -105,17 +105,19 @@ function getFontMetricsForItem(item: PreparedRichInlineItem, mode?: 'browser' | 
 /**
  * Structural key for the prepared-line cache.
  *
- * Covers exactly the run fields that `compileParagraph` + `prepareRichInline`
- * consume (text/shape + resolved font token inputs + letterSpacing). Style that
- * only affects positioning or painting — colour, alignment, line-height,
- * spacing, decoration — is deliberately excluded so an editor re-layout after
- * a colour change still hits the cache. `JSON.stringify(paragraph)` walked the
- * whole tree and busted on every such edit.
+ * Covers exactly the fields that `compileParagraph` + `prepareRichInline`
+ * consume (text/shape + resolved font token inputs + letterSpacing), plus the
+ * paragraph-level `overflowWrap` (it flows into every item and changes what
+ * `prepareRichInline` returns — see `PreparedRichInlineItem.overflowWrap`).
+ * Style that only affects positioning or painting — colour, alignment,
+ * line-height, spacing, decoration — is deliberately excluded so an editor
+ * re-layout after a colour change still hits the cache. `JSON.stringify(paragraph)`
+ * walked the whole tree and busted on every such edit.
  */
 function preparedCacheKey(paragraph: Paragraph): string {
   const c = paragraph.children;
-  let k = '';
-  const S = '\u0000';   // field/record separator — never present in a real text run
+  let k = (paragraph.style.overflowWrap ?? '') + '|';
+  const S ='\u0000';   // field/record separator — never present in a real text run
   for (let i = 0; i < c.length; i++) {
     const r = c[i];
     k += (r.type === 'inline-box' ? 'B' + (r.inlineWidget?.width ?? 0) : 'T' + r.text)

@@ -49,10 +49,16 @@ export type LayoutLinesResult = LayoutResult & {
     lines: LayoutLine[];
 };
 export type WordBreakMode = AnalysisWordBreakMode;
+export type OverflowWrapMode = 'normal' | 'break-word' | 'anywhere';
 export type PrepareOptions = {
     whiteSpace?: WhiteSpaceMode;
     wordBreak?: WordBreakMode;
     letterSpacing?: number;
+    /** CSS `overflow-wrap`. Default `'normal'` — an atomic word wider than
+     *  the line overflows instead of being sliced at grapheme boundaries.
+     *  `'break-word'` / `'anywhere'` restore upstream's unconditional
+     *  long-word grapheme fallback. */
+    overflowWrap?: OverflowWrapMode;
 };
 type PreparedLineChunk = {
     startSegmentIndex: number;

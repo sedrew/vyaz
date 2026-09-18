@@ -86,6 +86,95 @@ const DTS_REPLACEMENT =
 /** `measureContext` is now unused in the vendored file; drop the dead binding. */
 const DEAD_STATE_ANCHOR = 'let measureContext = null;\n';
 
+/**
+ * Second rewrite: `overflow-wrap: normal` support.
+ *
+ * Upstream pretext targets a fixed CSS profile — `overflow-wrap: break-word`
+ * unconditionally (see README / github.com/chenglou/pretext#206) — so any
+ * word wider than the available width is *always* sliced at grapheme
+ * boundaries, with no option to opt out. Real browsers and PowerPoint default
+ * to `overflow-wrap: normal`: an unbreakable word instead overflows the line.
+ * We add that missing mode as a new `overflowWrap` option, threaded from
+ * `prepare()`/`prepareWithSegments()` down to the one call site that decides
+ * whether a word-like segment may be broken mid-word.
+ */
+const OVERFLOW_WRAP_JS_SIGNATURE_ANCHOR =
+  'function measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing) {';
+const OVERFLOW_WRAP_JS_SIGNATURE_REPLACEMENT =
+  'function measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing, overflowWrap) {';
+
+const OVERFLOW_WRAP_JS_CALLSITE_ANCHOR =
+  '        pushMeasuredTextSegment(segText, segKind, segStart, segWordLike, true);';
+const OVERFLOW_WRAP_JS_CALLSITE_REPLACEMENT = `        // vendored: upstream always allowed overflow breaks here (hardcoded
+        // \`true\`, i.e. \`overflow-wrap: break-word\` unconditionally — see
+        // VENDOR.json). Gate it on the caller's actual \`overflowWrap\` /
+        // \`wordBreak\` instead, so \`overflow-wrap: normal\` (the real CSS
+        // default) lets an atomic word overflow the line instead of being
+        // sliced at grapheme boundaries.
+        pushMeasuredTextSegment(segText, segKind, segStart, segWordLike, overflowWrap !== 'normal' || wordBreak === 'break-all');`;
+
+const OVERFLOW_WRAP_JS_PREPARE_ANCHOR = `function prepareInternal(text, font, includeSegments, options) {
+    const wordBreak = options?.wordBreak ?? 'normal';
+    const letterSpacing = options?.letterSpacing ?? 0;
+    const analysis = analyzeText(text, getEngineProfile(), options?.whiteSpace, wordBreak);
+    return measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing);`;
+const OVERFLOW_WRAP_JS_PREPARE_REPLACEMENT = `function prepareInternal(text, font, includeSegments, options) {
+    const wordBreak = options?.wordBreak ?? 'normal';
+    const letterSpacing = options?.letterSpacing ?? 0;
+    // vendored: upstream has no such option (always \`overflow-wrap:
+    // break-word\`) — see VENDOR.json. \`'normal'\` is the real CSS default.
+    const overflowWrap = options?.overflowWrap ?? 'normal';
+    const analysis = analyzeText(text, getEngineProfile(), options?.whiteSpace, wordBreak);
+    return measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing, overflowWrap);`;
+
+const OVERFLOW_WRAP_DTS_ANCHOR = `export type PrepareOptions = {
+    whiteSpace?: WhiteSpaceMode;
+    wordBreak?: WordBreakMode;
+    letterSpacing?: number;
+};`;
+const OVERFLOW_WRAP_DTS_REPLACEMENT = `export type OverflowWrapMode = 'normal' | 'break-word' | 'anywhere';
+export type PrepareOptions = {
+    whiteSpace?: WhiteSpaceMode;
+    wordBreak?: WordBreakMode;
+    letterSpacing?: number;
+    /** CSS \`overflow-wrap\`. Default \`'normal'\` — an atomic word wider than
+     *  the line overflows instead of being sliced at grapheme boundaries.
+     *  \`'break-word'\` / \`'anywhere'\` restore upstream's unconditional
+     *  long-word grapheme fallback. */
+    overflowWrap?: OverflowWrapMode;
+};`;
+
+const OVERFLOW_WRAP_RICH_JS_ANCHOR =
+  '        const prepared = prepareWithSegments(trimmedText, item.font, letterSpacing === 0 ? undefined : { letterSpacing });';
+const OVERFLOW_WRAP_RICH_JS_REPLACEMENT = `        // vendored: forward overflowWrap (upstream rich-inline.js never read
+        // it — see VENDOR.json) so a per-item \`overflow-wrap: normal\` reaches
+        // the same word-break fallback gate as the plain prepare() path.
+        const prepareOptions = letterSpacing === 0 && item.overflowWrap === undefined
+            ? undefined
+            : { letterSpacing, overflowWrap: item.overflowWrap };
+        const prepared = prepareWithSegments(trimmedText, item.font, prepareOptions);`;
+
+const OVERFLOW_WRAP_RICH_DTS_ANCHOR = `import { type LayoutCursor } from './layout.js';
+declare const preparedRichInlineBrand: unique symbol;
+export type RichInlineItem = {
+    text: string;
+    font: string;
+    letterSpacing?: number;
+    break?: 'normal' | 'never';
+    extraWidth?: number;
+};`;
+const OVERFLOW_WRAP_RICH_DTS_REPLACEMENT = `import { type LayoutCursor, type OverflowWrapMode } from './layout.js';
+declare const preparedRichInlineBrand: unique symbol;
+export type RichInlineItem = {
+    text: string;
+    font: string;
+    letterSpacing?: number;
+    break?: 'normal' | 'never';
+    extraWidth?: number;
+    /** CSS \`overflow-wrap\` for this item's own text. Default \`'normal'\`. */
+    overflowWrap?: OverflowWrapMode;
+};`;
+
 function fail(message: string): never {
   console.error(`\n  vendor-pretext: ${message}\n`);
   process.exit(1);
@@ -174,6 +263,41 @@ async function main(): Promise<void> {
   );
   await writeFile(dtsPath, dts);
 
+  // ── the second rewrite: overflow-wrap: normal ─────────────────────────
+  const layoutJsPath = join(OUT, 'layout.js');
+  let layoutJs = await readFile(layoutJsPath, 'utf8');
+  layoutJs = replaceOnce(layoutJs, OVERFLOW_WRAP_JS_SIGNATURE_ANCHOR, OVERFLOW_WRAP_JS_SIGNATURE_REPLACEMENT, 'layout.js (measureAnalysis signature)');
+  layoutJs = replaceOnce(layoutJs, OVERFLOW_WRAP_JS_CALLSITE_ANCHOR, OVERFLOW_WRAP_JS_CALLSITE_REPLACEMENT, 'layout.js (allowOverflowBreaks call site)');
+  layoutJs = replaceOnce(layoutJs, OVERFLOW_WRAP_JS_PREPARE_ANCHOR, OVERFLOW_WRAP_JS_PREPARE_REPLACEMENT, 'layout.js (prepareInternal)');
+  await writeFile(layoutJsPath, layoutJs);
+
+  const layoutDtsPath = join(OUT, 'layout.d.ts');
+  const layoutDts = replaceOnce(
+    await readFile(layoutDtsPath, 'utf8'),
+    OVERFLOW_WRAP_DTS_ANCHOR,
+    OVERFLOW_WRAP_DTS_REPLACEMENT,
+    'layout.d.ts (PrepareOptions)',
+  );
+  await writeFile(layoutDtsPath, layoutDts);
+
+  const richInlineJsPath = join(OUT, 'rich-inline.js');
+  const richInlineJs = replaceOnce(
+    await readFile(richInlineJsPath, 'utf8'),
+    OVERFLOW_WRAP_RICH_JS_ANCHOR,
+    OVERFLOW_WRAP_RICH_JS_REPLACEMENT,
+    'rich-inline.js (prepareWithSegments call)',
+  );
+  await writeFile(richInlineJsPath, richInlineJs);
+
+  const richInlineDtsPath = join(OUT, 'rich-inline.d.ts');
+  const richInlineDts = replaceOnce(
+    await readFile(richInlineDtsPath, 'utf8'),
+    OVERFLOW_WRAP_RICH_DTS_ANCHOR,
+    OVERFLOW_WRAP_RICH_DTS_REPLACEMENT,
+    'rich-inline.d.ts (RichInlineItem)',
+  );
+  await writeFile(richInlineDtsPath, richInlineDts);
+
   // ── provenance stamp ─────────────────────────────────────────────────
   const hashes: Record<string, string> = {};
   for (const rel of files.sort()) {
@@ -191,6 +315,10 @@ async function main(): Promise<void> {
         patched: {
           'measurement.js': 'getMeasureContext() delegates to ../../measure/FontkitMeasureContext.ts',
           'measurement.d.ts': 'getMeasureContext() return type widened to the structural shape',
+          'layout.js': "adds an `overflowWrap` option (default 'normal', the real CSS default) gating the word-break grapheme fallback — upstream hardcodes 'overflow-wrap: break-word' unconditionally",
+          'layout.d.ts': 'PrepareOptions gets overflowWrap?: OverflowWrapMode',
+          'rich-inline.js': 'forwards RichInlineItem.overflowWrap into prepareWithSegments()',
+          'rich-inline.d.ts': 'RichInlineItem gets overflowWrap?: OverflowWrapMode',
         },
         files: hashes,
       },

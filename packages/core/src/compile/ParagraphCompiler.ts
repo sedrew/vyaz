@@ -56,6 +56,13 @@ export interface PreparedRichInlineItem {
   letterSpacing?: number;
   extraWidth?: number;         // padding, border for inline-box
   break?: 'normal' | 'never';  // for atomic chips
+  /**
+   * CSS `overflow-wrap` for this run's text — from the paragraph's
+   * `overflowWrap` style. `'normal'` (the default) means a word wider than
+   * the available width overflows the line instead of being force-split at
+   * grapheme boundaries.
+   */
+  overflowWrap?: 'normal' | 'break-word' | 'anywhere';
   /** Original text before text-transform (if transform was applied). Used for copy-paste / round-trip. */
   originalText?: string;
   metadata: {
@@ -165,6 +172,7 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
       text,
       font: makeFontToken(run, effectiveFontSize),
       letterSpacing: run.letterSpacing,
+      overflowWrap: paragraph.style.overflowWrap,
       // Save original text if transform was applied (for copy-paste / round-trip)
       ...(text !== rawText ? { originalText: rawText } : {}),
       metadata: {

@@ -4,7 +4,11 @@
   "generatedFrom": "dist/",
   "patched": {
     "measurement.js": "getMeasureContext() delegates to ../../measure/FontkitMeasureContext.ts; getEmojiCorrection() hard-returns 0 (fontkit backend has no canvas emoji inflation)",
-    "measurement.d.ts": "getMeasureContext() return type widened to the structural shape"
+    "measurement.d.ts": "getMeasureContext() return type widened to the structural shape",
+    "layout.js": "adds an `overflowWrap` option (default 'normal', the real CSS default) gating the word-break grapheme fallback — upstream hardcodes 'overflow-wrap: break-word' unconditionally",
+    "layout.d.ts": "PrepareOptions gets overflowWrap?: OverflowWrapMode",
+    "rich-inline.js": "forwards RichInlineItem.overflowWrap into prepareWithSegments()",
+    "rich-inline.d.ts": "RichInlineItem gets overflowWrap?: OverflowWrapMode"
   },
   "files": {
     "LICENSE": "e9355cb16457e81a",
@@ -14,15 +18,15 @@
     "bidi.js": "e5fd7375f9622ede",
     "generated/bidi-data.d.ts": "ba7a03abff51cabd",
     "generated/bidi-data.js": "6785c8f40c107a6d",
-    "layout.d.ts": "6c7a80bbf4aeee31",
-    "layout.js": "e4ba4c592ba903fa",
+    "layout.d.ts": "e406cdf26b0f78ae",
+    "layout.js": "a75633fa34d19552",
     "line-break.d.ts": "c20f5b71b3651c2e",
     "line-break.js": "93f1e3c6eccd318a",
     "line-text.d.ts": "5220afe62ec5de57",
     "line-text.js": "71fb4fa85d06a0ec",
     "measurement.d.ts": "76103f7f44fbbceb",
     "measurement.js": "a4d492763dd94e90",
-    "rich-inline.d.ts": "5f1bbf2b388fe1fe",
-    "rich-inline.js": "fc293676249c174e"
+    "rich-inline.d.ts": "06da58cbb420f459",
+    "rich-inline.js": "3e6dbe9cb60e0a78"
   }
 }

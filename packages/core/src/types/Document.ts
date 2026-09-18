@@ -96,8 +96,13 @@ export type LineBreak = 'auto' | 'loose' | 'normal' | 'strict' | 'anywhere';
 /**
  * Overflow wrap behavior (whether long words can break).
  *
+ * `'normal'` (the default) matches real browsers and PowerPoint: a word
+ * wider than the available width overflows the line rather than being
+ * split. `'break-word'` / `'anywhere'` force a break at grapheme boundaries
+ * when a word doesn't fit — `'anywhere'` also lets that break point count
+ * toward min-content sizing (both mapped to the same fallback here).
+ *
  * @see {@link https://www.w3.org/TR/css-text-3/#overflow-wrap-property | CSS Text: overflow-wrap}
- * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
  */
 export type OverflowWrap = 'normal' | 'break-word' | 'anywhere';
 
@@ -498,8 +503,8 @@ export interface ParagraphStyle {
    */
   lineBreak?: LineBreak;
   /**
-   * Overflow-wrap / word-wrap behaviour.
-   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
+   * Overflow-wrap / word-wrap behaviour. See {@link OverflowWrap}. Defaults
+   * to `'normal'` when unset.
    */
   overflowWrap?: OverflowWrap;
   /**

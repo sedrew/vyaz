@@ -1,4 +1,4 @@
-import { type LayoutCursor } from './layout.js';
+import { type LayoutCursor, type OverflowWrapMode } from './layout.js';
 declare const preparedRichInlineBrand: unique symbol;
 export type RichInlineItem = {
     text: string;
@@ -6,6 +6,8 @@ export type RichInlineItem = {
     letterSpacing?: number;
     break?: 'normal' | 'never';
     extraWidth?: number;
+    /** CSS `overflow-wrap` for this item's own text. Default `'normal'`. */
+    overflowWrap?: OverflowWrapMode;
 };
 export type PreparedRichInline = {
     readonly [preparedRichInlineBrand]: true;
