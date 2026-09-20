@@ -88,8 +88,9 @@ one thing you have to get right (fonts go to the engine *and* `document.fonts`).
 - **Line breaking** — soft & hard breaks, `white-space` (`normal` `nowrap` `pre` `pre-line` `pre-wrap`)
 - **Lists** — bullet & numbered, nesting, `outside` / `inside` markers, custom bullet char, roman/alpha formats
 - **Multi-column** — `balance` (default) or `auto` fill
-- **Autofit** — one proportional scale so the content fits the frame (`{ autofit: … }`)
+- **Autofit** — one proportional scale so the content fits the frame (`{ autofit: … }`), searched on PowerPoint's 1% `fontScale` grid and reported as the scale the layout was measured at
 - **Metric modes** — `browser` (CSS/Chrome line box) and `office` (PowerPoint / DrawingML) as a per-layout option
+- **PowerPoint text metrics** (`mode: 'office'`) — 1.20 line box, glyph advances on PowerPoint's 1/8pt grid, kerning from 12pt on fonts with a `kern` table (Roboto / Inter never), and `textBox.width` carries 1 pt of padding so a shape sized to it doesn't wrap the last word; opt-outs `advanceQuantum`, `shaping`, `kernMinSize`, `textBoxPadding`
 - **Font fallback** — `fontFamily: string | string[]` with `onMissingFont: 'throw' | 'substitute'`
 - **Shaping** — opt-in `{ shaping: true }` measures through fontkit's OpenType layout (GPOS kerning + GSUB ligatures); matches Chrome to a fraction of a pixel on Latin / Cyrillic / Greek
 - **SVG output** — four presets: `flat`, `browser`, `preserve`, `glyph`; CSS or XML style attributes; debug overlays

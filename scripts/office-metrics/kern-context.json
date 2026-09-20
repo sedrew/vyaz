@@ -1,0 +1,269 @@
+{
+  "unit": "pt",
+  "cases": [
+    {
+      "id": "A36_ox_yo",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "ox yo",
+      "widthPt": 86.35,
+      "vyazWidthPt": 86.29,
+      "kernedWidthPt": 86.29,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "A36_Tayo",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "Tayo",
+      "widthPt": 76.36,
+      "vyazWidthPt": 76.3,
+      "kernedWidthPt": 76.3,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "A36_Ta_yo",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "Ta yo",
+      "widthPt": 86.36,
+      "vyazWidthPt": 86.3,
+      "kernedWidthPt": 86.3,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "A36_Tax_yo",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "Tax yo",
+      "widthPt": 104.36,
+      "vyazWidthPt": 104.3,
+      "kernedWidthPt": 104.3,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "A36_yo_Ta",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "yo Ta",
+      "widthPt": 86.36,
+      "vyazWidthPt": 86.3,
+      "kernedWidthPt": 86.3,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "A36_AV_yo",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "AV yo",
+      "widthPt": 93.68,
+      "vyazWidthPt": 93.62,
+      "kernedWidthPt": 93.62,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "A36_AVo_yo",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "AVo yo",
+      "widthPt": 111.69,
+      "vyazWidthPt": 111.63,
+      "kernedWidthPt": 111.63,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "A36_yo_AV",
+      "font": "Arial",
+      "sizePt": 36,
+      "text": "yo AV",
+      "widthPt": 93.68,
+      "vyazWidthPt": 93.62,
+      "kernedWidthPt": 93.62,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_ox_yo",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "ox yo",
+      "widthPt": 34.6,
+      "vyazWidthPt": 34.54,
+      "kernedWidthPt": 34.54,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_Tayo",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "Tayo",
+      "widthPt": 29.74,
+      "vyazWidthPt": 29.68,
+      "kernedWidthPt": 29.68,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_Ta_yo",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "Ta yo",
+      "widthPt": 33.66,
+      "vyazWidthPt": 33.6,
+      "kernedWidthPt": 33.6,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_Tax_yo",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "Tax yo",
+      "widthPt": 40.39,
+      "vyazWidthPt": 40.33,
+      "kernedWidthPt": 40.33,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_yo_Ta",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "yo Ta",
+      "widthPt": 33.66,
+      "vyazWidthPt": 33.6,
+      "kernedWidthPt": 33.6,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_AV_yo",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "AV yo",
+      "widthPt": 37.22,
+      "vyazWidthPt": 37.16,
+      "kernedWidthPt": 37.16,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_AVo_yo",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "AVo yo",
+      "widthPt": 45.05,
+      "vyazWidthPt": 44.99,
+      "kernedWidthPt": 44.99,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "C16_yo_AV",
+      "font": "Calibri",
+      "sizePt": 16,
+      "text": "yo AV",
+      "widthPt": 37.22,
+      "vyazWidthPt": 37.16,
+      "kernedWidthPt": 37.16,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_ox_yo",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "ox yo",
+      "widthPt": 36.35,
+      "vyazWidthPt": 36.29,
+      "kernedWidthPt": 36.29,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_Tayo",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "Tayo",
+      "widthPt": 32.11,
+      "vyazWidthPt": 32.05,
+      "kernedWidthPt": 32.05,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_Ta_yo",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "Ta yo",
+      "widthPt": 36.11,
+      "vyazWidthPt": 36.05,
+      "kernedWidthPt": 36.05,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_Tax_yo",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "Tax yo",
+      "widthPt": 44.11,
+      "vyazWidthPt": 44.05,
+      "kernedWidthPt": 44.05,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_yo_Ta",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "yo Ta",
+      "widthPt": 36.11,
+      "vyazWidthPt": 36.05,
+      "kernedWidthPt": 36.05,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_AV_yo",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "AV yo",
+      "widthPt": 41.29,
+      "vyazWidthPt": 41.23,
+      "kernedWidthPt": 41.23,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_AVo_yo",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "AVo yo",
+      "widthPt": 47.23,
+      "vyazWidthPt": 47.17,
+      "kernedWidthPt": 47.17,
+      "expectedLines": 1,
+      "vyazLines": 1
+    },
+    {
+      "id": "TNR16_yo_AV",
+      "font": "Times New Roman",
+      "sizePt": 16,
+      "text": "yo AV",
+      "widthPt": 41.29,
+      "vyazWidthPt": 41.23,
+      "kernedWidthPt": 41.23,
+      "expectedLines": 1,
+      "vyazLines": 1
+    }
+  ]
+}

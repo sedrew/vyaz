@@ -15,106 +15,106 @@
       "vyaz": {
         "line_count": 14,
         "content_height": 302.4,
-        "textbox_height": 301.85,
-        "slack": 0.55,
+        "textbox_height": 302.3,
+        "slack": 0.1,
         "lines": [
           {
             "text": "The quick brown ",
             "y": 0,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 16.2
+            "baseline_in_box": 16.65,
+            "baseline_abs": 16.65
           },
           {
             "text": "fox jumps over ",
             "y": 21.6,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 37.8
+            "baseline_in_box": 16.65,
+            "baseline_abs": 38.25
           },
           {
             "text": "the lazy dog ",
             "y": 43.2,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 59.4
+            "baseline_in_box": 16.65,
+            "baseline_abs": 59.85
           },
           {
             "text": "while a ",
             "y": 64.8,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 81
+            "baseline_in_box": 16.65,
+            "baseline_abs": 81.45
           },
           {
             "text": "TextFrame ",
             "y": 86.4,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 102.6
+            "baseline_in_box": 16.65,
+            "baseline_abs": 103.05
           },
           {
             "text": "measures every ",
             "y": 108,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 124.2
+            "baseline_in_box": 16.65,
+            "baseline_abs": 124.65
           },
           {
             "text": "line box and ",
             "y": 129.6,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 145.8
+            "baseline_in_box": 16.65,
+            "baseline_abs": 146.25
           },
           {
             "text": "decides where ",
             "y": 151.2,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 167.4
+            "baseline_in_box": 16.65,
+            "baseline_abs": 167.85
           },
           {
             "text": "each word wraps ",
             "y": 172.8,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 189
+            "baseline_in_box": 16.65,
+            "baseline_abs": 189.45
           },
           {
             "text": "inside the given ",
             "y": 194.4,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 210.6
+            "baseline_in_box": 16.65,
+            "baseline_abs": 211.05
           },
           {
             "text": "rectangle, with ",
             "y": 216,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 232.2
+            "baseline_in_box": 16.65,
+            "baseline_abs": 232.65
           },
           {
             "text": "no autofit ",
             "y": 237.6,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 253.8
+            "baseline_in_box": 16.65,
+            "baseline_abs": 254.25
           },
           {
             "text": "shrinking the text ",
             "y": 259.2,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 275.4
+            "baseline_in_box": 16.65,
+            "baseline_abs": 275.85
           },
           {
             "text": "to make it fit.",
             "y": 280.8,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 297
+            "baseline_in_box": 16.65,
+            "baseline_abs": 297.45
           }
         ]
       }
@@ -247,148 +247,148 @@
       "vyaz": {
         "line_count": 20,
         "content_height": 576,
-        "textbox_height": 575.27,
-        "slack": 0.73,
+        "textbox_height": 575.87,
+        "slack": 0.13,
         "lines": [
           {
             "text": "The quick ",
             "y": 0,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 21.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 22.2
           },
           {
             "text": "brown fox ",
             "y": 28.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 50.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 51
           },
           {
             "text": "jumps over ",
             "y": 57.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 79.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 79.8
           },
           {
             "text": "the lazy dog ",
             "y": 86.4,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 108
+            "baseline_in_box": 22.2,
+            "baseline_abs": 108.6
           },
           {
             "text": "while a ",
             "y": 115.2,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 136.8
+            "baseline_in_box": 22.2,
+            "baseline_abs": 137.4
           },
           {
             "text": "TextFrame ",
             "y": 144,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 165.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 166.2
           },
           {
             "text": "measures ",
             "y": 172.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 194.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 195
           },
           {
             "text": "every line ",
             "y": 201.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 223.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 223.8
           },
           {
             "text": "box and ",
             "y": 230.4,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 252
+            "baseline_in_box": 22.2,
+            "baseline_abs": 252.6
           },
           {
             "text": "decides ",
             "y": 259.2,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 280.8
+            "baseline_in_box": 22.2,
+            "baseline_abs": 281.4
           },
           {
             "text": "where each ",
             "y": 288,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 309.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 310.2
           },
           {
             "text": "word wraps ",
             "y": 316.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 338.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 339
           },
           {
             "text": "inside the ",
             "y": 345.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 367.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 367.8
           },
           {
             "text": "given ",
             "y": 374.4,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 396
+            "baseline_in_box": 22.2,
+            "baseline_abs": 396.6
           },
           {
             "text": "rectangle, ",
             "y": 403.2,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 424.8
+            "baseline_in_box": 22.2,
+            "baseline_abs": 425.4
           },
           {
             "text": "with no ",
             "y": 432,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 453.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 454.2
           },
           {
             "text": "autofit ",
             "y": 460.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 482.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 483
           },
           {
             "text": "shrinking the ",
             "y": 489.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 511.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 511.8
           },
           {
             "text": "text to make ",
             "y": 518.4,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 540
+            "baseline_in_box": 22.2,
+            "baseline_abs": 540.6
           },
           {
             "text": "it fit.",
             "y": 547.2,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 568.8
+            "baseline_in_box": 22.2,
+            "baseline_abs": 569.4
           }
         ]
       }
@@ -405,71 +405,71 @@
       "vyaz": {
         "line_count": 9,
         "content_height": 194.4,
-        "textbox_height": 193.85,
-        "slack": 0.55,
+        "textbox_height": 194.3,
+        "slack": 0.1,
         "lines": [
           {
             "text": "The quick brown fox ",
             "y": 0,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 16.2
+            "baseline_in_box": 16.65,
+            "baseline_abs": 16.65
           },
           {
             "text": "jumps over the lazy dog ",
             "y": 21.6,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 37.8
+            "baseline_in_box": 16.65,
+            "baseline_abs": 38.25
           },
           {
             "text": "while a TextFrame ",
             "y": 43.2,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 59.4
+            "baseline_in_box": 16.65,
+            "baseline_abs": 59.85
           },
           {
             "text": "measures every line box ",
             "y": 64.8,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 81
+            "baseline_in_box": 16.65,
+            "baseline_abs": 81.45
           },
           {
             "text": "and decides where each ",
             "y": 86.4,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 102.6
+            "baseline_in_box": 16.65,
+            "baseline_abs": 103.05
           },
           {
             "text": "word wraps inside the ",
             "y": 108,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 124.2
+            "baseline_in_box": 16.65,
+            "baseline_abs": 124.65
           },
           {
             "text": "given rectangle, with no ",
             "y": 129.6,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 145.8
+            "baseline_in_box": 16.65,
+            "baseline_abs": 146.25
           },
           {
             "text": "autofit shrinking the text ",
             "y": 151.2,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 167.4
+            "baseline_in_box": 16.65,
+            "baseline_abs": 167.85
           },
           {
             "text": "to make it fit.",
             "y": 172.8,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 189
+            "baseline_in_box": 16.65,
+            "baseline_abs": 189.45
           }
         ]
       }
@@ -567,99 +567,99 @@
       "vyaz": {
         "line_count": 13,
         "content_height": 374.4,
-        "textbox_height": 373.67,
-        "slack": 0.73,
+        "textbox_height": 374.27,
+        "slack": 0.13,
         "lines": [
           {
             "text": "The quick brown ",
             "y": 0,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 21.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 22.2
           },
           {
             "text": "fox jumps over the ",
             "y": 28.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 50.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 51
           },
           {
             "text": "lazy dog while a ",
             "y": 57.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 79.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 79.8
           },
           {
             "text": "TextFrame ",
             "y": 86.4,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 108
+            "baseline_in_box": 22.2,
+            "baseline_abs": 108.6
           },
           {
             "text": "measures every ",
             "y": 115.2,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 136.8
+            "baseline_in_box": 22.2,
+            "baseline_abs": 137.4
           },
           {
             "text": "line box and ",
             "y": 144,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 165.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 166.2
           },
           {
             "text": "decides where ",
             "y": 172.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 194.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 195
           },
           {
             "text": "each word wraps ",
             "y": 201.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 223.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 223.8
           },
           {
             "text": "inside the given ",
             "y": 230.4,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 252
+            "baseline_in_box": 22.2,
+            "baseline_abs": 252.6
           },
           {
             "text": "rectangle, with no ",
             "y": 259.2,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 280.8
+            "baseline_in_box": 22.2,
+            "baseline_abs": 281.4
           },
           {
             "text": "autofit shrinking ",
             "y": 288,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 309.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 310.2
           },
           {
             "text": "the text to make it ",
             "y": 316.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 338.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 339
           },
           {
             "text": "fit.",
             "y": 345.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 367.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 367.8
           }
         ]
       }
@@ -676,50 +676,50 @@
       "vyaz": {
         "line_count": 6,
         "content_height": 129.6,
-        "textbox_height": 129.05,
-        "slack": 0.55,
+        "textbox_height": 129.5,
+        "slack": 0.1,
         "lines": [
           {
             "text": "The quick brown fox jumps over the ",
             "y": 0,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 16.2
+            "baseline_in_box": 16.65,
+            "baseline_abs": 16.65
           },
           {
             "text": "lazy dog while a TextFrame ",
             "y": 21.6,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 37.8
+            "baseline_in_box": 16.65,
+            "baseline_abs": 38.25
           },
           {
             "text": "measures every line box and decides ",
             "y": 43.2,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 59.4
+            "baseline_in_box": 16.65,
+            "baseline_abs": 59.85
           },
           {
             "text": "where each word wraps inside the ",
             "y": 64.8,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 81
+            "baseline_in_box": 16.65,
+            "baseline_abs": 81.45
           },
           {
             "text": "given rectangle, with no autofit ",
             "y": 86.4,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 102.6
+            "baseline_in_box": 16.65,
+            "baseline_abs": 103.05
           },
           {
             "text": "shrinking the text to make it fit.",
             "y": 108,
             "height": 21.6,
-            "baseline_in_box": 16.2,
-            "baseline_abs": 124.2
+            "baseline_in_box": 16.65,
+            "baseline_abs": 124.65
           }
         ]
       }
@@ -796,64 +796,64 @@
       "vyaz": {
         "line_count": 8,
         "content_height": 230.4,
-        "textbox_height": 229.67,
-        "slack": 0.73,
+        "textbox_height": 230.27,
+        "slack": 0.13,
         "lines": [
           {
             "text": "The quick brown fox jumps ",
             "y": 0,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 21.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 22.2
           },
           {
             "text": "over the lazy dog while a ",
             "y": 28.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 50.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 51
           },
           {
             "text": "TextFrame measures every ",
             "y": 57.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 79.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 79.8
           },
           {
             "text": "line box and decides where ",
             "y": 86.4,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 108
+            "baseline_in_box": 22.2,
+            "baseline_abs": 108.6
           },
           {
             "text": "each word wraps inside the ",
             "y": 115.2,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 136.8
+            "baseline_in_box": 22.2,
+            "baseline_abs": 137.4
           },
           {
             "text": "given rectangle, with no ",
             "y": 144,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 165.6
+            "baseline_in_box": 22.2,
+            "baseline_abs": 166.2
           },
           {
             "text": "autofit shrinking the text to ",
             "y": 172.8,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 194.4
+            "baseline_in_box": 22.2,
+            "baseline_abs": 195
           },
           {
             "text": "make it fit.",
             "y": 201.6,
             "height": 28.8,
-            "baseline_in_box": 21.6,
-            "baseline_abs": 223.2
+            "baseline_in_box": 22.2,
+            "baseline_abs": 223.8
           }
         ]
       }
@@ -870,106 +870,106 @@
       "vyaz": {
         "line_count": 14,
         "content_height": 302.4,
-        "textbox_height": 301.67,
-        "slack": 0.73,
+        "textbox_height": 302.04,
+        "slack": 0.36,
         "lines": [
           {
             "text": "The quick brown ",
             "y": 0,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 16.76
+            "baseline_in_box": 17.13,
+            "baseline_abs": 17.13
           },
           {
             "text": "fox jumps over ",
             "y": 21.6,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 38.36
+            "baseline_in_box": 17.13,
+            "baseline_abs": 38.73
           },
           {
             "text": "the lazy dog ",
             "y": 43.2,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 59.96
+            "baseline_in_box": 17.13,
+            "baseline_abs": 60.33
           },
           {
             "text": "while a ",
             "y": 64.8,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 81.56
+            "baseline_in_box": 17.13,
+            "baseline_abs": 81.93
           },
           {
             "text": "TextFrame ",
             "y": 86.4,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 103.16
+            "baseline_in_box": 17.13,
+            "baseline_abs": 103.53
           },
           {
             "text": "measures every ",
             "y": 108,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 124.76
+            "baseline_in_box": 17.13,
+            "baseline_abs": 125.13
           },
           {
             "text": "line box and ",
             "y": 129.6,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 146.36
+            "baseline_in_box": 17.13,
+            "baseline_abs": 146.73
           },
           {
             "text": "decides where ",
             "y": 151.2,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 167.96
+            "baseline_in_box": 17.13,
+            "baseline_abs": 168.33
           },
           {
             "text": "each word wraps ",
             "y": 172.8,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 189.56
+            "baseline_in_box": 17.13,
+            "baseline_abs": 189.93
           },
           {
             "text": "inside the given ",
             "y": 194.4,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 211.16
+            "baseline_in_box": 17.13,
+            "baseline_abs": 211.53
           },
           {
             "text": "rectangle, with ",
             "y": 216,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 232.76
+            "baseline_in_box": 17.13,
+            "baseline_abs": 233.13
           },
           {
             "text": "no autofit ",
             "y": 237.6,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 254.36
+            "baseline_in_box": 17.13,
+            "baseline_abs": 254.73
           },
           {
             "text": "shrinking the text ",
             "y": 259.2,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 275.96
+            "baseline_in_box": 17.13,
+            "baseline_abs": 276.33
           },
           {
             "text": "to make it fit.",
             "y": 280.8,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 297.56
+            "baseline_in_box": 17.13,
+            "baseline_abs": 297.93
           }
         ]
       }
@@ -1102,148 +1102,148 @@
       "vyaz": {
         "line_count": 20,
         "content_height": 576,
-        "textbox_height": 575.02,
-        "slack": 0.98,
+        "textbox_height": 575.52,
+        "slack": 0.48,
         "lines": [
           {
             "text": "The quick ",
             "y": 0,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 22.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 22.84
           },
           {
             "text": "brown fox ",
             "y": 28.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 51.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 51.64
           },
           {
             "text": "jumps over ",
             "y": 57.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 79.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 80.44
           },
           {
             "text": "the lazy dog ",
             "y": 86.4,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 108.74
+            "baseline_in_box": 22.84,
+            "baseline_abs": 109.24
           },
           {
             "text": "while a ",
             "y": 115.2,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 137.54
+            "baseline_in_box": 22.84,
+            "baseline_abs": 138.04
           },
           {
             "text": "TextFrame ",
             "y": 144,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 166.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 166.84
           },
           {
             "text": "measures ",
             "y": 172.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 195.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 195.64
           },
           {
             "text": "every line ",
             "y": 201.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 223.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 224.44
           },
           {
             "text": "box and ",
             "y": 230.4,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 252.74
+            "baseline_in_box": 22.84,
+            "baseline_abs": 253.24
           },
           {
             "text": "decides ",
             "y": 259.2,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 281.54
+            "baseline_in_box": 22.84,
+            "baseline_abs": 282.04
           },
           {
             "text": "where each ",
             "y": 288,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 310.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 310.84
           },
           {
             "text": "word wraps ",
             "y": 316.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 339.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 339.64
           },
           {
             "text": "inside the ",
             "y": 345.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 367.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 368.44
           },
           {
             "text": "given ",
             "y": 374.4,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 396.74
+            "baseline_in_box": 22.84,
+            "baseline_abs": 397.24
           },
           {
             "text": "rectangle, ",
             "y": 403.2,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 425.54
+            "baseline_in_box": 22.84,
+            "baseline_abs": 426.04
           },
           {
             "text": "with no ",
             "y": 432,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 454.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 454.84
           },
           {
             "text": "autofit ",
             "y": 460.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 483.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 483.64
           },
           {
             "text": "shrinking the ",
             "y": 489.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 511.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 512.44
           },
           {
             "text": "text to make ",
             "y": 518.4,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 540.74
+            "baseline_in_box": 22.84,
+            "baseline_abs": 541.24
           },
           {
             "text": "it fit.",
             "y": 547.2,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 569.54
+            "baseline_in_box": 22.84,
+            "baseline_abs": 570.04
           }
         ]
       }
@@ -1260,71 +1260,71 @@
       "vyaz": {
         "line_count": 9,
         "content_height": 194.4,
-        "textbox_height": 193.67,
-        "slack": 0.73,
+        "textbox_height": 194.04,
+        "slack": 0.36,
         "lines": [
           {
             "text": "The quick brown fox ",
             "y": 0,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 16.76
+            "baseline_in_box": 17.13,
+            "baseline_abs": 17.13
           },
           {
             "text": "jumps over the lazy dog ",
             "y": 21.6,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 38.36
+            "baseline_in_box": 17.13,
+            "baseline_abs": 38.73
           },
           {
             "text": "while a TextFrame ",
             "y": 43.2,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 59.96
+            "baseline_in_box": 17.13,
+            "baseline_abs": 60.33
           },
           {
             "text": "measures every line box ",
             "y": 64.8,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 81.56
+            "baseline_in_box": 17.13,
+            "baseline_abs": 81.93
           },
           {
             "text": "and decides where each ",
             "y": 86.4,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 103.16
+            "baseline_in_box": 17.13,
+            "baseline_abs": 103.53
           },
           {
             "text": "word wraps inside the ",
             "y": 108,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 124.76
+            "baseline_in_box": 17.13,
+            "baseline_abs": 125.13
           },
           {
             "text": "given rectangle, with no ",
             "y": 129.6,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 146.36
+            "baseline_in_box": 17.13,
+            "baseline_abs": 146.73
           },
           {
             "text": "autofit shrinking the text ",
             "y": 151.2,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 167.96
+            "baseline_in_box": 17.13,
+            "baseline_abs": 168.33
           },
           {
             "text": "to make it fit.",
             "y": 172.8,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 189.56
+            "baseline_in_box": 17.13,
+            "baseline_abs": 189.93
           }
         ]
       }
@@ -1422,99 +1422,99 @@
       "vyaz": {
         "line_count": 13,
         "content_height": 374.4,
-        "textbox_height": 373.42,
-        "slack": 0.98,
+        "textbox_height": 373.92,
+        "slack": 0.48,
         "lines": [
           {
             "text": "The quick brown ",
             "y": 0,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 22.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 22.84
           },
           {
             "text": "fox jumps over the ",
             "y": 28.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 51.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 51.64
           },
           {
             "text": "lazy dog while a ",
             "y": 57.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 79.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 80.44
           },
           {
             "text": "TextFrame ",
             "y": 86.4,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 108.74
+            "baseline_in_box": 22.84,
+            "baseline_abs": 109.24
           },
           {
             "text": "measures every ",
             "y": 115.2,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 137.54
+            "baseline_in_box": 22.84,
+            "baseline_abs": 138.04
           },
           {
             "text": "line box and ",
             "y": 144,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 166.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 166.84
           },
           {
             "text": "decides where ",
             "y": 172.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 195.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 195.64
           },
           {
             "text": "each word wraps ",
             "y": 201.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 223.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 224.44
           },
           {
             "text": "inside the given ",
             "y": 230.4,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 252.74
+            "baseline_in_box": 22.84,
+            "baseline_abs": 253.24
           },
           {
             "text": "rectangle, with no ",
             "y": 259.2,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 281.54
+            "baseline_in_box": 22.84,
+            "baseline_abs": 282.04
           },
           {
             "text": "autofit shrinking ",
             "y": 288,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 310.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 310.84
           },
           {
             "text": "the text to make it ",
             "y": 316.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 339.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 339.64
           },
           {
             "text": "fit.",
             "y": 345.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 367.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 368.44
           }
         ]
       }
@@ -1531,50 +1531,50 @@
       "vyaz": {
         "line_count": 6,
         "content_height": 129.6,
-        "textbox_height": 128.87,
-        "slack": 0.73,
+        "textbox_height": 129.24,
+        "slack": 0.36,
         "lines": [
           {
             "text": "The quick brown fox jumps over the ",
             "y": 0,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 16.76
+            "baseline_in_box": 17.13,
+            "baseline_abs": 17.13
           },
           {
             "text": "lazy dog while a TextFrame ",
             "y": 21.6,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 38.36
+            "baseline_in_box": 17.13,
+            "baseline_abs": 38.73
           },
           {
             "text": "measures every line box and decides ",
             "y": 43.2,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 59.96
+            "baseline_in_box": 17.13,
+            "baseline_abs": 60.33
           },
           {
             "text": "where each word wraps inside the ",
             "y": 64.8,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 81.56
+            "baseline_in_box": 17.13,
+            "baseline_abs": 81.93
           },
           {
             "text": "given rectangle, with no autofit ",
             "y": 86.4,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 103.16
+            "baseline_in_box": 17.13,
+            "baseline_abs": 103.53
           },
           {
             "text": "shrinking the text to make it fit.",
             "y": 108,
             "height": 21.6,
-            "baseline_in_box": 16.76,
-            "baseline_abs": 124.76
+            "baseline_in_box": 17.13,
+            "baseline_abs": 125.13
           }
         ]
       }
@@ -1651,64 +1651,64 @@
       "vyaz": {
         "line_count": 8,
         "content_height": 230.4,
-        "textbox_height": 229.42,
-        "slack": 0.98,
+        "textbox_height": 229.92,
+        "slack": 0.48,
         "lines": [
           {
             "text": "The quick brown fox jumps ",
             "y": 0,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 22.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 22.84
           },
           {
             "text": "over the lazy dog while a ",
             "y": 28.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 51.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 51.64
           },
           {
             "text": "TextFrame measures every ",
             "y": 57.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 79.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 80.44
           },
           {
             "text": "line box and decides where ",
             "y": 86.4,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 108.74
+            "baseline_in_box": 22.84,
+            "baseline_abs": 109.24
           },
           {
             "text": "each word wraps inside the ",
             "y": 115.2,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 137.54
+            "baseline_in_box": 22.84,
+            "baseline_abs": 138.04
           },
           {
             "text": "given rectangle, with no ",
             "y": 144,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 166.34
+            "baseline_in_box": 22.84,
+            "baseline_abs": 166.84
           },
           {
             "text": "autofit shrinking the text to ",
             "y": 172.8,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 195.14
+            "baseline_in_box": 22.84,
+            "baseline_abs": 195.64
           },
           {
             "text": "make it fit.",
             "y": 201.6,
             "height": 28.8,
-            "baseline_in_box": 22.34,
-            "baseline_abs": 223.94
+            "baseline_in_box": 22.84,
+            "baseline_abs": 224.44
           }
         ]
       }

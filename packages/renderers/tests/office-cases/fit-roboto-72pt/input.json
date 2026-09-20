@@ -1,0 +1,42 @@
+{
+  "_comment": "office fit box, Roboto 72pt \"To Ta\". PowerPoint measured every glyph of this run: T 43.000, o 41.125, space 17.875, T 43.000, a 39.125 = 184.125pt (1/8pt grid, no kerning even though the font kerns To / Ta). 184.42 = vyaz textBox.width (184.13 + 0.2835 padding): ONE line.",
+  "frame": {
+    "wrap": true,
+    "width": 184.42,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "To Ta",
+            "fontFamily": "Roboto",
+            "fontSize": 72
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

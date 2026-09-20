@@ -38,15 +38,16 @@ function paraWith(style: Partial<ParagraphStyle>, text: string): Paragraph {
 
 describe('overflowWrap: normal (default) — atomic word never breaks mid-word', () => {
   test('"Hi" at an intrinsic-width probe (width: 1e-3) stays one line at its natural width', () => {
-    // Exactly the ReportOne min-content probe from the bug report.
+    // An intrinsic-width (min-content) probe: a near-zero width, as a layout engine asks for it.
     const res = layoutTextFrame(
       { width: 1e-3, wrap: true, paragraphs: [paraWith({}, 'Hi')] },
-      { mode: 'office', onMissingFont: 'substitute' },
+      { mode: 'office', onMissingFont: 'substitute', textBoxPadding: 0 },
     );
     expect(res.lines.length).toBe(1);
     expect(lineTexts(res.lines)).toEqual(['Hi']);
-    // Natural width: sum of Arial 12pt advances for 'H' + 'i'.
-    expect(res.textBox.width).toBeCloseTo(11.33, 1);
+    // Natural width in office mode: Arial 12pt 'H' (8.664) and 'i' (2.664), each snapped to
+    // PowerPoint's 1/8pt glyph grid (8.625 + 2.625).
+    expect(res.textBox.width).toBeCloseTo(11.25, 2);
   });
 
   test('holds in both office and browser mode (not office-metrics-specific)', () => {

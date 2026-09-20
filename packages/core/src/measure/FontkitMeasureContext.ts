@@ -61,6 +61,26 @@ export interface MeasureProfile {
   engine: 'advance' | 'shape';
   /** `'shape'` only — OpenType feature overrides, e.g. `{ liga: false }`. */
   features?: Record<string, boolean>;
+  /**
+   * `'shape'` only — kerning applies just to text at `fontSize >= kernMinSize`
+   * (smaller text is shaped with `kern: false`). Mirrors DrawingML's
+   * `<a:rPr kern="1200">` "kerning for fonts N points and above", whose Office
+   * default is 12pt.
+   */
+  kernMinSize?: number;
+  /**
+   * `'shape'` only — kern only fonts that carry a classic `kern` table. PowerPoint kerns
+   * Times New Roman / Arial / Calibri (kern table) but never Roboto / Inter (GPOS only):
+   * measured on Roboto at 11, 16, 20, 24 and 72pt, no pair ever kerns.
+   */
+  kernRequiresTable?: boolean;
+  /**
+   * Round every glyph advance to a multiple of this many px (PowerPoint lays glyphs
+   * out on a 1/8 pt grid: all 266 glyphs of a Roboto / Times New Roman alphabet at
+   * 20 and 11pt were exact multiples of 0.125pt, equal to the font advance rounded
+   * to nearest). Kerning is added on top, unrounded. Ignored when unset or 0.
+   */
+  advanceQuantum?: number;
 }
 
 let profile: MeasureProfile = { engine: 'advance' };
@@ -77,7 +97,12 @@ export function setProfileChangeHook(fn: (() => void) | null): void {
 
 /** Install the measurement profile used by every fontkit-backed measure path. */
 export function setMeasureProfile(next: MeasureProfile): void {
-  const changed = next.engine !== profile.engine || JSON.stringify(next.features) !== JSON.stringify(profile.features);
+  const changed =
+    next.engine !== profile.engine ||
+    next.kernMinSize !== profile.kernMinSize ||
+    next.kernRequiresTable !== profile.kernRequiresTable ||
+    next.advanceQuantum !== profile.advanceQuantum ||
+    JSON.stringify(next.features) !== JSON.stringify(profile.features);
   profile = next;
   if (changed) onProfileChange?.();
 }
@@ -208,6 +233,17 @@ interface MeasureState {
  *     stretch that produced no advance, so the two profiles agree on
  *     un-shapeable text.
  */
+const kernTableCache = new WeakMap<object, boolean>();
+/** Whether the font carries a classic OpenType/TrueType `kern` table. */
+function hasKernTable(raw: any): boolean {
+  let v = kernTableCache.get(raw);
+  if (v === undefined) {
+    v = !!raw?.directory?.tables?.kern;
+    kernTableCache.set(raw, v);
+  }
+  return v;
+}
+
 export function measurePx(
   raw: any,
   scale: number,
@@ -216,20 +252,29 @@ export function measurePx(
   prof: MeasureProfile = profile,
 ): number {
   if (!text) return 0;
+  const q = prof.advanceQuantum ? prof.advanceQuantum : 0;
+  const snap = (px: number) => (q ? Math.round(px / q) * q : px);
 
   if (prof.engine === 'shape') {
     try {
-      const run = raw.layout(text, prof.features);
+      const noKern =
+        (prof.kernMinSize !== undefined && fontSize < prof.kernMinSize) ||
+        (prof.kernRequiresTable === true && !hasKernTable(raw));
+      const features = noKern ? { ...prof.features, kern: false } : prof.features;
+      const run = raw.layout(text, features);
       const positions = run.positions ?? [];
-      let units = 0;
+      let px = 0;
       for (let i = 0; i < run.glyphs.length; i++) {
-        units += positions[i]?.xAdvance ?? run.glyphs[i].advanceWidth ?? 0;
+        const base = run.glyphs[i].advanceWidth ?? 0;
+        const shaped = positions[i]?.xAdvance ?? base;
+        // grid-snapped base advance + unrounded kerning (xAdvance − advanceWidth)
+        px += q ? snap(base * scale) + (shaped - base) * scale : shaped * scale;
       }
       // layout() maps missing code points to .notdef (glyph id 0). If every
       // shaped glyph is .notdef the run told us nothing — fall through to the
       // per-code-point estimate rather than trusting a box-width advance.
       if (run.glyphs.length > 0 && run.glyphs.some((g: any) => g.id !== 0)) {
-        return units * scale;
+        return px;
       }
     } catch {
       // Complex-script shaper threw — fall back to the advance sum.
@@ -242,7 +287,7 @@ export function measurePx(
     // `glyphForCodePoint` never returns null — an unmapped code point yields
     // `.notdef`, whose box advance is not what a browser fallback paints.
     const advance = raw.hasGlyphForCodePoint(cp) ? raw.glyphForCodePoint(cp).advanceWidth : null;
-    width += advance != null ? advance * scale : fontSize * MISSING_GLYPH_FACTOR;
+    width += advance != null ? snap(advance * scale) : fontSize * MISSING_GLYPH_FACTOR;
     if (cp > 0xffff) i++;
   }
   return width;

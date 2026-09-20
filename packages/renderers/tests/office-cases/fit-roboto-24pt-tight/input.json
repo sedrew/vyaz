@@ -1,0 +1,42 @@
+{
+  "_comment": "same text 0.11pt below PowerPoint's one-line window ((328.31, 328.81], real export): PowerPoint wraps, vyaz (exact 328.75) must too: TWO lines.",
+  "frame": {
+    "wrap": true,
+    "width": 328.2,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Targets are agreed in advance.",
+            "fontFamily": "Roboto",
+            "fontSize": 24
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

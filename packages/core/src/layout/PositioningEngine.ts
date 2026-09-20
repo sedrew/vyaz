@@ -87,7 +87,7 @@ function resolveBulletIndent(
  * `mode: 'office'` line box = `OFFICE_LINE_BOX_RATIO × maxFontSizeInLine ×
  * style.lineHeight`. The 1.20 is **font-independent** — PowerPoint's own SVG
  * exports (packages/renderers/tests/office-cases/) put the pitch at exactly
- * `spcPct × 1.20 × fontSize` for Roboto, and `scripts/office-metrics/report.md`
+ * `spcPct × 1.20 × fontSize` for Roboto, and `scripts/office-metrics/RESULTS.md`
  * gets the same 1.20 box for Great Vibes (OS/2 win ratio 1.75). No single
  * fontkit metric (win / hhea / typo) yields 1.20 for both, so this is a
  * measured constant, not a table lookup. Alternative under consideration:

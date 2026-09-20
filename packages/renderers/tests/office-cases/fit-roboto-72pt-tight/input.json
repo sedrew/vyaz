@@ -1,0 +1,42 @@
+{
+  "_comment": "same run, 0.065pt below PowerPoint's measured 184.125pt: PowerPoint wraps after \"To\", vyaz must too: TWO lines.",
+  "frame": {
+    "wrap": true,
+    "width": 184.06,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "To Ta",
+            "fontFamily": "Roboto",
+            "fontSize": 72
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

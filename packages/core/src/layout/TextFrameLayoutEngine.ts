@@ -24,7 +24,7 @@ import type { TextFrame, ListStyle, VerticalAlignment, Paragraph, WritingMode } 
 import type { Line, LayoutWarning } from '../types/LayoutTypes.js';
 import { paragraphLayoutEngine, ParagraphLayoutEngine } from './ParagraphLayoutEngine.js';
 import { splitParagraphByHardBreaks } from '../compile/ParagraphCompiler.js';
-import { applyScale } from './AutoFitEngine.js';
+import { applyScaleExact } from './AutoFitEngine.js';
 import { formatListNumber, defaultBulletChar } from '../utils/list.js';
 import { getMeasureProfile, setMeasureProfile } from '../measure/FontkitMeasureContext.js';
 
@@ -104,6 +104,16 @@ export interface FrameTransform {
   layoutBox: { width: number; height: number };
 }
 
+/**
+ * Round a measured width UP to 0.01pt. A box sized to exactly the text width can come out
+ * a hair narrower after the consumer's own rounding (PowerPoint boxes are whole EMU,
+ * 1pt = 12700, and 1/8pt = 1587.5 EMU) — and PowerPoint then wraps the last word.
+ * The epsilon keeps a width that is already on the 0.01 grid from creeping up a step.
+ */
+function ceilWidth(n: number): number {
+  return n <= 0 ? 0 : Math.ceil(n * 100 - 1e-6) / 100;
+}
+
 /** Normalise a degree value into `[0, 360)`. */
 function normalizeDeg(d: number): number {
   const r = d % 360;
@@ -175,6 +185,27 @@ function applyVerticalAlignment(
   }
 }
 
+/** Office default: kerning for text this size (pt) and up — DrawingML `kern="1200"`. */
+const OFFICE_KERN_MIN_SIZE = 12;
+/** Office default: PowerPoint rounds every glyph advance to 1/8 pt. */
+const OFFICE_ADVANCE_QUANTUM = 0.125;
+/**
+ * Office default: added once to `textBox.width` so a box sized to the
+ * text does not wrap in PowerPoint.
+ *
+ * **Why 1pt, not the earlier 0.01 cm (0.2835pt):**
+ * PowerPoint snaps each glyph's shaped advance (base + kern) to the 1/8pt
+ * grid as a unit. vyaz applies the same grid to the BASE advance and then
+ * adds the kerning delta unrounded. The resulting discrepancy is ±1/32pt
+ * (= 0.125 / 4) per kerned glyph pair. For a typical business phrase at
+ * 12–16pt Arial/Calibri there can be up to ~9 such pairs accumulating in
+ * the same direction (9 × 1/32pt ≈ 0.28pt), which almost exhausted the
+ * old 0.2835pt budget (empirically: min observed slack 0.004pt, 28 of 118
+ * tested phrases below 0.1pt). 1pt comfortably covers ≤ 32 pairs and
+ * leaves a visible margin for any remaining measurement noise.
+ */
+const OFFICE_TEXTBOX_PADDING = 1.0;
+
 /** Options for {@link layoutTextFrame}. */
 export interface LayoutOptions {
   /**
@@ -192,7 +223,8 @@ export interface LayoutOptions {
   /**
    * Shrink every run's `fontSize` proportionally until the content fits the
    * frame box. `true` uses defaults; an object bounds the minimum size.
-   * The chosen scale is reported on `result.autofit`.
+   * The chosen scale is reported on `result.autofit`, on PowerPoint's 1%
+   * `fontScale` grid, and it is the scale the returned layout was measured at.
    */
   autofit?: boolean | { minFontSize?: number };
   /**
@@ -207,21 +239,31 @@ export interface LayoutOptions {
    * — instead of the default per-code-point advance sum. Applies to line
    * breaking and positioning for this call only.
    *
-   * Defaults to `true` when `mode: 'office'`, `false` otherwise — pass it
-   * explicitly to override either way. Real PowerPoint applies kerning too
-   * (confirmed empirically: a kerned string measured 0.27pt narrower via
-   * plain advance-sum than fontkit's shaped width, for Roboto; PowerPoint's
-   * own render needed the shaped width — see
-   * scripts/office-metrics/RESULTS.md), so `mode: 'office'`'s whole point —
-   * PowerPoint fidelity — needs shaping on by default. That 0.27pt is inside
-   * most layouts' slack and invisible, but it can flip a wrap decision at a
-   * zero-slack width (a shape sized exactly to `content.width` / `textBox.width`
-   * with no margin, e.g. "shrink shape to fit text").
-   * `mode: 'browser'` keeps the previous default (`false`) — pass `true`
-   * there too when the output must match what a browser paints (SVG
-   * `browser` preset).
+   * Defaults to `true` when `mode: 'office'` — but there kerning applies only from
+   * {@link LayoutOptions.kernMinSize} (12pt) up and only to fonts with a classic `kern`
+   * table (PowerPoint's behaviour) — and to `false` otherwise. Pass it explicitly to
+   * override either way (an explicit `true` kerns every font at every size).
    */
   shaping?: boolean;
+  /**
+   * With shaping on, kern only text at this size (pt) and up. Defaults to `12` when
+   * `shaping` is left unset in `mode: 'office'` (PowerPoint's default `kern="1200"`); no
+   * threshold when `shaping: true` is passed explicitly.
+   */
+  kernMinSize?: number;
+  /**
+   * Round every glyph advance to a multiple of this many pt. Defaults to `0.125` in
+   * `mode: 'office'` (PowerPoint's 1/8 pt glyph grid — all 266 glyphs of a measured
+   * Roboto / Times New Roman alphabet sat on it) and to none elsewhere; `0` turns it off.
+   */
+  advanceQuantum?: number;
+  /**
+   * Extra width (pt) added once to `textBox.width` — the widest line, not every line, and
+   * not the wrap decision. A box sized exactly to the measured text still wraps its last
+   * word in PowerPoint (rounding of kerned advances, whole-EMU boxes). Defaults to
+   * `1.0` (pt) in `mode: 'office'`, `0` elsewhere.
+   */
+  textBoxPadding?: number;
   /**
    * Fill `Span.notdefRanges` on every text span — the character ranges no
    * registered font covers. The SVG `glyph` preset always does this (it
@@ -235,7 +277,10 @@ export interface LayoutOptions {
 
 /** Autofit outcome, present on the result when {@link LayoutOptions.autofit} was set. */
 export interface AutofitOutcome {
-  /** Proportional font-size scale applied (1 = no shrink). */
+  /**
+   * Proportional font-size scale applied — the scale the returned layout was
+   * measured at, on PowerPoint's 1% `fontScale` grid. `1` = no shrink.
+   */
   scale: number;
   /** True when the min-size floor was hit and content still overflows. */
   clampedToMin: boolean;
@@ -261,14 +306,29 @@ export function runFlow(
   if (options.autofit || frame.autofit?.enabled) {
     return runAutofit(frame, options, engine);
   }
-  // Default: shaped (kerned) width for mode:'office' (real PowerPoint applies
-  // kerning), plain advance-sum otherwise — explicit `shaping` always wins.
-  const useShaping = options.shaping ?? options.mode === 'office';
-  if (useShaping) {
+  // mode:'office' mirrors PowerPoint's text metrics (measured on real exports, see
+  // scripts/office-metrics/RESULTS.md "Glyph advances"):
+  //   - every glyph advance is rounded to a 1/8 pt grid (`advanceQuantum`);
+  //   - kerning (GPOS values, identical to the `kern` table for the fonts checked) applies
+  //     from `kernMinSize` (12pt = `kern="1200"`) up and only to fonts that carry a classic
+  //     `kern` table — Times New Roman / Arial / Calibri yes, Roboto / Inter (GPOS only) never.
+  // Explicit options win: `shaping: true` kerns every font at every size, `shaping: false`
+  // never kerns, `advanceQuantum: 0` turns the grid off. Other modes: plain advance sum.
+  const office = options.mode === 'office';
+  const useShaping = options.shaping ?? office;
+  const quantum = options.advanceQuantum ?? (office ? OFFICE_ADVANCE_QUANTUM : 0);
+  if (useShaping || quantum) {
     const saved = getMeasureProfile();
-    setMeasureProfile({ engine: 'shape' });
+    const shapeDefault = options.shaping === undefined;
+    const kernMinSize = options.kernMinSize ?? (shapeDefault && office ? OFFICE_KERN_MIN_SIZE : undefined);
+    setMeasureProfile({
+      engine: useShaping ? 'shape' : 'advance',
+      ...(useShaping && kernMinSize !== undefined ? { kernMinSize } : {}),
+      ...(useShaping && shapeDefault && office ? { kernRequiresTable: true } : {}),
+      ...(quantum ? { advanceQuantum: quantum } : {}),
+    });
     try {
-      return runFlow(frame, { ...options, shaping: false }, engine);
+      return runFlow(frame, { ...options, shaping: false, advanceQuantum: 0, kernMinSize: undefined }, engine);
     } finally {
       setMeasureProfile(saved);
     }
@@ -556,7 +616,7 @@ export function runFlow(
     // contentWidth = total frame width (includes all columns + gaps + padding)
     contentWidth = frame.width!;
   } else {
-    contentWidth += rightPad;
+    contentWidth = ceilWidth(contentWidth + rightPad);
   }
 
   const lastLine = allLines.length > 0 ? allLines[allLines.length - 1] : null;
@@ -577,7 +637,7 @@ export function runFlow(
   }
   const r2 = (n: number) => Math.round(n * 100) / 100;
   const textBox = allLines.length > 0
-    ? { x: r2(tbLeft), y: r2(boxTop), width: r2(tbRight - tbLeft), height: r2(inkBottom - boxTop) }
+    ? { x: r2(tbLeft), y: r2(boxTop), width: ceilWidth(tbRight - tbLeft + (options.textBoxPadding ?? (options.mode === 'office' ? OFFICE_TEXTBOX_PADDING : 0))), height: r2(inkBottom - boxTop) }
     : { x: 0, y: 0, width: 0, height: 0 };
 
   // ── Post-layout rigid transform (writing-mode + rotation) ────────
@@ -623,6 +683,14 @@ export function runFlow(
 
 // ── Autofit ─────────────────────────────────────────────────────────────
 
+/**
+ * PowerPoint autofit granularity, in percent: `a:normAutofit/@fontScale` is an
+ * integer percentage, so a shape only shrinks in 1% steps of its authored size —
+ * 0.4pt on a 40pt run, 0.09pt on a 9.4pt one. Every scale autofit returns sits on
+ * this grid, which is what makes the reported scale storable in the PPTX.
+ */
+const AUTOFIT_SCALE_PERCENT_STEP = 1;
+
 /** Largest run fontSize in the frame (the autofit shrink reference). */
 function maxRunFontSize(frame: TextFrame): number {
   let m = 0;
@@ -633,9 +701,17 @@ function maxRunFontSize(frame: TextFrame): number {
 }
 
 /**
- * Binary-search a single proportional font scale so the content fits the frame,
- * then return that layout with `result.autofit` set. One scale for the whole
- * flow. Shrink-only (scale <= 1).
+ * Search one proportional font scale so the content fits the frame, then return that
+ * layout with `result.autofit` set. One scale for the whole flow, shrink-only.
+ *
+ * The search walks PowerPoint's 1% grid ({@link AUTOFIT_SCALE_PERCENT_STEP}) for the
+ * largest whole percent that fits — the true boundary floored to the grid, so it can
+ * never round up past what fits. Candidates are measured at the *exact*
+ * `fontSize × percent` (see {@link applyScaleExact}): a rounded-down size passes a fit
+ * check the size named by the returned scale would fail, which is how a shape ends up
+ * one line in the engine and two lines in PowerPoint. The winning layout is returned
+ * as measured, so `result.autofit.scale` is the scale of the grid the caller gets
+ * back, not a rounded copy of a finer one.
  */
 function runAutofit(
   frame: TextFrame,
@@ -658,19 +734,33 @@ function runAutofit(
   const minScale = cfg.minFontSize
     ? Math.min(1, Math.max(0.05, cfg.minFontSize / maxRunFontSize(frame)))
     : 0.1;
+  // Round the floor up to the grid — `minFontSize` is a promise, and a step below
+  // the one it asks for would break it.
+  const minPercent = Math.min(100, Math.ceil(minScale * 100 - 1e-9));
 
-  let lo = minScale, hi = 1, best: number | null = null, bestResult: TextFrameLayoutResult | null = null;
-  for (let i = 0; i < 24 && hi - lo > 0.005; i++) {
-    const mid = (lo + hi) / 2;
-    const r = runFlow(applyScale(frame, mid), base, engine);
-    if (fits(r)) { best = mid; bestResult = r; lo = mid; }
-    else hi = mid;
+  // A smaller run is never wider and never taller (line breaks only merge as the
+  // text narrows), so `fits` is monotone in the scale and the largest fitting
+  // percent sits at a bisection boundary — seven layout runs, not a hundred.
+  let lo = minPercent;
+  let hi = 100 - AUTOFIT_SCALE_PERCENT_STEP;
+  let scale: number | null = null;
+  let result: TextFrameLayoutResult | null = null;
+  while (lo <= hi) {
+    const percent = (lo + hi) >> 1;
+    const r = runFlow(applyScaleExact(frame, percent / 100), base, engine);
+    if (fits(r)) {
+      scale = percent / 100;
+      result = r;
+      lo = percent + AUTOFIT_SCALE_PERCENT_STEP;
+    } else {
+      hi = percent - AUTOFIT_SCALE_PERCENT_STEP;
+    }
   }
 
-  if (bestResult && best != null) {
-    return { ...bestResult, autofit: { scale: Math.round(best * 100) / 100, clampedToMin: false } };
+  if (result !== null && scale !== null) {
+    return { ...result, autofit: { scale, clampedToMin: false } };
   }
-  // Never fit — floor it and report clamped.
-  const floored = runFlow(applyScale(frame, minScale), base, engine);
-  return { ...floored, autofit: { scale: Math.round(minScale * 100) / 100, clampedToMin: true } };
+  // Nothing on the grid fits, down to the floor — report the floor and say so.
+  const floored = runFlow(applyScaleExact(frame, minPercent / 100), base, engine);
+  return { ...floored, autofit: { scale: minPercent / 100, clampedToMin: true } };
 }

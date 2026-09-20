@@ -14,7 +14,7 @@ baseline  = 0.75 × H          from the top of the line box, every line
 ```
 
 - **1.20** — not any fontkit table field. Roboto's pitch lands on
-  `spcPct × 1.20 × size` exactly; `report.md` measures the same 1.20 box for
+  `spcPct × 1.20 × size` exactly; the (removed) `report.md` measured the same 1.20 box for
   Great Vibes (OS/2 win ratio 1.75). Chosen over the `max(1.20, hhea/upm)`
   alternative — no oracle font can tell them apart yet.
 - **0.75** — == Roboto `typoAscender / (typoAscender − typoDescender)` (its typo
@@ -129,8 +129,9 @@ Generator picks: **HTML** → `frame` / `content`; **PDF** → `textBox`; **PPTX
 ## Still open
 
 1. **`mixed` wrap** — PowerPoint word-wraps a large run (36 pt in a 260 pt
-   column) more eagerly than vyaz: 5 lines vs 3. A wrap-width-budget question,
-   not the line box.
+   column) more eagerly than vyaz: 5 lines vs 3. Not a wrap-width budget (the `W − space`
+   hypothesis was refuted, see "Glyph advances") — re-test `gen-wrap-diagnostic.ts`
+   `mixed-run` with the 1/8pt grid + kerning policy before reading it as still open (its slides now live in `kern-context.pptx`).
 2. **one paragraph seam** — `stacked` ¶1→¶2 (spcPct 1.0 → 1.5) is
    PowerPoint-grid-snapped, ~0.9 pt below the `0.25/0.75` prediction.
 3. **`<a:spcPts>`** — absolute-point line spacing; needs a `lineHeightPts` /
@@ -243,7 +244,7 @@ whether text wraps at zero slack (exactly a "fit box to text" scenario).
 Old doc comment on `shaping` said "leave off unless the output is consumed
 by a browser" — true for `mode: 'browser'`, but wrong for `mode: 'office'`:
 PowerPoint kerns too, so `office` mode's whole reason to exist (PowerPoint
-fidelity) needs it. `report.md`'s "Width needs no calibration — ±0.4% match"
+fidelity) needs it. The (removed) `report.md`'s "Width needs no calibration — ±0.4% match"
 finding was itself only ever measured with shaping *explicitly* requested,
 not vyaz's default.
 
@@ -255,3 +256,61 @@ always wins either way. Not a no-op: any office-mode text with GPOS kern
 pairs gets slightly (usually sub-point) different widths/wrap points now —
 office-cases goldens shifted again (`UPDATE=1` + review) on top of the
 baseline-ratio change above.
+
+## Glyph advances: 1/8 pt grid, kerning from 12pt on kern-table fonts, 0.01 cm fit padding
+
+Found chasing "vyaz keeps a word on the line, PowerPoint wraps it" (the
+`W − space` hypothesis in *Still open* #1 was a red herring — it broke the
+Roboto 18pt office-cases that match PowerPoint). Tools: `gen-glyph-alphabet.ts`
+(`glyph-alphabet.pptx`: every character its own run and background colour, exported to SVG →
+one coloured rectangle = one advance), `gen-kern-context.ts` (`kern-context.pptx`, incl. the
+two wrap-diagnostic slides) and `gen-stress.ts` (`stress.pptx`, the general regression deck).
+Earlier exploratory sweeps (two-sided boundary boxes, kerning rulers, final-character sweep,
+font matrix) fed the findings below and were removed once the stress deck covered them.
+
+**1. Advances sit on a 1/8 pt grid.** Alphabet export (Roboto and Times New Roman, 20pt
+and 11pt, 266 glyphs) and Roboto 72pt "To Ta":
+
+| glyph (Roboto 72pt) | PowerPoint | font advance | ×8 |
+|---|--:|--:|--:|
+| T | 43.0000 | 42.9609 | 344.000 |
+| o | 41.1251 | 41.0625 | 329.001 |
+| space | 17.8750 | 17.8594 | 143.000 |
+| T | 42.9999 | 42.9609 | 343.999 |
+| a | 39.1250 | 39.1641 | 313.000 |
+
+266 / 266 glyphs are exact multiples of 0.125pt and equal the font advance rounded to
+nearest (ties up: 328.5 → 329); only 104 / 266 equal the exact advance. Same at 11, 16, 20,
+24, 72pt. The rounding accumulates over a line — the "Roboto ~0.25–0.66pt wider than its
+advance sum" residual in the rulers. With the grid vyaz's default width lands in PowerPoint's
+window for Roboto (11pt ×2, 16pt, 24pt: 151.13 / 136.13 / 198.13 / 328.75) and Arial 11pt
+(152.63 in (152.58, 152.79]); Roboto 72pt "To Ta" is 184.13 vs 184.125.
+
+**2. Kerning.**
+- Roboto: never kerned (all 8 pairs at 20 and 11pt equal the unkerned sum; both `T`s are
+  43.000pt at 72pt although "To"/"Ta" kern −3.5 / −4.0pt). Inter (also GPOS only) behaves the same.
+- Times New Roman: unkerned at 11pt, kerned at 20pt (`To Ta Yo Wa Ty` within 0.005pt of the
+  font's kerning; `AV`, `LT` 0.36pt tighter). Arial: 9–11pt wrap a box sized to the kerned width,
+  12pt and up fit.
+- Long sentences are kerned (Calibri 16pt ruler window (196.54, 196.80] = vyaz's kerned 196.66).
+- Short strings were the odd ones: two-sided boxes at vyaz's kerned width + 0.06pt wrapped for
+  `Ta yo` in Arial 36 and 72pt, Times New Roman 16pt, Calibri 16pt, `AV yo` in Arial 72pt, and
+  `kern-context` showed `Tayo` and `Tax yo` wrap as well — not the space, not the word boundary.
+  The kern table and GPOS hold the same values for these pairs (`Ta` −227u in Arial), and the
+  shortfall turned out to be small: **0.01 cm (0.2835pt) of padding on the box closes them**
+  (checked on PowerPoint).
+Decision: office mode = 1/8pt grid + kerning from 12pt on fonts that carry a `kern` table
+(Roboto / Inter never) + 0.2835pt added once to `textBox.width` (not to `content.width`, not to
+the wrap decision — Roboto's exact-width boxes prove the wrap decision has no slack). The
+stress deck `gen-stress.ts` (30 slides, 1336 boxes, 12 fonts, 8 → 120pt, regular / bold / italic)
+sizes every box to vyaz's width exactly; any box that wraps in PowerPoint is a remaining bug.
+Regression coverage in the repo: `office-cases/fit-roboto-*` (real-PowerPoint windows, goldens) and
+`packages/core/tests/office-fit-stress.test.ts` (the deck's promise checked without PowerPoint).
+
+**3. Also true.** PowerPoint breaks a word wider than the box mid-word (emergency break) —
+vyaz's `overflowWrap` default is `'normal'` (overflow), so a caller that wants PowerPoint's
+behaviour passes `overflowWrap: 'break-word'`. Line pitch is exactly 1.20 × size × spcPct
+(not 1.2018). Default text-frame insets are 0.1in left/right and 0.05in top/bottom.
+
+Open: whole-run kerning across spaces (pretext measures word by word), `AV`/`LT` in Times
+New Roman, `Roboto_MSFontService` cloud face vs the installed Roboto (same advances here).

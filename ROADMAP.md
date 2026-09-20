@@ -23,8 +23,9 @@ Direction, not a schedule. Order within a section is rough priority.
   (system font discovery doesn't apply in a browser bundle;
   `registerFont(family, opts, buffer)` stays the primitive both build on).
 - **Shaping by default** for the `browser` / `preserve` SVG presets — distinct
-  from `LayoutOptions.shaping`, which already defaults to `true` for
-  `mode: 'office'` as of v0.4.6 (kerned width; PowerPoint fidelity). This item
+  from `LayoutOptions.shaping`, which defaults to `true` for `mode: 'office'`
+  (v0.4.8: kerning from 12pt on fonts with a `kern` table only — PowerPoint
+  fidelity, see `scripts/office-metrics/RESULTS.md`). This item
   is the SVG-preset side: `browser`/`preserve` still default to unshaped
   per-character positioning, so ligature-heavy fonts don't paint quite what a
   real browser would. The `glyph` preset gets shaped per-cluster advances so
@@ -136,19 +137,24 @@ Direction, not a schedule. Order within a section is rough priority.
   - **Mixed-size-line baseline ratio** — a small run framing one large run in
     the same line measured *higher* than same-size lines (~0.81 for Arial,
     close to `winAscFrac` alone) but only 2 data points; not in code.
-  - **Does PowerPoint wrap where vyaz wraps?** `gen-wrap-diagnostic.ts` — a
-    reproduction of the original "5 lines vs 3" mismatch (a large run in a
-    narrow column) plus 7 other width/length cases per font — sent for
-    real-PowerPoint verification, result pending.
+  - **Does PowerPoint wrap where vyaz wraps?** Answered for single-run text in
+    v0.4.8 (glyph advances sit on a 1/8pt grid, kerning from 12pt on kern-table
+    fonts, 1pt fit padding — verified on the 1336-box `gen-stress.ts` deck). Still open: the original "5 lines vs 3"
+    mixed-size run (`mixed-run` in `kern-context.pptx`, re-check with the new
+    model), kerning of pairs around a space (pretext measures word by word;
+    Times New Roman 16pt line ≈1.5pt short), `AV`/`LT` in Times New Roman
+    (0.36pt tighter in PowerPoint than the font), STIX Two Text (kerned in
+    PowerPoint without a `kern` table).
   - **`<a:spcPts>`** (absolute-point line spacing, vs. today's `spcPct`-only
     multiplier) — needs a `lineHeightPts` / `lineHeightUnit` on
     `ParagraphStyle`.
   - **`spcPct < 100%`** — no oracle sample yet; PowerPoint is suspected to
     floor near the real ascent+descent rather than scale linearly.
-  - Width matches PowerPoint to ±0.4% **once `shaping` is on** — default for
-    `mode: 'office'` as of v0.4.6 (real PowerPoint kerns; the plain
-    advance-sum default used to under-measure any kerned run, invisible with
-    layout slack but decisive at a zero-slack "shrink shape to fit text" box).
+  - Width: `mode: 'office'` (v0.4.8) rounds every glyph advance to 1/8pt, kerns from
+    12pt on fonts with a `kern` table (never Roboto / Inter), and adds 1pt to
+    `textBox.width` — PowerPoint-exact for Roboto to the measured 0.06pt, and a
+    box sized to `textBox.width` no longer wraps in PowerPoint on any font /
+    size / string tried (the stress deck is the open test).
 
 ---
 

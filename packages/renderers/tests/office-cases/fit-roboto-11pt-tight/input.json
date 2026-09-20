@@ -1,0 +1,42 @@
+{
+  "_comment": "same text, 0.05pt below the lowest width at which PowerPoint kept it on one line ((151.05, 151.25] window, real export). PowerPoint wraps the last word; vyaz (exact width 151.13) must too: TWO lines.",
+  "frame": {
+    "wrap": true,
+    "width": 151.0,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Targets are agreed in advance.",
+            "fontFamily": "Roboto",
+            "fontSize": 11
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

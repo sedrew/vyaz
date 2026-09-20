@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="151" height="26.4" viewBox="0 0 151 26.4">
+  <text x="0" y="10.18" font-family="Roboto" font-size="11" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 6.6 12.6 16.4 22.5 28.4 32 37.6 40.4 46.4 50.1 56 58.8 64.8 70.9 74.6 80.5 86.4 92.6 95.4 98">Targets are agreed in</tspan>
+    <tspan x="104.1"> </tspan>
+  </text>
+  <text x="0" y="23.38" font-family="Roboto" font-size="11" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 6 12.3 17.6 23.6 29.8 35.5 41.4">advance.</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="151" height="26.4" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="106.88" height="26.4" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

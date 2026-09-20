@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="151" height="26.4" viewBox="0 0 151 26.4">
+  <text x="0" y="10.18" font-family="Roboto" font-size="11" fill="#000000" font-weight="400" xml:space="preserve">Targets are agreed in </text>
+  <text x="0" y="23.38" font-family="Roboto" font-size="11" fill="#000000" font-weight="400" xml:space="preserve">advance.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="151" height="26.4" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="106.88" height="26.4" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

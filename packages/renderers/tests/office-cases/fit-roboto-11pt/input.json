@@ -1,0 +1,42 @@
+{
+  "_comment": "office fit box, Roboto 11pt. Width 151.42 = what vyaz reports as textBox.width (exact 151.13 = 1/8pt glyph grid, unkerned + 0.01cm fit padding). PowerPoint (real export, ruler): the text stays on one line from a box width in (151.05, 151.25] up, so 151.42 must be ONE line.",
+  "frame": {
+    "wrap": true,
+    "width": 151.42,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Targets are agreed in advance.",
+            "fontFamily": "Roboto",
+            "fontSize": 11
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

@@ -145,7 +145,8 @@ describe('layoutTextFrame result.textBox', () => {
     expect(r.textBox.y).toBeCloseTo(Math.min(...r.lines.map((l) => l.y)), 2);
     expect(r.textBox.y + r.textBox.height).toBeCloseTo(last.y + last.baseline + last.descent, 1);
     expect(r.textBox.x).toBeCloseTo(Math.min(...r.lines.map((l) => l.x)), 2);
-    expect(r.textBox.width).toBeLessThanOrEqual(r.content.width + 0.01);
+    // textBox.width carries the office fit padding (1pt); content.width does not
+    expect(r.textBox.width).toBeLessThanOrEqual(r.content.width + 1.0 + 0.01);
   });
 
   test('content keeps the trailing leading that textBox trims — grows with spcPct', () => {

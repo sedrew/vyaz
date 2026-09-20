@@ -73,7 +73,7 @@ baseline     = 0.75 × H     from the top of the line box   // 0.75 = Roboto typ
 advance      = H            (baseline to baseline, equal sizes)
 ```
 
-- **1.20** is not a fontkit table field — matches `scripts/office-metrics/report.md`
+- **1.20** is not a fontkit table field — matches `scripts/office-metrics/RESULTS.md`
   (Great Vibes, win ratio 1.75, gets the same 1.20 box as Roboto). Candidate
   model **A** there.
 - **First line is not special-cased.** With `margin_top = 0` on the box, the
@@ -264,4 +264,4 @@ Once M1+M3 land, `frame-fit` content height = `Σ H(line)` should equal
 PowerPoint's autofit `cy` (with `tIns=bIns=0`): `report.md`'s single-line box is
 the *full* `1.2·size` (no last-line descent trim), so the plain sum is right.
 Verify against the autofit `cy` of `line-spacing.pptx` after a PowerPoint
-save (`parse-pptx.ts`-style `<a:ext>` read), not just the SVG.
+save (read the `<a:ext>` sizes from the saved pptx), not just the SVG.

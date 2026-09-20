@@ -21,7 +21,7 @@ dist/
 .DS_Store
 
 # MS Office lock files + the loose working copy of the calibration deck
-# (canonical copy lives at scripts/office-metrics/font-metrics.pptx)
+# (the deck it was built from was removed)
 ~$*
 /font metrics.pptx
 

@@ -33,8 +33,10 @@
  * should look near-identical (same words per line); if they don't, the
  * mismatch is immediately visible as different line breaks between colors.
  *
- *   bun scripts/office-metrics/gen-wrap-diagnostic.ts
- *   → wrap-diagnostic.pptx (2 slides: Roboto, Arial)
+ * Not run on its own any more: `gen-kern-context.ts` appends these two slides to
+ * `kern-context.pptx` (the former standalone wrap-diagnostic.pptx).
+ *
+ *   bun scripts/office-metrics/gen-kern-context.ts   → kern-context.pptx (slide 1 kern context, 2–3 this)
  */
 import pptxgen from 'pptxgenjs';
 import { readFileSync, existsSync } from 'node:fs';
@@ -117,14 +119,11 @@ function layoutCase(family: string, c: Case) {
   return layoutTextFrame(frame, { mode: 'office' });
 }
 
-async function main() {
+/** Append the two wrap-diagnostic slides (Roboto, Arial) to `p` (16:9, 13.333 x 7.5in). */
+export async function addWrapDiagnosticSlides(p: pptxgen): Promise<void> {
   for (const [name, path] of Object.entries(FONTS)) {
     await fontMetricsProvider.registerFont(name, { weight: 'normal', style: 'normal' }, readFileSync(path));
   }
-
-  const p = new pptxgen();
-  p.defineLayout({ name: 'VYAZ_16X9', width: 13.333, height: 7.5 });
-  p.layout = 'VYAZ_16X9';
 
   const xStartIn = PT2IN(0.4 * 72);
   const boxGapPt = 24; // gap between the 3 boxes in a row
@@ -262,10 +261,4 @@ async function main() {
       }
     });
   }
-
-  const out = resolve(HERE, 'wrap-diagnostic.pptx');
-  await p.writeFile({ fileName: out });
-  console.log(`\nwrote ${out} (2 slides: ${Object.keys(FONTS).join(', ')}; yellow=PowerPoint natural wrap, green=vyaz forced wrap)`);
 }
-
-main();

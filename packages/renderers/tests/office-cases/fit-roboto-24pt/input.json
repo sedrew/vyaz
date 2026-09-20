@@ -1,0 +1,42 @@
+{
+  "_comment": "office fit box, Roboto 24pt. 329.04 = vyaz textBox.width (exact 328.75 + 0.2835 padding). PowerPoint window for one line: (328.31, 328.81] (real export). ONE line.",
+  "frame": {
+    "wrap": true,
+    "width": 329.04,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Targets are agreed in advance.",
+            "fontFamily": "Roboto",
+            "fontSize": 24
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "whiteSpace": "normal"
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

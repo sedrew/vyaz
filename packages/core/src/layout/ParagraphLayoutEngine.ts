@@ -206,7 +206,7 @@ export class ParagraphLayoutEngine {
     // The measure profile changes fragment widths (kerning / ligatures) and thus
     // line-break points, so it is part of the key.
     const mp = getMeasureProfile();
-    const cacheKey = `${mp.engine}${mp.features ? JSON.stringify(mp.features) : ''}${preparedCacheKey(paragraph)}`;
+    const cacheKey = `${mp.engine}${mp.kernMinSize ?? ''}${mp.kernRequiresTable ? 'T' : ''}${mp.advanceQuantum ?? ''}${mp.features ? JSON.stringify(mp.features) : ''}${preparedCacheKey(paragraph)}`;
     let prepared = this.preparedCache.get(cacheKey);
     if (prepared) {
       // bump recency
@@ -397,6 +397,7 @@ export class ParagraphLayoutEngine {
 
     const scale = fontSize / font.unitsPerEm;
     const advances = new Float32Array(text.length);
+    const q = getMeasureProfile().advanceQuantum || 0;
 
     const raw = font._raw;
     for (let i = 0; i < text.length; i++) {
@@ -408,7 +409,7 @@ export class ParagraphLayoutEngine {
       const advance = raw.hasGlyphForCodePoint(codePoint)
         ? raw.glyphForCodePoint(codePoint).advanceWidth
         : null;
-      advances[i] = advance != null ? advance * scale : fontSize * MISSING_GLYPH_FACTOR;
+      advances[i] = advance != null ? (q ? Math.round((advance * scale) / q) * q : advance * scale) : fontSize * MISSING_GLYPH_FACTOR;
       if (codePoint > 0xffff) i++;
     }
 

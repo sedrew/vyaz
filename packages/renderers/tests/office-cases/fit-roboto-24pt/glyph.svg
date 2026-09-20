@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="329.04" height="28.8" viewBox="0 0 329.04 28.8">
+  <text x="0" y="22.2" font-family="Roboto" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 14.4 27.4 35.5 49 61.8 69.6 82 88 101 109.1 121.9 127.9 140.9 154.4 162.5 175.3 188 201.5 207.5 213.4 226.6 232.6 245.6 259.1 270.8 283.8 297 309.6 322.4">Targets are agreed in advance.</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="329.04" height="28.8" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="328.75" height="28.8" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

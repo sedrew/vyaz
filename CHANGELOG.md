@@ -7,6 +7,138 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.11] - 2026-09-20
+
+`@vyaz/core` 0.4.10 → 0.4.11, `@vyaz/renderer` 0.4.10 → 0.4.11.
+
+### Fixed
+
+- **`textBox.width` could be dangerously narrow for long kerned lines** — `OFFICE_TEXTBOX_PADDING`
+  raised from 0.01 cm (0.2835 pt) to **1 pt**. Root cause: vyaz snaps each glyph's base advance
+  to the 1/8 pt grid then adds the kern delta unrounded, while PowerPoint appears to snap the
+  shaped advance (base + kern) as a unit. The discrepancy is ±1/32 pt per kerned pair; for
+  business-style phrases at 12–16 pt Arial/Calibri up to nine such pairs accumulated in the same
+  direction (≈ 0.28 pt total), almost exhausting the old budget. Empirically: 118 tested phrases
+  had slack < 0.29 pt, 28 had slack < 0.1 pt, worst case 0.004 pt. 1 pt covers ≤ 32 such pairs.
+  `content.width` and the wrap decision are unaffected.
+
+### Added
+
+- **Long-phrase slack regression test** (`office-fit-stress.test.ts`) — eight business phrases
+  at Arial 9–16 pt verify that `textBox.width` fits in one line and carries ≥ 0.1 pt margin.
+- **`stress.pptx` / `stress.json` regenerated** with the new padding (all 1336 cells).
+
+## [0.4.10] - 2026-09-20
+
+`@vyaz/core` 0.4.9 → 0.4.10, `@vyaz/renderer` 0.4.9 → 0.4.10. `@vyaz/converters`
+unchanged at 0.1.0. No engine change over 0.4.9 — the version moves so consumers that
+depend on `@vyaz/core` via `file:` (bun copies the package into `node_modules`) reinstall
+a copy with 0.4.8's PowerPoint text metrics and 0.4.9's autofit grid; the only
+additions are regression cases and tests (below) and a wording change in this changelog.
+
+### Added
+
+- **Fit-box regression cases and tests** for the office width model:
+  - `packages/renderers/tests/office-cases/fit-roboto-{11pt,24pt,72pt}` and `…-tight` — six
+    golden cases (Roboto fixture, run anywhere). Each pair is one text at the width vyaz reports
+    (`textBox.width`: exact width + 0.01 cm; must stay ONE line) and at a width just under the
+    lowest one at which real PowerPoint kept it on one line (must wrap to TWO). The windows and
+    the per-glyph advances of "To Ta" 72pt come from real PowerPoint exports (see each `_comment`).
+  - `packages/core/tests/office-fit-stress.test.ts` — the self-checkable half of the stress deck:
+    for Roboto and Inter at the deck's 21 sizes (8 → 120pt) and its string bands, a frame of
+    `textBox.width` holds the text on one line without overflow, the padding is added once on
+    `textBox.width` only, a frame 0.06pt under the exact width wraps, GPOS-only fonts are never
+    kerned, Roboto's exact width sits on the 1/8pt grid, `stress.json`'s expected widths still match
+    the engine, and (where Arial is installed) Arial kerns from 12pt and its box holds the text.
+
+## [0.4.9] - 2026-09-20
+
+`@vyaz/core` 0.4.8 → 0.4.9, `@vyaz/renderer` 0.4.8 → 0.4.9. `@vyaz/converters`
+unchanged at 0.1.0. Autofit now searches the 1% `fontScale` grid a PowerPoint shape can
+store, reports the scale it measured, and measures each candidate at the size that scale
+names — a rounded-down probe passes fit checks the named size fails.
+
+### Fixed
+
+- **Autofit could report a scale whose size does not fit** — candidates were laid out
+  through `applyScale`, which rounds the scaled size to two decimals: an authored
+  13.3333px at 94% was measured as 12.53px (9.3975pt) while the reported 94% means 9.4pt
+  (12.53333px). On the office glyph grid the width is a step function of the size, so
+  0.003px can decide a wrap: the engine kept one line, reported `scale: 0.94`, the
+  consumer wrote `sz="940"`, and PowerPoint wrapped to two lines. Autofit now probes with
+  `applyScaleExact` — a candidate is measured at the size it names — which rejects 94% in
+  such a case and returns 93%, one line. The winning layout is measured at that same exact
+  size, so `result.autofit.scale` names the layout the caller gets back; `applyScale` keeps
+  its two-decimal rounding for callers that re-derive a size from the scale.
+
+### Changed
+
+- **Autofit searched a scale PowerPoint cannot store, and reported a rounded copy of
+  it** — `layoutTextFrame(..., { autofit })` bisected a continuous scale to a 0.005
+  tolerance, returned the layout measured there, and reported
+  `Math.round(scale * 100) / 100`, which can round *up* past what fits (`0.996` →
+  `1.00`). A shape can only be scaled in whole percents — PowerPoint's
+  `a:normAutofit/@fontScale` is an integer percentage — so autofit now bisects that 1%
+  grid for the largest whole percent that fits and returns the layout it measured at
+  exactly that scale. `result.autofit.scale` is now the applied scale: re-scaling the
+  frame by it reproduces the returned content, and the value is one the PPTX can hold.
+  Consequences: a result may sit up to one grid step below the old continuous maximum
+  (0.4pt on a 40pt run, 0.09pt on a 9.4pt one — PowerPoint's own granularity), and the
+  search runs ≤ 7 layouts instead of 24. `autofit: { minFontSize }` rounds its floor
+  **up** to the grid, so a clamped layout still respects the minimum — `autofit-option`'s
+  20/24 = 0.8333 floor is reported as `0.84` (its assertion was updated).
+
+## [0.4.8] - 2026-09-20
+
+`@vyaz/core` 0.4.7 → 0.4.8, `@vyaz/renderer` 0.4.7 → 0.4.8. `@vyaz/converters`
+unchanged at 0.1.0. Refines 0.4.6's "office kerns everything" — measured on
+PowerPoint exports, not assumed. Consumers that depend on `@vyaz/core` via `file:`
+(bun copies it into `node_modules`) must reinstall to pick this up.
+
+### Fixed
+
+- **`mode: 'office'` measures glyphs the way PowerPoint lays them out** — measured
+  on PowerPoint SVG exports of per-glyph highlighted alphabets (Roboto and Times
+  New Roman at 72 / 20 / 11pt) and the `kern-context` / `stress` decks:
+  1. **1/8 pt glyph grid** — every glyph advance is rounded to the nearest
+     0.125pt (all 266 glyphs of both alphabets sat exactly on the grid; only 104
+     equal the exact advance). The per-glyph rounding accumulates: it is the
+     "Roboto is 0.25–0.66pt wider than its advance sum" residual that made
+     zero-slack boxes wrap. New `LayoutOptions.advanceQuantum` (default
+     `0.125` in office, none elsewhere, `0` = off). With it vyaz's default width
+     lands inside PowerPoint's measured window for Roboto (4/4 rulers), Arial 11pt
+     and reproduces Roboto 72pt "To Ta" (184.13 vs 184.125pt).
+  2. **Kerning from 12pt, only on fonts with a classic `kern` table** — PowerPoint's default
+     `kern="1200"` (Times New Roman: unkerned at 11pt, kerned at 20pt; Arial 9–11pt wraps a box
+     sized to its kerned width), and Roboto (GPOS only) is never kerned at 11 / 16 / 20 / 24 /
+     72pt ("To"/"Ta" at 72pt: both `T` advances 43.000pt though the font kerns them −3.5 /
+     −4.0pt). Kerning values come from GPOS (identical to the `kern` table for Arial, Calibri,
+     Times New Roman). `shaping` left unset applies this; an explicit `shaping: true` kerns every
+     font at every size, `shaping: false` never kerns; `kernMinSize` moves the threshold.
+  3. **`textBox.width` carries 0.01 cm (0.2835pt) of padding in office mode** — the residue PowerPoint
+     needs beyond vyaz's measured width: kerned advances aren't reproduced to the last 0.1pt (short
+     strings such as "Ta yo" in Arial 36 / 72pt, Calibri 16pt, Times New Roman 16pt wrapped in a box
+     of exactly the kerned width; 0.01 cm closed them). Added ONCE to the widest line, on
+     `textBox.width` only — `content.width` and the wrap decision are exact. New
+     `LayoutOptions.textBoxPadding` (default `0.2835` in office, `0` elsewhere).
+  Office-cases goldens shifted (`UPDATE=1`); wrap points of all five cases still equal
+  the PowerPoint references. See `scripts/office-metrics/RESULTS.md` "Glyph advances".
+- **`textBox.width` and `content.width` round UP to 0.01pt** (were nearest) — a
+  box sized exactly to the measured width could come out a hair narrower after the
+  consumer's own rounding (PowerPoint boxes are whole EMU; 1/8pt = 1587.5 EMU) and
+  PowerPoint then wrapped the last word. Multi-column `content.width` is unchanged.
+
+### Added
+
+- **PowerPoint calibration tooling** (`scripts/office-metrics/`): `gen-glyph-alphabet.ts` (every
+  glyph its own coloured run → per-glyph advances from the SVG export), `gen-kern-context.ts`
+  (`kern-context.pptx`: kern pair in different contexts + the wrap diagnostic slides) and
+  `gen-stress.ts` (30 slides × 8×6, 12 fonts, 8 → 120pt, regular / bold / italic; 1336 boxes sized to
+  vyaz's width — any box that wraps in PowerPoint is a bug). Removed: the hand-fitted
+  `font-metrics.pptx` oracle deck with its `parse-pptx.ts` / `report.ts` / `report.md`. All
+  PowerPoint-side steps are manual (export to SVG); method and results in `RESULTS.md`
+  "Glyph advances".
+
 ## [0.4.7] - 2026-09-18
 
 `@vyaz/core` 0.4.6 → 0.4.7, `@vyaz/renderer` 0.4.6 → 0.4.7. `@vyaz/converters`

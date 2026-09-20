@@ -29,23 +29,56 @@ export interface AutoFitResult {
  * Apply a scale factor to all fontSize values in the document.
  * inlineWidget dimensions are NOT scaled.
  * Returns a NEW document (does not mutate the original).
+ *
+ * Sizes are rounded to two decimals — what a caller re-deriving the size from
+ * `scale` would get. Autofit measures through {@link applyScaleExact} instead: see
+ * there for why the rounded size is the wrong one to measure.
  */
 export function applyScale(
   doc: TextFrame,
   scale: number,
 ): TextFrame {
+  return scaleFontSizes(doc, scale, true);
+}
+
+/**
+ * Same as {@link applyScale}, but leaves the scaled sizes exact.
+ *
+ * Autofit probes candidates with this. `applyScale` can round a candidate *down* —
+ * an authored 13.3333px at 94% becomes 12.53px (9.3975pt) instead of 12.5333px
+ * (9.4pt) — so a candidate that does not fit at the size it names gets measured as
+ * if it were smaller, and 0.003 of a unit is enough to flip a line break once glyph
+ * advances sit on a 1/8pt grid. Measuring the unrounded size keeps the fit decision
+ * about the size the caller actually renders.
+ *
+ * @internal
+ */
+export function applyScaleExact(
+  doc: TextFrame,
+  scale: number,
+): TextFrame {
+  return scaleFontSizes(doc, scale, false);
+}
+
+function scaleFontSizes(
+  doc: TextFrame,
+  scale: number,
+  round: boolean,
+): TextFrame {
   const clone = JSON.parse(JSON.stringify(doc)) as TextFrame;
+  const scaled = (size: number): number =>
+    round ? Math.round(size * scale * 100) / 100 : size * scale;
 
   for (const paragraph of clone.paragraphs) {
     for (const run of paragraph.children) {
       if (typeof run.fontSize === 'number') {
-        run.fontSize = Math.round(run.fontSize * scale * 100) / 100;
+        run.fontSize = scaled(run.fontSize);
       }
     }
   }
 
   if (clone.defaultStyle?.fontSize) {
-    clone.defaultStyle.fontSize = Math.round(clone.defaultStyle.fontSize * scale * 100) / 100;
+    clone.defaultStyle.fontSize = scaled(clone.defaultStyle.fontSize);
   }
 
   return clone;
