@@ -5,7 +5,7 @@
 <h1 align="center">Vyaz</h1>
 
 <p align="center">
-  Rich&#8209;text layout engine — TypeScript, isomorphic (browser + Bun/Node.js), pixel&#8209;perfect typography.
+  Rich&#8209;text layout engine — TypeScript, isomorphic (browser + Bun/Node.js), sub&#8209;point font metrics.
 </p>
 
 <p align="center">
@@ -16,17 +16,19 @@
 
 ---
 
-Vyaz parses styled text into positioned lines with precise font metrics and
-renders them to SVG. It supports both a CSS&#8209;Text line box and an Office
-(PowerPoint / DrawingML) line box.
+Vyaz computes line positions, baseline offsets, and glyph advances for styled
+text — not a rendering engine. Output is a structured layout result (lines,
+spans, metrics) that `@vyaz/renderer` turns into SVG. It supports both a
+CSS&#8209;Text line box and an Office (PowerPoint / DrawingML) line box, each
+calibrated against its respective oracle.
 
 The engine works on a **TextFrame → Paragraph → TextRun** hierarchy, following
 W3C CSS Text and CSS Inline Layout.
 
 One of the first pure&#8209;JS text layout engines with a real golden corpus:
-line breaking and positioning are covered by **630+ unit tests** and **320+
+line breaking and positioning are covered by **1,100+ unit tests** and **420+
 golden SVG snapshots**, and every renderer preset is diffed against a frozen
-Chrome oracle for browser‑metrics parity.
+Chrome oracle for browser&#8209;metrics parity.
 
 The name is **Vyaz** ([Вязь](https://en.wikipedia.org/wiki/Vyaz_(Cyrillic_calligraphy)))
 — an ornate Cyrillic lettering style of Old Slavic origin, where letters are
@@ -92,7 +94,7 @@ one thing you have to get right (fonts go to the engine *and* `document.fonts`).
 - **Metric modes** — `browser` (CSS/Chrome line box) and `office` (PowerPoint / DrawingML) as a per-layout option
 - **PowerPoint text metrics** (`mode: 'office'`) — 1.20 line box, glyph advances on PowerPoint's 1/8pt grid, kerning from 12pt on fonts with a `kern` table (Roboto / Inter never), and `textBox.width` carries 1 pt of padding so a shape sized to it doesn't wrap the last word; opt-outs `advanceQuantum`, `shaping`, `kernMinSize`, `textBoxPadding`
 - **Font fallback** — `fontFamily: string | string[]` with `onMissingFont: 'throw' | 'substitute'`
-- **Shaping** — opt-in `{ shaping: true }` measures through fontkit's OpenType layout (GPOS kerning + GSUB ligatures); matches Chrome to a fraction of a pixel on Latin / Cyrillic / Greek
+- **Shaping** — opt-in `{ shaping: true }` measures through fontkit's OpenType layout (GPOS kerning + GSUB ligatures); advance widths match Chrome to within 0.01pt on Latin / Cyrillic / Greek
 - **SVG output** — four presets: `flat`, `browser`, `preserve`, `glyph`; CSS or XML style attributes; debug overlays
 - **Pure JS** — the measurement path is fontkit-only; no canvas or native addon required
 - **Tables** — `TableFrame` grid layout: measured columns/rows, `colSpan`/`rowSpan`
@@ -107,10 +109,10 @@ wrapping), Unifont from the test fixture. `min` of N iterations:
 
 | runs | layout (cold) | layout (warm cache) | render → SVG |
 |---:|---:|---:|---:|
-| 1,000 | 0.9 ms | 0.8 ms | 1.5 ms |
-| 10,000 | 9.7 ms | 8.8 ms | 13.5 ms |
-| 100,000 | 97 ms | 84 ms | 123 ms |
-| 1,000,000 | 0.90 s | 0.88 s | 1.4 s |
+| 1,000 | 0.9 ms | 0.8 ms | 1.1 ms |
+| 10,000 | 8.5 ms | 8.9 ms | 13.4 ms |
+| 100,000 | 101 ms | 87 ms | 134 ms |
+| 1,000,000 | 1.09 s | 1.03 s | 2.0 s |
 
 ≈ **1M styled runs/second** laid out, ≈ 1.2M/s on a warm prepared-line cache.
 `bench/BASELINE.txt` holds reference numbers — re-run and diff after touching the
@@ -122,9 +124,9 @@ multiplication-table grid, center-aligned, Unifont. Configurable via env vars
 
 | grid (rows×cols) | cells | layout | render |
 |---:|---:|---:|---:|
-| 11×11 | 121 | 18.0 ms | 2.4 ms |
-| 51×51 | 2,601 | 53.2 ms | 15.7 ms |
-| 101×101 | 10,201 | 115.8 ms | 52.9 ms |
+| 11×11 | 121 | 18.5 ms | 2.9 ms |
+| 51×51 | 2,601 | 60.9 ms | 16.8 ms |
+| 101×101 | 10,201 | 117.1 ms | 53.5 ms |
 
 `bun run bench:resize` — re-layout cost when only `width` changes (a
 drag-resize), same frame reused each step so the prepare-cache should hit
@@ -133,10 +135,10 @@ both `TextFrame` and `TableFrame`:
 
 | size | min/step (resize) | cold (fresh) | cold/min |
 |---|---:|---:|---:|
-| 10,000 runs (text) | 8.7 ms | 9.6 ms | 1.1× |
-| 100,000 runs (text) | 87.3 ms | 96.8 ms | 1.1× |
-| 50×50 table (2,601 cells) | 9.9 ms | 15.7 ms | 1.6× |
-| 100×100 table (10,201 cells) | 45.3 ms | 62.3 ms | 1.4× |
+| 10,000 runs (text) | 9.3 ms | 10.0 ms | 1.1× |
+| 100,000 runs (text) | 90.0 ms | 101 ms | 1.1× |
+| 50×50 table (2,601 cells) | 11.3 ms | 18.9 ms | 1.7× |
+| 100×100 table (10,201 cells) | 52.0 ms | 73.6 ms | 1.4× |
 
 The prepare-cache's win here is modest — most of a resize's cost is line
 re-breaking and (for tables) the two-pass column/row re-measurement, neither
@@ -278,15 +280,6 @@ await fontMetricsProvider.registerFont('Inter', { weight: '700', variation: { wg
 
 Node.js can discover system fonts via `SystemFontRegistry` (imports `node:fs`,
 so it is excluded from the browser bundle).
-
-## Debug tooling
-
-Invariant checks and semantic YAML snapshots live in a separate entry so
-`js-yaml` never lands in the production bundle:
-
-```ts
-import { assertLineInvariants, linesToYAML } from '@vyaz/core/debug'
-```
 
 ## Roadmap
 
