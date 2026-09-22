@@ -205,6 +205,7 @@ function derive(
     p.leftIndent = (para.leftIndent ?? 0) + Math.round(o.baseSize * 2.5);
     p.rightIndent = (para.rightIndent ?? 0) + Math.round(o.baseSize);
     p.spaceBefore = p.spaceAfter = Math.round(o.baseSize * 0.5);
+    p.leftRule = { width: Math.max(2, Math.round(o.baseSize * 0.2)), color: '#dddddd' };
     r.color = '#555555';
   } else if (tag === 'pre') {
     pre = true;
@@ -489,6 +490,16 @@ function processChildren(
       handleTable(child, para, run, ctx);
       continue;
     }
+    if (tag === 'hr') {
+      flush();
+      const spacing = Math.round(ctx.opts.baseSize * 0.75);
+      ctx.out.push({
+        style: { ...para, spaceBefore: spacing, spaceAfter: spacing },
+        children: [],
+        rule: { thickness: 1, color: '#dddddd' },
+      });
+      continue;
+    }
     if (BLOCK_TEXT.has(tag)) {
       flush();
       if (tag === 'dt' || tag === 'dd') {
@@ -555,7 +566,8 @@ function trimParagraphs(out: Paragraph[]): Paragraph[] {
     const last = p.children[p.children.length - 1];
     if (last) last.text = last.text.replace(/[ \t]+$/, '');
   }
-  return out.filter((p) => p.children.length > 0 && p.children.some((r) => r.text !== ''));
+  // A `rule` paragraph (<hr>) is content-less by design — never filtered.
+  return out.filter((p) => p.rule || (p.children.length > 0 && p.children.some((r) => r.text !== '')));
 }
 
 export function walk(

@@ -541,3 +541,70 @@ describe('overflow (5c)', () => {
     expect(r.overflow.horizontal).toBe(false);
   });
 });
+
+// ── Paragraph.rule (<hr>) / ParagraphStyle.leftRule (<blockquote>) ─────────
+
+describe('Paragraph.rule — horizontal rule', () => {
+  test('a rule paragraph lays out as one line spanning the full width, no spans', () => {
+    const rule = { style: { alignment: 'left' as const, lineHeight: 1, spaceBefore: 0, spaceAfter: 0 }, children: [], rule: { thickness: 2, color: '#abcdef' } };
+    const r = layoutTextFrame(makeTextFrame([rule], { width: 400 }));
+    expect(r.lines).toHaveLength(1);
+    const line = r.lines[0];
+    expect(line.spans).toHaveLength(0);
+    expect(line.width).toBe(400);
+    expect(line.height).toBe(2);
+    expect(line.rule).toEqual({ color: '#abcdef' });
+  });
+
+  test('spaceBefore/spaceAfter still apply as the rule\'s vertical margin', () => {
+    const before = makeParagraph('above');
+    const rule = { style: { alignment: 'left' as const, lineHeight: 1, spaceBefore: 10, spaceAfter: 20 }, children: [], rule: { thickness: 1, color: '#000' } };
+    const after = makeParagraph('below');
+    const r = layoutTextFrame(makeTextFrame([before, rule, after], { width: 400 }));
+    const [l0, l1, l2] = r.lines;
+    expect(l1.y).toBeCloseTo(l0.y + l0.height + 10, 5);
+    expect(l2.y).toBeCloseTo(l1.y + l1.height + 20, 5);
+  });
+
+  test('a rule sits at the frame\'s left padding, same as text', () => {
+    const rule = { style: { alignment: 'left' as const, lineHeight: 1, spaceBefore: 0, spaceAfter: 0 }, children: [], rule: { thickness: 1, color: '#000' } };
+    const r = layoutTextFrame(makeTextFrame([rule], { width: 400, padding: { top: 0, right: 0, bottom: 0, left: 12 } }));
+    expect(r.lines[0].x).toBe(12);
+  });
+});
+
+describe('ParagraphStyle.leftRule — blockquote-style vertical bar', () => {
+  test('leftRule is stamped on every wrapped line of the paragraph', () => {
+    const p = makeParagraph('one two three four five six seven eight nine ten', {});
+    p.style = { ...p.style, leftRule: { width: 3, color: '#ddd' } };
+    const r = layoutTextFrame(makeTextFrame([p], { width: 80 }));
+    expect(r.lines.length).toBeGreaterThan(1); // must actually wrap for this test to mean anything
+    for (const line of r.lines) {
+      expect(line.leftRule?.width).toBe(3);
+      expect(line.leftRule?.color).toBe('#ddd');
+      expect(typeof line.leftRule?.x).toBe('number');
+    }
+  });
+
+  test('leftRule.x is identical across every line of the paragraph', () => {
+    const p = makeParagraph('one two three four five six seven eight nine ten');
+    p.style = { ...p.style, leftRule: { width: 3, color: '#ddd' } };
+    const r = layoutTextFrame(makeTextFrame([p], { width: 80 }));
+    const xs = new Set(r.lines.map((l) => l.leftRule!.x));
+    expect(xs.size).toBe(1);
+  });
+
+  test('adjacent lines of the same paragraph are flush (no gap between segments)', () => {
+    const p = makeParagraph('one two three four five six seven eight nine ten');
+    p.style = { ...p.style, leftRule: { width: 3, color: '#ddd' } };
+    const r = layoutTextFrame(makeTextFrame([p], { width: 80 }));
+    for (let i = 1; i < r.lines.length; i++) {
+      expect(r.lines[i].y).toBeCloseTo(r.lines[i - 1].y + r.lines[i - 1].height, 5);
+    }
+  });
+
+  test('a paragraph without leftRule has no leftRule on its lines', () => {
+    const r = layoutTextFrame(makeTextFrame([makeParagraph('plain')]));
+    expect(r.lines[0].leftRule).toBeUndefined();
+  });
+});

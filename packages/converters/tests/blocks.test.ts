@@ -38,6 +38,28 @@ describe('block structure', () => {
     expect(p.children[0].color).toBe('#555555');
   });
 
+  test('blockquote sets a leftRule (rendered as the vertical indent bar)', () => {
+    const { frame } = convert('<blockquote><p>quoted</p></blockquote>');
+    expect(frame.paragraphs[0].style.leftRule).toBeDefined();
+    expect(frame.paragraphs[0].style.leftRule!.width).toBeGreaterThan(0);
+  });
+
+  test('hr becomes a content-less rule paragraph', () => {
+    const { frame } = convert('<p>before</p><hr><p>after</p>');
+    expect(frame.paragraphs).toHaveLength(3);
+    const hr = frame.paragraphs[1];
+    expect(hr.children).toHaveLength(0);
+    expect(hr.rule).toBeDefined();
+    expect(hr.rule!.thickness).toBeGreaterThan(0);
+  });
+
+  test('hr is not dropped, and survives trimParagraphs despite empty children', () => {
+    const { frame, dropped } = convert('<hr>');
+    expect(frame.paragraphs).toHaveLength(1);
+    expect(frame.paragraphs[0].rule).toBeDefined();
+    expect(dropped.some((d) => d.tag === 'hr')).toBe(false);
+  });
+
   test('pre preserves whitespace + monospace', () => {
     const { frame } = convert('<pre>  a\n  b</pre>');
     const p = frame.paragraphs[0];

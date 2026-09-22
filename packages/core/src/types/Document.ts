@@ -534,6 +534,20 @@ export interface ParagraphStyle {
    * for this paragraph and subsequent ones in the same sequence.
    */
   listRestart?: boolean;
+
+  /**
+   * A vertical rule drawn along the paragraph's left edge, e.g. `<blockquote>`'s
+   * indent bar. Painted per-line (one short vertical segment per laid-out
+   * `Line`, at that line's left edge) rather than as one shape spanning the
+   * whole paragraph — consecutive lines sit flush against each other, so the
+   * segments read as a single continuous bar without the layout engine having
+   * to track a paragraph's overall bounding box.
+   *
+   * @see {@link Paragraph.rule} for a full-width horizontal rule (`<hr>`) —
+   *      a different construct: that one *replaces* a paragraph's content,
+   *      this one decorates a paragraph that still has normal text content.
+   */
+  leftRule?: { width: number; color: string };
 }
 
 /**
@@ -560,6 +574,14 @@ export interface Paragraph {
   style: ParagraphStyle;
   /** Inline-level text runs forming the paragraph. */
   children: TextRun[];
+  /**
+   * When set, this paragraph **is** a horizontal rule (`<hr>`) — `children`
+   * is ignored (should be `[]`) and the paragraph lays out as a single line
+   * spanning the full available content width, painted as a horizontal bar
+   * `thickness` px tall instead of text. `style.spaceBefore`/`spaceAfter`
+   * still apply as the rule's own vertical margin.
+   */
+  rule?: { thickness: number; color: string };
 }
 
 // ── Multi-column config ─────────────────────────────────────────────────

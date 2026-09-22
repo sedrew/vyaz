@@ -134,6 +134,28 @@ export interface Line {
    */
   isHardBreak?: boolean;
 
+  /**
+   * Set when this line **is** a horizontal rule (`<hr>` — see
+   * {@link Paragraph.rule}) rather than text: `spans` is empty and the
+   * renderer paints a `height`-px-tall bar across `x`…`x + width` instead of
+   * glyphs.
+   */
+  rule?: { color: string };
+
+  /**
+   * Set when this line belongs to a paragraph with
+   * {@link ParagraphStyle.leftRule} (e.g. `<blockquote>`). The renderer
+   * paints a `width`-px vertical bar at absolute x `x`, spanning
+   * `y`…`y + height`. `x` is the paragraph's *un-indented* left edge (i.e.
+   * `line.x - style.leftIndent`), the same for every line of the paragraph
+   * regardless of that line's own `line.x` — so the segments line up into
+   * one straight bar. Stamped on every line of the paragraph, not just the
+   * first: adjacent lines' segments sit flush (line N's `y + height` ==
+   * line N+1's `y`), so they read as one continuous bar without the layout
+   * engine tracking the paragraph's overall bounding box.
+   */
+  leftRule?: { x: number; width: number; color: string };
+
   spans: Span[];
 }
 

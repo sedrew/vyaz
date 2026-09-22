@@ -835,6 +835,24 @@ class SvgAstBuilder {
   }
 
   /**
+   * Add a vertical rule as a direct child of the root <svg> — the
+   * `<blockquote>`-style bar painted at each `Line.leftRule`'s position
+   * (see `Document.ts`'s `ParagraphStyle.leftRule` doc comment for why this
+   * is stamped per-line rather than once per paragraph).
+   */
+  addVerticalRule(x: number, y1: number, y2: number, color: string, thickness: number): void {
+    this.closeText();
+    this.root.children.push(el('line', {
+      x1: fmt(x),
+      y1: fmt(y1),
+      x2: fmt(x),
+      y2: fmt(y2),
+      stroke: color,
+      'stroke-width': fmt(thickness),
+    }));
+  }
+
+  /**
    * Add a pre-rendered SVG line as a raw node directly under root.
    * Used in flat mode when each span is its own <text>.
    */
@@ -1098,6 +1116,17 @@ export function renderToSVG(
 
   for (const line of lines) {
     const baselineY = line.y + line.baseline;
+
+    // `<hr>` — a full-width horizontal bar in place of text (`line.rule`;
+    // see `Paragraph.rule`). `<blockquote>`-style left bar (`line.leftRule`;
+    // see `ParagraphStyle.leftRule`) — painted per-line so multi-line
+    // paragraphs read as one continuous bar.
+    if (line.rule) {
+      builder.addDecorationLine(line.x, line.width, line.y + line.height / 2, line.rule.color, line.height);
+    }
+    if (line.leftRule) {
+      builder.addVerticalRule(line.leftRule.x, line.y, line.y + line.height, line.leftRule.color, line.leftRule.width);
+    }
 
     // First pass: render background rects for all highlighted spans.
     // span.x is line-origin-relative and already carries the alignment/column

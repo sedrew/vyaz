@@ -448,8 +448,25 @@ export function runFlow(
   ): { lines: Line[]; height: number; contentWidth: number; warnings?: LayoutWarning[] } {
     const listStyle = p.style.listStyle;
 
-    // Fast path: empty paragraph → hard-break line (from \n separator)
+    // Fast path: paragraph has no runs — either a horizontal rule (`<hr>`,
+    // p.rule set) spanning the full available width, or a genuinely empty
+    // paragraph (hard-break line, from \n separator).
     if (p.children.length === 0) {
+      if (p.rule) {
+        const thickness = p.rule.thickness;
+        return {
+          lines: [{
+            x: 0, y: 0, width: maxWidth, height: thickness,
+            baseline: thickness, ascent: thickness, descent: 0,
+            startIndex: 0, endIndex: 0,
+            isHardBreak: true,
+            rule: { color: p.rule.color },
+            spans: [],
+          }],
+          height: thickness,
+          contentWidth: maxWidth,
+        };
+      }
       // Use the paragraph's own style or fallback to default font metrics
       const fontSize = 12;
       const lineHeight = p.style.lineHeight;
@@ -541,6 +558,14 @@ export function runFlow(
       if (subResult.warnings) warnings.push(...subResult.warnings);
 
       for (const line of subResult.lines) {
+        if (p.style.leftRule) {
+          // Same x on every line of the paragraph regardless of that line's
+          // own `line.x` (list markers, per-line indent quirks) — computed
+          // pre-`leftPad` since `leftPad` is added identically to `line.x`
+          // just below, so it cancels out either way; done here, before
+          // that add, to read as "the paragraph's un-indented edge".
+          line.leftRule = { x: line.x - (p.style.leftIndent ?? 0) + leftPad, width: p.style.leftRule.width, color: p.style.leftRule.color };
+        }
         if (!hasColumns) {
           // Non-column: simple accumulation
           line.x += leftPad;

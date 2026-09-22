@@ -7,7 +7,8 @@
  *   - marks: bold, italic, underline, strike, code, link
  *   - headings → fontSize bump
  *   - bulletList / orderedList → listStyle
- *   - horizontalRule, hardBreak → placeholder
+ *   - horizontalRule → Paragraph.rule, blockquote → ParagraphStyle.leftRule
+ *   - hardBreak → placeholder
  */
 
 import type { TextFrame, Paragraph, TextRun, TextAlignment, ListStyle, ListStylePosition } from '@vyaz/core'
@@ -229,6 +230,9 @@ function pmNodeToParagraph(node: PMNode, listLevel: number = 0): Paragraph | nul
     }
 
     case 'horizontalRule': {
+      // A real <hr> — Paragraph.rule (see @vyaz/core's Document.ts) lays out
+      // as a single full-width bar instead of text, painted by the SVG
+      // renderer via Line.rule. Not a placeholder run of dash characters.
       return {
         style: {
           alignment: 'left',
@@ -236,17 +240,8 @@ function pmNodeToParagraph(node: PMNode, listLevel: number = 0): Paragraph | nul
           spaceBefore: 8,
           spaceAfter: 8,
         },
-        children: [
-          {
-            type: 'text',
-            text: '────────────────────',
-            fontFamily: DEFAULT_FONT_FAMILY,
-            fontSize: 8,
-            fontWeight: 'normal',
-            fontStyle: 'normal',
-            color: '#999999',
-          },
-        ],
+        children: [],
+        rule: { thickness: 1, color: '#dddddd' },
       }
     }
 
@@ -354,6 +349,11 @@ function flattenBlockquote(node: PMNode, out: Paragraph[]): void {
       const p = pmNodeToParagraph(child)
       if (!p) continue
       p.style.leftIndent = (p.style.leftIndent ?? 0) + 16
+      // The vertical bar — ParagraphStyle.leftRule (see @vyaz/core's
+      // Document.ts), painted per-line by the SVG renderer via
+      // Line.leftRule so a wrapped/multi-paragraph quote still reads as one
+      // continuous bar. leftIndent above is what makes room for it.
+      p.style.leftRule = { width: 3, color: '#dddddd' }
       for (const r of p.children) if (!r.color || r.color === '#000000') r.color = '#6a737d'
       out.push(p)
     }

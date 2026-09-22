@@ -4,8 +4,11 @@
  * Inline formatting, block text and lists are classified here and driven by
  * walk.ts's generic dispatch. `<table>` is a special case — see the DROPPED
  * comment below. `<img>` is handled inline (walk.ts's `handleImg` → an
- * inline-box widget); the other graphics (`<svg>`/`<progress>`/`<meter>`/`<hr>`
- * — a later phase) are still in DROPPED.
+ * inline-box widget); `<hr>` is handled in walk.ts's `processChildren` as a
+ * `Paragraph.rule` (a content-less paragraph painted as a horizontal bar —
+ * see `Document.ts`'s doc comment on `Paragraph.rule`); the remaining
+ * graphics (`<svg>`/`<progress>`/`<meter>` — a later phase) are still in
+ * DROPPED.
  */
 import type { TextRun } from '@vyaz/core';
 
@@ -68,7 +71,7 @@ export const DROPPED: Record<string, string> = {
   video: 'media', audio: 'media', iframe: 'embedded document', embed: 'embedded document',
   object: 'embedded document', canvas: 'script-drawn',
   svg: 'inline svg (Phase 4)',
-  progress: 'Phase 4', meter: 'Phase 4', hr: 'Phase 4',
+  progress: 'Phase 4', meter: 'Phase 4',
   input: 'form control', textarea: 'form control', select: 'form control',
   button: 'form control', form: 'form', fieldset: 'form', legend: 'form', label: 'form',
   script: 'non-content', style: 'CSS not applied', link: 'non-content', meta: 'non-content',
