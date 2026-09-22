@@ -1,0 +1,62 @@
+<!doctype html>
+<!--
+  browser-harness.html — vanilla-JS smoke page for e2e/browser.spec.ts.
+
+  Loads the *built* browser bundles (dist/index.browser.js) exactly the way
+  a real, framework-free consumer would: a plain <script type="module">, no
+  bundler, no Vite/webpack resolving bare "@vyaz/core" specifiers. Runs the
+  full pipeline (register a real font -> layoutTextFrame -> renderToSVG) in
+  a real browser and writes the result into the DOM for Playwright to read.
+-->
+<html>
+<head><meta charset="utf-8"></head>
+<body>
+  <div id="status">pending</div>
+  <div id="svg-host"></div>
+  <!--
+    @vyaz/renderer's browser bundle is built with `@vyaz/core` external (for
+    real bundlers, which resolve it from node_modules) — a plain
+    <script type="module"> with no bundler needs an import map to satisfy
+    that bare specifier itself.
+  -->
+  <script type="importmap">
+    { "imports": { "@vyaz/core": "/packages/core/dist/index.browser.js" } }
+  </script>
+  <script type="module">
+    import { fontMetricsProvider, layoutTextFrame } from '@vyaz/core';
+    import { renderToSVG } from '../packages/renderers/dist/index.browser.js';
+
+    async function main() {
+      const res = await fetch('/packages/core/tests/fixtures/unifont-17.0.05.otf');
+      const bytes = new Uint8Array(await res.arrayBuffer());
+      await fontMetricsProvider.registerFont('Unifont', { weight: 'normal', style: 'normal' }, bytes);
+
+      const frame = {
+        width: 300,
+        wrap: true,
+        paragraphs: [
+          {
+            style: { alignment: 'left', lineHeight: 1.3, spaceBefore: 0, spaceAfter: 0 },
+            children: [
+              { type: 'text', text: 'Hello, ', fontFamily: 'Unifont', fontSize: 16, fontWeight: 'normal', fontStyle: 'normal', color: '#111' },
+              { type: 'text', text: 'browser!', fontFamily: 'Unifont', fontSize: 16, fontWeight: 'bold', fontStyle: 'normal', color: '#111' },
+            ],
+          },
+        ],
+      };
+
+      const result = layoutTextFrame(frame);
+      const svg = renderToSVG(result, { preset: 'browser' });
+
+      document.getElementById('svg-host').innerHTML = svg;
+      window.__vyazResult = { lineCount: result.lines.length, svgLength: svg.length, hasSystemFontRegistry: false };
+      document.getElementById('status').textContent = 'done';
+    }
+
+    main().catch((err) => {
+      document.getElementById('status').textContent = 'error: ' + (err && err.message ? err.message : String(err));
+      window.__vyazError = String(err && err.stack || err);
+    });
+  </script>
+</body>
+</html>

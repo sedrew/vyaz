@@ -14,7 +14,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  # Bun-native run: the fast dev-loop leg. '@vyaz/core' etc. resolve via
+  # package.json's "bun" export condition, straight to live src/ — no build
+  # needed first, and this is the leg that most directly reflects `bun test`
+  # during local development.
+  test-bun:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,8 +31,8 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
-      - name: Test
-        run: bun test
+      - name: Test (Bun, source)
+        run: bun test packages
 
       - name: Build (all packages)
         run: bun run build
@@ -38,3 +42,72 @@ jobs:
 
       - name: Browser bundle exports
         run: make browser-check
+
+  # Node run: the *same* test files (see vitest.config.mts's `bun:test` ->
+  # vitest.bun-test-shim.mts alias — no test file forks between runners),
+  # but resolving '@vyaz/core' etc. via the "node" export condition, i.e.
+  # dist/, not src/. Build has to happen first for that to mean anything.
+  # This is the leg that catches "works on Bun, breaks on Node" bugs — see
+  # CHANGELOG [0.4.13]: a dual-package-hazard font-registration bug and a
+  # Bun-only `fetch('file://…')` support gap, both invisible to `bun test`
+  # alone, both found by standing this leg up.
+  test-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Build (all packages)
+        run: bun run build
+
+      - name: Test (Node, dist/)
+        run: npx vitest run
+
+  # Real browser (Chromium), loaded the way a framework-free consumer would:
+  # e2e/browser-harness.html via a plain <script type="module">, no bundler
+  # resolving '@vyaz/core' — an import map does that instead (renderers'
+  # browser bundle is built with '@vyaz/core' external, for real bundlers;
+  # see the harness's own comment). This is the only one of the three legs
+  # that runs in an actual browser JS engine + DOM, not a server-side one —
+  # neither test-bun nor test-node would ever catch a real
+  # OffscreenCanvas/document-dependent code path breaking.
+  test-browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Build (all packages)
+        run: bun run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Test (browser, dist/)
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

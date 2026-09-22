@@ -35,3 +35,9 @@ tmp/
 .idea/
 # generated calibration page (rebuild: bun scripts/browser-metrics/build-page.ts)
 scripts/browser-metrics/page.html
+
+# Playwright (e2e/)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

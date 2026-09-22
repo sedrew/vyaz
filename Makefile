@@ -1,4 +1,4 @@
-.PHONY: help install build test smoke pack-test lint check-decls check publish-core publish-renderer clean
+.PHONY: help install build test test-node test-browser smoke pack-test lint check-decls check publish-core publish-renderer clean
 
 PACKAGES := core renderers converters
 DIST_TMP := /tmp/vyaz-pack-test
@@ -7,7 +7,9 @@ help:
 	@echo "Available commands:"
 	@echo "  make install         — Install dependencies (bun install)"
 	@echo "  make build           — Build all packages"
-	@echo "  make test            — Run unit tests"
+	@echo "  make test            — Run unit tests (Bun, source)"
+	@echo "  make test-node       — Same tests, under Node (dist/) via vitest"
+	@echo "  make test-browser    — Real-Chromium e2e via Playwright (dist/)"
 	@echo "  make smoke           — Verify dist/ imports in Node"
 	@echo "  make pack-test       — npm pack + clean install + import"
 	@echo "  make browser-check   — Validate browser bundle exports"
@@ -28,7 +30,15 @@ build:
 	bun run build
 
 test:
-	bun test
+	bun test packages
+
+# ── Cross-runtime: same *.test.ts files, under Node against dist/ ────────
+test-node: build
+	npx vitest run
+
+# ── Real browser (Chromium) e2e against dist/, no bundler ────────────────
+test-browser: build
+	npx playwright test
 
 lint:
 	@echo "No linter configured yet — skipping"
@@ -108,7 +118,7 @@ browser-check: build
 	bun test packages/core/tests/build-browser.test.ts
 
 # ── Full pre-publish pipeline ────────────────────────────────────
-check: build test smoke pack-test browser-check check-env
+check: build test test-node test-browser smoke pack-test browser-check check-env
 	@echo ""
 	@echo "═══════════════════════════════════════════════"
 	@echo "  ✅ All checks passed — ready to publish"
