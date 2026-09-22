@@ -310,6 +310,15 @@ bun test            # unit + golden-corpus tests
 bun run bench       # layout + render throughput, 100 … 1,000,000 runs
 ```
 
+## Acknowledgements
+
+Vyaz is inspired by two open-source projects. Thanks to their authors:
+
+- **[pretext](https://github.com/chenglou/pretext)** — line breaking and text
+  segmentation, vendored into `@vyaz/core` (MIT).
+- **[svg-table](https://github.com/wootra/svg-table)** — the `TableFrame` table
+  API is modelled on `svg-table-core`.
+
 ## License
 
 MIT
