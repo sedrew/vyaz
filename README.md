@@ -147,6 +147,22 @@ of which is cached across calls.
 Column/row sizing is two `layoutTextFrame` passes per cell — algorithmically
 linear in total cell content; see [`bench/table-throughput.ts`](bench/table-throughput.ts).
 
+### vs. Satori & vs. @react-pdf/textkit
+
+Two different jobs, same shared word/style generator so all three engines see
+identical content — `bun run bench:satori` times the full pipeline (parse +
+layout + serialize to SVG); `bun run bench:textkit` times layout only
+(textkit has no HTML input or SVG output, so there's no full-pipeline number
+to compare it on):
+
+| | 50 words | 500 words | 2,000 words | 10,000 words |
+|---|---:|---:|---:|---:|
+| vs. Satori (full pipeline) | 10.1× | 20.9× | 30.4× | 40.1× |
+| vs. textkit (layout only) | 8.7× | 11.3× | 12.4× | 14.9× |
+
+Exact ms and output-size figures, plus what each number actually includes:
+[`bench/README.md`](bench/README.md#vs-satori--vs-react-pdftextkit).
+
 ## API
 
 ### `layoutTextFrame(frame, options?)`

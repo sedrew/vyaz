@@ -66,6 +66,21 @@ dramatic win the cache gives `throughput.ts`'s cold/warm split, because most
 of a resize's cost is line re-breaking and (for tables) the two-pass
 column/row re-measurement, neither of which the prepare-cache touches.
 
+## vs. Satori & vs. @react-pdf/textkit — at a glance
+
+Two separate benches below, two different jobs, one word/style generator
+shared across both so all three engines see identical content: `vs-satori.ts`
+times the *full pipeline* (parse + layout + serialize to SVG); `vs-textkit.ts`
+times *layout only* (textkit has no HTML input and no SVG output, so there's
+no full-pipeline number to compare it on) — not one race, two different jobs:
+
+| | 50 words | 500 words | 2,000 words | 10,000 words |
+|---|---:|---:|---:|---:|
+| vs. Satori (full pipeline) | 10.1× | 20.9× | 30.4× | 40.1× |
+| vs. textkit (layout only) | 8.7× | 11.3× | 12.4× | 14.9× |
+
+Exact ms and output-size figures are in the two tables below.
+
 ## vs. Satori
 
 ```bash
@@ -102,3 +117,67 @@ per-glyph path-extraction cost — grows with glyph complexity, not just
 count). Satori is built for fixed-size OG-image generation; vyaz is a text
 *layout* engine. Read the time/size ratios as the cost of that different
 contract, not a verdict on either library.
+
+## vs. @react-pdf/textkit
+
+```bash
+bun run bench:textkit                           # 50 … 10,000 words
+BENCH_MAX=2000 bun run bench:textkit            # cap the largest size
+BENCH_SIZES=50,500,5000 bun run bench:textkit
+```
+
+`vs-textkit.ts` compares vyaz against react-pdf's
+[@react-pdf/textkit](https://www.npmjs.com/package/@react-pdf/textkit) on
+the same job — a rich-text document (styled paragraphs, bold/italic runs) in,
+shaped/line-broken/positioned lines out — using the same word/style generator
+as `vs-satori.ts` so both engines see identical content, and the same static
+PT Sans fixture (textkit shapes glyphs via plain `fontkit.Font.layout()`, no
+`fvar` support needed either way).
+
+Unlike the Satori bench, both engines here get their *native* pre-built
+rich-text input directly (a `TextFrame` for vyaz, per-paragraph
+`Fragment[]` → `fromFragments()` for textkit) — textkit has no HTML/DOM
+input and no serialize-to-SVG output, so only the shape + line-break +
+justify stage is timed (`layoutTextFrame()` vs. textkit's `layoutEngine()`,
+which internally shapes every run via fontkit, then runs Knuth-Plass line
+breaking, bidi, script itemization, and justification). See the file's own
+header comment for the full rationale.
+
+| words | vyaz layout | vyaz lines | textkit layout | textkit lines | time ratio |
+|---:|---:|---:|---:|---:|---:|
+| 50 | 0.09 ms | 4 | 0.80 ms | 4 | 8.7× |
+| 500 | 0.46 ms | 38 | 5.16 ms | 38 | 11.3× |
+| 2,000 | 1.58 ms | 150 | 19.50 ms | 150 | 12.4× |
+| 10,000 | 5.96 ms | 750 | 88.58 ms | 750 | 14.9× |
+
+Line counts matching across every size is the content-parity check: both
+engines wrap the identical word/style stream to (in this case) the same
+number of lines, though that's not guaranteed in general — vyaz uses a
+greedy line-breaker, textkit Knuth-Plass, so counts can diverge on other
+inputs. This *is* an apples-to-apples comparison of the layout-engine stage
+itself (not glued to different upstream/downstream pipelines), unlike the
+Satori bench above.
+
+### Fuzzing vyaz vs. textkit
+
+```bash
+bun run fuzz:textkit                              # 300 cases, seed 1
+FUZZ_CASES=2000 FUZZ_SEED=7 bun run fuzz:textkit
+FUZZ_GARBLE_RATE=0 bun run fuzz:textkit           # isolate line-breaking divergence
+                                                   # from unbreakable-token overflow
+FUZZ_VERBOSE=1 bun run fuzz:textkit               # print every flagged case's params
+```
+
+`fuzz-vs-textkit.ts` randomizes rich-text documents (size, weight, italic,
+letter-spacing, alignment, occasional unbreakable long tokens) and diffs
+vyaz against textkit for: crashes, content loss, overflow (a line wider than
+its box when a break opportunity existed), line-count outliers, and autofit
+divergence (vyaz's real `AutoFitEngine` 1%-grid shrink-to-fit search vs. a
+hand-rolled textkit equivalent, same grid). It is **not** a pass/fail gate —
+the two engines use different line-breaking algorithms (greedy vs.
+Knuth-Plass) and are not expected to wrap identically — it prints a report
+of what it found. See the file's own header comment for the full rationale
+and the known limitations of its overflow-tolerance heuristics (hanging
+trailing space/letter-spacing at a wrap point is expected and excluded, but
+imperfectly — see the comments around `UNBREAKABLE_WORD_LEN` and
+`spacingTolerance`).
