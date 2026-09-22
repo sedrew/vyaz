@@ -9,7 +9,7 @@
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, registerArialVariants } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
+import { layoutTextFrame } from '@vyaz/core';
 import type { LayoutOptions } from '../src/layout/TextFrameLayoutEngine.js';
 
 beforeAll(async () => {

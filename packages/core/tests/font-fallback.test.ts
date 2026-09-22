@@ -3,10 +3,9 @@
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, makeTextFrame } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
+import { layoutTextFrame } from '@vyaz/core';
 import type { Paragraph } from '../src/types/Document.js';
-import { FontNotFoundError } from '../src/measure/FontNotFoundError.js';
-
+import { FontNotFoundError } from '@vyaz/core';
 beforeAll(async () => {
   await registerUnifont(); // only "Unifont" is registered
 });

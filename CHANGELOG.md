@@ -7,7 +7,48 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
-## [0.4.12] - 2026-09-22
+## [0.4.13] - 2026-09-23
+
+`@vyaz/core` 0.4.12 → 0.4.13, `@vyaz/renderer` 0.4.12 → 0.4.13.
+
+Both found by standing up real Node.js and browser test runs alongside
+`bun test` (previously the only runtime the suite ever actually ran on) —
+see the `test-node`/`test-browser` CI legs.
+
+### Fixed
+
+- **Dual package hazard: font registration silently invisible to the layout
+  engine under Node.js.** `@vyaz/core`'s `package.json` "exports" map points
+  the `"bun"` condition at live `src/` and the `"node"` condition at
+  `dist/` — two different module instances of the same process-global
+  `fontMetricsProvider` singleton, depending on which specifier resolved
+  which way. Registering a font through one instance while the code under
+  test queried the other threw `FontNotFoundError` even though registration
+  "succeeded". Only surfaced under Node (Bun's `"bun"` condition made both
+  paths converge on `src/` regardless), and only because test helpers mixed
+  relative `../src/...` imports with `@vyaz/core` package-specifier imports
+  in the same process. Fixed by making every `packages/core/tests/*.test.ts`
+  resolve its public `@vyaz/core` symbols (`fontMetricsProvider`,
+  `layoutTextFrame`, `FontNotFoundError`, etc.) the same way, consistently.
+- **`registerFont(family, 'file://…')` only worked on Bun.** Bun's
+  `fetch()` supports the `file:` scheme as a convenience extension; Node's
+  (undici-based) `fetch()` throws "not implemented" for it, and no browser
+  `fetch()` honours `file:` either (blocked for security) — so this was
+  never actually portable despite looking like ordinary URL loading.
+  `file://` sources now read via `node:fs` instead of `fetch()` (with the
+  module specifier built at runtime so it doesn't get statically bundled
+  into the browser build, which doesn't hit this branch — see the CI
+  browser leg's bundle-content check).
+
+### Added
+
+- **Cross-runtime CI**: the same `*.test.ts` suite now also runs under Node
+  (`vitest run`, against the built `dist/` — `vitest.config.mts` aliases
+  `bun:test` → `vitest` so no test file forks between runners) and in a
+  real Chromium via Playwright (`e2e/browser-harness.html`, a vanilla
+  `<script type="module">` page with no bundler — the third runtime the
+  README already claimed to support but never actually tested).
+  `make test-node` / `make test-browser`, both folded into `make check`.
 
 `@vyaz/core` 0.4.11 → 0.4.12, `@vyaz/renderer` 0.4.11 → 0.4.12, `@vyaz/converters` 0.1.0 → 0.1.1.
 

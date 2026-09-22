@@ -10,9 +10,9 @@
  */
 
 import { describe, it, expect, beforeAll } from 'bun:test';
-import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
-import { FontNotFoundError } from '../src/measure/FontNotFoundError.js';
-
+import { fontMetricsProvider } from '@vyaz/core';
+import { FontNotFoundError } from '@vyaz/core';
+import { registerArialVariants } from './helpers.ts';
 // ── 1. env.ts ─────────────────────────────────────────────────────────
 
 describe('env.ts — isNodeLike', () => {
@@ -93,7 +93,14 @@ describe('index.browser.ts — browser entry', () => {
 // ── 3. FontMetricsProvider in browser mode ────────────────────────────
 
 describe('FontMetricsProvider — browser mode', () => {
-  beforeAll(() => {
+  // Self-registered here rather than relying on another test *file*'s
+  // beforeAll to have already run (registerArialVariants in
+  // text-run.test.ts): that only worked because Bun's test runner shares one
+  // process/global fontMetricsProvider across every file by default and
+  // happened to run that file first. Vitest isolates each file in its own
+  // worker — no such cross-file ordering to depend on, under either runner.
+  beforeAll(async () => {
+    await registerArialVariants();
     fontMetricsProvider.setMode('browser');
   });
 
@@ -102,8 +109,9 @@ describe('FontMetricsProvider — browser mode', () => {
   });
 
   it('getMetrics() should use Canvas fallback for system fonts', () => {
-    // Arial is registered via helpers (registerArialVariants in text-run.test.ts),
-    // but even if not — Canvas fallback saves it on Bun (has @napi-rs/canvas)
+    // Arial is registered just above; even if the system has no Arial file
+    // (registerArialVariants no-ops, warning, rather than throwing) the
+    // Canvas fallback should still not throw.
     expect(() => {
       fontMetricsProvider.getMetrics('Arial', 16);
     }).not.toThrow();

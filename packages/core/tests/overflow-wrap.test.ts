@@ -17,9 +17,8 @@
 import { describe, test, expect, beforeAll } from 'bun:test';
 import type { Paragraph, ParagraphStyle } from '../src/types/Document.js';
 import { registerArialVariants, registerUnifont } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
-import { paragraphLayoutEngine } from '../src/layout/ParagraphLayoutEngine.js';
-
+import { layoutTextFrame } from '@vyaz/core';
+import { paragraphLayoutEngine } from '@vyaz/core';
 beforeAll(async () => {
   await registerArialVariants();
   await registerUnifont();

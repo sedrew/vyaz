@@ -3,7 +3,7 @@
  */
 
 import { describe, test, expect } from 'bun:test';
-import { groupLinesByParagraph } from '../src/utils/groupLinesByParagraph.js';
+import { groupLinesByParagraph } from '@vyaz/core';
 import type { Line, Span } from '../src/types/LayoutTypes.js';
 
 function makeSpan(text: string, pIdx: number, tag?: string): Span {

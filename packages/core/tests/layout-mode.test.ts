@@ -6,8 +6,8 @@
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, registerFixtureFonts, makeTextFrame, makeParagraph } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
-import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
+import { layoutTextFrame } from '@vyaz/core';
+import { fontMetricsProvider } from '@vyaz/core';
 import type { Paragraph, TextFrame } from '../src/types/Document.js';
 
 beforeAll(async () => {

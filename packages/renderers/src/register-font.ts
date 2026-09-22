@@ -37,6 +37,28 @@ function normWeight(w: string | number | undefined): string {
 }
 
 /**
+ * Read a `file://` URL via node:fs — see the call site's comment for why.
+ *
+ * The two specifiers are built at runtime (`'node:' + 'fs/promises'`), not
+ * written as literal `import('node:fs/promises')` calls: a literal string
+ * is exactly what a bundler's static `import()` analysis looks for to pull
+ * a module into the graph and inline it — which is how this leaked
+ * `node:fs/promises` into the browser bundle (`index.browser.ts` exports
+ * `registerFont` too, unlike `SystemFontRegistry`, which dodges the same
+ * problem by living in a module `index.browser.ts` never imports at all).
+ * A computed specifier is opaque to that analysis, so the bundler leaves it
+ * as a genuine runtime `import()` — which only ever executes on the
+ * `file://` branch above, something no browser caller would trigger.
+ */
+async function readFileUrl(url: string): Promise<Uint8Array> {
+  const nodeFs = 'node:' + 'fs/promises';
+  const nodeUrl = 'node:' + 'url';
+  const { readFile } = await import(nodeFs);
+  const { fileURLToPath } = await import(nodeUrl);
+  return new Uint8Array(await readFile(fileURLToPath(url)));
+}
+
+/**
  * Register one font face with the layout engine and (in a browser) with
  * `document.fonts`, from a single `ArrayBuffer` / `Uint8Array` or a URL.
  *
@@ -68,9 +90,19 @@ export async function registerFont(
 
   // Fetch a URL once so both halves see identical bytes; normalise to a
   // Uint8Array (fontkit needs a typed array, not a bare ArrayBuffer).
+  //
+  // `file://` is read via node:fs, not fetch(): Bun's fetch() supports the
+  // `file:` scheme as a convenience extension, but Node's (undici-based)
+  // does not — it throws "not implemented" — and no browser fetch() honours
+  // `file:` either (blocked for security), so this scheme only ever makes
+  // sense server-side to begin with. Dynamic import keeps `node:fs` out of
+  // the browser bundle's static dependency graph; the branch is simply
+  // unreachable there since nothing would pass a `file://` URL in a browser.
   const bytes: Uint8Array =
     typeof source === 'string'
-      ? new Uint8Array(await (await fetch(source)).arrayBuffer())
+      ? source.startsWith('file://')
+        ? await readFileUrl(source)
+        : new Uint8Array(await (await fetch(source)).arrayBuffer())
       : source instanceof Uint8Array
         ? source
         : new Uint8Array(source);

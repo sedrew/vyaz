@@ -3,9 +3,8 @@
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, makeTextFrame, makeParagraph } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
-import { createLayoutEngine } from '../src/layout/create-engine.js';
-
+import { layoutTextFrame } from '@vyaz/core';
+import { createLayoutEngine } from '@vyaz/core';
 beforeAll(async () => {
   await registerUnifont();
 });

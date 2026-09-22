@@ -43,11 +43,11 @@ import {
   spanTexts,
   lastSpan,
 } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
-import { FontNotFoundError } from '../src/measure/FontNotFoundError.js';
-import { compileParagraph } from '../src/compile/ParagraphCompiler.js';
-import { fontMetricsProvider, MISSING_GLYPH_FACTOR } from '../src/measure/FontMetricsProvider.js';
-
+import { layoutTextFrame } from '@vyaz/core';
+import { FontNotFoundError } from '@vyaz/core';
+import { compileParagraph } from '@vyaz/core';
+import { fontMetricsProvider } from '@vyaz/core';
+import { MISSING_GLYPH_FACTOR } from '../src/measure/FontMetricsProvider.js';
 beforeAll(async () => {
   await registerUnifont();
   await registerArialVariants();

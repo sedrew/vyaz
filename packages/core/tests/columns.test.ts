@@ -10,8 +10,7 @@
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, makeParagraph, makeTextFrame } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
-
+import { layoutTextFrame } from '@vyaz/core';
 beforeAll(async () => {
   await registerUnifont();
 });

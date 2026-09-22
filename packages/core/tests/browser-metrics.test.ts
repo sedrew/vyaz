@@ -15,7 +15,7 @@ import { describe, test, expect, beforeAll } from 'bun:test';
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { fontMetricsProvider, createFontFace, measurePx } from '../src/index.js';
+import { fontMetricsProvider, createFontFace, measurePx } from '@vyaz/core';
 import {
   oracleDir,
   registerOracleFont,

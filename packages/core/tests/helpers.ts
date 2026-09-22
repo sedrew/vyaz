@@ -21,10 +21,18 @@ import type {
 } from '../src/types/Document.js';
 import type { ParagraphLayoutResult, Span } from '../src/types/LayoutTypes.js';
 import type { TextFrameLayoutResult } from '../src/layout/TextFrameLayoutEngine.js';
-import { ParagraphLayoutEngine } from '../src/layout/ParagraphLayoutEngine.js';
-import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
+// Public value imports go through '@vyaz/core', not a relative 'src/' path —
+// see the long comment on this exact issue in git blame / CHANGELOG: Node has
+// no "bun" package.json export condition, so a package-specifier import
+// resolves to dist/ while a relative import stays on src/ — two different
+// module instances of the same stateful singleton (fontMetricsProvider).
+// Every *.test.ts in this package now imports its public @vyaz/core symbols
+// (layoutTextFrame, fontMetricsProvider, etc.) the same way, including this
+// file, so they all share one instance regardless of runtime.
+// `assertLineInvariants` stays relative — not part of the public API, and a
+// pure function, so it has no shared state to diverge on.
+import { ParagraphLayoutEngine, fontMetricsProvider, DEFAULT_PARAGRAPH_STYLE } from '@vyaz/core';
 import { assertLineInvariants } from '../src/layout/LineBoxValidator.js';
-import { DEFAULT_PARAGRAPH_STYLE } from '../src/types/Document.js';
 import getSystemFonts from 'get-system-fonts';
 
 // ── Singleton ──────────────────────────────────────────────────────────

@@ -11,7 +11,7 @@
 
 import { describe, test, expect, beforeAll } from 'bun:test';
 import type { Paragraph } from '../src/types/Document.js';
-import { paragraphLayoutEngine } from '../src/layout/ParagraphLayoutEngine.js';
+import { paragraphLayoutEngine, layoutTextFrame } from '@vyaz/core';
 import { registerArialVariants } from './helpers.ts';
 
 beforeAll(async () => {
@@ -263,8 +263,6 @@ describe('letterSpacing — multi-run with different spacing', () => {
 
 describe('letterSpacing — TextFrame integration', () => {
   test('layoutTextFrame preserves letterSpacing in output spans', () => {
-    const { layoutTextFrame } = require('../src/layout/TextFrameLayoutEngine.js') as any;
-
     const frame = {
       width: 500,
       wrap: true,

@@ -5,7 +5,7 @@
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import { registerUnifont, makeParagraph, makeTextFrame } from './helpers.ts';
-import { layoutTableFrame } from '../src/layout/TableLayoutEngine.js';
+import { layoutTableFrame } from '@vyaz/core';
 import type { TableFrame, TableCell } from '../src/types/TableTypes.js';
 
 beforeAll(async () => {

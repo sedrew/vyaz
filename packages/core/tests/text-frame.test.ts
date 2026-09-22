@@ -19,8 +19,7 @@ import {
   makeParagraph,
   makeTextFrame,
 } from './helpers.ts';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
-
+import { layoutTextFrame } from '@vyaz/core';
 beforeAll(async () => {
   await registerUnifont();
   await registerArialVariants();

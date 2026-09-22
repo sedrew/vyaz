@@ -11,9 +11,9 @@
  */
 
 import { describe, test, expect, beforeAll } from 'bun:test';
-import { formatListNumber, defaultBulletChar, BULLET_CHARACTERS } from '../src/utils/list.js';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
-import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
+import { formatListNumber, defaultBulletChar, BULLET_CHARACTERS } from '@vyaz/core';
+import { layoutTextFrame } from '@vyaz/core';
+import { fontMetricsProvider } from '@vyaz/core';
 import type { TextFrame, Paragraph, TextRun, ListStyle } from '../src/types/Document.js';
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';

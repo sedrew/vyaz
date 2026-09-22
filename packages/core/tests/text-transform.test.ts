@@ -7,8 +7,7 @@
  */
 
 import { describe, test, expect } from 'bun:test';
-import { transformText } from '../src/utils/textTransform.js';
-
+import { transformText } from '@vyaz/core';
 describe('transformText — uppercase', () => {
   test('simple text', () => {
     expect(transformText('hello', 'uppercase')).toBe('HELLO');

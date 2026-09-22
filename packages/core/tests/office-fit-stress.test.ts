@@ -20,8 +20,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { registerUnifont, registerFixtureFonts, registerArialVariants } from './helpers.ts';
-import { fontMetricsProvider } from '../src/measure/FontMetricsProvider.js';
-import { layoutTextFrame } from '../src/layout/TextFrameLayoutEngine.js';
+import { fontMetricsProvider } from '@vyaz/core';
+import { layoutTextFrame } from '@vyaz/core';
 import type { LayoutOptions } from '../src/layout/TextFrameLayoutEngine.js';
 
 beforeAll(async () => {
