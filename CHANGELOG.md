@@ -7,6 +7,24 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.4.12] - 2026-09-22
+
+`@vyaz/core` 0.4.11 → 0.4.12, `@vyaz/renderer` 0.4.11 → 0.4.12, `@vyaz/converters` 0.1.0 → 0.1.1.
+
+### Added
+
+- **`<hr>` support** — previously dropped entirely at conversion time (never reached the layout
+  engine or renderer, including via Markdown `---`). `Paragraph.rule?: { thickness, color }` lays
+  out as a content-less paragraph spanning the full available width, painted as a horizontal bar
+  (`Line.rule` in the layout result).
+- **`<blockquote>` left rule** — the indent bar was missing entirely (indentation + grey text
+  only). `ParagraphStyle.leftRule?: { width, color }` is stamped on every laid-out `Line` of the
+  paragraph (`Line.leftRule`), so a wrapped quote reads as one continuous bar without the layout
+  engine tracking the paragraph's overall bounding box.
+- Both painted by `SVGRenderer`'s new `addVerticalRule()` (mirrors the existing
+  `addDecorationLine()` used for underline/strikethrough). Playground's editor updated to match.
+- 14 new tests (core layout geometry, converters, SVG output).
+
 ## [0.4.11] - 2026-09-20
 
 `@vyaz/core` 0.4.10 → 0.4.11, `@vyaz/renderer` 0.4.10 → 0.4.11.
