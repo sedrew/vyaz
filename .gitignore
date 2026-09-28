@@ -6,6 +6,7 @@ fonts/
 !packages/renderers/tests/cases/fonts/
 
 dist/
+*.tsbuildinfo
 
 .skills/
 .agents/
