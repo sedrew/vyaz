@@ -110,7 +110,7 @@ pack-test: build
 
 # ── Environment check ────────────────────────────────────────────
 check-env:
-	bun run --cwd packages/core vyaz --check
+	node packages/core/bin/vyaz.js --check
 	@echo "✅ check-env passed"
 
 # ── Browser bundle export validation ─────────────────────────────
