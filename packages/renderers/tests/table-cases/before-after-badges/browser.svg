@@ -9,7 +9,7 @@
   </text>
 </svg>
 </g>
-  <g transform="translate(11 11)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="17" viewBox="0 0 178 17">
+  <g transform="translate(11 11)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="16.89" viewBox="0 0 178 16.89">
   <text x="50" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
     <tspan x="50" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">Build passed</tspan>
   </text>
@@ -27,7 +27,7 @@
   </text>
 </svg>
 </g>
-  <g transform="translate(211 11)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="17" viewBox="0 0 178 17">
+  <g transform="translate(211 11)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="16.89" viewBox="0 0 178 16.89">
   <text x="50" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
     <tspan x="50" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">Tests failed</tspan>
   </text>
@@ -39,7 +39,7 @@
   </text>
 </svg>
 </g>
-  <g transform="translate(11 61)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="17" viewBox="0 0 178 17">
+  <g transform="translate(11 61)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="16.89" viewBox="0 0 178 16.89">
   <text x="43.5" y="12" font-family="Unifont" font-size="13" fill="#666666" font-weight="400" xml:space="preserve">
     <tspan x="43.5" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#666666">no badges here</tspan>
   </text>
@@ -51,7 +51,7 @@
   </text>
 </svg>
 </g>
-  <g transform="translate(211 61)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="17" viewBox="0 0 178 17">
+  <g transform="translate(211 61)"><svg xmlns="http://www.w3.org/2000/svg" width="178" height="16.89" viewBox="0 0 178 16.89">
   <text x="53.25" y="12" font-family="Unifont" font-size="13" fill="#111111" font-weight="400" xml:space="preserve">
     <tspan x="53.25" font-weight="400" font-style="normal" font-family="Unifont" font-size="13" fill="#111111">before only</tspan>
   </text>

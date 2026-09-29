@@ -111,6 +111,67 @@ const OFFICE_LINE_BOX_RATIO = 1.20;
  */
 const OFFICE_BASELINE_RATIO = 0.75;
 
+/**
+ * `mode: 'browser'` — the pixel grid Chrome rounds font ascent/descent to, in
+ * device px per CSS px. 1 matches headless Chromium (any `deviceScaleFactor`)
+ * and desktop Chrome at 100%; a Blink that lays out at device scale (Electron
+ * at DPR 2) rounds to 0.5px instead.
+ */
+const BROWSER_PIXEL_GRID = 1;
+
+/** Blink's `LayoutUnit`: fixed point, 1/64 px. */
+const LAYOUT_UNIT = 64;
+
+/** One inline box on a line: font metrics (px), used size, and its baseline shift (+ = down). */
+interface BrowserInlineBox {
+  ascent: number;
+  descent: number;
+  fontSize: number;
+  shift: number;
+  /** Atomic inline (an inline-box widget, like `<img>`): its box is exactly ascent + descent — no leading, no rounding. */
+  atomic?: boolean;
+}
+
+/**
+ * `mode: 'browser'` line box — CSS 2.1 §10.8 as Blink computes it, measured
+ * against Chrome over 10 fonts × 17 sizes × 7 line-heights (1190/1190 exact
+ * for height, baseline and 3-line pitch):
+ *
+ * - each inline box's ascent/descent (hhea) is rounded to the pixel grid;
+ * - its line-height is `fontSize × lineHeight` floored to a LayoutUnit;
+ * - half-leading = `(lineHeight − (A + D)) / 2` truncated to a LayoutUnit — it
+ *   may be **negative** (the glyphs overflow the box; the line never grows to
+ *   fit them);
+ * - the box's baseline sits `floor(A + halfLeading)` below its top, on the
+ *   pixel grid; the rest of the box (`lineHeight − that`) hangs below it;
+ * - the line box spans the highest box top to the lowest box bottom (mixed
+ *   sizes: 144/144 exact against Chrome).
+ *
+ * An atomic inline (inline-box widget) contributes its own box as-is.
+ */
+function browserLineBox(boxes: BrowserInlineBox[], lineHeight: number): { height: number; baseline: number } {
+  const grid = BROWSER_PIXEL_GRID;
+  const lu = (v: number) => Math.floor(v * LAYOUT_UNIT) / LAYOUT_UNIT;
+  let above = -Infinity;
+  let below = -Infinity;
+  for (const b of boxes) {
+    if (b.atomic) {
+      above = Math.max(above, b.ascent - b.shift);
+      below = Math.max(below, b.descent + b.shift);
+      continue;
+    }
+    const a = Math.round(b.ascent * grid) / grid;
+    const d = Math.round(b.descent * grid) / grid;
+    const boxHeight = lu(lu(b.fontSize) * lineHeight);
+    const halfLeading = Math.trunc(((boxHeight - (a + d)) / 2) * LAYOUT_UNIT) / LAYOUT_UNIT;
+    const boxAbove = Math.floor((a + halfLeading) * grid) / grid;
+    above = Math.max(above, boxAbove - b.shift);
+    below = Math.max(below, boxHeight - boxAbove + b.shift);
+  }
+  if (!Number.isFinite(above)) return { height: 0, baseline: 0 };
+  return { height: above + below, baseline: above };
+}
+
 /** Round to 2 decimal places — the precision every emitted geometry value carries. */
 function round2(value: number): number {
   return Math.round(value * 100) / 100;
@@ -206,6 +267,7 @@ export function positionLines(
     let dominantWinAscFrac: number | undefined;
     let dominantUseTypoMetrics: boolean | undefined;
     const spans: Span[] = [];
+    const inlineBoxes: BrowserInlineBox[] = [];
 
     for (const frag of ptLine.fragments) {
       const item = items[frag.itemIndex];
@@ -221,6 +283,13 @@ export function positionLines(
 
       maxAscent = Math.max(maxAscent, effectiveAscent);
       maxDescent = Math.max(maxDescent, effectiveDescent);
+      inlineBoxes.push({
+        ascent: metrics.ascent,
+        descent: metrics.descent,
+        fontSize: item.metadata.effectiveFontSize,
+        shift: item.metadata.baselineOffset || 0,
+        atomic: !!item.metadata.inlineWidget,
+      });
 
       if (item.metadata.effectiveFontSize >= maxFontSizeSeen) {
         maxFontSizeSeen = item.metadata.effectiveFontSize;
@@ -393,6 +462,7 @@ export function positionLines(
 
       maxAscent = Math.max(maxAscent, markerAscent);
       maxDescent = Math.max(maxDescent, markerDescent);
+      inlineBoxes.push({ ascent: markerAscent, descent: markerDescent, fontSize: markerFontSize, shift: 0 });
 
       // Create a style object for the marker span
       const markerStyle = {
@@ -589,8 +659,9 @@ export function positionLines(
     // ── Y positioning ───────────────────────────────
     // Line height algorithm depends on mode:
     //
-    // 'browser' (CSS-compatible, parley/Chrome matching):
-    //   1. lineHeightPx = maxFontSize * style.lineHeight
+    // 'browser' (CSS inline formatting, Chrome-exact): every run and marker is
+    //   an inline box with its own `fontSize × lineHeight` and half-leading;
+    //   the line box bounds them all — see `browserLineBox`.
     //
     // 'office' (MS Office / DrawingML):
     //   line box = OFFICE_LINE_BOX_RATIO (1.20, font-independent) × the line's
@@ -614,9 +685,6 @@ export function positionLines(
     //   lineHeight===1, non-useTypoMetrics case is switched.
     const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
 
-    const ascentRounded = Math.round(maxAscent);
-    const descentRounded = Math.round(maxDescent);
-
     let lineBoxHeight: number;
     let baseline: number;
 
@@ -634,32 +702,8 @@ export function positionLines(
       lineBoxHeight = OFFICE_LINE_BOX_RATIO * maxFontSize * style.lineHeight;
       baseline = lineBoxHeight * baselineRatio;
     } else {
-      // Browser: CSS-compatible with leading distribution.
-      const lineHeightPx = maxFontSize * style.lineHeight;
-      const ascentDescentRounded = ascentRounded + descentRounded;
-
-      const rawLineBoxHeight = Math.round(lineHeightPx);
-      lineBoxHeight = Math.max(rawLineBoxHeight, ascentDescentRounded);
-      const leading = lineBoxHeight - ascentDescentRounded; // always integer
-
-      if (leading <= 0) {
-        // Negative or zero leading: don't shrink the line
-        baseline = ascentRounded;
-      } else {
-        // Positive leading: distribute as integers with above_leading < below_leading
-        const ascentDescent = maxAscent + maxDescent;
-        const aboveLeadingFloat = ascentDescent > 0 ? leading * maxAscent / ascentDescent : leading / 2;
-        let aboveLeading = Math.round(aboveLeadingFloat);
-        let belowLeading = leading - aboveLeading;
-
-        // Ensure above_leading < below_leading (parley/Chrome heuristic)
-        if (aboveLeading >= belowLeading) {
-          aboveLeading = Math.floor((leading - 1) / 2);
-          belowLeading = leading - aboveLeading;
-        }
-
-        baseline = ascentRounded + aboveLeading;
-      }
+      // Browser: CSS inline formatting (see browserLineBox).
+      ({ height: lineBoxHeight, baseline } = browserLineBox(inlineBoxes, style.lineHeight));
     }
 
     const startIdx = charIndex;
@@ -694,7 +738,9 @@ export function positionLines(
       x: round2(lineX),
       y: round2(currentY),
       width: round2(lineWidth),
-      height: Math.round(lineBoxHeight * 100) / 100,
+      // browser: a LayoutUnit multiple (1/64) — exact in a double, and the frame
+      // re-accumulates `y` from it, so 2 dp rounding would drift ~0.005px/line.
+      height: mode === 'browser' ? lineBoxHeight : Math.round(lineBoxHeight * 100) / 100,
       baseline: Math.round(baseline * 100) / 100,
       ascent: Math.round(maxAscent * 100) / 100,
       descent: Math.round(maxDescent * 100) / 100,
