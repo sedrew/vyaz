@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="580" height="197.58" viewBox="-10 -10 580 197.58">
+<svg xmlns="http://www.w3.org/2000/svg" width="580" height="195.58" viewBox="-10 -10 580 195.58">
   <text x="0" y="22" font-family="Roboto" font-size="24" fill="#111111" font-weight="700" xml:space="preserve">
     <tspan x="0" font-weight="700" font-style="normal" font-family="Roboto" font-size="24" fill="#111111">Quarterly Type Review</tspan>
   </text>
@@ -68,9 +68,9 @@
     <tspan x="254.08" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333"> </tspan>
     <tspan x="257.81" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333">run.</tspan>
   </text>
-  <text x="464.3" y="172.69" font-family="Roboto" font-size="13" fill="#777777" font-weight="400" font-style="italic" xml:space="preserve">
+  <text x="464.3" y="170.69" font-family="Roboto" font-size="13" fill="#777777" font-weight="400" font-style="italic" xml:space="preserve">
     <tspan x="464.3" font-weight="400" font-style="italic" font-family="Roboto" font-size="13" fill="#777777">— end of sample</tspan>
   </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="560" height="177.58" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="560" height="175.58" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

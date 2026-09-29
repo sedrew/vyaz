@@ -27,6 +27,7 @@ import { splitParagraphByHardBreaks } from '../compile/ParagraphCompiler.js';
 import { applyScaleExact } from './AutoFitEngine.js';
 import { formatListNumber, defaultBulletChar } from '../utils/list.js';
 import { getMeasureProfile, setMeasureProfile } from '../measure/FontkitMeasureContext.js';
+import { fontMetricsProvider } from '../measure/FontMetricsProvider.js';
 
 /**
  * Result of laying out a full TextFrame.
@@ -293,6 +294,16 @@ export interface AutofitOutcome {
  * isolation, an explicit cache bound, or `clearCache()`, make your own via
  * {@link createLayoutEngine}.
  */
+
+/**
+ * CSS 2.1 §8.3.1 collapsed margin of two adjoining vertical margins: the larger
+ * of two positives, the more negative of two negatives, their sum otherwise.
+ */
+function collapseMargin(a: number, b: number): number {
+  if (a >= 0 && b >= 0) return Math.max(a, b);
+  if (a <= 0 && b <= 0) return Math.min(a, b);
+  return a + b;
+}
 export function layoutTextFrame(frame: TextFrame, options: LayoutOptions = {}): TextFrameLayoutResult {
   return runFlow(frame, options, paragraphLayoutEngine);
 }
@@ -434,6 +445,11 @@ export function runFlow(
   const colLines: Line[] = [];
   const colGaps: number[] = [];
   let pendingColGap = 0;
+  // `mode: 'browser'` collapses adjacent vertical margins (CSS 2.1 §8.3.1): a
+  // paragraph's spaceAfter waits here until the next paragraph's spaceBefore
+  // is known. office stacks them (PowerPoint adds spcAft + spcBef).
+  const collapseMargins = (mode ?? fontMetricsProvider.getMode()) === 'browser';
+  let pendingSpaceAfter = 0;
 
   /**
    * Layout a single paragraph (may be virtual from splitParagraphByHardBreaks).
@@ -545,8 +561,10 @@ export function runFlow(
 
       // Add spaceBefore only for the first sub-paragraph of each original paragraph
       if (subIdx === 0) {
-        if (hasColumns) pendingColGap += p.style.spaceBefore;
-        else currentColY[0] += p.style.spaceBefore;
+        const gap = collapseMargins ? collapseMargin(pendingSpaceAfter, p.style.spaceBefore) : p.style.spaceBefore;
+        pendingSpaceAfter = 0;
+        if (hasColumns) pendingColGap += gap;
+        else currentColY[0] += gap;
       }
       const subResult = layoutSingleParagraph(
         subPara,
@@ -589,11 +607,15 @@ export function runFlow(
 
       // spaceAfter after the LAST sub-paragraph of the original paragraph
       if (subPara === subParagraphs[subParagraphs.length - 1]) {
-        if (hasColumns) pendingColGap += p.style.spaceAfter;
+        if (collapseMargins) pendingSpaceAfter = p.style.spaceAfter;
+        else if (hasColumns) pendingColGap += p.style.spaceAfter;
         else currentColY[0] += p.style.spaceAfter;
       }
     } // end for each paragraph
   }
+  // The last paragraph's spaceAfter has nothing to collapse with. (Columns drop
+  // a trailing gap either way — it never reaches a line.)
+  if (pendingSpaceAfter !== 0 && !hasColumns) currentColY[0] += pendingSpaceAfter;
 
   // ── Multi-column: distribute the collected lines across columns ──────
   if (hasColumns) {

@@ -127,18 +127,19 @@ describe('Vertical stacking (Y offset)', () => {
     expect(gap).toBeLessThanOrEqual(17);
   });
 
-  test('spaceBefore + spaceAfter stack between paragraphs', () => {
+  test('spaceAfter / spaceBefore collapse in browser mode, stack in office', () => {
     const p1 = makeParagraph('First');
     p1.style.spaceAfter = 10;
     const p2 = makeParagraph('Second');
     p2.style.spaceBefore = 10;
 
-    const result = layoutTextFrame(makeTextFrame([p1, p2]));
-    expect(result.lines.length).toBeGreaterThanOrEqual(2);
-
-    const gap = result.lines[1].y - (result.lines[0].y + result.lines[0].height);
-    expect(gap).toBeGreaterThanOrEqual(18);
-    expect(gap).toBeLessThanOrEqual(22);
+    const gap = (mode: 'browser' | 'office') => {
+      const result = layoutTextFrame(makeTextFrame([p1, p2]), { mode });
+      expect(result.lines.length).toBeGreaterThanOrEqual(2);
+      return result.lines[1].y - (result.lines[0].y + result.lines[0].height);
+    };
+    expect(gap('browser')).toBeCloseTo(10, 2); // CSS margin collapsing
+    expect(gap('office')).toBeCloseTo(20, 2);  // PowerPoint spcAft + spcBef
   });
 });
 

@@ -165,3 +165,37 @@ describe('layoutTextFrame result.textBox', () => {
     expect(r.textBox).toEqual({ x: 0, y: 0, width: 0, height: 0 });
   });
 });
+
+// ── paragraph spacing: browser collapses, office stacks ─────────────────
+// CSS 2.1 §8.3.1: adjoining vertical margins collapse (max of positives, min
+// of negatives, sum when the signs differ). PowerPoint adds spcAft + spcBef.
+describe('paragraph spacing between paragraphs', () => {
+  const para = (spaceBefore: number, spaceAfter: number): Paragraph => ({
+    style: { alignment: 'left', lineHeight: 1.2, spaceBefore, spaceAfter, whiteSpace: 'normal' },
+    children: [{ type: 'text', text: 'Hxgyj', fontFamily: 'Roboto', fontSize: 16 } as any],
+  });
+  /** y of the second paragraph's line minus the first line's bottom. */
+  const gap = (a: Paragraph, b: Paragraph, mode: 'browser' | 'office') => {
+    const r = layoutTextFrame({ width: 400, wrap: true, paragraphs: [a, b] }, { mode });
+    return r.lines[1].y - (r.lines[0].y + r.lines[0].height);
+  };
+
+  test('browser: the larger of spaceAfter / spaceBefore', () => {
+    expect(gap(para(0, 12), para(8, 0), 'browser')).toBeCloseTo(12, 6);
+    expect(gap(para(0, 5), para(20, 0), 'browser')).toBeCloseTo(20, 6);
+  });
+
+  test('browser: two negatives → the more negative; mixed signs → sum', () => {
+    expect(gap(para(0, -4), para(-9, 0), 'browser')).toBeCloseTo(-9, 6);
+    expect(gap(para(0, 12), para(-5, 0), 'browser')).toBeCloseTo(7, 6);
+  });
+
+  test('office: spaceAfter + spaceBefore (unchanged)', () => {
+    expect(gap(para(0, 12), para(8, 0), 'office')).toBeCloseTo(20, 6);
+  });
+
+  test('browser: the first paragraph keeps its own spaceBefore', () => {
+    const r = layoutTextFrame({ width: 400, wrap: true, paragraphs: [para(6, 0), para(0, 10)] }, { mode: 'browser' });
+    expect(r.lines[0].y).toBeCloseTo(6, 6);
+  });
+});
