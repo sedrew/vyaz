@@ -7,6 +7,10 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+`mode: 'browser'` brought to Chrome's own numbers, each rule measured in
+headless Chromium and frozen as a test oracle. `mode: 'office'` is untouched
+(office-cases goldens and office tests unchanged).
+
 ### Security
 
 - **SVG attribute injection (stored XSS).** `serializeSvg` wrote attribute
@@ -35,6 +39,54 @@ item when it closes or advances one.
   font was registered into that copy and `@vyaz/core` threw
   `FontNotFoundError`. The Node build now externalises core like the browser
   bundle (`dist/index.js` 1.77 MB → 57 KB). (7e07654)
+
+
+- **Browser line box was wrong in 66% of lines (up to 18px at
+  `lineHeight: 1`).** The browser branch of `PositioningEngine` rounded the
+  line box to whole px, never let it shrink below the rounded content area
+  (`max(lineBox, A + D)`) and split leading proportionally. Now each run is a
+  CSS inline box as Blink lays it out: hhea ascent/descent rounded to the
+  pixel grid, box height `fontSize × lineHeight` on a 1/64px LayoutUnit,
+  half-leading truncated (it may be negative — glyphs overflow, the line does
+  not grow), the box baseline floored, super/sub shifting their own box; the
+  line box bounds them all. Inline-box widgets are atomic. Browser
+  `Line.height` is emitted unrounded (exact 1/64 multiples) so the frame no
+  longer drifts ~0.005px per line. Oracle:
+  `scripts/browser-metrics/capture-line-box.ts` →
+  `fixtures/browser-line-box/line-box.json`; `browser-line-box.test.ts`
+  matches it 552/552 (single and mixed-size lines: height, baseline,
+  3-line pitch). Goldens: line heights such as 14 → 13.8. (a754d49)
+- **Paragraph spacing collapses in browser mode.** `spaceAfter` of one
+  paragraph and `spaceBefore` of the next were added; CSS collapses adjoining
+  margins (larger of two positives, more negative of two negatives, sum when
+  the signs differ). office still stacks them like PowerPoint. (14c304d)
+- **A separator space took the next run's decoration.** In
+  `<b>lazy</b> <del>Athena</del>` the lone `" "` run was folded into the next
+  run's gap and struck through. It now keeps its own style. (e156c65)
+- **Highlight / decoration painted on line-end spaces.** Where white-space
+  collapses (`normal` / `nowrap` / `pre-line`) CSS removes trailing spaces at
+  a line end; a `<mark>` ending in a soft wrap ran ~5px past its last glyph.
+  Such spans are now flagged `Span.collapsed` and the SVG / Canvas renderers
+  skip painting them. browser mode only. (e156c65)
+
+### Added
+
+- **Optical sizing (`opsz`) in browser mode.** A variable font whose `opsz`
+  axis is left free at registration is instanced at
+  `opsz = clamp(fontSize, min, max)` per size, like CSS
+  `font-optical-sizing: auto` (Inter 18px: 363.40 → 357.59px, Chrome
+  357.59). An explicitly registered `opsz` is kept; office measures the
+  registered instance. `MeasureProfile.opticalSizing`. (728769f)
+- **Decorating-box rule for mixed-size underline / line-through.**
+  `TextRun.decorationFontSize` (set by `@vyaz/converters` from the element
+  that turns the decoration on) — Chrome draws a decoration with that
+  element's font, so `<u>` at 16px puts one 1px line under nested 48px text
+  too. The SVG `browser` preset paints such runs as explicit lines
+  (thickness `max(1, floor(box/10))`, underline top `ceil(box/20)` below the
+  baseline, line-through per fragment); single-size runs keep native
+  `text-decoration` (exact in Chrome, skip-ink included). Ink mismatch
+  against Chrome on mixed cases 12–35% → 0.8–15.5%; SVG size: single-size
+  unchanged, mixed underline −56 bytes, mixed line-through +85–105. (390ff4a)
 
 ### Changed
 

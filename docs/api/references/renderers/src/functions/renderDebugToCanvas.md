@@ -4,7 +4,7 @@
 
 > **renderDebugToCanvas**(`ctx`, `lines`, `_width`, `_height`, `flags`): `void`
 
-Defined in: [renderers/src/CanvasRenderer.ts:289](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/CanvasRenderer.ts#L289)
+Defined in: [renderers/src/CanvasRenderer.ts:290](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/CanvasRenderer.ts#L290)
 
 Draw debug overlays on Canvas.
 

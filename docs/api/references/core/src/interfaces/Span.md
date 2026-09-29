@@ -10,12 +10,25 @@ Defined in: [core/src/types/LayoutTypes.ts:14](https://github.com/sedrew/vyaz/bl
 
 > `optional` **breakType?**: `"soft"` \| `"hard"`
 
-Defined in: [core/src/types/LayoutTypes.ts:77](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L77)
+Defined in: [core/src/types/LayoutTypes.ts:85](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L85)
 
 Line break mode after this span.
 'soft' — soft line break (insufficient space)
 'hard' — forced break (\n, explicit separator)
 undefined — not end of line
+
+***
+
+### collapsed?
+
+> `optional` **collapsed?**: `boolean`
+
+Defined in: [core/src/types/LayoutTypes.ts:77](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L77)
+
+Trailing whitespace that CSS removes at the line end (white-space `normal`,
+`nowrap`, `pre-line`; CSS Text §4.1.2). Kept in `spans` for text and index
+fidelity (it may carry the `\n` of a hard break) but never painted:
+renderers draw no background, decoration or glyph for it.
 
 ***
 

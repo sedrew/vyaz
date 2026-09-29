@@ -176,12 +176,49 @@ Register one `FontFace` with `weight: '1 1000'` — the browser instances it per
 
 ```ts
 await fontMetricsProvider.registerFont('Roboto', { weight: '700', variation: { wght: 700 } }, bytes);
-// optical sizing: match font-optical-sizing: auto by pinning opsz to the size
+// opt out of optical sizing: pin opsz yourself
 await fontMetricsProvider.registerFont('Inter', { weight: '400', variation: { opsz: 24 } }, bytes);
 ```
 
 Without `variation`, the engine measures the font's default master (usually
 `wght 400`), so a `bold` run would come out regular-width.
+
+**Optical sizing is automatic.** Chrome applies `font-optical-sizing: auto`:
+a font with an `opsz` axis is drawn with `opsz = clamp(font-size)`. In
+`mode: 'browser'` the engine does the same for an `opsz` axis you leave out of
+`variation` — Inter at 18px measures 357.59px, as in Chrome, instead of the
+default master's 363.40px (enough to move a line break). A pinned `opsz` is
+kept as is; `mode: 'office'` always measures the registered instance.
+
+### What `mode: 'browser'` matches in Chrome
+
+Each rule below was measured in headless Chromium and is held by a frozen
+oracle test (`packages/core/tests/browser-line-box.test.ts`,
+`packages/renderers/tests/decoration-box.test.ts`):
+
+- **Line box** — every run is a CSS inline box: hhea ascent/descent rounded to
+  whole px, `fontSize × lineHeight` on Blink's 1/64px grid, half-leading split
+  evenly and allowed to go negative (at `lineHeight: 1` the glyphs overflow
+  the box; the line does not grow). Mixed sizes on one line and `sup`/`sub`
+  shifts grow the line the way Chrome does. `Line.height` is exact, so long
+  paragraphs don't drift.
+- **Paragraph spacing** — `spaceAfter` / `spaceBefore` of neighbouring
+  paragraphs collapse (the larger wins), like CSS margins.
+- **Line-end spaces** — trailing spaces at a wrap are removed: no highlight or
+  underline past the last glyph (`Span.collapsed`).
+- **Decorations** — an underline / line-through takes its thickness and
+  position from the element that set it (`TextRun.decorationFontSize`, filled
+  in by `@vyaz/converters`), so `<u>` around a bigger `<span>` stays one thin
+  line.
+
+Not yet: the CSS *strut* (a line of only small runs is shorter than in Chrome)
+and Chrome's `<sup>`/`<sub>` size and offsets — see the Roadmap.
+
+The engine models a 1 CSS px grid — what headless Chromium uses at any
+`deviceScaleFactor`, and any Chrome at DPR 1. A Blink that lays out at device
+scale rounds to device pixels instead (seen in Electron at DPR 2: ascent and
+descent snap to 0.5px), so on HiDPI screens baselines can differ by up to
+half a pixel; desktop Chrome on HiDPI has not been measured yet.
 
 ### Matching the browser more closely — `shaping`
 

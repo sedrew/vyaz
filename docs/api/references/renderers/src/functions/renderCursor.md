@@ -4,7 +4,7 @@
 
 > **renderCursor**(`ctx`, `lines`, `pos`, `options?`): `void`
 
-Defined in: [renderers/src/CanvasRenderer.ts:528](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/CanvasRenderer.ts#L528)
+Defined in: [renderers/src/CanvasRenderer.ts:529](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/CanvasRenderer.ts#L529)
 
 Render a text cursor (caret) at the given character position.
 

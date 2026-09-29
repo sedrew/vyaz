@@ -4,7 +4,7 @@
 
 > **splitParagraphByHardBreaks**(`paragraph`): [`Paragraph`](../interfaces/Paragraph.md)[]
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:215](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L215)
+Defined in: [core/src/compile/ParagraphCompiler.ts:223](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L223)
 
 Zero phase: split a Paragraph into virtual Paragraph[] on \n boundaries.
 

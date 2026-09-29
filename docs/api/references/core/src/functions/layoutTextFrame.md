@@ -4,7 +4,7 @@
 
 > **layoutTextFrame**(`frame`, `options?`): [`TextFrameLayoutResult`](../interfaces/TextFrameLayoutResult.md)
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:219](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L219)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:307](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L307)
 
 Layout a full TextFrame (paragraphs stacked with Y-offset accumulation).
 

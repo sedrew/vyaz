@@ -2,7 +2,7 @@
 
 # Interface: LayoutWarning
 
-Defined in: [core/src/types/LayoutTypes.ts:155](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L155)
+Defined in: [core/src/types/LayoutTypes.ts:185](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L185)
 
 A non-fatal issue found while laying out.
 
@@ -12,7 +12,7 @@ A non-fatal issue found while laying out.
 
 > **requested**: `string`
 
-Defined in: [core/src/types/LayoutTypes.ts:163](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L163)
+Defined in: [core/src/types/LayoutTypes.ts:193](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L193)
 
 The first (preferred) family the run asked for.
 
@@ -22,7 +22,7 @@ The first (preferred) family the run asked for.
 
 > **runIndex**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:167](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L167)
+Defined in: [core/src/types/LayoutTypes.ts:197](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L197)
 
 Index of the source run in its paragraph's `children`.
 
@@ -32,7 +32,7 @@ Index of the source run in its paragraph's `children`.
 
 > **type**: `"font-fallback"` \| `"font-missing"`
 
-Defined in: [core/src/types/LayoutTypes.ts:161](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L161)
+Defined in: [core/src/types/LayoutTypes.ts:191](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L191)
 
 - `font-fallback` — a later entry in a `fontFamily` fallback list was used.
 - `font-missing`  — no requested family was registered; a substitute was
@@ -44,6 +44,6 @@ Defined in: [core/src/types/LayoutTypes.ts:161](https://github.com/sedrew/vyaz/b
 
 > **used**: `string`
 
-Defined in: [core/src/types/LayoutTypes.ts:165](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L165)
+Defined in: [core/src/types/LayoutTypes.ts:195](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L195)
 
 The family actually used.

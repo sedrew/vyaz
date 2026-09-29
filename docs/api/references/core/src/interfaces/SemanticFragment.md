@@ -2,7 +2,7 @@
 
 # Interface: SemanticFragment
 
-Defined in: [core/src/types/LayoutTypes.ts:173](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L173)
+Defined in: [core/src/types/LayoutTypes.ts:203](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L203)
 
 Semantic span for snapshots (without physical metrics)
 
@@ -12,7 +12,7 @@ Semantic span for snapshots (without physical metrics)
 
 > `optional` **style?**: `"normal"` \| `"bold"` \| `"italic"`
 
-Defined in: [core/src/types/LayoutTypes.ts:177](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L177)
+Defined in: [core/src/types/LayoutTypes.ts:207](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L207)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/src/types/LayoutTypes.ts:177](https://github.com/sedrew/vyaz/b
 
 > **text**: `string`
 
-Defined in: [core/src/types/LayoutTypes.ts:174](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L174)
+Defined in: [core/src/types/LayoutTypes.ts:204](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L204)
 
 ***
 
@@ -28,7 +28,7 @@ Defined in: [core/src/types/LayoutTypes.ts:174](https://github.com/sedrew/vyaz/b
 
 > **width**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:176](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L176)
+Defined in: [core/src/types/LayoutTypes.ts:206](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L206)
 
 ***
 
@@ -36,4 +36,4 @@ Defined in: [core/src/types/LayoutTypes.ts:176](https://github.com/sedrew/vyaz/b
 
 > **x**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:175](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L175)
+Defined in: [core/src/types/LayoutTypes.ts:205](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L205)

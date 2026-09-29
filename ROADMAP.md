@@ -40,6 +40,20 @@ Direction, not a schedule. Order within a section is rough priority.
   Silently wrong today for any `uppercase`/`lowercase`/`capitalize` run tagged
   Turkish — needs a `lang`/locale signal on the run (not in `TextRun` today)
   to know when to use `tr` casing instead of the default.
+- **Browser parity — what is still off against Chrome** (measured, see
+  `CHANGELOG.md` Unreleased for what already matches):
+  - **CSS strut** — a line box is at least the paragraph font's own inline box
+    in CSS; the document model has no paragraph-level font, so a line made
+    only of smaller runs (`<small>`, a lone `<sub>`) comes out shorter than in
+    Chrome. Needs a paragraph default font on `ParagraphStyle`.
+  - **`<sup>` / `<sub>`** — Chrome: `font-size: smaller` (parent / 1.2),
+    raise by `parentSize / 3 + 1`, lower by `parentSize / 5 + 1`, nested
+    shifts add up (`<sup><sub>` sits just above the baseline). vyaz: fixed
+    0.65 size, −0.4 / +0.25 em, and a single-level `TextRun.script`.
+    Browser-only constants plus a nesting-aware shift in the model.
+  - **Skip-ink on explicit decoration lines** — mixed-size underlines are
+    drawn as `<line>`s (decorating-box rule) and cross descenders; Chrome
+    skips them. Needs glyph outlines at the underline band.
 - **Per-glyph font fallback** — walk a family chain for a missing code point
   instead of falling back to `.notdef` / a `0.5em` estimate.
 - **`text-decoration` styles** — dashed / dotted / wavy, custom colour and

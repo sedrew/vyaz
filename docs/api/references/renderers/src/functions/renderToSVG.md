@@ -4,7 +4,7 @@
 
 > **renderToSVG**(`input`, `options?`): `string`
 
-Defined in: [renderers/src/SVGRenderer.ts:1045](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/SVGRenderer.ts#L1045)
+Defined in: [renderers/src/SVGRenderer.ts:1065](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/SVGRenderer.ts#L1065)
 
 Render a layout to an SVG string.
 

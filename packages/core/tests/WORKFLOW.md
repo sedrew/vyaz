@@ -65,6 +65,22 @@ with `scripts/ci/install-arial.sh` and sets `VYAZ_REQUIRE_ARIAL=1`, which makes
 instead of silently skipping suites. Locally without Arial the suites guarded by
 `REAL_ARIAL` skip and everything else runs on the Roboto stand-in.
 
+## Browser oracles
+
+Chrome's own numbers, captured once with headless Chromium and committed, so
+the tests run offline under `bun test` / vitest:
+
+| Test | Oracle | Refresh |
+|------|--------|---------|
+| `browser-metrics.test.ts` | `fixtures/browser-metrics/<family>-<weight>.json` — advance widths | `scripts/browser-metrics/` (`build-page.ts`, `capture.ts`) |
+| `browser-line-box.test.ts` | `fixtures/browser-line-box/line-box.json` — line height, baseline, 3-line pitch for fixture fonts × 17 sizes × 6 line-heights + mixed-size lines | `bun scripts/browser-metrics/capture-line-box.ts` |
+| `optical-size.test.ts` | inline constant (Inter 18px = 357.59375px) | measure a `<span>` in headless Chromium |
+
+`browser-line-box.test.ts` compares `Line.height` / `Line.baseline` exactly
+(±0.006, the 2 dp output); a failure there is a real divergence from Chrome,
+not noise. `packages/renderers/tests/decoration-box.test.ts` holds the
+underline / line-through positions the same way.
+
 ## When to skip tests
 
 - Font-specific tests (Arial, Times New Roman) that require Canvas fallback — skip with `test.skip` when `hasCanvas()` returns `false`.

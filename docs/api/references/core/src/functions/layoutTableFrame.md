@@ -4,7 +4,7 @@
 
 > **layoutTableFrame**(`table`, `options?`): [`TableLayoutResult`](../interfaces/TableLayoutResult.md)
 
-Defined in: [core/src/layout/TableLayoutEngine.ts:363](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TableLayoutEngine.ts#L363)
+Defined in: [core/src/layout/TableLayoutEngine.ts:364](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TableLayoutEngine.ts#L364)
 
 ## Parameters
 

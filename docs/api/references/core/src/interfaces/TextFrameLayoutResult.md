@@ -2,7 +2,7 @@
 
 # Interface: TextFrameLayoutResult
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:38](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L38)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:39](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L39)
 
 Result of laying out a full TextFrame.
 
@@ -16,7 +16,7 @@ Result of laying out a full TextFrame.
 
 > `optional` **autofit?**: [`AutofitOutcome`](AutofitOutcome.md)
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:55](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L55)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:75](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L75)
 
 Present when autofit ran — the scale applied and whether it bottomed out.
 
@@ -26,9 +26,12 @@ Present when autofit ran — the scale applied and whether it bottomed out.
 
 > **content**: `object`
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:41](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L41)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:47](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L47)
 
-Intrinsic content box — the text bounding box.
+CSS-style content box: every line's full `lineHeight` box summed, plus
+padding. Reported in visual (post-rotation) space. Use it for flow-level
+stacking / auto-grow — a `lineHeight` > 1 leaves half-leading above the
+first line and below the last, exactly as a browser block would.
 
 #### height
 
@@ -44,7 +47,7 @@ Intrinsic content box — the text bounding box.
 
 > **fit**: `object`
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:53](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L53)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:73](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L73)
 
 Which size a renderer should use per axis: `'frame'` when a frame size was
 provided, otherwise `'content'`.
@@ -63,7 +66,7 @@ provided, otherwise `'content'`.
 
 > **frame**: `object`
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:43](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L43)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:63](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L63)
 
 Frame box as given on the input; an axis is omitted when its size was not set.
 
@@ -81,7 +84,7 @@ Frame box as given on the input; an axis is omitted when its size was not set.
 
 > **lines**: [`Line`](Line.md)[]
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:39](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L39)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:40](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L40)
 
 ***
 
@@ -89,7 +92,7 @@ Defined in: [core/src/layout/TextFrameLayoutEngine.ts:39](https://github.com/sed
 
 > **overflow**: `object`
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:48](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L48)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:68](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L68)
 
 Whether content spills past the frame on each axis. `false` for an axis
 with no frame size. Use it to decide auto-grow vs clip vs autofit.
@@ -104,11 +107,47 @@ with no frame size. Use it to decide auto-grow vs clip vs autofit.
 
 ***
 
+### textBox
+
+> **textBox**: `object`
+
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L61)
+
+Text box with the last line's trailing leading trimmed off, in the same
+(pre-rotation) coordinate space as `lines`, `x` / `y` from the frame origin
+(padding kept in the offset). Top / left / right are the first line's box
+top and the widest line's advance extent — unchanged from `content`,
+because PowerPoint keeps the leading above the first line too. The bottom
+is the **last line's baseline + its real font descent**, so a
+`lineHeight` > 1 no longer leaves empty space after the text
+(`content.height − textBox.height` is that trimmed slack, ~6 pt at 18 pt /
+spacing 2.0). Use it for PDF / PPTX frame sizing; use `content` / `frame`
+for flow-level stacking. All zeroes when there are no lines. Callers
+handling `transform` apply it to this box just like to `lines`.
+
+#### height
+
+> **height**: `number`
+
+#### width
+
+> **width**: `number`
+
+#### x
+
+> **x**: `number`
+
+#### y
+
+> **y**: `number`
+
+***
+
 ### transform?
 
 > `optional` **transform?**: [`FrameTransform`](FrameTransform.md)
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:67](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L67)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:87](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L87)
 
 Post-layout rigid transform to realise `writingMode: 'sideways-*'` and/or
 `TextFrame.rotation`. Omitted when the net rotation is a multiple of 360°
@@ -121,7 +160,7 @@ layout space; `content` / `overflow` are reported in **visual** space.
 
 > `optional` **warnings?**: [`LayoutWarning`](LayoutWarning.md)[]
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:69](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L69)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:89](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L89)
 
 Non-fatal issues (font fallback / substitution). Omitted when empty.
 
@@ -131,7 +170,7 @@ Non-fatal issues (font fallback / substitution). Omitted when empty.
 
 > **writingMode**: [`WritingMode`](../type-aliases/WritingMode.md)
 
-Defined in: [core/src/layout/TextFrameLayoutEngine.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L60)
+Defined in: [core/src/layout/TextFrameLayoutEngine.ts:80](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/TextFrameLayoutEngine.ts#L80)
 
 Block flow direction this layout was produced for — echoes
 `TextFrame.writingMode`, defaulting to `'horizontal-tb'`.

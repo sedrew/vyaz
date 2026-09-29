@@ -44,7 +44,7 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:56](https://github.com/sedrew
 
 > **metadata**: `object`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L61)
+Defined in: [core/src/compile/ParagraphCompiler.ts:68](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L68)
 
 #### baselineOffset
 
@@ -72,9 +72,22 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:61](https://github.com/sedrew
 
 > `optional` **originalText?**: `string`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L60)
+Defined in: [core/src/compile/ParagraphCompiler.ts:67](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L67)
 
 Original text before text-transform (if transform was applied). Used for copy-paste / round-trip.
+
+***
+
+### overflowWrap?
+
+> `optional` **overflowWrap?**: `"normal"` \| `"break-word"` \| `"anywhere"`
+
+Defined in: [core/src/compile/ParagraphCompiler.ts:65](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L65)
+
+CSS `overflow-wrap` for this run's text — from the paragraph's
+`overflowWrap` style. `'normal'` (the default) means a word wider than
+the available width overflows the line instead of being force-split at
+grapheme boundaries.
 
 ***
 

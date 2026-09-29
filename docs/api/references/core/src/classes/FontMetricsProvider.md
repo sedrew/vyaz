@@ -2,7 +2,7 @@
 
 # Class: FontMetricsProvider
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:114](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L114)
+Defined in: [core/src/measure/FontMetricsProvider.ts:115](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L115)
 
 Font metrics provider — registers, resolves, and measures fonts.
 
@@ -39,7 +39,7 @@ Everything else is internal.
 
 > **getFamilyVariants**(`family`): `string`[]
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:257](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L257)
+Defined in: [core/src/measure/FontMetricsProvider.ts:258](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L258)
 
 **`Beta`**
 
@@ -64,7 +64,7 @@ Returns empty array if family not found.
 
 > **getFont**(`family`, `weight?`, `style?`): [`FontFace`](../interfaces/FontFace.md) \| `undefined`
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:268](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L268)
+Defined in: [core/src/measure/FontMetricsProvider.ts:269](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L269)
 
 Get font engine FontFace for per-character calculations.
 Uses the same smart fallback logic as getMetrics().
@@ -93,7 +93,7 @@ Uses the same smart fallback logic as getMetrics().
 
 > **getMetrics**(`fontFamily`, `fontSize`, `weight?`, `style?`, `mode?`): [`FontMetrics`](../interfaces/FontMetrics.md)
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:361](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L361)
+Defined in: [core/src/measure/FontMetricsProvider.ts:362](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L362)
 
 Get pixel-scale metrics for a given font family, size, weight, and style.
 
@@ -141,7 +141,7 @@ FontNotFoundError when font is neither registered nor available via Canvas
 
 > **getMode**(): `"browser"` \| `"office"`
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:163](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L163)
+Defined in: [core/src/measure/FontMetricsProvider.ts:164](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L164)
 
 Get current measurement mode.
 
@@ -159,7 +159,7 @@ Get current measurement mode.
 
 > **getRegisteredFamilies**(): `string`[]
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:247](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L247)
+Defined in: [core/src/measure/FontMetricsProvider.ts:248](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L248)
 
 **`Beta`**
 
@@ -177,7 +177,7 @@ List all families registered in the provider.
 
 > **registerFont**(`family`, `options`, `source`, `sourcePath?`): `Promise`\<`void`\>
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:179](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L179)
+Defined in: [core/src/measure/FontMetricsProvider.ts:180](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L180)
 
 Register a binary font for use with fontkit.
 
@@ -231,7 +231,7 @@ Optional filesystem path (used for @napi-rs/canvas in Node.js)
 
 > **setMode**(`mode`): `void`
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:153](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L153)
+Defined in: [core/src/measure/FontMetricsProvider.ts:154](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L154)
 
 Set measurement mode.
 - `'browser'` — hhea.ascender/descender (default)
@@ -257,7 +257,7 @@ Set measurement mode.
 
 > **waitForPendingRegistrations**(): `Promise`\<`void`\>
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:236](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L236)
+Defined in: [core/src/measure/FontMetricsProvider.ts:237](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L237)
 
 **`Beta`**
 

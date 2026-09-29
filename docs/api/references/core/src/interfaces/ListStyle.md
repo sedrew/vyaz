@@ -2,7 +2,7 @@
 
 # Interface: ListStyle
 
-Defined in: [core/src/types/Document.ts:398](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L398)
+Defined in: [core/src/types/Document.ts:412](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L412)
 
 Configuration for list markers (bullet or numbered).
 
@@ -36,7 +36,7 @@ across the entire list group during layout.
 
 > `optional` **bulletChar?**: `string`
 
-Defined in: [core/src/types/Document.ts:415](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L415)
+Defined in: [core/src/types/Document.ts:429](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L429)
 
 Override marker character for bullet lists.
 If not set, defaults depend on `level`:
@@ -50,7 +50,7 @@ If not set, defaults depend on `level`:
 
 > `optional` **bulletIndent?**: `number`
 
-Defined in: [core/src/types/Document.ts:431](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L431)
+Defined in: [core/src/types/Document.ts:445](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L445)
 
 Indent in px for the marker zone.
 All lines of the paragraph share this indent (for `outside` position).
@@ -65,7 +65,7 @@ across the entire list group.
 
 > `optional` **indents?**: `number`[]
 
-Defined in: [core/src/types/Document.ts:438](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L438)
+Defined in: [core/src/types/Document.ts:452](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L452)
 
 Per-level indent overrides (indexed by nesting level).
 E.g. `indents[1]` is the indent for level 1 (first nested).
@@ -77,7 +77,7 @@ Falls back to `bulletIndent * (level + 1)` if not specified.
 
 > `optional` **level?**: `number`
 
-Defined in: [core/src/types/Document.ts:403](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L403)
+Defined in: [core/src/types/Document.ts:417](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L417)
 
 List nesting level (0-based). 0 = top-level.
 
@@ -87,7 +87,7 @@ List nesting level (0-based). 0 = top-level.
 
 > `optional` **numberFormat?**: [`NumberFormat`](../type-aliases/NumberFormat.md)
 
-Defined in: [core/src/types/Document.ts:418](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L418)
+Defined in: [core/src/types/Document.ts:432](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L432)
 
 Numbering format (only used when `type === 'number'`). Defaults to `'decimal'`.
 
@@ -97,7 +97,7 @@ Numbering format (only used when `type === 'number'`). Defaults to `'decimal'`.
 
 > `optional` **position?**: [`ListStylePosition`](../type-aliases/ListStylePosition.md)
 
-Defined in: [core/src/types/Document.ts:406](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L406)
+Defined in: [core/src/types/Document.ts:420](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L420)
 
 Marker position. Defaults to `'outside'`.
 
@@ -107,7 +107,7 @@ Marker position. Defaults to `'outside'`.
 
 > `optional` **startNumber?**: `number`
 
-Defined in: [core/src/types/Document.ts:421](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L421)
+Defined in: [core/src/types/Document.ts:435](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L435)
 
 Starting number for numbered lists. Defaults to 1.
 
@@ -117,6 +117,6 @@ Starting number for numbered lists. Defaults to 1.
 
 > **type**: [`ListType`](../type-aliases/ListType.md)
 
-Defined in: [core/src/types/Document.ts:400](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L400)
+Defined in: [core/src/types/Document.ts:414](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L414)
 
 List type.

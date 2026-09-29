@@ -2,7 +2,7 @@
 
 # Interface: SpanFontMetrics
 
-Defined in: [core/src/types/LayoutTypes.ts:80](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L80)
+Defined in: [core/src/types/LayoutTypes.ts:88](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L88)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [core/src/types/LayoutTypes.ts:80](https://github.com/sedrew/vyaz/bl
 
 > **ascent**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:81](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L81)
+Defined in: [core/src/types/LayoutTypes.ts:89](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L89)
 
 ***
 
@@ -18,7 +18,7 @@ Defined in: [core/src/types/LayoutTypes.ts:81](https://github.com/sedrew/vyaz/bl
 
 > `optional` **baselineOffset?**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:87](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L87)
+Defined in: [core/src/types/LayoutTypes.ts:95](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L95)
 
 Vertical offset from baseline (px). Used for sub/superscript positioning.
  Negative = above baseline (superscript). Positive = below baseline (subscript).
@@ -30,7 +30,7 @@ Vertical offset from baseline (px). Used for sub/superscript positioning.
 
 > **descent**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:82](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L82)
+Defined in: [core/src/types/LayoutTypes.ts:90](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L90)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [core/src/types/LayoutTypes.ts:82](https://github.com/sedrew/vyaz/bl
 
 > **fontSize**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:83](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L83)
+Defined in: [core/src/types/LayoutTypes.ts:91](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L91)

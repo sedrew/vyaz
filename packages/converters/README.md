@@ -68,6 +68,13 @@ real data — see below), `span` + inline `style=""` (`color`, `font-*`,
 `text-align`, `vertical-align`), **`table`** (`colspan`/`rowspan`,
 `<caption>`, header shading — see below). `div`/`section`/… are transparent.
 
+Decorations record their *decorating box*: the element that turns on an
+underline / line-through (`u`, `ins`, `a`, `s`, `del`, `text-decoration`)
+stores its own font size in `TextRun.decorationFontSize`, which nested runs
+inherit (an outer box wins; `text-decoration: none` clears it). The SVG
+`browser` preset uses it to draw the line the way Chrome does when the
+decorated text mixes sizes.
+
 **Lossy (with a warning):** `dl`/`dt`/`dd`, `figcaption`, `details`/`summary`,
 `a` href with a disallowed scheme (`javascript:`, `data:`, …) dropped, `abbr`
 title (lost).

@@ -32,6 +32,20 @@ To keep output compact, only **diff attributes** are emitted on each `<tspan>`. 
 
 Space spans (`type: 'space'`) do **not** reset the style diff — they inherit the style of the preceding text span. This ensures that consecutive text spans with identical styles produce no redundant attributes.
 
+### Decorations and line-end spaces
+
+- `browser` (and the default when no preset is given): a decorated run whose
+  text is all one size keeps native `text-decoration`. A run that mixes sizes
+  under one decorating element (`TextRun.decorationFontSize`, e.g.
+  `<u>ab <span style="font-size:48px">X</span></u>`) drops `text-decoration`
+  and gets explicit `<line>` elements with Chrome's decorating-box rule:
+  thickness `max(1, floor(box / 10))`, underline top `ceil(box / 20)` below the
+  baseline, line-through per fragment. `flat`, `preserve` and `glyph` are
+  unchanged.
+- Spans flagged `Span.collapsed` (trailing spaces CSS removes at a line end,
+  browser mode) are not painted by any preset — no background rect,
+  decoration or glyph.
+
 ## Sizing mode
 
 | Mode | Behavior |

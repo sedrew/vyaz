@@ -2,7 +2,7 @@
 
 # Interface: ShapedGlyph
 
-Defined in: [core/src/measure/FontEngine.ts:127](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L127)
+Defined in: [core/src/measure/FontEngine.ts:183](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L183)
 
 One shaped glyph: its id and its post-GPOS advance / offset, in font units.
 
@@ -12,7 +12,7 @@ One shaped glyph: its id and its post-GPOS advance / offset, in font units.
 
 > **glyphId**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:128](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L128)
+Defined in: [core/src/measure/FontEngine.ts:184](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L184)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/src/measure/FontEngine.ts:128](https://github.com/sedrew/vyaz/
 
 > **xAdvance**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:129](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L129)
+Defined in: [core/src/measure/FontEngine.ts:185](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L185)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [core/src/measure/FontEngine.ts:129](https://github.com/sedrew/vyaz/
 
 > **xOffset**: `number`
 
-Defined in: [core/src/measure/FontEngine.ts:130](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L130)
+Defined in: [core/src/measure/FontEngine.ts:186](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L186)

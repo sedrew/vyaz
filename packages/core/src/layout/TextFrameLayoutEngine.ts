@@ -288,14 +288,6 @@ export interface AutofitOutcome {
 }
 
 /**
- * Layout a full TextFrame (paragraphs stacked with Y-offset accumulation).
- *
- * Uses a shared default engine with its own bounded prepared-line cache. For
- * isolation, an explicit cache bound, or `clearCache()`, make your own via
- * {@link createLayoutEngine}.
- */
-
-/**
  * CSS 2.1 §8.3.1 collapsed margin of two adjoining vertical margins: the larger
  * of two positives, the more negative of two negatives, their sum otherwise.
  */
@@ -304,6 +296,14 @@ function collapseMargin(a: number, b: number): number {
   if (a <= 0 && b <= 0) return Math.min(a, b);
   return a + b;
 }
+
+/**
+ * Layout a full TextFrame (paragraphs stacked with Y-offset accumulation).
+ *
+ * Uses a shared default engine with its own bounded prepared-line cache. For
+ * isolation, an explicit cache bound, or `clearCache()`, make your own via
+ * {@link createLayoutEngine}.
+ */
 export function layoutTextFrame(frame: TextFrame, options: LayoutOptions = {}): TextFrameLayoutResult {
   return runFlow(frame, options, paragraphLayoutEngine);
 }

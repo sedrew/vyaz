@@ -230,11 +230,17 @@ interface MeasureState {
   opticalSizing: boolean;
 }
 
-/**
- * Build a measure context backed by the font tables.
- *
- * @param resolver - font lookup, normally the shared `fontMetricsProvider`
- */
+const kernTableCache = new WeakMap<object, boolean>();
+/** Whether the font carries a classic OpenType/TrueType `kern` table. */
+function hasKernTable(raw: any): boolean {
+  let v = kernTableCache.get(raw);
+  if (v === undefined) {
+    v = !!raw?.directory?.tables?.kern;
+    kernTableCache.set(raw, v);
+  }
+  return v;
+}
+
 /**
  * Pixel width of `text` under `profile`. Shared by the pretext measure context
  * and `ParagraphLayoutEngine`'s fragment measurement so line breaking and
@@ -247,17 +253,6 @@ interface MeasureState {
  *     stretch that produced no advance, so the two profiles agree on
  *     un-shapeable text.
  */
-const kernTableCache = new WeakMap<object, boolean>();
-/** Whether the font carries a classic OpenType/TrueType `kern` table. */
-function hasKernTable(raw: any): boolean {
-  let v = kernTableCache.get(raw);
-  if (v === undefined) {
-    v = !!raw?.directory?.tables?.kern;
-    kernTableCache.set(raw, v);
-  }
-  return v;
-}
-
 export function measurePx(
   raw: any,
   scale: number,
@@ -307,6 +302,11 @@ export function measurePx(
   return width;
 }
 
+/**
+ * Build a measure context backed by the font tables.
+ *
+ * @param resolver - font lookup, normally the shared `fontMetricsProvider`
+ */
 export function createFontkitMeasureContext(resolver: FontResolver): MeasureContextLike {
   // Keyed by the raw `font` string: pretext re-assigns the same handful of
   // shorthands thousands of times per document.

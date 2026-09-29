@@ -2,7 +2,7 @@
 
 # Interface: SemanticParagraph
 
-Defined in: [core/src/types/LayoutTypes.ts:190](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L190)
+Defined in: [core/src/types/LayoutTypes.ts:220](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L220)
 
 Semantic paragraph for YAML snapshots
 
@@ -12,7 +12,7 @@ Semantic paragraph for YAML snapshots
 
 > **height**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:192](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L192)
+Defined in: [core/src/types/LayoutTypes.ts:222](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L222)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/src/types/LayoutTypes.ts:192](https://github.com/sedrew/vyaz/b
 
 > **lines**: [`SemanticLine`](SemanticLine.md)[]
 
-Defined in: [core/src/types/LayoutTypes.ts:193](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L193)
+Defined in: [core/src/types/LayoutTypes.ts:223](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L223)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [core/src/types/LayoutTypes.ts:193](https://github.com/sedrew/vyaz/b
 
 > **width**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:191](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L191)
+Defined in: [core/src/types/LayoutTypes.ts:221](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L221)

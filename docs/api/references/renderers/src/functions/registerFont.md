@@ -4,7 +4,7 @@
 
 > **registerFont**(`family`, `source`, `opts?`): `Promise`\<[`RegisterFontResult`](../interfaces/RegisterFontResult.md)\>
 
-Defined in: [renderers/src/register-font.ts:49](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/register-font.ts#L49)
+Defined in: [renderers/src/register-font.ts:71](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/register-font.ts#L71)
 
 Register one font face with the layout engine and (in a browser) with
 `document.fonts`, from a single `ArrayBuffer` / `Uint8Array` or a URL.

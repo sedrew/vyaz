@@ -4,7 +4,7 @@
 
 > **setMeasureProfile**(`next`): `void`
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:79](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L79)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:105](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L105)
 
 Install the measurement profile used by every fontkit-backed measure path.
 

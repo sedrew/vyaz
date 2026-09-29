@@ -4,7 +4,7 @@
 
 > **measurePx**(`raw`, `scale`, `fontSize`, `text`, `prof?`): `number`
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:211](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L211)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:256](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L256)
 
 Pixel width of `text` under `profile`. Shared by the pretext measure context
 and `ParagraphLayoutEngine`'s fragment measurement so line breaking and

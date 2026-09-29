@@ -16,8 +16,10 @@ in `licenses/`. Downloaded from the upstreams below.
 ## Refreshing
 
 Re-download from the same paths and update the version in the filename / this
-table. Then regenerate the browser oracle (`scripts/browser-metrics/`), which is
-the only thing pinned to exact glyph advances.
+table. Then regenerate both browser oracles — glyph advances
+(`scripts/browser-metrics/`, see `capture.ts`) and line-box geometry
+(`bun scripts/browser-metrics/capture-line-box.ts` →
+`browser-line-box/line-box.json`, needs `bunx playwright install chromium`).
 
 ## Corpus
 
