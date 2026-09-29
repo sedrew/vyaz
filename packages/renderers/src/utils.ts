@@ -50,6 +50,15 @@ export function fmt(n: number, precision = 2): string {
 }
 
 /**
+ * The line as it is painted: spans CSS removes at the line end (`Span.collapsed`
+ * — trailing spaces where white-space collapses) are dropped, so no background,
+ * decoration or glyph is drawn for them. Returns `line` itself when there are none.
+ */
+export function paintableLine(line: Line): Line {
+  return line.spans.some((s) => s.collapsed) ? { ...line, spans: line.spans.filter((s) => !s.collapsed) } : line;
+}
+
+/**
  * Compute the bounding box (content width + height, min x/y) from an array of Line.
  */
 export function computeBBox(lines: Line[]): { x: number; y: number; width: number; height: number } {

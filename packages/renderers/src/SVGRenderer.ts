@@ -21,7 +21,7 @@
 import type { Line, Span, ParagraphLayoutResult, TextFrameLayoutResult, ParagraphGroup, MultiColumnConfig, FrameTransform } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
-import { computeBBox, escapeXml, fmt, safeColor, safeFamily } from './utils.js';
+import { computeBBox, escapeXml, fmt, paintableLine, safeColor, safeFamily } from './utils.js';
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -1107,7 +1107,8 @@ export function renderToSVG(
 
   const builder = new SvgAstBuilder(svgWidth, svgHeight, opts, viewBox);
 
-  for (const line of lines) {
+  for (const rawLine of lines) {
+    const line = paintableLine(rawLine);
     const baselineY = line.y + line.baseline;
 
     // `<hr>` — a full-width horizontal bar in place of text (`line.rule`;

@@ -21,7 +21,7 @@
 import type { Line, Span } from '@vyaz/core';
 import type { DebugFlags } from './types.js';
 import type { CharPos } from './interactive.js';
-import { computeBBox } from './utils.js';
+import { computeBBox, paintableLine } from './utils.js';
 
 export interface CanvasRenderOptions {
   /**
@@ -243,7 +243,8 @@ export function renderToCanvas(
   // ── Render lines with baselineOffset support ──────────────────────
   // SVG expanded mode groups spans by targetY (accounts for sub/superscript
   // baselineOffset). We do the same here: each group gets its own y coordinate.
-  for (const line of lines) {
+  for (const rawLine of lines) {
+    const line = paintableLine(rawLine);
     // Collect all non-space spans that should be drawn
     const drawableSpans = line.spans.filter(
       s => preserveSpaces || s.type !== 'space',

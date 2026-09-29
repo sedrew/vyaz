@@ -321,9 +321,10 @@ export function positionLines(
         // front of it. Matches how a browser attributes a collapsed space to the
         // element that contains it in source.
         const prevItem = items[frag.itemIndex - 1];
+        // A lone separator run (the " " between `</b>` and `<del>`) owns the
+        // space too — it must not pick up the following run's strikethrough.
         const gapFromPrev =
           !!prevItem &&
-          (prevItem.text ?? '').trim().length > 0 && // a real run, not a lone separator
           /\s$/.test(prevItem.text ?? '') &&
           !/^\s/.test(item.text ?? '');
         const gapItem = gapFromPrev ? prevItem : item;
@@ -540,8 +541,15 @@ export function positionLines(
       .slice(trailingStartIndex)
       .reduce((sum, f) => sum + f.width, 0);
 
+    // browser: where spaces collapse (normal / nowrap / pre-line), CSS removes
+    // them at the line end altogether — nothing is painted there, no background
+    // or underline (a `<mark>` ending in a soft wrap stops at its last glyph).
+    // office keeps painting them (PowerPoint was not measured on this).
+    const ws = style.whiteSpace ?? 'normal';
+    const collapsible = mode === 'browser' && (ws === 'normal' || ws === 'nowrap' || ws === 'pre-line');
     for (let i = trailingStartIndex; i < spans.length; i++) {
       spans[i].trailing = true;
+      if (collapsible) spans[i].collapsed = true;
     }
 
     // ── Compute effective line width (excluding trailing whitespace) ─

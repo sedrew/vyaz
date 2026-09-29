@@ -4,10 +4,14 @@
   </text>
   <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="18"> </tspan>
+  </text>
+  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="24 30 36">BBB</tspan>
   </text>
   <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="42"> </tspan>
+  </text>
+  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="48 54 60">CCC</tspan>
   </text>
 <!-- debug overlay -->

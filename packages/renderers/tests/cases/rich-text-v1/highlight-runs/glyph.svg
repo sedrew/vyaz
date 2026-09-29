@@ -2,7 +2,6 @@
   <rect x="0" y="1.08" width="49.89" height="17.58" fill="#FFD54F" />
   <rect x="49.89" y="1.08" width="46.06" height="17.58" fill="#FF8A65" />
   <rect x="240.72" y="1.08" width="73.89" height="17.58" fill="#A5D6A7" />
-  <rect x="314.61" y="1.08" width="3.72" height="17.58" fill="#A5D6A7" />
   <text x="0" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="0 8.9 17.2 25.5 30.5 34.2 41.9">Sunrise</tspan>
   </text>
@@ -16,7 +15,6 @@
   </text>
   <text x="0" y="15" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="240.7 249 252.6 261.1 269.3 273 276.6 285 293.3 298.2 306.2">highlighted</tspan>
-    <tspan x="314.6"> </tspan>
   </text>
   <rect x="0" y="22.08" width="225.01" height="17.58" fill="#A5D6A7" />
   <rect x="272.56" y="26.95" width="5.48" height="11.43" fill="#B3E5FC" />

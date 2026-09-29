@@ -1,15 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="641.41" height="75.98" viewBox="-10 -10 641.41 75.98">
-  <rect x="236.79" y="9.16" width="3.97" height="18.75" fill="#FFE066" />
   <rect x="240.76" y="9.16" width="61.31" height="18.75" fill="#FFE066" />
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="34.3">plain</tspan>
+    <tspan x="34.3" textLength="3.97"> </tspan>
   </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="700" xml:space="preserve">
-    <tspan x="34.3" font-weight="700" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
     <tspan x="38.27" font-weight="700" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="31.28">bold</tspan>
   </text>
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="69.55" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
+  </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" font-style="italic" xml:space="preserve">
-    <tspan x="69.55" font-weight="400" font-style="italic" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
     <tspan x="73.52" font-weight="400" font-style="italic" font-family="Roboto" font-size="16" fill="#333333" textLength="33.98">italic</tspan>
   </text>
   <text x="0" y="24" font-family="Roboto" font-size="24" fill="#333333" font-weight="400" xml:space="preserve">
@@ -20,28 +21,40 @@
     <tspan x="144.26" font-weight="400" font-style="normal" font-family="Roboto" font-size="11" fill="#333333" textLength="3.97"> </tspan>
     <tspan x="148.23" font-weight="400" font-style="normal" font-family="Roboto" font-size="11" fill="#333333" textLength="26.66">small</tspan>
   </text>
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
+    <tspan x="174.89" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
+  </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#C81E3A" font-weight="400" xml:space="preserve">
-    <tspan x="174.89" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#C81E3A" textLength="3.97"> </tspan>
     <tspan x="178.86" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#C81E3A" textLength="57.94">crimson</tspan>
   </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="236.79" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
+  </text>
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="240.76" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="61.31">highlight</tspan>
   </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="302.07" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" text-decoration="underline" textLength="3.97"> </tspan>
+    <tspan x="302.07" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
+  </text>
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="306.04" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" text-decoration="underline" textLength="65.69">underline</tspan>
   </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="371.73" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" text-decoration="line-through" textLength="3.97"> </tspan>
+    <tspan x="371.73" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
+  </text>
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="375.7" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" text-decoration="line-through" textLength="39.4">strike</tspan>
   </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="415.1" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" letter-spacing="3" textLength="3.97"> </tspan>
+    <tspan x="415.1" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
+  </text>
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="419.07" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" letter-spacing="3" textLength="66.88">spread</tspan>
   </text>
   <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="485.94" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" letter-spacing="-1" textLength="3.97"> </tspan>
+    <tspan x="485.94" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" textLength="3.97"> </tspan>
+  </text>
+  <text x="0" y="24" font-family="Roboto" font-size="16" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="489.91" font-weight="400" font-style="normal" font-family="Roboto" font-size="16" fill="#333333" letter-spacing="-1" textLength="27.16">tight</tspan>
   </text>
   <text x="0" y="17.6" font-family="Roboto" font-size="10.4" fill="#333333" font-weight="400" xml:space="preserve">

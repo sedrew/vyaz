@@ -69,6 +69,14 @@ export interface Span {
   trailing?: boolean;
 
   /**
+   * Trailing whitespace that CSS removes at the line end (white-space `normal`,
+   * `nowrap`, `pre-line`; CSS Text §4.1.2). Kept in `spans` for text and index
+   * fidelity (it may carry the `\n` of a hard break) but never painted:
+   * renderers draw no background, decoration or glyph for it.
+   */
+  collapsed?: boolean;
+
+  /**
    * Line break mode after this span.
    * 'soft' — soft line break (insufficient space)
    * 'hard' — forced break (\n, explicit separator)

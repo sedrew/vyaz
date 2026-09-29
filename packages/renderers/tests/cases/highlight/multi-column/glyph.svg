@@ -9,15 +9,12 @@
   <text x="0" y="29.09" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="42"> </tspan>
     <tspan x="49 56 63 70 77 84 91 98 105 112 119 126 133 140 147 154">epsilon zeta eta</tspan>
-    <tspan x="161"> </tspan>
   </text>
   <text x="210" y="13" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="210 217 224 231 238 245 252 259 266 273 280 287 294 301 308 315 322 329 336 343 350 357 364 371 378 385">theta iota kappa lambda mu</tspan>
-    <tspan x="392"> </tspan>
   </text>
   <text x="210" y="29.09" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="210 217 224 231 238 245 252 259 266 273 280 287 294 301 308 315 322 329 336 343 350 357 364 371 378 385">nu xi omicron pi rho sigma</tspan>
-    <tspan x="392"> </tspan>
   </text>
   <text x="210" y="45.19" font-family="Unifont" font-size="14" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="210 217 224 231">tau.</tspan>

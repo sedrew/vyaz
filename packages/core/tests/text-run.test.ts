@@ -539,6 +539,45 @@ describe('Span.trailing', () => {
     const b = layoutParagraph(makeParagraph('Hello')).lines[0].width;
     expect(Math.abs(a - b)).toBeLessThan(5);
   });
+
+  // CSS removes collapsible spaces at a line end, so they are never painted
+  // (a highlight ending in a soft wrap stops at its last glyph).
+  const wrapped = (whiteSpace: 'normal' | 'pre-wrap', mode: 'browser' | 'office') => {
+    const p = makeParagraph('Hello World How Are You', { backgroundColor: '#ff0' } as any);
+    p.style = { ...p.style, whiteSpace };
+    return layoutTextFrame(makeTextFrame([p], { width: 60 }), { mode });
+  };
+  test('browser: soft-wrap trailing spaces are marked collapsed', () => {
+    const r = wrapped('normal', 'browser');
+    expect(r.lines.length).toBeGreaterThan(1);
+    const trailing = r.lines[0].spans.filter((s) => s.trailing);
+    expect(trailing.length).toBeGreaterThan(0);
+    for (const t of trailing) expect(t.collapsed).toBe(true);
+    for (const s of r.lines[0].spans.filter((x) => !x.trailing)) expect(s.collapsed).toBeUndefined();
+  });
+  test('pre-wrap and office keep trailing spaces paintable', () => {
+    for (const r of [wrapped('pre-wrap', 'browser'), wrapped('normal', 'office')]) {
+      for (const l of r.lines) for (const s of l.spans) expect(s.collapsed).toBeUndefined();
+    }
+  });
+});
+
+describe('inter-run space ownership', () => {
+  // `<b>ab</b> <del>cd</del>` → runs "ab" | " " | "cd"(strike): the space is its
+  // own run and must not take the strikethrough of the run after it.
+  test('a lone separator run keeps its own style', () => {
+    const p = makeMultiRunParagraph([
+      { text: 'ab', style: { fontWeight: 'bold' } },
+      { text: ' ' },
+      { text: 'cd', style: { strikethrough: true } },
+    ]);
+    const r = layoutTextFrame(makeTextFrame([p], { width: 400 }));
+    const space = r.lines[0].spans.find((s) => s.type === 'space')!;
+    expect(space).toBeDefined();
+    expect(space.style.strikethrough).toBeFalsy();
+    const cd = r.lines[0].spans.find((s) => s.text === 'cd')!;
+    expect(cd.style.strikethrough).toBe(true);
+  });
 });
 
 // ── 16. Span.breakType ───────────────────────────────────────────────────

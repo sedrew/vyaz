@@ -6,8 +6,10 @@
   <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="700" xml:space="preserve">
     <tspan x="36 42 48 54">Bold</tspan>
   </text>
-  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
+  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="700" xml:space="preserve">
     <tspan x="60"> </tspan>
+  </text>
+  <text x="0" y="11" font-family="Unifont" font-size="12" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="66 72 78 84 90">World</tspan>
   </text>
 <!-- debug overlay -->
