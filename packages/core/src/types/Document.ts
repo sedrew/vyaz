@@ -304,6 +304,15 @@ export interface TextRun {
   underline?: boolean;
   /** Strikethrough decoration. */
   strikethrough?: boolean;
+  /**
+   * Font size of the element that *set* each decoration — CSS's "decorating
+   * box". Chrome draws a decoration with that element's thickness and
+   * position, not each nested run's: `<u>ab <span style="font-size:48px">X</span></u>`
+   * gets one thin 16px underline under the 48px text too. The SVG `browser`
+   * preset uses it where a decorated run mixes font sizes; omitted, the run's
+   * own `fontSize` is the box. Set by `@vyaz/converters`.
+   */
+  decorationFontSize?: { underline?: number; strikethrough?: number };
   /** Overline decoration. @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */
   overline?: boolean;
   /** Underline / overline / strikethrough line style. @experimental Accepted in the type but ignored by the layout engine (no-op until implemented). */

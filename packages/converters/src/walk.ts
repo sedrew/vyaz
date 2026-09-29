@@ -61,7 +61,24 @@ function inlineStyleFor(el: Element, tag: string, cur: RunStyle, o: ResolvedOpti
     const extra = o.resolveStyle(el);
     if (extra) next = { ...next, ...extra } as RunStyle;
   }
-  return next;
+  return withDecorationBox(cur, next);
+}
+
+/**
+ * Record the decorating box: when this element turns a decoration on, its own
+ * font size is what Chrome draws that line with (see
+ * `TextRun.decorationFontSize`). An outer box already decorating wins;
+ * `text-decoration: none` drops it.
+ */
+function withDecorationBox(cur: RunStyle, next: RunStyle): RunStyle {
+  const prev = cur.decorationFontSize ?? {};
+  const box: { underline?: number; strikethrough?: number } = {};
+  if (next.underline) box.underline = cur.underline && prev.underline !== undefined ? prev.underline : next.fontSize;
+  if (next.strikethrough) box.strikethrough = cur.strikethrough && prev.strikethrough !== undefined ? prev.strikethrough : next.fontSize;
+  const out = { ...next };
+  if (box.underline === undefined && box.strikethrough === undefined) delete out.decorationFontSize;
+  else out.decorationFontSize = box;
+  return out;
 }
 
 function mkRun(text: string, s: RunStyle): TextRun {
@@ -231,7 +248,7 @@ function derive(
   if (styleAttr) {
     const parsed = parseInlineStyle(styleAttr, r.fontSize);
     if (parsed.align) p.alignment = parsed.align;
-    r = { ...r, ...parsed.run } as RunStyle;
+    r = withDecorationBox(r, { ...r, ...parsed.run } as RunStyle);
   }
   return { para: p, run: r, pre };
 }
@@ -552,7 +569,9 @@ function sameStyle(a: TextRun, b: TextRun): boolean {
     a.fontWeight === b.fontWeight && a.fontStyle === b.fontStyle && a.color === b.color &&
     a.backgroundColor === b.backgroundColor && a.underline === b.underline &&
     a.strikethrough === b.strikethrough && a.script === b.script &&
-    a.letterSpacing === b.letterSpacing && a.textTransform === b.textTransform;
+    a.letterSpacing === b.letterSpacing && a.textTransform === b.textTransform &&
+    a.decorationFontSize?.underline === b.decorationFontSize?.underline &&
+    a.decorationFontSize?.strikethrough === b.decorationFontSize?.strikethrough;
 }
 
 /**

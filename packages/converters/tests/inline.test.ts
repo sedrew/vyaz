@@ -26,6 +26,17 @@ describe('inline formatting', () => {
     expect(p.children.find((r) => r.text === 'd')!.strikethrough).toBe(true);
   });
 
+  test('decorationFontSize: the element that sets a decoration is its box', () => {
+    const p = one('<p style="font-size:16px"><u>ab <span style="font-size:48px">XY</span></u> <s style="font-size:30px">s <small>t</small></s> <span style="text-decoration:underline;font-size:20px">z<span style="text-decoration:none">n</span></span></p>');
+    const run = (t: string) => p.children.find((r) => r.text.trim() === t)!;
+    expect(run('ab').decorationFontSize).toEqual({ underline: 16 });
+    expect(run('XY').decorationFontSize).toEqual({ underline: 16 }); // nested bigger text keeps the <u> box
+    expect(run('s').decorationFontSize).toEqual({ strikethrough: 30 });
+    expect(run('t').decorationFontSize).toEqual({ strikethrough: 30 });
+    expect(run('z').decorationFontSize).toEqual({ underline: 20 });
+    expect(run('n').decorationFontSize).toBeUndefined();
+  });
+
   test('sup / sub → script', () => {
     const p = one('<p>x<sup>2</sup>y<sub>n</sub></p>');
     expect(p.children.find((r) => r.text === '2')!.script).toBe('super');

@@ -21,7 +21,7 @@
 import type { Line, Span, ParagraphLayoutResult, TextFrameLayoutResult, ParagraphGroup, MultiColumnConfig, FrameTransform } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
-import { computeBBox, escapeXml, fmt, paintableLine, safeColor, safeFamily } from './utils.js';
+import { computeBBox, escapeXml, fmt, paintableLine, safeColor, safeFamily, splitMixedDecorations, type DecorationRule } from './utils.js';
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -130,6 +130,8 @@ type ResolvedOptions = {
   contentPadding: number;
   debug?: DebugFlags;
   glyphDecorations: boolean;
+  /** browser preset: mixed-size decorated runs use Chrome's decorating-box lines (see `splitMixedDecorations`). */
+  decorationBoxes: boolean;
   inlineBoxes?: Record<string, string>;
   missingGlyph: 'keep' | 'box';
 };
@@ -255,7 +257,7 @@ function resolveOptions(opts: SVGRenderOptions): ResolvedOptions {
     fit = 'text';
   }
 
-  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug, glyphDecorations: opts.glyphDecorations ?? true, inlineBoxes: opts.inlineBoxes, missingGlyph: opts.missingGlyph ?? 'keep' };
+  return { structure, spacing, style, fit, sizingHorizontal, sizingVertical, width: opts.width, height: opts.height, className: opts.className, contentPadding: opts.contentPadding ?? 0, debug: opts.debug, glyphDecorations: opts.glyphDecorations ?? true, decorationBoxes: structure === 'expanded' && (opts.preset === undefined || opts.preset === 'browser'), inlineBoxes: opts.inlineBoxes, missingGlyph: opts.missingGlyph ?? 'keep' };
 }
 
 /**
@@ -1108,8 +1110,12 @@ export function renderToSVG(
   const builder = new SvgAstBuilder(svgWidth, svgHeight, opts, viewBox);
 
   for (const rawLine of lines) {
-    const line = paintableLine(rawLine);
+    let line = paintableLine(rawLine);
     const baselineY = line.y + line.baseline;
+    // browser preset: decorated runs that mix font sizes get Chrome's
+    // decorating-box lines instead of per-tspan `text-decoration`.
+    let decoRules: DecorationRule[] = [];
+    if (opts.decorationBoxes) ({ line, rules: decoRules } = splitMixedDecorations(line, baselineY));
 
     // `<hr>` — a full-width horizontal bar in place of text (`line.rule`;
     // see `Paragraph.rule`). `<blockquote>`-style left bar (`line.leftRule`;
@@ -1379,6 +1385,13 @@ export function renderToSVG(
         }
         builder.closeText();
         if (href) builder.closeLink();
+      }
+    }
+
+    if (decoRules.length) {
+      const decoFirstTextX = line.spans.find(s => s.type === 'text' || s.type === 'marker')?.x ?? 0;
+      for (const r of decoRules) {
+        builder.addDecorationLine(line.x + r.x - decoFirstTextX, r.width, r.y + r.thickness / 2, r.color, r.thickness);
       }
     }
   }
