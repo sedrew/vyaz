@@ -25,7 +25,7 @@ import { compileParagraph } from '../compile/ParagraphCompiler.js';
 import type { PreparedRichInlineItem } from '../compile/ParagraphCompiler.js';
 import { fontMetricsProvider, MISSING_GLYPH_FACTOR } from '../measure/FontMetricsProvider.js';
 import { FontNotFoundError } from '../measure/FontNotFoundError.js';
-import { createFontkitMeasureContext, setMeasureContext, setProfileChangeHook, getMeasureProfile, measurePx } from '../measure/FontkitMeasureContext.js';
+import { createFontkitMeasureContext, setMeasureContext, setProfileChangeHook, getMeasureProfile, measurePx, sizedFont } from '../measure/FontkitMeasureContext.js';
 import { clearMeasurementCaches } from '../vendor/pretext/measurement.js';
 import { positionLines } from './PositioningEngine.js';
 import { resolveFontFamily, type OnMissingFont } from './resolve-font.js';
@@ -206,7 +206,7 @@ export class ParagraphLayoutEngine {
     // The measure profile changes fragment widths (kerning / ligatures) and thus
     // line-break points, so it is part of the key.
     const mp = getMeasureProfile();
-    const cacheKey = `${mp.engine}${mp.kernMinSize ?? ''}${mp.kernRequiresTable ? 'T' : ''}${mp.advanceQuantum ?? ''}${mp.features ? JSON.stringify(mp.features) : ''}${preparedCacheKey(paragraph)}`;
+    const cacheKey = `${mp.engine}${mp.kernMinSize ?? ''}${mp.kernRequiresTable ? 'T' : ''}${mp.advanceQuantum ?? ''}${mp.opticalSizing === false ? 'N' : ''}${mp.features ? JSON.stringify(mp.features) : ''}${preparedCacheKey(paragraph)}`;
     let prepared = this.preparedCache.get(cacheKey);
     if (prepared) {
       // bump recency
@@ -257,8 +257,9 @@ export class ParagraphLayoutEngine {
       // (pretext measure context) is on the same profile, so the two agree.
       const prof = getMeasureProfile();
       if (prof.engine === 'shape') {
-        const font = fontMetricsProvider.getFont(fontFamily || 'Arial', fontWeight || '400', fontStyle || 'normal');
-        if (font) {
+        const registered = fontMetricsProvider.getFont(fontFamily || 'Arial', fontWeight || '400', fontStyle || 'normal');
+        if (registered) {
+          const font = sizedFont(registered, fontSize);
           const scale = fontSize / font.unitsPerEm;
           return Math.round(measurePx(font._raw, scale, fontSize, text, prof) * 100) / 100;
         }
@@ -382,18 +383,19 @@ export class ParagraphLayoutEngine {
     fontWeight?: string,
     fontStyle?: string,
   ): Float32Array {
-    const font = fontMetricsProvider.getFont(
+    const registered = fontMetricsProvider.getFont(
       fontFamily || 'Arial',
       fontWeight || '400',
       fontStyle || 'normal',
     );
-    if (!font) {
+    if (!registered) {
       throw new FontNotFoundError(
         fontFamily || 'Arial',
         fontWeight || '400',
         fontStyle || 'normal',
       );
     }
+    const font = sizedFont(registered, fontSize);
 
     const scale = fontSize / font.unitsPerEm;
     const advances = new Float32Array(text.length);

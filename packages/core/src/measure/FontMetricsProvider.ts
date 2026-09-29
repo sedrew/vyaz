@@ -15,6 +15,7 @@
 
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
 import type { FontFace } from './FontEngine.js';
+import { opticalSizeInstance } from './FontEngine.js';
 import { FontNotFoundError } from './FontNotFoundError.js';
 
 // ── Reasonable default for missing glyphs ──────────────────────────────────
@@ -387,7 +388,9 @@ export class FontMetricsProvider implements IFontMetricsProvider {
     // Strategy 1: FontEngine (fontkit) with smart fallback
     const resolved = this._resolveFont(fontFamily, weight, style);
     if (resolved) {
-      const font = resolved.font;
+      // browser: hhea of the optical-size instance the browser uses (an `opsz`
+      // master may carry its own MVAR vertical metrics).
+      const font = m === 'browser' ? opticalSizeInstance(resolved.font, fontSize) : resolved.font;
       const scale = fontSize / font.unitsPerEm;
 
       let ascent: number;

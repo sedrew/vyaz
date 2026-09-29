@@ -50,6 +50,17 @@ export interface FontFace {
    * set, doesn't fit the same office-mode baseline-ratio formula as the rest).
    */
   readonly useTypoMetrics: boolean | null;
+  /**
+   * Set when the font has an `opsz` axis that registration left free: the
+   * un-instanced master plus the registered axes, so {@link opticalSizeInstance}
+   * can pin `opsz` to the used font size (CSS `font-optical-sizing: auto`).
+   */
+  readonly _opticalSize?: {
+    readonly min: number;
+    readonly max: number;
+    readonly base: any;
+    readonly variation: Record<string, number> | undefined;
+  };
 }
 
 // ── FontEngine ─────────────────────────────────────────────────────────
@@ -127,15 +138,43 @@ export async function createFontFace(
   opts?: { variation?: Record<string, number> },
 ): Promise<FontFace> {
   const fontkit = await _getFontkit();
-  let raw = fontkit.create(buffer);
+  const base = fontkit.create(buffer);
+  let raw = base;
   if (opts?.variation && raw.variationAxes && Object.keys(raw.variationAxes).length > 0) {
     raw = raw.getVariation(opts.variation);
   }
   const metrics = _extractMetrics(raw);
+  const opszAxis = base.variationAxes?.opsz;
+  const freeOpsz = opszAxis && !(opts?.variation && 'opsz' in opts.variation);
   return {
     _raw: raw,
     ...metrics,
+    ...(freeOpsz ? { _opticalSize: { min: opszAxis.min, max: opszAxis.max, base, variation: opts?.variation } } : {}),
   };
+}
+
+const _opticalSizeCache = new WeakMap<FontFace, Map<number, FontFace>>();
+
+/**
+ * The instance a browser actually uses for `font` at `fontSize`: Chrome applies
+ * `font-optical-sizing: auto`, i.e. `opsz = clamp(fontSize, axis.min, axis.max)`
+ * for a font whose `opsz` axis is not pinned. Inter at 18px is 1.6% narrower
+ * on `opsz` 18 than on its default 14 — enough to move a line break.
+ * Returns `font` itself when it has no free `opsz` axis. Cached per size.
+ */
+export function opticalSizeInstance(font: FontFace, fontSize: number): FontFace {
+  const os = font._opticalSize;
+  if (!os) return font;
+  const opsz = Math.max(os.min, Math.min(os.max, fontSize));
+  let bySize = _opticalSizeCache.get(font);
+  if (!bySize) _opticalSizeCache.set(font, (bySize = new Map()));
+  let inst = bySize.get(opsz);
+  if (!inst) {
+    const raw = os.base.getVariation({ ...os.variation, opsz });
+    inst = { _raw: raw, ..._extractMetrics(raw) };
+    bySize.set(opsz, inst);
+  }
+  return inst;
 }
 
 // ── Shaping ───────────────────────────────────────────────────────────

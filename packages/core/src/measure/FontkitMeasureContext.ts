@@ -24,7 +24,7 @@
  */
 
 import type { FontFace } from './FontEngine.js';
-import { MISSING_GLYPH_FACTOR } from './FontEngine.js';
+import { MISSING_GLYPH_FACTOR, opticalSizeInstance } from './FontEngine.js';
 import { FontNotFoundError } from './FontNotFoundError.js';
 
 // ── Contract ─────────────────────────────────────────────────────────────
@@ -81,6 +81,12 @@ export interface MeasureProfile {
    * to nearest). Kerning is added on top, unrounded. Ignored when unset or 0.
    */
   advanceQuantum?: number;
+  /**
+   * Instance fonts with a free `opsz` axis at the used size, like CSS
+   * `font-optical-sizing: auto` (see `opticalSizeInstance`). On unless `false`;
+   * `mode: 'office'` turns it off (PowerPoint was never measured doing it).
+   */
+  opticalSizing?: boolean;
 }
 
 let profile: MeasureProfile = { engine: 'advance' };
@@ -102,6 +108,7 @@ export function setMeasureProfile(next: MeasureProfile): void {
     next.kernMinSize !== profile.kernMinSize ||
     next.kernRequiresTable !== profile.kernRequiresTable ||
     next.advanceQuantum !== profile.advanceQuantum ||
+    next.opticalSizing !== profile.opticalSizing ||
     JSON.stringify(next.features) !== JSON.stringify(profile.features);
   profile = next;
   if (changed) onProfileChange?.();
@@ -110,6 +117,11 @@ export function setMeasureProfile(next: MeasureProfile): void {
 /** The active measurement profile. */
 export function getMeasureProfile(): MeasureProfile {
   return profile;
+}
+
+/** `font` as the active profile measures it at `fontSize` (optical-size instance or itself). */
+export function sizedFont(font: FontFace, fontSize: number): FontFace {
+  return profile.opticalSizing === false ? font : opticalSizeInstance(font, fontSize);
 }
 
 // ── Active context ───────────────────────────────────────────────────────
@@ -214,6 +226,8 @@ interface MeasureState {
   raw: unknown;
   scale: number;
   size: number;
+  /** The profile's optical sizing when this state was resolved. */
+  opticalSizing: boolean;
 }
 
 /**
@@ -301,7 +315,8 @@ export function createFontkitMeasureContext(resolver: FontResolver): MeasureCont
   let state: MeasureState | null = null;
 
   function resolve(nextSpec: string): MeasureState | null {
-    const cached = states.get(nextSpec);
+    const key = (profile.opticalSizing === false ? '0' : '1') + nextSpec;
+    const cached = states.get(key);
     if (cached !== undefined) return cached;
 
     const parsed = parseFont(nextSpec);
@@ -316,12 +331,14 @@ export function createFontkitMeasureContext(resolver: FontResolver): MeasureCont
       throw new FontNotFoundError(parsed.families[0], parsed.weight, parsed.style);
     }
 
+    font = sizedFont(font, parsed.size);
     const next: MeasureState = {
       raw: font._raw,
       scale: parsed.size / font.unitsPerEm,
       size: parsed.size,
+      opticalSizing: profile.opticalSizing !== false,
     };
-    states.set(nextSpec, next);
+    states.set(key, next);
     return next;
   }
 
@@ -337,6 +354,9 @@ export function createFontkitMeasureContext(resolver: FontResolver): MeasureCont
 
     measureText(text: string): { width: number } {
       if (state === null || text.length === 0) return { width: 0 };
+      // the profile may have switched optical sizing since this font was resolved
+      if (state.opticalSizing !== (profile.opticalSizing !== false)) state = resolve(spec);
+      if (state === null) return { width: 0 };
       return { width: measurePx(state.raw, state.scale, state.size, text, profile) };
     },
   };

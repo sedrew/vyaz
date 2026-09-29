@@ -328,7 +328,10 @@ export function runFlow(
   const office = options.mode === 'office';
   const useShaping = options.shaping ?? office;
   const quantum = options.advanceQuantum ?? (office ? OFFICE_ADVANCE_QUANTUM : 0);
-  if (useShaping || quantum) {
+  // Optical sizing (`opsz` = font size, CSS `font-optical-sizing: auto`) is the
+  // browser default; office metrics stay on the registered instance.
+  const noOpticalSizing = (options.mode ?? fontMetricsProvider.getMode()) === 'office';
+  if (useShaping || quantum || (noOpticalSizing && getMeasureProfile().opticalSizing !== false)) {
     const saved = getMeasureProfile();
     const shapeDefault = options.shaping === undefined;
     const kernMinSize = options.kernMinSize ?? (shapeDefault && office ? OFFICE_KERN_MIN_SIZE : undefined);
@@ -337,6 +340,7 @@ export function runFlow(
       ...(useShaping && kernMinSize !== undefined ? { kernMinSize } : {}),
       ...(useShaping && shapeDefault && office ? { kernRequiresTable: true } : {}),
       ...(quantum ? { advanceQuantum: quantum } : {}),
+      ...(noOpticalSizing ? { opticalSizing: false } : {}),
     });
     try {
       return runFlow(frame, { ...options, shaping: false, advanceQuantum: 0, kernMinSize: undefined }, engine);
