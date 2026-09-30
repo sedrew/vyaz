@@ -90,6 +90,24 @@ describe('attribute injection', () => {
     expect(injected(svg)).toBe(false);
   });
 
+  test('mixed-size decorated run (explicit <line> rules) keeps the colour safe', () => {
+    const f: TextFrame = {
+      width: 400,
+      wrap: true,
+      paragraphs: [{
+        style: { alignment: 'left', lineHeight: 1.4, spaceBefore: 0, spaceAfter: 0 },
+        children: [
+          { type: 'text', text: 'ab ', fontFamily: 'Roboto', fontSize: 16, color: EVIL, underline: true, decorationFontSize: { underline: 16 } },
+          { type: 'text', text: 'Hxgyj', fontFamily: 'Roboto', fontSize: 48, color: EVIL, underline: true, decorationFontSize: { underline: 16 } },
+        ] as any,
+      }],
+    };
+    const svg = renderToSVG(layoutTextFrame(f), { preset: 'browser', sizing: 'content' });
+    expect(svg).toContain('<line '); // the decorating-box path really ran
+    expect(injected(svg)).toBe(false);
+    expect(svg).not.toContain('alert(');
+  });
+
   test('legitimate colours are untouched', () => {
     for (const c of ['#f00', '#ff0000', '#ff000080', 'rebeccapurple', 'rgb(255, 0, 0)', 'rgba(0,0,0,.5)', 'hsl(120 50% 50%)']) {
       const svg = renderToSVG(layoutTextFrame(frame({ color: c })), { preset: 'browser', sizing: 'content' });

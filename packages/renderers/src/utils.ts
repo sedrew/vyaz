@@ -105,7 +105,7 @@ export function splitMixedDecorations(line: Line, baselineY: number): { line: Li
 
 function boxRules(kind: DecoKind, group: Line['spans'], box: number, baselineY: number): DecorationRule[] {
   const thickness = Math.max(1, Math.floor(box / 10));
-  const color = group[0].style.color || '#000000';
+  const color = safeColor(group[0].style.color, '#000000');
   if (kind === 'underline') {
     const last = group[group.length - 1];
     return [{ x: group[0].x, width: last.x + last.width - group[0].x, y: Math.round(baselineY + Math.ceil(box / 20)), thickness, color }];
