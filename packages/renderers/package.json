@@ -1,6 +1,6 @@
 {
   "name": "@vyaz/renderer",
-  "version": "0.4.13",
+  "version": "0.5.0",
   "description": "SVG renderer for @vyaz/core layout output — text lines and TableFrame grids, four presets (flat/browser/preserve/glyph), plus registerFont() for keeping engine metrics and document.fonts in sync.",
   "keywords": ["svg", "renderer", "text-layout", "table-layout", "typography"],
   "license": "MIT",
@@ -34,12 +34,12 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
-    "@vyaz/core": "^0.4.0",
+    "@vyaz/core": "^0.5.0",
     "is-svg": "^6.1.0",
     "svg-parser": "^2.0.4",
     "typescript": "^5.4.0"
   },
   "peerDependencies": {
-    "@vyaz/core": "^0.4.0"
+    "@vyaz/core": "^0.5.0"
   }
 }

@@ -7,6 +7,19 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-09-30
+
+`@vyaz/core` 0.4.13 → 0.5.0, `@vyaz/renderer` 0.4.13 → 0.5.0,
+`@vyaz/converters` 0.1.1 → 0.5.0 (all three now share one version).
+
+**Upgrading — read this.** `@vyaz/core` is now a *peer* dependency of
+`@vyaz/renderer` and `@vyaz/converters` (and `@vyaz/renderer` of converters), so
+install them together at the same `0.5.x`: `bun add @vyaz/core @vyaz/renderer`
+(+ `@vyaz/converters`). If you inline SVG produced from untrusted input, upgrade
+for the [Security](#security) fix. `mode: 'browser'` geometry changed to match
+Chrome exactly — line heights and vertical positions move by up to a few px
+(the golden snapshots did); `mode: 'office'` output is unchanged.
+
 `mode: 'browser'` brought to Chrome's own numbers, each rule measured in
 headless Chromium and frozen as a test oracle. `mode: 'office'` is untouched
 (office-cases goldens and office tests unchanged).
@@ -55,19 +68,19 @@ headless Chromium and frozen as a test oracle. `mode: 'office'` is untouched
   `scripts/browser-metrics/capture-line-box.ts` →
   `fixtures/browser-line-box/line-box.json`; `browser-line-box.test.ts`
   matches it 552/552 (single and mixed-size lines: height, baseline,
-  3-line pitch). Goldens: line heights such as 14 → 13.8. (a754d49)
+  3-line pitch). Goldens: line heights such as 14 → 13.8. (ebf6b18)
 - **Paragraph spacing collapses in browser mode.** `spaceAfter` of one
   paragraph and `spaceBefore` of the next were added; CSS collapses adjoining
   margins (larger of two positives, more negative of two negatives, sum when
-  the signs differ). office still stacks them like PowerPoint. (14c304d)
+  the signs differ). office still stacks them like PowerPoint. (1572747)
 - **A separator space took the next run's decoration.** In
   `<b>lazy</b> <del>Athena</del>` the lone `" "` run was folded into the next
-  run's gap and struck through. It now keeps its own style. (e156c65)
+  run's gap and struck through. It now keeps its own style. (f000c68)
 - **Highlight / decoration painted on line-end spaces.** Where white-space
   collapses (`normal` / `nowrap` / `pre-line`) CSS removes trailing spaces at
   a line end; a `<mark>` ending in a soft wrap ran ~5px past its last glyph.
   Such spans are now flagged `Span.collapsed` and the SVG / Canvas renderers
-  skip painting them. browser mode only. (e156c65)
+  skip painting them. browser mode only. (f000c68)
 
 ### Added
 
@@ -76,7 +89,7 @@ headless Chromium and frozen as a test oracle. `mode: 'office'` is untouched
   `opsz = clamp(fontSize, min, max)` per size, like CSS
   `font-optical-sizing: auto` (Inter 18px: 363.40 → 357.59px, Chrome
   357.59). An explicitly registered `opsz` is kept; office measures the
-  registered instance. `MeasureProfile.opticalSizing`. (728769f)
+  registered instance. `MeasureProfile.opticalSizing`. (aa51c05)
 - **Decorating-box rule for mixed-size underline / line-through.**
   `TextRun.decorationFontSize` (set by `@vyaz/converters` from the element
   that turns the decoration on) — Chrome draws a decoration with that
@@ -86,7 +99,7 @@ headless Chromium and frozen as a test oracle. `mode: 'office'` is untouched
   baseline, line-through per fragment); single-size runs keep native
   `text-decoration` (exact in Chrome, skip-ink included). Ink mismatch
   against Chrome on mixed cases 12–35% → 0.8–15.5%; SVG size: single-size
-  unchanged, mixed underline −56 bytes, mixed line-through +85–105. (390ff4a)
+  unchanged, mixed underline −56 bytes, mixed line-through +85–105. (89df99a)
 
 ### Changed
 

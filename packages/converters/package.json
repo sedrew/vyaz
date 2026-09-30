@@ -1,6 +1,6 @@
 {
   "name": "@vyaz/converters",
-  "version": "0.1.1",
+  "version": "0.5.0",
   "description": "Convert a formatted-HTML fragment or Markdown into a @vyaz/core TextFrame — inline formatting, lists, tables (colspan/rowspan, nested tables), images/SVG as inline boxes, clickable links.",
   "keywords": ["html", "markdown", "text-layout", "table-layout", "converter", "svg"],
   "license": "MIT",
@@ -37,13 +37,13 @@
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
-    "@vyaz/core": "^0.4.0",
-    "@vyaz/renderer": "^0.4.0",
+    "@vyaz/core": "^0.5.0",
+    "@vyaz/renderer": "^0.5.0",
     "linkedom": "^0.18.13",
     "typescript": "^5.4.0"
   },
   "peerDependencies": {
-    "@vyaz/core": "^0.4.0",
-    "@vyaz/renderer": "^0.4.0"
+    "@vyaz/core": "^0.5.0",
+    "@vyaz/renderer": "^0.5.0"
   }
 }
