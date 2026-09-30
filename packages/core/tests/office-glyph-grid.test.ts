@@ -11,7 +11,7 @@
  *   - Times New Roman (kern table) is unkerned at 11pt and kerned at 20pt.
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
-import { registerUnifont, registerArialVariants, registerFixtureFonts } from './helpers.ts';
+import { registerUnifont, registerArialVariants, registerFixtureFonts, REAL_ARIAL } from './helpers.ts';
 import { layoutTextFrame } from '@vyaz/core';
 import type { LayoutOptions } from '../src/layout/TextFrameLayoutEngine.js';
 
@@ -65,7 +65,7 @@ describe('1/8pt glyph advance grid (office default)', () => {
   });
 });
 
-describe('kerning policy: kern-table fonts from 12pt, GPOS-only fonts never', () => {
+describe.skipIf(!REAL_ARIAL)('kerning policy: kern-table fonts from 12pt, GPOS-only fonts never', () => {
   test('Roboto (no kern table) is not kerned at 20pt: "To" 23.25pt, "LT" 22.625pt as exported', () => {
     expect(width('To', 'Roboto', 20)).toBeCloseTo(23.25, 1);
     expect(width('LT', 'Roboto', 20)).toBeCloseTo(22.625, 1);

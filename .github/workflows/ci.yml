@@ -28,11 +28,16 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Install Arial (tests are calibrated against the real font)
+        run: scripts/ci/install-arial.sh
+
       - name: Install
         run: bun install --frozen-lockfile
 
       - name: Test (Bun, source)
         run: bun test packages
+        env:
+          VYAZ_REQUIRE_ARIAL: '1'
 
       - name: Build (all packages)
         run: bun run build
@@ -65,6 +70,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Install Arial (tests are calibrated against the real font)
+        run: scripts/ci/install-arial.sh
+
       - name: Install
         run: bun install --frozen-lockfile
 
@@ -73,6 +81,8 @@ jobs:
 
       - name: Test (Node, dist/)
         run: npx vitest run
+        env:
+          VYAZ_REQUIRE_ARIAL: '1'
 
   # Real browser (Chromium), loaded the way a framework-free consumer would:
   # e2e/browser-harness.html via a plain <script type="module">, no bundler

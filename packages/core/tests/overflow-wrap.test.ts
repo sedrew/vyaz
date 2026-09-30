@@ -16,7 +16,7 @@
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
 import type { Paragraph, ParagraphStyle } from '../src/types/Document.js';
-import { registerArialVariants, registerUnifont } from './helpers.ts';
+import { registerArialVariants, registerUnifont, REAL_ARIAL } from './helpers.ts';
 import { layoutTextFrame } from '@vyaz/core';
 import { paragraphLayoutEngine } from '@vyaz/core';
 beforeAll(async () => {
@@ -35,7 +35,7 @@ function paraWith(style: Partial<ParagraphStyle>, text: string): Paragraph {
   };
 }
 
-describe('overflowWrap: normal (default) — atomic word never breaks mid-word', () => {
+describe.skipIf(!REAL_ARIAL)('overflowWrap: normal (default) — atomic word never breaks mid-word', () => {
   test('"Hi" at an intrinsic-width probe (width: 1e-3) stays one line at its natural width', () => {
     // An intrinsic-width (min-content) probe: a near-zero width, as a layout engine asks for it.
     const res = layoutTextFrame(

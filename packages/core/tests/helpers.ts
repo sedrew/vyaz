@@ -116,15 +116,47 @@ function parseSubfamily(subfamily: string): { weight: string; style: string } {
   return { weight, style };
 }
 
+/** True when `registerArialVariants` found the real system Arial (false: Roboto stands in). */
+let realArial = false;
+export const hasRealArial = (): boolean => realArial;
+
+const isArialFile = (p: string): boolean => {
+  const name = p.toLowerCase().replace(/\\/g, '/').split('/').pop() || '';
+  return name.startsWith('arial') && (name.endsWith('.ttf') || name.endsWith('.otf'));
+};
+
 /**
- * Find and register Arial font variants (Regular, Bold, Italic, Bold Italic)
- * from the system. Uses get-system-fonts to locate font files.
- * If Arial is not found, logs a warning — tests that require Arial
- * should be guarded by hasCanvas().
+ * Whether the real Arial is installed — known at *import* time, because
+ * `describe.skipIf(!REAL_ARIAL)` is decided while the file is collected,
+ * before any `beforeAll` runs. Tests that lean on Arial's own tables (its
+ * classic `kern` table, its exact advances) use it to skip on a machine
+ * without Arial; CI installs it and sets `VYAZ_REQUIRE_ARIAL=1`, so a
+ * failed font install fails the job loudly instead of skipping silently.
+ */
+export const REAL_ARIAL: boolean = await (async () => {
+  let found = false;
+  try { found = (await getSystemFonts()).some(isArialFile); } catch { /* no font discovery here */ }
+  if (!found && process.env.VYAZ_REQUIRE_ARIAL) {
+    throw new Error('VYAZ_REQUIRE_ARIAL is set but no system Arial was found — is the font package installed?');
+  }
+  return found;
+})();
+
+/**
+ * Register Arial for the suite — `DEFAULT_TEXT_STYLE.fontFamily` is `'Arial'`,
+ * so almost every test lays text out in it.
+ *
+ * Uses the real system Arial (Regular, Bold, Italic, Bold Italic, found with
+ * get-system-fonts) when installed — macOS, Windows. On a runner without it
+ * (Ubuntu CI) the fixture Roboto is registered under the name `Arial` instead,
+ * so tests that only need "some proportional default font" stay hermetic.
+ * Tests that depend on Arial's own tables (its `kern` table, its exact
+ * advances) must skip with `hasRealArial()`.
  *
  * @param mockPaths — optional override for getSystemFonts() result (for testing)
  */
 export async function registerArialVariants(mockPaths?: string[]): Promise<void> {
+  realArial = false;
   try {
     let fontPaths: string[];
     if (mockPaths !== undefined) {
@@ -132,15 +164,7 @@ export async function registerArialVariants(mockPaths?: string[]): Promise<void>
     } else {
       fontPaths = await getSystemFonts();
     }
-    const arialPaths = fontPaths.filter((p) => {
-      const name = p.toLowerCase().replace(/\\/g, '/').split('/').pop() || '';
-      return name.startsWith('arial') && (name.endsWith('.ttf') || name.endsWith('.otf'));
-    });
-
-    if (arialPaths.length === 0) {
-      console.warn('Arial font files not found on the system — Arial font weight tests will be skipped.');
-      return;
-    }
+    const arialPaths = fontPaths.filter(isArialFile);
 
     // Dynamic import — fontkit may not be available
     let fontkit: any;
@@ -161,13 +185,27 @@ export async function registerArialVariants(mockPaths?: string[]): Promise<void>
 
         const { weight, style } = parseSubfamily(font.subfamilyName || 'Regular');
         await fontMetricsProvider.registerFont(family, { weight, style }, buffer, fontPath);
-        console.log(`Registered: ${family} (${weight}/${style})`);
+        realArial = true;
       } catch {
         // Skip individual file errors
       }
     }
+    if (realArial) return;
+
+    console.warn('Arial font files not found on the system — Arial font weight tests will be skipped.');
+    await registerRobotoAsArial();
   } catch (err) {
     console.warn('Failed to register Arial variants:', err);
+  }
+}
+
+/** Stand-in for a missing system Arial: fixture Roboto (variable) registered as `Arial`, all four variants. */
+async function registerRobotoAsArial(): Promise<void> {
+  const dir = resolve(dirname(fileURLToPath(import.meta.url)), 'fixtures');
+  const roboto = readFileSync(resolve(dir, 'Roboto-VariableFont_wdth,wght.ttf'));
+  for (const style of ['normal', 'italic'] as const) {
+    await fontMetricsProvider.registerFont('Arial', { weight: 'normal', style }, roboto);
+    await fontMetricsProvider.registerFont('Arial', { weight: 'bold', style, variation: { wght: 700 } }, roboto);
   }
 }
 

@@ -19,7 +19,7 @@ import { describe, test, expect, beforeAll } from 'bun:test';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { registerUnifont, registerFixtureFonts, registerArialVariants } from './helpers.ts';
+import { registerUnifont, registerFixtureFonts, registerArialVariants, REAL_ARIAL } from './helpers.ts';
 import { fontMetricsProvider } from '@vyaz/core';
 import { layoutTextFrame } from '@vyaz/core';
 import type { LayoutOptions } from '../src/layout/TextFrameLayoutEngine.js';
@@ -111,7 +111,7 @@ describe('stress.json (the deck\'s expected widths) still matches the engine', (
   });
 });
 
-describe('Arial (kern table): kerned from 12pt, box still holds the text', () => {
+describe.skipIf(!REAL_ARIAL)('Arial (kern table): kerned from 12pt, box still holds the text', () => {
   const hasArial = () => fontMetricsProvider.getRegisteredFamilies().includes('Arial');
 
   test.each([9, 11, 12, 16, 36, 72])('%ipt', (size) => {

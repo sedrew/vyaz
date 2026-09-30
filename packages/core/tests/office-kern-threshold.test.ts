@@ -8,7 +8,7 @@
  * every font at every size.
  */
 import { describe, test, expect, beforeAll } from 'bun:test';
-import { registerUnifont, registerArialVariants } from './helpers.ts';
+import { registerUnifont, registerArialVariants, REAL_ARIAL } from './helpers.ts';
 import { layoutTextFrame } from '@vyaz/core';
 import type { LayoutOptions } from '../src/layout/TextFrameLayoutEngine.js';
 
@@ -40,7 +40,7 @@ const unkerned = (size: number) => layout(size, undefined, { mode: 'office', sha
 // plain advance sum: no kerning, no 1/8pt glyph grid — what browser mode measures
 const plain = (size: number) => layout(size, undefined, { mode: 'office', shaping: false, advanceQuantum: 0 }).textBox.width;
 
-describe('office mode: kerning starts at 12pt', () => {
+describe.skipIf(!REAL_ARIAL)('office mode: kerning starts at 12pt', () => {
   test('the fixture text really kerns (otherwise nothing below discriminates)', () => {
     for (const size of [10, 11, 12, 14]) expect(unkerned(size) - kerned(size)).toBeGreaterThan(1);
   });
@@ -65,7 +65,7 @@ describe('office mode: kerning starts at 12pt', () => {
   });
 });
 
-describe('explicit options override the default', () => {
+describe.skipIf(!REAL_ARIAL)('explicit options override the default', () => {
   test('shaping: true kerns at every size', () => {
     expect(layout(10, kerned(10) + 0.25, { mode: 'office', shaping: true }).lines.length).toBe(1);
   });
@@ -86,7 +86,7 @@ describe('explicit options override the default', () => {
   });
 });
 
-describe('prepared-line cache does not cross-feed profiles', () => {
+describe.skipIf(!REAL_ARIAL)('prepared-line cache does not cross-feed profiles', () => {
   test('same paragraph laid out under different kerning profiles back to back', () => {
     const size = 11;
     const w = kerned(size) + 0.25;
