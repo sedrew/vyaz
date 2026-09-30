@@ -11,6 +11,9 @@ bun add @vyaz/core @vyaz/renderer
 npm install @vyaz/core @vyaz/renderer
 ```
 
+`@vyaz/core` is a **peer dependency** — install both, so there is a single copy
+(one font registry) in your app.
+
 ## Quick start — text
 
 ```ts

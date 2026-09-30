@@ -11,6 +11,9 @@ Rich-text editor output, CMS bodies, email HTML → positioned lines → SVG. It
 bun add @vyaz/converters @vyaz/core @vyaz/renderer
 ```
 
+`@vyaz/core` and `@vyaz/renderer` are **peer dependencies** — install them
+alongside, so your app has one copy of each.
+
 ```ts
 import { htmlToTextFrame } from '@vyaz/converters'
 import { layoutTextFrame } from '@vyaz/core'

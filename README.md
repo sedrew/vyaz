@@ -26,9 +26,11 @@ The engine works on a **TextFrame → Paragraph → TextRun** hierarchy, followi
 W3C CSS Text and CSS Inline Layout.
 
 One of the first pure&#8209;JS text layout engines with a real golden corpus:
-line breaking and positioning are covered by **1,100+ unit tests** and **420+
-golden SVG snapshots**, and every renderer preset is diffed against a frozen
-Chrome oracle for browser&#8209;metrics parity.
+line breaking and positioning are covered by **1,200+ tests** (run on Bun and on
+Node against the built packages, plus a real&#8209;Chromium run in CI) and **420+
+golden SVG snapshots** across the four presets. Text widths are checked against a
+frozen headless&#8209;Chrome oracle, and `office` mode against measurements taken
+from real PowerPoint exports (`scripts/office-metrics/`).
 
 The name is **Vyaz** ([Вязь](https://en.wikipedia.org/wiki/Vyaz_(Cyrillic_calligraphy)))
 — an ornate Cyrillic lettering style of Old Slavic origin, where letters are
@@ -52,6 +54,11 @@ the docs site under `docs/`.
 bun add @vyaz/core @vyaz/renderer
 # converting HTML? add @vyaz/converters too
 ```
+
+Install them **together**: `@vyaz/renderer` and `@vyaz/converters` declare
+`@vyaz/core` as a peer dependency, so an app has exactly one copy of it — and
+therefore one font registry (`fontMetricsProvider`) shared by layout, the renderer's
+`registerFont` and the converters.
 
 ## Quick start
 
@@ -94,7 +101,7 @@ one thing you have to get right (fonts go to the engine *and* `document.fonts`).
 - **Metric modes** — `browser` (CSS/Chrome line box) and `office` (PowerPoint / DrawingML) as a per-layout option
 - **PowerPoint text metrics** (`mode: 'office'`) — 1.20 line box, glyph advances on PowerPoint's 1/8pt grid, kerning from 12pt on fonts with a `kern` table (Roboto / Inter never), and `textBox.width` carries 1 pt of padding so a shape sized to it doesn't wrap the last word; opt-outs `advanceQuantum`, `shaping`, `kernMinSize`, `textBoxPadding`
 - **Font fallback** — `fontFamily: string | string[]` with `onMissingFont: 'throw' | 'substitute'`
-- **Shaping** — opt-in `{ shaping: true }` measures through fontkit's OpenType layout (GPOS kerning + GSUB ligatures); advance widths match Chrome to within 0.01pt on Latin / Cyrillic / Greek
+- **Shaping** — opt-in `{ shaping: true }` measures through fontkit's OpenType layout (GPOS kerning + GSUB ligatures); against a frozen Chrome oracle, string widths on the bundled test fonts agree within 0.5 px (in practice ~0.01 px) for Latin / Cyrillic / Greek; known gap: Inter digits next to `.` and `,`, which fontkit over-kerns by a few px
 - **SVG output** — four presets: `flat`, `browser`, `preserve`, `glyph`; CSS or XML style attributes; debug overlays
 - **Pure JS** — the measurement path is fontkit-only; no canvas or native addon required
 - **Tables** — `TableFrame` grid layout: measured columns/rows, `colSpan`/`rowSpan`
@@ -306,9 +313,18 @@ RTL / BiDi, vertical writing modes, and more.
 
 ```bash
 bun install
-bun test            # unit + golden-corpus tests
+bun test packages   # unit + golden-corpus tests (Bun, against src/)
+bun run build && npm run test:node   # the same tests on Node, against dist/
+npm run test:browser                 # real Chromium (Playwright)
 bun run bench       # layout + render throughput, 100 … 1,000,000 runs
 ```
+
+Some tests are calibrated against the real **Arial** (its `kern` table, and the
+default font of `DEFAULT_TEXT_STYLE`). It is found in the system fonts; where it
+is missing (a bare Linux box) those suites are skipped and the rest run on a
+stand-in, so the run stays green. CI installs it
+(`scripts/ci/install-arial.sh`) and sets `VYAZ_REQUIRE_ARIAL=1`, which turns a
+missing Arial into a failure instead of a skip.
 
 ## Acknowledgements
 

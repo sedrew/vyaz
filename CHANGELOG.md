@@ -7,6 +7,43 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+### Security
+
+- **SVG attribute injection (stored XSS).** `serializeSvg` wrote attribute
+  values without escaping, so a colour such as `red" onload="alert(1)" x="` —
+  reachable directly (`color`, `backgroundColor`, `className`) and from
+  untrusted HTML through `@vyaz/converters` (`style="color:…"`) — became a real
+  attribute on the `<text>` element; CSS mode also let a `;` in a colour add
+  declarations. Every attribute value is now escaped (the table renderer's own
+  string builders too), colours and font families are validated when the style
+  state is built (an invalid colour falls back to `#000000`), the converter drops
+  non-colour `color` / `background*` values, and SVG comments cannot contain
+  `--`. Any consumer inlining vyaz SVG built from untrusted input should upgrade.
+  `inlineBoxes` fragments remain raw by design (caller-supplied SVG). (a8a7479)
+
+### Fixed
+
+- **CI was red on GitHub since 0.4.13's test legs (158 failures on Linux).**
+  `DEFAULT_TEXT_STYLE.fontFamily` is `'Arial'` and the tests looked it up in the
+  system fonts; the ubuntu runner has none, so layouts came back with zero
+  lines — invisible on macOS. CI now installs the real Arial
+  (`scripts/ci/install-arial.sh`, `ttf-mscorefonts-installer`) and runs with
+  `VYAZ_REQUIRE_ARIAL=1`; without Arial locally the suites that depend on its
+  `kern` table skip and the rest run on a Roboto stand-in. (dbd0196)
+- **Node: `registerFont` from `@vyaz/renderer` never reached `@vyaz/core`.**
+  The renderer's Node bundle inlined a private copy of core (1.77 MB), so the
+  font was registered into that copy and `@vyaz/core` threw
+  `FontNotFoundError`. The Node build now externalises core like the browser
+  bundle (`dist/index.js` 1.77 MB → 57 KB). (7e07654)
+
+### Changed
+
+- **`@vyaz/core` is now a `peerDependency`** of `@vyaz/renderer` and
+  `@vyaz/converters` (and `@vyaz/renderer` of converters) — install the packages
+  together, as the docs already said, so an app has one copy and one font
+  registry. **`fontkit` moved from `optionalDependencies` to `dependencies`**: all
+  measurement goes through it. (7e07654)
+
 ## [0.4.13] - 2026-09-23
 
 `@vyaz/core` 0.4.12 → 0.4.13, `@vyaz/renderer` 0.4.12 → 0.4.13.

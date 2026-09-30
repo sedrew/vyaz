@@ -53,6 +53,17 @@ Layout engine produces two core types:
 | `lastSpan(result)` | Last span of last line |
 | `hasCanvas()` | Check if @napi-rs/canvas is available |
 | `registerUnifont()` | Register Unifont in fontMetricsProvider |
+| `registerArialVariants()` | Register the real system Arial (all four variants); with none installed, registers fixture Roboto as `Arial` so default-font tests still run |
+| `REAL_ARIAL` | `true` when the real Arial is installed (known at import). Use `describe.skipIf(!REAL_ARIAL)` for suites that lean on Arial's own tables (its `kern` table, exact advances) |
+
+## Arial
+
+`DEFAULT_TEXT_STYLE.fontFamily` is `'Arial'`, and part of the suite is calibrated
+against the real font. It cannot be committed (Monotype licence). CI installs it
+with `scripts/ci/install-arial.sh` and sets `VYAZ_REQUIRE_ARIAL=1`, which makes
+`helpers.ts` throw if it is still missing — so a flaky font download fails the job
+instead of silently skipping suites. Locally without Arial the suites guarded by
+`REAL_ARIAL` skip and everything else runs on the Roboto stand-in.
 
 ## When to skip tests
 
