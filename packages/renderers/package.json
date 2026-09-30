@@ -29,16 +29,17 @@
     }
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target bun && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core && tsc -b",
+    "build": "bun build ./src/index.ts --outdir ./dist --target bun --external @vyaz/core && bun build ./src/index.browser.ts --outdir ./dist --outfile ./dist/index.browser.js --target browser --external @vyaz/core && tsc -b",
     "prepublishOnly": "bun run build"
-  },
-  "dependencies": {
-    "@vyaz/core": "^0.4.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
+    "@vyaz/core": "^0.4.0",
     "is-svg": "^6.1.0",
     "svg-parser": "^2.0.4",
     "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "@vyaz/core": "^0.4.0"
   }
 }

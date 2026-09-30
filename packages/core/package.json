@@ -54,11 +54,11 @@
     "test": "bun test"
   },
   "dependencies": {
+    "fontkit": "^2.0.4",
     "js-yaml": "^5.0.0"
   },
   "optionalDependencies": {
     "@napi-rs/canvas": "^1.0.2",
-    "fontkit": "^2.0.4",
     "get-system-fonts": "^2.0.2"
   },
   "devDependencies": {

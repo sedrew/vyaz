@@ -9,6 +9,8 @@ import { fileURLToPath } from 'node:url';
 import { fontMetricsProvider, layoutTextFrame } from '@vyaz/core';
 import type { TextFrame } from '@vyaz/core';
 import { registerFont, renderToSVG } from '../src/index.js';
+// The published entry (package specifier): live src/ under Bun, built dist/ under Node.
+import * as renderer from '@vyaz/renderer';
 
 const FIX = resolve(dirname(fileURLToPath(import.meta.url)), '../../core/tests/fixtures');
 const robotoBytes = readFileSync(resolve(FIX, 'Roboto-VariableFont_wdth,wght.ttf'));
@@ -25,6 +27,13 @@ const frame = (family: string): TextFrame => ({
 });
 
 describe('registerFont', () => {
+  test('the package entry registers into the SAME engine as @vyaz/core (no second bundled copy)', async () => {
+    // Regression: the Node bundle used to inline @vyaz/core, so this registered
+    // into a private fontMetricsProvider and core never saw the font.
+    await renderer.registerFont('RegViaPackage', robotoBytes);
+    expect(fontMetricsProvider.getFont('RegViaPackage')).toBeDefined();
+  });
+
   test('registers with the engine from bytes; browser half is false in Node', async () => {
     const r = await registerFont('RegByBytes', robotoBytes, { weight: 400 });
     expect(r).toEqual({ family: 'RegByBytes', engine: true, browser: false });
