@@ -36,6 +36,17 @@ function splitDecls(cssText: string): [string, string][] {
   return out;
 }
 
+/**
+ * A CSS colour that is only a colour — `#hex`, a keyword, `rgb()/rgba()/hsl()/hsla()` —
+ * else `undefined`. The value ends up in an SVG attribute / `style` string, so
+ * anything that could carry more (quotes, `;`, `url()`, `var()`) is dropped here
+ * rather than trusted; the renderer escapes and re-validates it as well.
+ */
+function plainColor(raw: string): string | undefined {
+  const c = raw.trim();
+  return /^(?:#[0-9a-f]{3,8}|[a-z]{3,30}|(?:rgb|hsl)a?\(\s*[-+0-9.%,\s/a-z]*\))$/i.test(c) ? c : undefined;
+}
+
 export function parseInlineStyle(cssText: string, parentSize: number): ParsedInlineStyle {
   const run: Partial<TextRun> = {};
   let align: TextAlignment | undefined;
@@ -43,15 +54,20 @@ export function parseInlineStyle(cssText: string, parentSize: number): ParsedInl
   for (const [prop, raw] of splitDecls(cssText)) {
     const v = raw.toLowerCase();
     switch (prop) {
-      case 'color':
-        run.color = raw;
+      case 'color': {
+        const c = plainColor(raw);
+        if (c) run.color = c;
         break;
-      case 'background-color':
-        run.backgroundColor = raw;
+      }
+      case 'background-color': {
+        const c = plainColor(raw);
+        if (c) run.backgroundColor = c;
         break;
+      }
       case 'background': {
         // only a bare colour keyword/hex/rgb() — ignore shorthands with images
-        if (/^#|^rgb|^hsl|^[a-z]+$/.test(v)) run.backgroundColor = raw;
+        const c = plainColor(raw);
+        if (c) run.backgroundColor = c;
         break;
       }
       case 'font-weight':

@@ -5,6 +5,40 @@
 import type { Line } from '@vyaz/core';
 
 /**
+ * Escape text for use in XML character data or a double-quoted attribute value.
+ * Numeric references (not `&amp;`) so the output is valid in SVG-as-XML,
+ * SVG-in-HTML and inside a CSS `style` attribute alike.
+ */
+export function escapeXml(text: string | number): string {
+  return String(text)
+    .replace(/&/g, '&#38;')
+    .replace(/</g, '&#60;')
+    .replace(/>/g, '&#62;')
+    .replace(/"/g, '&#34;');
+}
+
+/**
+ * A CSS/SVG paint value that cannot carry anything but a colour: `#rgb[a]`,
+ * `#rrggbb[aa]`, a colour keyword, `rgb()/rgba()/hsl()/hsla()`. Everything else
+ * (`red; background:url(…)`, `url(…)`, `var(…)`, quotes, `;`, `{}`) is refused.
+ */
+const SAFE_COLOR = /^(?:#[0-9a-f]{3,8}|[a-z]{3,30}|(?:rgb|hsl)a?\(\s*[-+0-9.%,\s/a-z]*\))$/i;
+
+/** `color` when it is a plain colour value, else `fallback`. */
+export function safeColor(color: string | undefined, fallback: string): string;
+export function safeColor(color: string | undefined, fallback?: undefined): string | undefined;
+export function safeColor(color: string | undefined, fallback?: string): string | undefined {
+  if (color === undefined) return fallback;
+  const c = color.trim();
+  return SAFE_COLOR.test(c) ? c : fallback;
+}
+
+/** A font-family name made safe to place between quotes in CSS and in an attribute. */
+export function safeFamily(family: string): string {
+  return family.replace(/['"\\;{}<>&\r\n]/g, '');
+}
+
+/**
  * Format a number for SVG output with fixed precision.
  * Prevents subpixel noise from creating false snapshot diffs.
  *

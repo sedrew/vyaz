@@ -21,7 +21,7 @@
 import type { Line, Span, ParagraphLayoutResult, TextFrameLayoutResult, ParagraphGroup, MultiColumnConfig, FrameTransform } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
-import { computeBBox, fmt } from './utils.js';
+import { computeBBox, escapeXml, fmt, safeColor, safeFamily } from './utils.js';
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -163,14 +163,6 @@ function rotationTransform(rotate: number, w: number, h: number): { transform: s
   return { transform: `rotate(${fmt(rotate)} ${fmt(w / 2)} ${fmt(h / 2)})`, width: w, height: h };
 }
 
-function escapeXml(text: string): string {
-  return text
-    .replace(/&/g, '&#38;')
-    .replace(/</g, '&#60;')
-    .replace(/>/g, '&#62;')
-    .replace(/"/g, '&#34;');
-}
-
 function fontWeightCSS(weight: string | number): string {
   if (weight === 'bold') return 'bold';
   if (weight === 'normal') return '400';
@@ -186,6 +178,7 @@ function fontWeightNumeric(weight: string | number): number {
 }
 
 function colorToRGB(color: string): string {
+  color = safeColor(color, '#000000');
   if (!color) return 'rgb(0, 0, 0)';
   if (color[0] !== '#') return color;
 
@@ -357,14 +350,14 @@ function defaultStyleState(span: Span): StyleState {
   if (span.style.strikethrough) decorations.push('line-through');
 
   return {
-    fontFamily: span.style.fontFamily || 'Arial',
+    fontFamily: safeFamily(span.style.fontFamily || 'Arial'),
     fontSize: span.fontMetrics.fontSize || 16,
     fontWeight: fontWeightNumeric(span.style.fontWeight),
-    color: span.style.color || '#000000',
+    color: safeColor(span.style.color, '#000000'),
     fontStyle: span.style.fontStyle || 'normal',
     decoration: decorations.join(' '),
     letterSpacing: span.style.letterSpacing,
-    backgroundColor: span.style.backgroundColor,
+    backgroundColor: safeColor(span.style.backgroundColor),
   };
 }
 
@@ -408,7 +401,7 @@ function cssStyleString(s: StyleState): string {
 
 /** Build XML presentation attributes for a style */
 function xmlStyleAttrs(s: StyleState): string {
-  let attrs = `font-family="${s.fontFamily}" font-size="${fmt(s.fontSize)}" fill="${s.color}" font-weight="${s.fontWeight}"`;
+  let attrs = `font-family="${escapeXml(s.fontFamily)}" font-size="${fmt(s.fontSize)}" fill="${escapeXml(s.color)}" font-weight="${s.fontWeight}"`;
   if (s.fontStyle === 'italic') attrs += ' font-style="italic"';
   if (s.decoration) attrs += ` text-decoration="${s.decoration}"`;
   if (s.letterSpacing !== undefined && s.letterSpacing !== 0) attrs += ` letter-spacing="${fmt(s.letterSpacing)}"`;
@@ -579,12 +572,12 @@ function serializeSvg(node: SvgNode, indent = 0): string {
       return node.value;
 
     case 'comment':
-      return `${pad}<!-- ${node.value} -->\n`;
+      return `${pad}<!-- ${node.value.replace(/-{2,}/g, '-').replace(/-$/, '')} -->\n`;
 
     case 'element': {
       const tag = node.tag;
       const attrsStr = Object.entries(node.attrs)
-        .map(([k, v]) => `${k}="${v}"`)
+        .map(([k, v]) => `${k}="${escapeXml(v ?? "")}"`)
         .join(' ');
 
       if (node.children.length === 0) {
@@ -1042,7 +1035,7 @@ function getSpanBackgroundAttrs(span: Span, baselineY: number): { x: number; y: 
   const y = baselineY - span.fontMetrics.ascent;
   const w = span.width;
   const h = span.fontMetrics.ascent + span.fontMetrics.descent;
-  return { x, y, w, h, fill: span.style.backgroundColor };
+  return { x, y, w, h, fill: safeColor(span.style.backgroundColor, 'none') };
 }
 
 // ── Main render logic ────────────────────────────────────────────────────
@@ -1200,7 +1193,7 @@ export function renderToSVG(
             for (let i = 0; i < r.start && i < adv.length; i++) x += adv[i] + ls;
             let w = 0;
             for (let i = r.start; i < r.end && i < adv.length; i++) w += adv[i] + (i > r.start ? ls : 0);
-            notdefBoxes.push({ x, advance: w, baseY, fs: span.fontMetrics.fontSize, color: span.style.color || '#000000' });
+            notdefBoxes.push({ x, advance: w, baseY, fs: span.fontMetrics.fontSize, color: safeColor(span.style.color, '#000000') });
           }
           // draw the surviving characters; blank the missing ones so their
           // per-glyph x slot is preserved but nothing is painted there
@@ -1237,7 +1230,7 @@ export function renderToSVG(
           const u = !!span.style.underline;
           const s = !!span.style.strikethrough;
           if (!u && !s) { flushDeco(); continue; }
-          const color = span.style.color || '#000000';
+          const color = safeColor(span.style.color, '#000000');
           const x = span.x + glyphSpanDX;
           const baseY = line.y + line.baseline;
           if (cur && cur.u === u && cur.s === s && cur.color === color && Math.abs(cur.end - x) < 0.01) {
@@ -1296,7 +1289,7 @@ export function renderToSVG(
         }
         // For flat mode, use addRawLine to skip text tracking
         const attrsStr = Object.entries(textAttrs)
-          .map(([k, v]) => `${k}="${v}"`)
+          .map(([k, v]) => `${k}="${escapeXml(v)}"`)
           .join(' ');
         builder.addRawLine(`  <text ${attrsStr}>${text}</text>\n`);
       }

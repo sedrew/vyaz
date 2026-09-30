@@ -41,7 +41,7 @@
 import type { TableLayoutResult, TableCellLayoutResult, ResolvedBorder } from '@vyaz/core';
 import { renderToSVG } from './SVGRenderer.js';
 import type { SvgPreset, SvgStyle } from './SVGRenderer.js';
-import { fmt } from './utils.js';
+import { escapeXml, fmt, safeColor } from './utils.js';
 
 export interface TableRenderOptions {
   /** Preset used for every cell's own text render. Default `'browser'`. */
@@ -67,13 +67,13 @@ function withOverflowVisible(svg: string): string {
 // ── Shape helpers ────────────────────────────────────────────────────────
 
 function rect(x: number, y: number, w: number, h: number, attrs: Record<string, string | number>): string {
-  const a = Object.entries(attrs).map(([k, v]) => `${k}="${v}"`).join(' ');
+  const a = Object.entries(attrs).map(([k, v]) => `${k}="${escapeXml(v)}"`).join(' ');
   return `  <rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(Math.max(0, w))}" height="${fmt(Math.max(0, h))}" ${a} />\n`;
 }
 
 function line(x1: number, y1: number, x2: number, y2: number, color: string, width: number, extra: Record<string, string> = {}): string {
-  const extraAttrs = Object.entries(extra).map(([k, v]) => ` ${k}="${v}"`).join('');
-  return `  <line x1="${fmt(x1)}" y1="${fmt(y1)}" x2="${fmt(x2)}" y2="${fmt(y2)}" stroke="${color}" stroke-width="${fmt(width)}"${extraAttrs} />\n`;
+  const extraAttrs = Object.entries(extra).map(([k, v]) => ` ${k}="${escapeXml(v)}"`).join('');
+  return `  <line x1="${fmt(x1)}" y1="${fmt(y1)}" x2="${fmt(x2)}" y2="${fmt(y2)}" stroke="${escapeXml(safeColor(color, "#000000"))}" stroke-width="${fmt(width)}"${extraAttrs} />\n`;
 }
 
 type Side = 'top' | 'right' | 'bottom' | 'left';
