@@ -7,6 +7,140 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-10-22
+
+`@vyaz/core`, `@vyaz/renderer`, `@vyaz/converters` 0.5.0 → 0.6.0. 0.5.1 was
+never released; its measure cache ships here (see Performance).
+
+**Upgrading — read this.** Install the three packages together at `0.6.x`
+(the peer ranges are `^0.6.0`; `^0.5.0` does not include it). Layout output
+changes in both modes:
+
+- **Both modes:** an indented paragraph or list item that wraps now breaks
+  inside its indents — lines that used to run past the box break earlier.
+  Nested numbered lists keep counting ("1. a. b. 2.", was "1."). Justify
+  stretches every space, single-run paragraphs included. `whiteSpace: 'pre'`
+  / `'pre-wrap'` keep their spaces. Blank lines are a strut of their run's
+  size. Tracked text split at a line end is positioned with its tracking.
+  `Line.startIndex` / `endIndex` are now offsets into the paragraph's source
+  text (they counted collapsed text and restarted after every `\n`).
+- **`mode: 'office'`:** the single-spacing baseline moves down 0.27–1.8 pt
+  (more at larger sizes); list markers sit where PowerPoint puts them;
+  underline / strikethrough come from the font tables; trailing spaces are
+  not painted; super / subscript are 2/3 size and rise 30 %; `whiteSpace`
+  defaults to `'pre-wrap'`.
+
+`mode: 'office'` checked against PowerPoint for Mac 16.93 on justify, list
+markers, whitespace, empty lines, underline / strikethrough, hyphen breaks,
+the single-spacing baseline, center / right, indents, `spc`, super /
+subscript and list levels — 99 text boxes measured through PowerPoint's own object model and PDF export
+(`bun scripts/office-metrics/text-features-run.ts`; findings in
+`scripts/office-metrics/TEXT-FEATURES-RESULTS.md`). **Office output changes**
+(office-cases goldens: trailing spaces no longer painted); browser output
+changes for justified single-run text and blank `pre-line` lines (goldens
+reviewed, both now match CSS).
+
+### Fixed
+
+- **Office baseline at single line spacing sat too high** — up to 3.8 pt at
+  144 pt. At spcPct 100 % PowerPoint puts the baseline at
+  `winAscent / (winAscent + winDescent)` of the 1.2 × size line box, not the
+  average of the typo and win ratios: measured on 7 fonts (Arial, Roboto,
+  Times New Roman, Georgia, Verdana, Courier New, Tahoma) at 12–144 pt, and
+  on PowerPoint's SVG export. **Office output changes** (office-cases goldens:
+  baselines 0.27–1.8 pt lower). `textBox` no longer reaches below the last
+  line box. spcPct ≠ 100 % unchanged. New `office-oracle.test.ts` checks the
+  baselines against PowerPoint's SVG exports.
+- **Letter-spacing was lost on a run split at a line end** — the pieces
+  vyaz measures itself (a word and its trailing space) had no tracking, so
+  justify ran up to 14 pt past the box, centred / right-aligned lines sat off,
+  and the next span overlapped the tracked glyphs. Both modes.
+- **Office super / subscript sized and shifted like PowerPoint.** `script`
+  runs in `mode: 'office'` are 2/3 of the run size (was 0.65) and a
+  superscript rises 30 % of the size (was 40 %) — PowerPoint's Superscript /
+  Subscript buttons, measured. Browser unchanged.
+- **A word after a run ending in a space was split at the line end** in
+  `pre-wrap` with `overflowWrap: 'break-word'` (the office defaults):
+  "wrap su│b" instead of moving "sub" whole. Vendored pretext patch.
+- **Indented text ran past the box.** Line breaking used the full box width
+  while positioning moved the lines in by `leftIndent`, `indent`, the list
+  marker zone and ignored `rightIndent` for the break — an indented
+  paragraph overflowed by up to its indent (both modes, since 0.5.0 and
+  before). Each line now wraps at its own width; PowerPoint's breaks for an
+  indented, centred paragraph match line for line. **Output changes** for
+  every indented paragraph or list item long enough to wrap (goldens
+  `rich-text-v1/paragraph-block`, `office-cases/list-levels`).
+- **List numbering restarted after nested items.** "1. a. b. 2." came out
+  "1. a. b. 1."; a nested bullet did the same. Numbering now follows
+  PowerPoint (measured, 11 cases) and CSS counters: one counter per level, a
+  deeper item keeps the outer count running, coming back up restarts the
+  deeper one. A new `numberFormat` or a `startNumber` that does not continue
+  the count starts a new sequence (roman from 4 then alpha from 25 gave
+  "g. h.", now "y. z."). `mode: 'office'`: an empty numbered paragraph draws
+  no marker and is not counted. `@vyaz/converters` no longer warns
+  `nested-list`.
+- **Justify stretched only the spaces between runs.** A paragraph of one run
+  was not justified at all (up to 57 pt short of the edge); a multi-run line
+  put all its slack into one gap. Every space of the line now takes an equal
+  share, a run of spaces one share per space (both modes). In `office` a line
+  ending in `\n` is stretched too, as PowerPoint stretches one ending in
+  `<a:br/>`.
+- **`Line.startIndex` / `endIndex` counted collapsed text and restarted at 0
+  after every `\n`.** They are now offsets into the paragraph's source text,
+  lines tile it (a `\n` belongs to the line it ends), and spans get
+  `startIndex` / `endIndex` too.
+- **Blank lines.** `a\n\nb` laid out four lines (two 12 px blanks), `a\n` two;
+  an empty line was always 12 px, and a paragraph with one empty run vanished.
+  Now `a\n\nb` is three lines, a blank line is a strut of its run's size, a
+  trailing `\n` adds no line in `browser` (CSS) and one in `office`
+  (PowerPoint).
+- **`whiteSpace: 'pre'` / `'pre-wrap'` collapsed spaces anyway.** They now keep
+  them; trailing spaces hang. `pre` no longer wraps automatically.
+- **Office list markers** sat right-aligned against the text with a 0.25 em
+  gap at 0.9× size. PowerPoint puts the marker left-aligned at
+  `marL + indent` (vyaz `leftIndent`) at 100 % of the text size, the text at
+  `marL` or straight after a wider marker (per paragraph, no list-wide
+  alignment), never kerns auto-numbers and never grows the line for a big
+  bullet — office now does the same. A `\n` inside a list item no longer
+  draws a second marker.
+- **Office trailing spaces** are no longer painted: PowerPoint draws no
+  underline under the spaces a line ends with.
+
+### Added
+
+- `Line.decorations` — underline / strikethrough rules with their geometry,
+  filled in `mode: 'office'` from the font (`post` underline, `OS/2`
+  strikeout): one underline per underlined stretch at the advance-weighted
+  size, strikethrough per run (PowerPoint's model, measured 8–144 pt). The SVG
+  presets and the Canvas renderer paint these rules instead of their own
+  1 px lines. `FontMetrics` gains `underlineTop` / `underlineThickness` /
+  `strikeoutTop` / `strikeoutThickness`.
+- `Line.pIdx` on every line, empty ones included.
+- `mode: 'office'` defaults `whiteSpace` to `'pre-wrap'` when a paragraph
+  leaves it unset (PowerPoint keeps every space).
+- `ParagraphStyle.hyphenBreak` (default `true`): `false` keeps `well-known`,
+  `TEST-1234`, dates and phone numbers on one line.
+- `ListStyle.bulletSize` (DrawingML `buSzPct`) and `ListStyle.bulletFont`
+  (`buFont`).
+- `splitParagraphAtHardBreaks()` — the `\n` pieces of a paragraph with their
+  source offsets.
+- `scripts/office-metrics/text-features-run.ts` drives PowerPoint for Mac via
+  AppleScript (no manual export) and freezes its numbers in
+  `text-features.json`.
+
+### Performance
+
+- **`mode: 'office'` (and any `shaping: true` layout) no longer re-shapes the
+  same words on every call.** `measurePx` now caches shaped widths per font,
+  size and measure profile, shared by line breaking and positioning and kept
+  across `layoutTextFrame()` calls (bounded; the plain advance sum is not
+  cached — it is already a table lookup). The vendored pretext segment cache is
+  keyed by measure profile as well, instead of being flushed twice per office
+  layout when the profile was installed and restored. `bun run bench:office`
+  (1000 text boxes, shared vocabulary): cold 1320 → 128 ms, warm 90 → 31 ms.
+  Output is unchanged. New export `clearMeasureCache()` drops the cached widths
+  (e.g. after unloading a large document).
+
 ## [0.5.0] - 2026-09-30
 
 `@vyaz/core` 0.4.13 → 0.5.0, `@vyaz/renderer` 0.4.13 → 0.5.0,

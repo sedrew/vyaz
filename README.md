@@ -95,12 +95,12 @@ one thing you have to get right (fonts go to the engine *and* `document.fonts`).
 - **Rich runs** — bold, italic, size, colour, background, letter-spacing, sub/superscript, text-transform, underline, strikethrough
 - **Alignment** — left / center / right / justify, per paragraph
 - **Line breaking** — soft & hard breaks, `white-space` (`normal` `nowrap` `pre` `pre-line` `pre-wrap`)
-- **Lists** — bullet & numbered, nesting, `outside` / `inside` markers, custom bullet char, roman/alpha formats
+- **Lists** — bullet & numbered, nesting (numbering runs on past nested items, like PowerPoint and CSS counters), `outside` / `inside` markers, custom bullet char, roman/alpha formats
 - **Multi-column** — `balance` (default) or `auto` fill
 - **Autofit** — one proportional scale so the content fits the frame (`{ autofit: … }`), searched on PowerPoint's 1% `fontScale` grid and reported as the scale the layout was measured at
 - **Metric modes** — `browser` (CSS/Chrome line box) and `office` (PowerPoint / DrawingML) as a per-layout option
 - **Chrome line box** (`mode: 'browser'`) — CSS inline boxes on Blink's 1/64px LayoutUnit grid, negative half-leading, collapsing paragraph margins, `font-optical-sizing: auto` for variable fonts; matches a frozen headless-Chromium oracle exactly (height, baseline, line pitch)
-- **PowerPoint text metrics** (`mode: 'office'`) — 1.20 line box, glyph advances on PowerPoint's 1/8pt grid, kerning from 12pt on fonts with a `kern` table (Roboto / Inter never), and `textBox.width` carries 1 pt of padding so a shape sized to it doesn't wrap the last word; opt-outs `advanceQuantum`, `shaping`, `kernMinSize`, `textBoxPadding`
+- **PowerPoint text metrics** (`mode: 'office'`) — 1.20 line box with the baseline at the font's win-ascent share, glyph advances on PowerPoint's 1/8pt grid, kerning from 12pt on fonts with a `kern` table (Roboto / Inter never), and `textBox.width` carries 1 pt of padding so a shape sized to it doesn't wrap the last word; opt-outs `advanceQuantum`, `shaping`, `kernMinSize`, `textBoxPadding`. Justify, list markers and numbering, indents, underline / strikethrough geometry, super / subscript and whitespace follow PowerPoint, checked box by box against PowerPoint for Mac (`scripts/office-metrics/`)
 - **Font fallback** — `fontFamily: string | string[]` with `onMissingFont: 'throw' | 'substitute'`
 - **Shaping** — opt-in `{ shaping: true }` measures through fontkit's OpenType layout (GPOS kerning + GSUB ligatures); against a frozen Chrome oracle, string widths on the bundled test fonts agree within 0.5 px (in practice ~0.01 px) for Latin / Cyrillic / Greek; known gap: Inter digits next to `.` and `,`, which fontkit over-kerns by a few px
 - **SVG output** — four presets: `flat`, `browser`, `preserve`, `glyph`; CSS or XML style attributes; debug overlays

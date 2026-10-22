@@ -4,6 +4,24 @@ Direction, not a schedule. Order within a section is rough priority.
 
 ## Next
 
+- **Motion hooks — track text across re-layouts.** Layout is a pure, sub-ms
+  function, so motion tools (Remotion, Motion Canvas) can re-lay out every
+  frame — a Remotion promo reel built on Vyaz does exactly that, and had to
+  rebuild two things the engine already knows:
+  - **Character offset on `Span`.** A span carries `pIdx`, `itemIndex` and
+    `text`, but not where its text starts in the paragraph, so mapping a span
+    character back to the source means re-accumulating `span.text.length`
+    from `line.startIndex` (fragile around markers and collapsed spaces).
+    Add `span.startIndex` (offset in the paragraph's text) — enough to key
+    every glyph to a stable source character and animate it between two
+    layouts (FLIP). Run-level identity already flows through: `TextRun.data`
+    is copied into `span.style.data`.
+  - **Word / segment boundaries in the result.** Line breaking already
+    segments with `Intl.Segmenter` (`granularity: 'word'`, vendored pretext
+    `analysis.js`), but the result exposes no word index, so a caller
+    animating words (stagger, "word moved to the next line") re-splits on
+    spaces — wrong for CJK, Thai and punctuation. Expose the segment per
+    span (e.g. `span.wordIndex` / a `segments` table on the line).
 - **Simpler, more reliable font registration.** `fontMetricsProvider.registerFont(family, {weight, style}, buffer)`
   today needs the caller to already have: the font's bytes in hand, its own
   correct weight/style labels, and — for a system font — the right file path
@@ -136,21 +154,26 @@ Direction, not a schedule. Order within a section is rough priority.
 - **`office` line-box model — open questions (v0.4.6 status).** The line box
   itself is settled and shipped: font-independent `1.2 × maxRunSizeInLine ×
   lnSpc%` (`OFFICE_LINE_BOX_RATIO`), and the `lineHeight === 1` baseline ratio
-  is `(typoAscFrac + winAscFrac) / 2` of the dominant run's own font
-  (`OFFICE_BASELINE_RATIO`), both calibrated against real PowerPoint —
-  see `scripts/office-metrics/RESULTS.md`. Genuinely still open:
+  is the dominant run's own `winAscFrac` (`OFFICE_BASELINE_RATIO`; 7 fonts,
+  12–144 pt, mixed-size lines included), both calibrated against real
+  PowerPoint — see `scripts/office-metrics/RESULTS.md` and
+  `TEXT-FEATURES-RESULTS.md` §7. Genuinely still open:
   - **Model A vs B for the `1.2` constant** — flat, or `max(1.2, hhea/upm)`?
     Every oracle font tested so far (Roboto, Arial, Great Vibes, Unifont,
     Times New Roman) has `hhea/upm < 1.2`, so it still can't be told apart.
     Needs a large-`hhea` display/script font (Lobster, Pacifico, Alfa Slab
     One) in `scripts/office-metrics/gen-font-grid-diagnostic.ts`.
   - **`useTypoMetrics` fonts' own baseline formula** — fonts with OS/2
-    `fsSelection.useTypoMetrics` set don't fit the averaged ratio above and
+    `fsSelection.useTypoMetrics` set don't fit the win ratio above and
     fall back to the flat `0.75` (unverified for that case). Only Unifont
     tested; needs a second such font to derive a real rule instead of a guess.
-  - **Mixed-size-line baseline ratio** — a small run framing one large run in
-    the same line measured *higher* than same-size lines (~0.81 for Arial,
-    close to `winAscFrac` alone) but only 2 data points; not in code.
+  - **Office parity gaps found by `text-features-run.ts`** (2026-10-22,
+    `TEXT-FEATURES-RESULTS.md` §9–12): `glyphAdvances` are unshaped while span
+    widths are shaped, so the glyph preset draws a kerned pair apart
+    (`Tr` 48 pt: 1.7 pt); negative `spc` moves the break space to the next line; a PPTX `baseline`
+    other than ±30/25 % has no way into `script` (a `baselineShift` would
+    carry it); the subscript sits ~1.2 pt higher in PowerPoint's PDF than
+    25 % gives, unexplained.
   - **Does PowerPoint wrap where vyaz wraps?** Answered for single-run text in
     v0.4.8 (glyph advances sit on a 1/8pt grid, kerning from 12pt on kern-table
     fonts, 1pt fit padding — verified on the 1336-box `gen-stress.ts` deck). Still open: the original "5 lines vs 3"
