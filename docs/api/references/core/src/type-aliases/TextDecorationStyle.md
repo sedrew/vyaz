@@ -4,7 +4,7 @@
 
 > **TextDecorationStyle** = `"solid"` \| `"double"` \| `"dotted"` \| `"dashed"` \| `"wavy"`
 
-Defined in: [core/src/types/Document.ts:115](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L115)
+Defined in: [core/src/types/Document.ts:119](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L119)
 
 **`Experimental`**
 

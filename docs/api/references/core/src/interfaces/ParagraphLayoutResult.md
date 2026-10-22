@@ -2,7 +2,7 @@
 
 # Interface: ParagraphLayoutResult
 
-Defined in: [core/src/types/LayoutTypes.ts:172](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L172)
+Defined in: [core/src/types/LayoutTypes.ts:220](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L220)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [core/src/types/LayoutTypes.ts:172](https://github.com/sedrew/vyaz/b
 
 > **contentHeight**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:179](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L179)
+Defined in: [core/src/types/LayoutTypes.ts:227](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L227)
 
 Actual content height (text bbox)
 
@@ -20,7 +20,7 @@ Actual content height (text bbox)
 
 > **contentWidth**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:177](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L177)
+Defined in: [core/src/types/LayoutTypes.ts:225](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L225)
 
 Actual content width (text bbox, without voids)
 
@@ -30,7 +30,7 @@ Actual content width (text bbox, without voids)
 
 > **height**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:174](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L174)
+Defined in: [core/src/types/LayoutTypes.ts:222](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L222)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [core/src/types/LayoutTypes.ts:174](https://github.com/sedrew/vyaz/b
 
 > **lines**: [`Line`](Line.md)[]
 
-Defined in: [core/src/types/LayoutTypes.ts:175](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L175)
+Defined in: [core/src/types/LayoutTypes.ts:223](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L223)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [core/src/types/LayoutTypes.ts:175](https://github.com/sedrew/vyaz/b
 
 > `optional` **warnings?**: [`LayoutWarning`](LayoutWarning.md)[]
 
-Defined in: [core/src/types/LayoutTypes.ts:181](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L181)
+Defined in: [core/src/types/LayoutTypes.ts:229](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L229)
 
 Non-fatal issues (e.g. font fallback/substitution).
 
@@ -56,4 +56,4 @@ Non-fatal issues (e.g. font fallback/substitution).
 
 > **width**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:173](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L173)
+Defined in: [core/src/types/LayoutTypes.ts:221](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L221)

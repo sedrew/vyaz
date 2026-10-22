@@ -2,7 +2,7 @@
 
 # Interface: IFontMetricsProvider
 
-Defined in: [core/src/types/FontTypes.ts:64](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L64)
+Defined in: [core/src/types/FontTypes.ts:76](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L76)
 
 Metrics provider — isomorphic interface
 
@@ -12,7 +12,7 @@ Metrics provider — isomorphic interface
 
 > **getMetrics**(`fontFamily`, `fontSize`, `weight?`, `style?`, `mode?`): [`FontMetrics`](FontMetrics.md)
 
-Defined in: [core/src/types/FontTypes.ts:93](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L93)
+Defined in: [core/src/types/FontTypes.ts:105](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L105)
 
 Get metrics for a given family and size.
 
@@ -48,7 +48,7 @@ Get metrics for a given family and size.
 
 > **getMode**(): `"browser"` \| `"office"`
 
-Defined in: [core/src/types/FontTypes.ts:75](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L75)
+Defined in: [core/src/types/FontTypes.ts:87](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L87)
 
 Get current mode.
 
@@ -62,7 +62,7 @@ Get current mode.
 
 > **registerFont**(`family`, `options`, `source`, `sourcePath?`): `void`
 
-Defined in: [core/src/types/FontTypes.ts:83](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L83)
+Defined in: [core/src/types/FontTypes.ts:95](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L95)
 
 Register a binary font for use with fontkit.
 In browser — no-op (fonts are registered via CSS @font-face).
@@ -103,7 +103,7 @@ In browser — no-op (fonts are registered via CSS @font-face).
 
 > **setMode**(`mode`): `void`
 
-Defined in: [core/src/types/FontTypes.ts:70](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L70)
+Defined in: [core/src/types/FontTypes.ts:82](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L82)
 
 Set measurement mode.
   'browser' — hhea.ascender/descender (default)

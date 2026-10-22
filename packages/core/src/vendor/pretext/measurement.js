@@ -1,4 +1,4 @@
-import { getMeasureContext as __vyazGetMeasureContext } from '../../measure/FontkitMeasureContext.js';
+import { getMeasureContext as __vyazGetMeasureContext, getMeasureProfileKey as __vyazGetMeasureProfileKey } from '../../measure/FontkitMeasureContext.js';
 import { isCJK } from './analysis.js';
 const segmentMetricCaches = new Map();
 let cachedEngineProfile = null;
@@ -16,10 +16,14 @@ export function getMeasureContext() {
     return __vyazGetMeasureContext();
 }
 export function getSegmentMetricCache(font) {
-    let cache = segmentMetricCaches.get(font);
+    // vendored: upstream keys this cache by `font` alone. vyaz measures the
+    // same font differently per measure profile (advance / shape, kerning
+    // threshold, advance grid, optical sizing), so the profile is part of the key.
+    const key = __vyazGetMeasureProfileKey() + font;
+    let cache = segmentMetricCaches.get(key);
     if (!cache) {
         cache = new Map();
-        segmentMetricCaches.set(font, cache);
+        segmentMetricCaches.set(key, cache);
     }
     return cache;
 }

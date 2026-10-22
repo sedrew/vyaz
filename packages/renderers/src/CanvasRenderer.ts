@@ -21,7 +21,7 @@
 import type { Line, Span } from '@vyaz/core';
 import type { DebugFlags } from './types.js';
 import type { CharPos } from './interactive.js';
-import { computeBBox, paintableLine } from './utils.js';
+import { computeBBox, layoutDecorations, paintableLine } from './utils.js';
 
 export interface CanvasRenderOptions {
   /**
@@ -244,7 +244,10 @@ export function renderToCanvas(
   // SVG expanded mode groups spans by targetY (accounts for sub/superscript
   // baselineOffset). We do the same here: each group gets its own y coordinate.
   for (const rawLine of lines) {
-    const line = paintableLine(rawLine);
+    let line = paintableLine(rawLine);
+    // Rules the layout placed (`mode: 'office'`) replace the per-span lines.
+    let rules: { x: number; width: number; y: number; thickness: number; color: string }[] = [];
+    if (line.decorations?.length) ({ line, rules } = layoutDecorations(line));
     // Collect all non-space spans that should be drawn
     const drawableSpans = line.spans.filter(
       s => preserveSpaces || s.type !== 'space',
@@ -258,6 +261,10 @@ export function renderToCanvas(
       for (const span of group.spans) {
         renderSpan(ctx, line, span, group.targetY, preserveSpaces);
       }
+    }
+    for (const r of rules) {
+      ctx.fillStyle = r.color;
+      ctx.fillRect(line.x + r.x, r.y, r.width, r.thickness);
     }
   }
 

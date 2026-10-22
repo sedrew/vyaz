@@ -90,28 +90,34 @@ export interface MeasureProfile {
 }
 
 let profile: MeasureProfile = { engine: 'advance' };
-let onProfileChange: (() => void) | null = null;
 
-/**
- * Register a callback fired whenever {@link setMeasureProfile} changes the
- * profile — used to drop pretext's per-segment width cache, which is keyed by
- * text only and would otherwise serve `advance` widths to a `shape` layout.
- */
-export function setProfileChangeHook(fn: (() => void) | null): void {
-  onProfileChange = fn;
+/** The fields of `p` that change what `measurePx` returns for a given font, as a string. */
+function widthKey(p: MeasureProfile): string {
+  // `advance` reads none of the shaping fields, so all such profiles share one key.
+  if (p.engine !== 'shape') return `a${p.advanceQuantum || 0}`;
+  return `s${p.advanceQuantum || 0}|${p.kernMinSize ?? ''}|${p.kernRequiresTable ? 'T' : ''}|${p.features ? JSON.stringify(p.features) : ''}`;
+}
+
+let profileKey = profileKeyOf(profile);
+function profileKeyOf(p: MeasureProfile): string {
+  // optical sizing picks the font instance, which pretext only knows by its `font` string
+  return `${widthKey(p)}|${p.opticalSizing === false ? 'N' : ''}\u0001`;
 }
 
 /** Install the measurement profile used by every fontkit-backed measure path. */
 export function setMeasureProfile(next: MeasureProfile): void {
-  const changed =
-    next.engine !== profile.engine ||
-    next.kernMinSize !== profile.kernMinSize ||
-    next.kernRequiresTable !== profile.kernRequiresTable ||
-    next.advanceQuantum !== profile.advanceQuantum ||
-    next.opticalSizing !== profile.opticalSizing ||
-    JSON.stringify(next.features) !== JSON.stringify(profile.features);
   profile = next;
-  if (changed) onProfileChange?.();
+  profileKey = profileKeyOf(next);
+}
+
+/**
+ * The active profile as a cache-key prefix: two profiles share a key exactly
+ * when they measure every text identically. Caches of measured widths (the
+ * prepared-line cache, vendored pretext's per-font segment cache) key on it,
+ * so switching profile neither cross-feeds widths nor throws the caches away.
+ */
+export function getMeasureProfileKey(): string {
+  return profileKey;
 }
 
 /** The active measurement profile. */
@@ -241,6 +247,57 @@ function hasKernTable(raw: any): boolean {
   return v;
 }
 
+// Shaped widths, font → (profile, size) → text → px. Line breaking and
+// positioning measure the same words over and over — within a document and
+// across `layoutTextFrame()` calls — and each miss is a full fontkit `layout()`.
+const SHAPE_CACHE_MAX_ENTRIES = 200_000;
+/** Longer strings are rarely measured twice and would make for heavy keys. */
+const SHAPE_CACHE_MAX_TEXT = 256;
+let shapeCache = new WeakMap<object, Map<string, Map<string, number>>>();
+let shapeCacheSize = 0;
+const widthKeys = new WeakMap<MeasureProfile, string>();
+// The last (font, scale, size, profile) looked up: consecutive calls mostly repeat it.
+let lastRaw: unknown = null;
+let lastScale = 0;
+let lastSize = 0;
+let lastProf: MeasureProfile | null = null;
+let lastWidths: Map<string, number> | null = null;
+
+function shapeWidths(raw: object, scale: number, fontSize: number, prof: MeasureProfile): Map<string, number> {
+  if (lastWidths !== null && raw === lastRaw && scale === lastScale && fontSize === lastSize && prof === lastProf) {
+    return lastWidths;
+  }
+  let byVariant = shapeCache.get(raw);
+  if (byVariant === undefined) {
+    byVariant = new Map();
+    shapeCache.set(raw, byVariant);
+  }
+  let pk = widthKeys.get(prof);
+  if (pk === undefined) {
+    pk = widthKey(prof);
+    widthKeys.set(prof, pk);
+  }
+  const variant = `${pk}|${fontSize}|${scale}`;
+  let widths = byVariant.get(variant);
+  if (widths === undefined) {
+    widths = new Map();
+    byVariant.set(variant, widths);
+  }
+  lastRaw = raw;
+  lastScale = scale;
+  lastSize = fontSize;
+  lastProf = prof;
+  lastWidths = widths;
+  return widths;
+}
+
+/** Drop every cached shaped width (they are also dropped wholesale past a size bound). */
+export function clearMeasureCache(): void {
+  shapeCache = new WeakMap();
+  shapeCacheSize = 0;
+  lastRaw = lastProf = lastWidths = null;
+}
+
 /**
  * Pixel width of `text` under `profile`. Shared by the pretext measure context
  * and `ParagraphLayoutEngine`'s fragment measurement so line breaking and
@@ -261,6 +318,26 @@ export function measurePx(
   prof: MeasureProfile = profile,
 ): number {
   if (!text) return 0;
+  // The advance sum is a table lookup per code point; only `layout()` is worth a cache.
+  if (prof.engine !== 'shape' || text.length > SHAPE_CACHE_MAX_TEXT) {
+    return computePx(raw, scale, fontSize, text, prof);
+  }
+  const widths = shapeWidths(raw, scale, fontSize, prof);
+  let px = widths.get(text);
+  if (px === undefined) {
+    px = computePx(raw, scale, fontSize, text, prof);
+    if (++shapeCacheSize > SHAPE_CACHE_MAX_ENTRIES) {
+      clearMeasureCache();
+      shapeWidths(raw, scale, fontSize, prof).set(text, px);
+      shapeCacheSize = 1;
+    } else {
+      widths.set(text, px);
+    }
+  }
+  return px;
+}
+
+function computePx(raw: any, scale: number, fontSize: number, text: string, prof: MeasureProfile): number {
   const q = prof.advanceQuantum ? prof.advanceQuantum : 0;
   const snap = (px: number) => (q ? Math.round(px / q) * q : px);
 

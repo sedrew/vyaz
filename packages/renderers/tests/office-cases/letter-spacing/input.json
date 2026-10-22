@@ -1,0 +1,76 @@
+{
+  "_comment": "office character spacing (DrawingML spc → letterSpacing) on a run that wraps (text-features.json `sp-*`): every line's glyphs, tracking included, end inside the box — justify reaches the edge, centre stays centred. Pieces of a split run used to lose the tracking.",
+  "frame": {
+    "wrap": true,
+    "width": 220,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "The quick brown fox jumps over the lazy dog while a frame measures every line box.",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "letterSpacing": 3
+          }
+        ],
+        "style": {
+          "alignment": "justify",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 10
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "The quick brown fox jumps over the lazy dog while a frame measures every line box.",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "letterSpacing": 3
+          }
+        ],
+        "style": {
+          "alignment": "center",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 10
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "The quick brown fox jumps over the lazy dog while a frame measures every line box.",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "letterSpacing": -1
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 10
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

@@ -25,14 +25,14 @@ describe('lists', () => {
     expect(frame.paragraphs[1].style.listStyle!.startNumber).toBe(6);
   });
 
-  test('nested list → level + 1, with a warning', () => {
+  test('nested list → level + 1, no warning (the outer count runs on)', () => {
     const { frame, warnings } = convert(
       '<ul><li>top<ul><li>child</li></ul></li><li>top2</li></ul>',
     );
     const levels = frame.paragraphs.map((p) => p.style.listStyle!.level);
     expect(levels).toEqual([0, 1, 0]);
     expect(text(frame.paragraphs[1])).toBe('child');
-    expect(warnings.some((w) => w.code === 'nested-list')).toBe(true);
+    expect(warnings.some((w) => w.code === 'nested-list')).toBe(false);
   });
 
   test('inline formatting inside li is kept', () => {

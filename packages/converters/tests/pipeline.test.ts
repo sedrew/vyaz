@@ -59,3 +59,21 @@ describe('full pipeline', () => {
     expect(svg).toContain('>x<');
   });
 });
+
+describe('nested lists through layout', () => {
+  const markers = (html: string) => {
+    const { frame } = convert(html, { width: 400, baseFont: { family: 'Unifont', size: 16 } });
+    const lines = layoutTextFrame(frame).lines;
+    return frame.paragraphs.map((_, i) => lines.find((l) => l.pIdx === i)?.spans.find((s) => s.type === 'marker')?.text ?? null);
+  };
+
+  test('the outer <ol> keeps counting after a nested list (CSS counters)', () => {
+    expect(markers('<ol><li>one<ol><li>inner</li><li>inner</li></ol></li><li>two</li><li>three</li></ol>'))
+      .toEqual(['1.', '1.', '2.', '2.', '3.']);
+  });
+
+  test('<ol start> keeps counting after a nested list', () => {
+    expect(markers('<ol start="5"><li>five<ul><li>dot</li></ul></li><li>six</li></ol>'))
+      .toEqual(['5.', '○', '6.']);
+  });
+});

@@ -1,0 +1,79 @@
+{
+  "_comment": "office paragraph indents (text-features.json `a-center-indent`): every line wraps inside its own indents — leftIndent (marL), first-line indent, rightIndent — and is aligned between them. vyaz used to wrap at the full box width and push indented lines past the box.",
+  "frame": {
+    "wrap": true,
+    "width": 240,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "The quick brown fox jumps over the lazy dog while a frame measures every line box and decides where each word wraps inside the given rectangle.",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "center",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 12,
+          "leftIndent": 40,
+          "indent": 20
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "The quick brown fox jumps over the lazy dog while a frame measures every line box and decides where each word wraps inside the given rectangle.",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 12,
+          "leftIndent": 40,
+          "indent": -20,
+          "rightIndent": 30
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "The quick brown fox jumps over the lazy dog while a frame measures every line box and decides where each word wraps inside the given rectangle.",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "right",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 12,
+          "rightIndent": 40
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

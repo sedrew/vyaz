@@ -4,7 +4,7 @@
 
 > **computePixelMetrics**(`font`, `fontSize`, `mode`): [`FontMetrics`](../interfaces/FontMetrics.md)
 
-Defined in: [core/src/measure/FontEngine.ts:239](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L239)
+Defined in: [core/src/measure/FontEngine.ts:271](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L271)
 
 Compute pixel‑scale metrics for a given font size.
 

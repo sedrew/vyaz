@@ -1,0 +1,57 @@
+{
+  "_comment": "office justify inside one run: every space of a non-last line takes an equal share of the slack, the line ending in \\n is stretched too. PowerPoint (scripts/office-metrics/text-features.json `j-roboto`, `j-br`): ink right edge 200.01 on every non-last line, same line breaks.",
+  "frame": {
+    "wrap": true,
+    "width": 200,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "The quick brown fox jumps over the lazy dog while a frame measures every line box and decides where each word wraps inside the given rectangle.",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "justify",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Short line ends in a break\nthen the text continues long enough to wrap.",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          }
+        ],
+        "style": {
+          "alignment": "justify",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

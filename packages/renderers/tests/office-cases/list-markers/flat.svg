@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="115.2" viewBox="0 0 260 115.2">
+  <text x="0" y="15.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">•Bullet, marL 27 indent -27, long</text>
+  <text x="27" y="34.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">enough to wrap</text>
+  <text x="0" y="53.6" font-family="Roboto" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">•</text>
+  <text x="27" y="53.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">Big bullet</text>
+  <text x="27" y="72.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">after a break</text>
+  <text x="0" y="92" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">9.Nine</text>
+  <text x="0" y="111.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">10.Ten</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="260" height="115.2" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="250" height="115.2" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

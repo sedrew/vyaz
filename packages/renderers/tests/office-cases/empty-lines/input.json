@@ -1,0 +1,89 @@
+{
+  "_comment": "office empty lines (text-features.json `e-br-br`, `e-br-end`, `e-empty-run`): a\\n\\nb is three 1.2 x 40 lines, a trailing \\n opens one more line, an empty run is a line at its own size. whiteSpace is unset: office keeps every space (pre-wrap) — the two leading spaces of 'c' are kept.",
+  "frame": {
+    "wrap": true,
+    "width": 200,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "a\n\nb",
+            "fontFamily": "Roboto",
+            "fontSize": 40
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "",
+            "fontFamily": "Roboto",
+            "fontSize": 24
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "  c\n",
+            "fontFamily": "Roboto",
+            "fontSize": 40
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "d",
+            "fontFamily": "Roboto",
+            "fontSize": 40
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

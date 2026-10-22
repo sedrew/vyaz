@@ -41,13 +41,14 @@
 import { mkdir, readdir, readFile, rm, writeFile, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, join, relative } from 'node:path';
+import { TEXT_PATCHES, TEXT_PATCH_NOTES } from './vendor-pretext-text-patches.ts';
 
 const PKG = 'node_modules/@chenglou/pretext';
 const OUT = 'src/vendor/pretext';
 
 /** Import specifier the vendored measurement.js delegates to. */
 const SEAM_IMPORT =
-  "import { getMeasureContext as __vyazGetMeasureContext } from '../../measure/FontkitMeasureContext.js';\n";
+  "import { getMeasureContext as __vyazGetMeasureContext, getMeasureProfileKey as __vyazGetMeasureProfileKey } from '../../measure/FontkitMeasureContext.js';\n";
 
 /**
  * Exact upstream body of measurement.js `getMeasureContext()` as emitted by
@@ -75,6 +76,33 @@ const JS_ANCHOR = `export function getMeasureContext() {
 const JS_REPLACEMENT = `export function getMeasureContext() {
     // vendored: delegates to src/measure/FontkitMeasureContext.ts
     return __vyazGetMeasureContext();
+}`;
+
+/**
+ * Upstream keys its per-segment width cache by `font` alone — one canvas, one
+ * way to measure. vyaz measures the same font differently per measure profile,
+ * so the profile becomes part of the key: widths never cross-feed, and a
+ * profile switch (every `mode: 'office'` layout) no longer has to flush it.
+ */
+const PROFILE_KEY_JS_ANCHOR = `export function getSegmentMetricCache(font) {
+    let cache = segmentMetricCaches.get(font);
+    if (!cache) {
+        cache = new Map();
+        segmentMetricCaches.set(font, cache);
+    }
+    return cache;
+}`;
+const PROFILE_KEY_JS_REPLACEMENT = `export function getSegmentMetricCache(font) {
+    // vendored: upstream keys this cache by \`font\` alone. vyaz measures the
+    // same font differently per measure profile (advance / shape, kerning
+    // threshold, advance grid, optical sizing), so the profile is part of the key.
+    const key = __vyazGetMeasureProfileKey() + font;
+    let cache = segmentMetricCaches.get(key);
+    if (!cache) {
+        cache = new Map();
+        segmentMetricCaches.set(key, cache);
+    }
+    return cache;
 }`;
 
 const DTS_ANCHOR =
@@ -252,6 +280,7 @@ async function main(): Promise<void> {
   let js = await readFile(jsPath, 'utf8');
   js = replaceOnce(js, JS_ANCHOR, JS_REPLACEMENT, 'measurement.js');
   js = replaceOnce(js, DEAD_STATE_ANCHOR, '', 'measurement.js (dead state)');
+  js = replaceOnce(js, PROFILE_KEY_JS_ANCHOR, PROFILE_KEY_JS_REPLACEMENT, 'measurement.js (segment cache key)');
   await writeFile(jsPath, SEAM_IMPORT + js);
 
   const dtsPath = join(OUT, 'measurement.d.ts');
@@ -298,6 +327,12 @@ async function main(): Promise<void> {
   );
   await writeFile(richInlineDtsPath, richInlineDts);
 
+  // ── the third rewrite: pre-wrap rich items, hyphenBreak ───────────────
+  for (const patch of TEXT_PATCHES) {
+    const path = join(OUT, patch.file);
+    await writeFile(path, replaceOnce(await readFile(path, 'utf8'), patch.anchor, patch.replacement, patch.where));
+  }
+
   // ── provenance stamp ─────────────────────────────────────────────────
   const hashes: Record<string, string> = {};
   for (const rel of files.sort()) {
@@ -305,6 +340,12 @@ async function main(): Promise<void> {
     hashes[rel] = createHash('sha256').update(bytes).digest('hex').slice(0, 16);
   }
 
+  const BASE_NOTES: Record<string, string> = {
+    'layout.js': "adds an `overflowWrap` option (default 'normal', the real CSS default) gating the word-break grapheme fallback — upstream hardcodes 'overflow-wrap: break-word' unconditionally",
+    'layout.d.ts': 'PrepareOptions gets overflowWrap?: OverflowWrapMode',
+    'rich-inline.js': 'forwards RichInlineItem.overflowWrap into prepareWithSegments()',
+    'rich-inline.d.ts': 'RichInlineItem gets overflowWrap?: OverflowWrapMode',
+  };
   await writeFile(
     join(OUT, 'VENDOR.json'),
     JSON.stringify(
@@ -313,12 +354,10 @@ async function main(): Promise<void> {
         upstream: `${manifest.name}@${manifest.version}`,
         generatedFrom: 'dist/',
         patched: {
-          'measurement.js': 'getMeasureContext() delegates to ../../measure/FontkitMeasureContext.ts',
+          'measurement.js': 'getMeasureContext() delegates to ../../measure/FontkitMeasureContext.ts; getSegmentMetricCache() keys by measure profile + font',
           'measurement.d.ts': 'getMeasureContext() return type widened to the structural shape',
-          'layout.js': "adds an `overflowWrap` option (default 'normal', the real CSS default) gating the word-break grapheme fallback — upstream hardcodes 'overflow-wrap: break-word' unconditionally",
-          'layout.d.ts': 'PrepareOptions gets overflowWrap?: OverflowWrapMode',
-          'rich-inline.js': 'forwards RichInlineItem.overflowWrap into prepareWithSegments()',
-          'rich-inline.d.ts': 'RichInlineItem gets overflowWrap?: OverflowWrapMode',
+          ...BASE_NOTES,
+          ...Object.fromEntries(Object.entries(TEXT_PATCH_NOTES).map(([file, note]) => [file, file in BASE_NOTES ? `${BASE_NOTES[file]}; ${note}` : note])),
         },
         files: hashes,
       },

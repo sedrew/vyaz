@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="237.6" viewBox="0 0 200 237.6">
+  <text x="0" y="17.1" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">The quick brown fox</text>
+  <text x="0" y="38.7" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">jumps over the lazy dog</text>
+  <text x="0" y="60.3" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">while a frame measures</text>
+  <text x="0" y="81.9" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">every line box and</text>
+  <text x="0" y="103.5" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">decides where each</text>
+  <text x="0" y="125.1" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">word wraps inside the</text>
+  <text x="0" y="146.7" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">given rectangle.</text>
+  <text x="0" y="168.3" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">Short line ends in a</text>
+  <text x="0" y="189.9" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">break</text>
+  <text x="0" y="211.5" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">then the text continues</text>
+  <text x="0" y="233.1" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">long enough to wrap.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="200" height="237.6" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="204.5" height="237.6" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

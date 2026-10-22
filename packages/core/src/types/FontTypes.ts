@@ -46,11 +46,11 @@ export interface FontMetrics {
    * Together with `typoAscFrac` / `winAscFrac`, this is how `mode: 'office'`
    * places the baseline at `style.lineHeight === 1` (see
    * `OFFICE_BASELINE_RATIO` in PositioningEngine.ts): for the common case
-   * (`useTypoMetrics` false/undefined) real PowerPoint's baseline tracks
-   * `(typoAscFrac + winAscFrac) / 2` — neither ratio alone (Roboto 0.7500 /
-   * 0.7917, Arial 0.7758 / 0.8103, Times New Roman 0.7626 / 0.8047 measured
-   * empirically at ~0.777 / 0.784 / 0.782 — the average lands within ~1%,
-   * either ratio alone off by 2–3%). A font with `useTypoMetrics` true
+   * (`useTypoMetrics` false/undefined) PowerPoint's baseline sits at
+   * `winAscFrac` of the line box (Roboto 0.7917, Arial 0.8103, Times New Roman
+   * 0.8047, Georgia 0.8070, Verdana 0.8272, Courier New 0.7349, Tahoma 0.8289
+   * — each inside the range its PDF baselines allow, 12–144 pt;
+   * `typoAscFrac` is the fallback when win metrics are missing). A font with `useTypoMetrics` true
    * (found via `scripts/office-metrics/gen-font-grid-diagnostic.ts`: Unifont
    * is the one oracle font with the bit set) does **not** fit that formula —
    * only one such font has been measured so far, not enough to derive its
@@ -58,6 +58,18 @@ export interface FontMetrics {
    * open, see RESULTS.md).
    */
   useTypoMetrics?: boolean;
+  /**
+   * Font-defined decoration geometry, px, measured from the baseline with y
+   * pointing **down**, each the top edge of the stroke: underline from
+   * `post.underlinePosition` / `underlineThickness`, strikeout from
+   * `OS/2.yStrikeoutPosition` / `yStrikeoutSize` (so `strikeoutTop` is
+   * negative). `undefined` when the table is missing. `mode: 'office'`
+   * draws decorations exactly here (PowerPoint, measured).
+   */
+  underlineTop?: number;
+  underlineThickness?: number;
+  strikeoutTop?: number;
+  strikeoutThickness?: number;
 }
 
 /** Metrics provider — isomorphic interface */

@@ -2,7 +2,7 @@
 
 # Interface: GlyphData
 
-Defined in: [core/src/types/FontTypes.ts:103](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L103)
+Defined in: [core/src/types/FontTypes.ts:115](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L115)
 
 Glyph-level data for a single glyph (per-character tracking/highlighting)
 
@@ -12,7 +12,7 @@ Glyph-level data for a single glyph (per-character tracking/highlighting)
 
 > **advance**: `number`
 
-Defined in: [core/src/types/FontTypes.ts:105](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L105)
+Defined in: [core/src/types/FontTypes.ts:117](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L117)
 
 ***
 
@@ -20,7 +20,7 @@ Defined in: [core/src/types/FontTypes.ts:105](https://github.com/sedrew/vyaz/blo
 
 > **char**: `string`
 
-Defined in: [core/src/types/FontTypes.ts:104](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L104)
+Defined in: [core/src/types/FontTypes.ts:116](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L116)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [core/src/types/FontTypes.ts:104](https://github.com/sedrew/vyaz/blo
 
 > **x**: `number`
 
-Defined in: [core/src/types/FontTypes.ts:106](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L106)
+Defined in: [core/src/types/FontTypes.ts:118](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/FontTypes.ts#L118)

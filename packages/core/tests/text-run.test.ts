@@ -555,9 +555,17 @@ describe('Span.trailing', () => {
     for (const t of trailing) expect(t.collapsed).toBe(true);
     for (const s of r.lines[0].spans.filter((x) => !x.trailing)) expect(s.collapsed).toBeUndefined();
   });
-  test('pre-wrap and office keep trailing spaces paintable', () => {
-    for (const r of [wrapped('pre-wrap', 'browser'), wrapped('normal', 'office')]) {
-      for (const l of r.lines) for (const s of l.spans) expect(s.collapsed).toBeUndefined();
+  test('pre-wrap keeps trailing spaces paintable in browser', () => {
+    const r = wrapped('pre-wrap', 'browser');
+    for (const l of r.lines) for (const s of l.spans) expect(s.collapsed).toBeUndefined();
+  });
+  test('office never paints trailing spaces (PowerPoint draws no underline under them)', () => {
+    // scripts/office-metrics/text-features.json `u-wrap-trailing`: the rule stops at the last glyph
+    for (const ws of ['normal', 'pre-wrap'] as const) {
+      const r = wrapped(ws, 'office');
+      const trailing = r.lines.flatMap((l) => l.spans.filter((s) => s.trailing));
+      expect(trailing.length).toBeGreaterThan(0);
+      for (const t of trailing) expect(t.collapsed).toBe(true);
     }
   });
 });

@@ -2,9 +2,9 @@
 
 # Function: positionLines()
 
-> **positionLines**(`pretextLines`, `items`, `fontMetricsFn`, `style`, `maxWidth`, `startY?`, `mode?`, `measureText`, `tag?`, `listStyle?`, `listIndex?`, `listMarkerWidth?`): `object`
+> **positionLines**(`pretextLines`, `items`, `fontMetricsFn`, `style`, `maxWidth`, `startY?`, `mode?`, `measureText`, `tag?`, `listStyle?`, `listIndex?`, `listMarkerWidth?`, `extras?`): `object`
 
-Defined in: [core/src/layout/PositioningEngine.ts:200](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/PositioningEngine.ts#L200)
+Defined in: [core/src/layout/PositioningEngine.ts:417](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/PositioningEngine.ts#L417)
 
 Build Line[] from pretext lines with alignment and metrics.
 
@@ -84,6 +84,10 @@ Build Line[] from pretext lines with alignment and metrics.
 
 — pre-computed width of the widest marker in the list group.
   When provided, bulletIndent is expanded to this value if needed.
+
+### extras?
+
+`PositionExtras` = `{}`
 
 ## Returns
 

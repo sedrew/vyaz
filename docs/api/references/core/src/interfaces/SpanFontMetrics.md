@@ -2,7 +2,7 @@
 
 # Interface: SpanFontMetrics
 
-Defined in: [core/src/types/LayoutTypes.ts:88](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L88)
+Defined in: [core/src/types/LayoutTypes.ts:100](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L100)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [core/src/types/LayoutTypes.ts:88](https://github.com/sedrew/vyaz/bl
 
 > **ascent**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:89](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L89)
+Defined in: [core/src/types/LayoutTypes.ts:101](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L101)
 
 ***
 
@@ -18,7 +18,7 @@ Defined in: [core/src/types/LayoutTypes.ts:89](https://github.com/sedrew/vyaz/bl
 
 > `optional` **baselineOffset?**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:95](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L95)
+Defined in: [core/src/types/LayoutTypes.ts:107](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L107)
 
 Vertical offset from baseline (px). Used for sub/superscript positioning.
  Negative = above baseline (superscript). Positive = below baseline (subscript).
@@ -30,7 +30,7 @@ Vertical offset from baseline (px). Used for sub/superscript positioning.
 
 > **descent**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:90](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L90)
+Defined in: [core/src/types/LayoutTypes.ts:102](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L102)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [core/src/types/LayoutTypes.ts:90](https://github.com/sedrew/vyaz/bl
 
 > **fontSize**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:91](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L91)
+Defined in: [core/src/types/LayoutTypes.ts:103](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L103)

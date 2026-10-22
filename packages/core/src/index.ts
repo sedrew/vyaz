@@ -72,6 +72,7 @@ export type {
   Line,
   Span,
   SpanFontMetrics,
+  LineDecoration,
   LayoutWarning,
   SemanticParagraph,
   SemanticLine,
@@ -132,14 +133,14 @@ export const defaultBulletChar: (level: number) => string = _dbc;
 export const BULLET_CHARACTERS: Record<number, string> = { ..._BC2 };
 
 // ── Compiler — stable ──────────────────────────────────────────────────
-export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, collapseSegmentWhitespace } from './compile/ParagraphCompiler.js';
-export type { PreparedRichInlineItem } from './compile/ParagraphCompiler.js';
+export { compileParagraph, getParagraphText, makeFontToken, splitParagraphByHardBreaks, splitParagraphAtHardBreaks, collapseSegmentWhitespace } from './compile/ParagraphCompiler.js';
+export type { PreparedRichInlineItem, HardBreakPiece } from './compile/ParagraphCompiler.js';
 
 // ── Font Engine — stable ────────────────────────────────────────────────
 export type { FontFace } from './measure/FontEngine.js';
 export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable, shapeRun } from './measure/FontEngine.js';
 export type { ShapedRun, ShapedGlyph } from './measure/FontEngine.js';
-export { setMeasureProfile, getMeasureProfile, measurePx } from './measure/FontkitMeasureContext.js';
+export { setMeasureProfile, getMeasureProfile, measurePx, clearMeasureCache } from './measure/FontkitMeasureContext.js';
 export type { MeasureProfile } from './measure/FontkitMeasureContext.js';
 
 // ── Font metrics — stable ──────────────────────────────────────────────

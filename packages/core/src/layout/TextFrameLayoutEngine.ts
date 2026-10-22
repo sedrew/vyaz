@@ -21,9 +21,11 @@
  *   5. If no frame.height, columns are infinite (all lines stay in column 0)
  */
 import type { TextFrame, ListStyle, VerticalAlignment, Paragraph, WritingMode } from '../types/Document.js';
+import { DEFAULT_TEXT_STYLE } from '../types/Document.js';
 import type { Line, LayoutWarning } from '../types/LayoutTypes.js';
 import { paragraphLayoutEngine, ParagraphLayoutEngine } from './ParagraphLayoutEngine.js';
-import { splitParagraphByHardBreaks } from '../compile/ParagraphCompiler.js';
+import { splitParagraphAtHardBreaks } from '../compile/ParagraphCompiler.js';
+import type { ParagraphLayoutExtras } from './ParagraphLayoutEngine.js';
 import { applyScaleExact } from './AutoFitEngine.js';
 import { formatListNumber, defaultBulletChar } from '../utils/list.js';
 import { getMeasureProfile, setMeasureProfile } from '../measure/FontkitMeasureContext.js';
@@ -136,19 +138,38 @@ function getMarkerTextHelper(listStyle: ListStyle, listIndex: number): string {
 }
 
 /**
- * Compute the widest marker across a list group, used to expand bulletIndent
- * when numbered markers have varying widths (e.g. "9." vs "10.").
+ * `mode: 'office'` paragraph default, applied only when the paragraph leaves
+ * `whiteSpace` unset: PowerPoint keeps every space — leading, repeated,
+ * trailing (`'pre-wrap'`; scripts/office-metrics/TEXT-FEATURES-RESULTS.md §3).
+ *
+ * `overflowWrap` keeps its `'normal'` default even here: PowerPoint does break
+ * an overlong word inside, but `'break-word'` would also split words under an
+ * intrinsic-width probe (`width: 1e-3`). Pass `overflowWrap: 'break-word'` for
+ * PowerPoint parity in a real box.
+ */
+function officeDefaults(p: Paragraph, office: boolean): Paragraph {
+  if (!office || p.style.whiteSpace !== undefined) return p;
+  return { ...p, style: { ...p.style, whiteSpace: 'pre-wrap' } };
+}
+
+/** A hard-break piece with nothing but empty runs. */
+function isEmptyPiece(p: Paragraph): boolean {
+  return p.children.every((r) => r.type !== 'inline-box' && r.text.length === 0);
+}
+
+/**
+ * Compute the widest marker of one numbering sequence, used to expand
+ * bulletIndent when numbered markers have varying widths (e.g. "9." vs "10.").
  */
 function computeMaxMarkerWidth(
   listStyle: ListStyle,
-  startIndex: number,
-  count: number,
+  indices: number[],
   measureText: (text: string, fontSize: number) => number,
 ): number {
   if (listStyle.type !== 'number') return 0;
   let maxWidth = 0;
-  for (let i = 0; i < count; i++) {
-    const markerText = getMarkerTextHelper(listStyle, startIndex + i);
+  for (const index of indices) {
+    const markerText = getMarkerTextHelper(listStyle, index);
     const width = measureText(markerText, 12); // approximate, will be refined by positionLines
     maxWidth = Math.max(maxWidth, width);
   }
@@ -386,56 +407,59 @@ export function runFlow(
 
   const verticalAlign: VerticalAlignment = frame.verticalAlignment ?? 'top';
 
-  // ── List grouping pass ──────────────────────────────────────────
-  // (identical to before, but uses colWidth for maxWidth later)
+  // ── List numbering pass ─────────────────────────────────────────
+  // PowerPoint's rules (scripts/office-metrics/TEXT-FEATURES-RESULTS.md §11),
+  // which nested HTML lists follow too: one counter per level. A deeper item
+  // keeps the outer counters running ("1. a. b. 2."); coming back up ends the
+  // deeper ones ("2. a."); a paragraph without a list ends them all. A counter
+  // also ends — the item starts a new one — when the item's type or number
+  // format differs, `listRestart` is set, or it declares a `startNumber` that
+  // is neither where the counter started nor where it has got to (DrawingML
+  // `startAt` 1, 1, 10 → "1. 2. 10."). office: an empty list paragraph draws
+  // no marker and is not counted.
+  const officeMode = (mode ?? fontMetricsProvider.getMode()) === 'office';
   const listIndices: (number | undefined)[] = new Array(frame.paragraphs.length).fill(undefined);
   const listMarkerWidths: (number | undefined)[] = new Array(frame.paragraphs.length).fill(undefined);
+  const listNoMarker: boolean[] = new Array(frame.paragraphs.length).fill(false);
 
-  let i = 0;
-  while (i < frame.paragraphs.length) {
+  interface ListCounter { ls: ListStyle; next: number; members: number[] }
+  const counters: (ListCounter | undefined)[] = [];
+  const allCounters: ListCounter[] = [];
+  for (let i = 0; i < frame.paragraphs.length; i++) {
     const p = frame.paragraphs[i];
     const ls = p.style.listStyle;
-
     if (!ls || ls.type === 'none') {
-      i++;
+      counters.length = 0;
       continue;
     }
-
-    // Find end of this list group
-    let groupStart = i;
-    let groupEnd = i + 1;
-    while (groupEnd < frame.paragraphs.length) {
-      const nextP = frame.paragraphs[groupEnd];
-      const nextLs = nextP.style.listStyle;
-      if (!nextLs || nextLs.type !== ls.type || nextP.style.listRestart) {
-        break;
-      }
-      // Same nesting level only
-      if ((nextLs.level ?? 0) !== (ls.level ?? 0)) {
-        break;
-      }
-      groupEnd++;
+    const level = ls.level ?? 0;
+    counters.length = level + 1;
+    let counter = counters[level];
+    const start = ls.startNumber;
+    const continues = counter !== undefined
+      && counter.ls.type === ls.type
+      && (counter.ls.numberFormat ?? 'decimal') === (ls.numberFormat ?? 'decimal')
+      && !p.style.listRestart
+      && (start === undefined || start === (counter.ls.startNumber ?? 1) || start === counter.next);
+    if (!continues) {
+      counter = { ls, next: start ?? 1, members: [] };
+      counters[level] = counter;
+      allCounters.push(counter);
     }
-
-    const groupSize = groupEnd - groupStart;
-    const startNumber = ls.startNumber ?? 1;
-
-    // Assign indices
-    for (let j = 0; j < groupSize; j++) {
-      listIndices[groupStart + j] = startNumber + j;
+    listIndices[i] = counter!.next;
+    if (officeMode && isEmptyPiece(p)) {
+      listNoMarker[i] = true;
+      continue;
     }
+    counter!.next++;
+    counter!.members.push(i);
+  }
 
-    // Compute max marker width for numbered lists in this group
-    const paraFontSize = p.children[0]?.fontSize ?? 12;
-    const measureMarkerWidth = (text: string, fontSize: number): number => {
-      return text.length * fontSize * 0.6;
-    };
-    const maxMW = computeMaxMarkerWidth(ls, startNumber, groupSize, measureMarkerWidth);
-    for (let j = 0; j < groupSize; j++) {
-      listMarkerWidths[groupStart + j] = maxMW;
-    }
-
-    i = groupEnd;
+  // Widest marker per counter (browser widens the marker zone to it)
+  const measureMarkerWidth = (text: string, fontSize: number): number => text.length * fontSize * 0.6;
+  for (const counter of allCounters) {
+    const maxMW = computeMaxMarkerWidth(counter.ls, counter.members.map((m) => listIndices[m]!), measureMarkerWidth);
+    for (const m of counter.members) listMarkerWidths[m] = maxMW;
   }
 
   // ── Layout pass ─────────────────────────────────────────────────
@@ -465,6 +489,7 @@ export function runFlow(
     pIdx: number,
     listIndex?: number,
     listMarkerWidth?: number,
+    extras: ParagraphLayoutExtras = {},
   ): { lines: Line[]; height: number; contentWidth: number; warnings?: LayoutWarning[] } {
     const listStyle = p.style.listStyle;
 
@@ -487,17 +512,20 @@ export function runFlow(
           contentWidth: maxWidth,
         };
       }
-      // Use the paragraph's own style or fallback to default font metrics
-      const fontSize = 12;
+      // No run to take a size from: the default font size. office: PowerPoint's
+      // 1.2 × size line box, baseline at OFFICE_BASELINE_RATIO.
+      const fontSize = DEFAULT_TEXT_STYLE.fontSize ?? 12;
       const lineHeight = p.style.lineHeight;
-      const lineHeightPx = Math.round(fontSize * lineHeight);
+      const office = (mode ?? fontMetricsProvider.getMode()) === 'office';
+      const lineHeightPx = office ? Math.round(1.2 * fontSize * lineHeight * 100) / 100 : Math.round(fontSize * lineHeight);
+      const at = extras.sourceStart ?? 0;
       return {
         lines: [{
           x: 0, y: 0, width: 0, height: lineHeightPx,
-          baseline: Math.round(fontSize * 0.8),
+          baseline: office ? Math.round(lineHeightPx * 0.75 * 100) / 100 : Math.round(fontSize * 0.8),
           ascent: Math.round(fontSize * 0.8),
           descent: Math.round(fontSize * 0.2),
-          startIndex: 0, endIndex: 0,
+          startIndex: at, endIndex: at + (extras.endsWithBreak ? 1 : 0),
           isHardBreak: true,
           spans: [],
         }],
@@ -518,6 +546,7 @@ export function runFlow(
       mode,
       onMissingFont,
       markMissingGlyphs,
+      extras,
     );
 
     return {
@@ -530,10 +559,15 @@ export function runFlow(
 
   // For non-column layout, we use a single "virtual column" approach
   for (let i = 0; i < frame.paragraphs.length; i++) {
-    const p = frame.paragraphs[i];
+    const p = officeDefaults(frame.paragraphs[i], officeMode);
 
-    // Zero phase: split `pre`/`pre-line`/`pre-wrap` paragraphs on \n
-    const subParagraphs = splitParagraphByHardBreaks(p);
+    // Zero phase: split `pre`/`pre-line`/`pre-wrap` paragraphs on \n. A
+    // trailing \n ends the paragraph's last line in CSS but opens one more,
+    // empty line in PowerPoint.
+    const pieces = splitParagraphAtHardBreaks(p);
+    const hasHardBreak = pieces.length > 1;
+    if (!officeMode && hasHardBreak && isEmptyPiece(pieces[pieces.length - 1].paragraph)) pieces.pop();
+    const subParagraphs = pieces.map((piece) => piece.paragraph);
 
     // Available inline size: colWidth if columns; otherwise the frame's inline
     // axis minus its padding. Under `sideways-*` the inline axis is the frame
@@ -570,12 +604,23 @@ export function runFlow(
         if (hasColumns) pendingColGap += gap;
         else currentColY[0] += gap;
       }
+      const piece = pieces[subIdx];
       const subResult = layoutSingleParagraph(
         subPara,
         maxWidth,
         i,
         listIndex,
         listMarkerWidth,
+        {
+          // an empty piece is still a line: always in office (every paragraph
+          // is), and in CSS when a forced break made it
+          strut: officeMode || hasHardBreak,
+          sourceTexts: piece.sourceTexts,
+          sourceStart: piece.sourceStart,
+          endsWithBreak: piece.endsWithBreak,
+          justifyLastLine: officeMode && piece.endsWithBreak,
+          noMarker: subIdx > 0 || listNoMarker[i],
+        },
       );
       if (subResult.warnings) warnings.push(...subResult.warnings);
 
@@ -588,6 +633,7 @@ export function runFlow(
           // that add, to read as "the paragraph's un-indented edge".
           line.leftRule = { x: line.x - (p.style.leftIndent ?? 0) + leftPad, width: p.style.leftRule.width, color: p.style.leftRule.color };
         }
+        line.pIdx = i;
         if (!hasColumns) {
           // Non-column: simple accumulation
           line.x += leftPad;
@@ -677,13 +723,15 @@ export function runFlow(
 
   // textBox: content box with the last line's trailing leading trimmed.
   // Top/left/right track the line boxes (PowerPoint keeps the leading above
-  // line 1); bottom drops to the last baseline + real font descent.
+  // line 1); bottom drops to the last baseline + real font descent, never
+  // below the line box (office at spcPct 100 % leaves less than the font's
+  // descent under the baseline — nothing to trim there).
   let boxTop = Infinity, tbLeft = Infinity, tbRight = -Infinity, inkBottom = -Infinity;
   for (const l of allLines) {
     if (l.y < boxTop) boxTop = l.y;
     if (l.x < tbLeft) tbLeft = l.x;
     if (l.x + l.width > tbRight) tbRight = l.x + l.width;
-    const bottom = l.y + l.baseline + l.descent;
+    const bottom = Math.min(l.y + l.baseline + l.descent, l.y + l.height);
     if (bottom > inkBottom) inkBottom = bottom;
   }
   const r2 = (n: number) => Math.round(n * 100) / 100;

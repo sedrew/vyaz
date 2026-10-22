@@ -7,7 +7,6 @@
   </text>
   <text x="0" y="48.6" font-family="Roboto" font-size="36" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="104.3 126.6 136.4">BIG</tspan>
-    <tspan x="160.9"> </tspan>
   </text>
   <text x="0" y="113.4" font-family="Roboto" font-size="36" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 31.4 41.1 64.8 88.4 107.8">MIDDLE</tspan>
@@ -15,7 +14,6 @@
   <text x="0" y="113.4" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="128.3"> </tspan>
     <tspan x="132.8 142 157.8 167.5 171.9 176.3 180.8 190.5 196.8 202.6 212.1">small after</tspan>
-    <tspan x="218.3"> </tspan>
   </text>
   <text x="0" y="153.9" font-family="Roboto" font-size="18" fill="#000000" font-weight="400" xml:space="preserve">
     <tspan x="0 13.5 19.6 29.4 39.5 48.8 53.3 63.1 72.6 78.8">wraps here</tspan>

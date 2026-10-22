@@ -21,20 +21,20 @@ import type { IFontMetricsProvider } from '../types/FontTypes.js';
 import type { ParagraphLayoutResult, Span } from '../types/LayoutTypes.js';
 
 type NotdefRange = NonNullable<Span['notdefRanges']>[number];
-import { compileParagraph } from '../compile/ParagraphCompiler.js';
+import { compileParagraph, preservesSpaces, sourceTextOf } from '../compile/ParagraphCompiler.js';
 import type { PreparedRichInlineItem } from '../compile/ParagraphCompiler.js';
 import { fontMetricsProvider, MISSING_GLYPH_FACTOR } from '../measure/FontMetricsProvider.js';
 import { FontNotFoundError } from '../measure/FontNotFoundError.js';
-import { createFontkitMeasureContext, setMeasureContext, setProfileChangeHook, getMeasureProfile, measurePx, sizedFont } from '../measure/FontkitMeasureContext.js';
-import { clearMeasurementCaches } from '../vendor/pretext/measurement.js';
-import { positionLines } from './PositioningEngine.js';
+import { createFontkitMeasureContext, setMeasureContext, getMeasureProfile, getMeasureProfileKey, measurePx, sizedFont } from '../measure/FontkitMeasureContext.js';
+import { positionLines, resolveListMarker, paragraphLineIndents, type PositionExtras } from './PositioningEngine.js';
+import { assignSourceIndices } from '../utils/sourceIndex.js';
 import { resolveFontFamily, type OnMissingFont } from './resolve-font.js';
 import type { LayoutWarning } from '../types/LayoutTypes.js';
 
 // Vendored pretext — see src/vendor/pretext/VENDOR.json and
 // scripts/vendor-pretext.ts. The vendored copy routes text measurement through
 // src/measure/FontkitMeasureContext.ts instead of a global canvas context.
-import { prepareRichInline, materializeRichInlineLineRange, walkRichInlineLineRanges, type PreparedRichInline } from '../vendor/pretext/rich-inline.js';
+import { prepareRichInline, materializeRichInlineLineRange, layoutNextRichInlineLineRange, type PreparedRichInline, type RichInlineCursor } from '../vendor/pretext/rich-inline.js';
 
 // ── Text measurement backend ──────────────────────────────────────────────
 //
@@ -45,9 +45,9 @@ import { prepareRichInline, materializeRichInlineLineRange, walkRichInlineLineRa
 //
 // Escape hatch: `setMeasureContext(null)` puts line breaking back on canvas.
 setMeasureContext(createFontkitMeasureContext(fontMetricsProvider));
-// Pretext caches segment widths by text only; flush that cache whenever the
-// measure profile flips so `shape` and `advance` layouts never cross-feed.
-setProfileChangeHook(clearMeasurementCaches);
+// Pretext caches segment widths per `font` string; the vendored copy prefixes
+// that key with `getMeasureProfileKey()`, so `shape` and `advance` layouts
+// never cross-feed and a profile switch keeps both sets of widths.
 
 // ── Cache key builder ─────────────────────────────────────────────────────
 
@@ -116,7 +116,9 @@ function getFontMetricsForItem(item: PreparedRichInlineItem, mode?: 'browser' | 
  */
 function preparedCacheKey(paragraph: Paragraph): string {
   const c = paragraph.children;
-  let k = (paragraph.style.overflowWrap ?? '') + '|';
+  let k = (paragraph.style.overflowWrap ?? '') + '|'
+    + (preservesSpaces(paragraph.style.whiteSpace) ? 'P' : '')
+    + (paragraph.style.hyphenBreak === false ? 'H' : '') + '|';
   const S ='\u0000';   // field/record separator — never present in a real text run
   for (let i = 0; i < c.length; i++) {
     const r = c[i];
@@ -134,6 +136,22 @@ function preparedCacheKey(paragraph: Paragraph): string {
 }
 
 const DEFAULT_PREPARED_CACHE_MAX = 4096;
+
+/**
+ * What {@link ParagraphLayoutEngine.layout} needs to know when the paragraph
+ * is one line-break-free piece of a bigger one (`layoutTextFrame` splits on
+ * `\n`), plus the empty-line policy.
+ */
+export interface ParagraphLayoutExtras extends PositionExtras {
+  /** Lay out an empty paragraph as one line at its first run's size (a strut). */
+  strut?: boolean;
+  /** Source text per run, before whitespace collapsing. Default: the runs' texts. */
+  sourceTexts?: string[];
+  /** Offset of this piece in the source paragraph text. Default 0. */
+  sourceStart?: number;
+  /** A `\n` follows this piece (counted into its last line's `endIndex`). */
+  endsWithBreak?: boolean;
+}
 
 export class ParagraphLayoutEngine {
   /** LRU (Map insertion order) of PreparedRichInline keyed by {@link preparedCacheKey}. */
@@ -169,11 +187,15 @@ export class ParagraphLayoutEngine {
     mode?: 'browser' | 'office',
     onMissingFont: OnMissingFont = 'throw',
     markMissingGlyphs: boolean = false,
+    extras: ParagraphLayoutExtras = {},
   ): ParagraphLayoutResult {
     const provider = fontProvider || fontMetricsProvider;
 
-    // Phase 1: Compile
-    const items = compileParagraph(paragraph);
+    // Per-call mode overrides the provider's global mode
+    const renderMode = mode ?? provider.getMode();
+
+    // Phase 1: Compile (super / subscript size and shift depend on the mode)
+    const items = compileParagraph(paragraph, renderMode);
 
     // Phase 1b: resolve each run's fontFamily (name or fallback list) to one
     // concrete registered family, before prepare/positioning see it.
@@ -205,8 +227,7 @@ export class ParagraphLayoutEngine {
     // Phase 2: Prepare (cached, bounded LRU keyed on prepare-relevant fields only).
     // The measure profile changes fragment widths (kerning / ligatures) and thus
     // line-break points, so it is part of the key.
-    const mp = getMeasureProfile();
-    const cacheKey = `${mp.engine}${mp.kernMinSize ?? ''}${mp.kernRequiresTable ? 'T' : ''}${mp.advanceQuantum ?? ''}${mp.opticalSizing === false ? 'N' : ''}${mp.features ? JSON.stringify(mp.features) : ''}${preparedCacheKey(paragraph)}`;
+    const cacheKey = `${renderMode}|${getMeasureProfileKey()}${preparedCacheKey(paragraph)}`;
     let prepared = this.preparedCache.get(cacheKey);
     if (prepared) {
       // bump recency
@@ -219,22 +240,6 @@ export class ParagraphLayoutEngine {
         this.preparedCache.delete(this.preparedCache.keys().next().value as string);
       }
     }
-
-    // Phase 3: Layout — walk lines
-    const effectiveMaxWidth = paragraph.style.whiteSpace === 'nowrap' ? Infinity : maxWidth;
-    const pretextLines: any[] = [];
-    walkRichInlineLineRanges(prepared, effectiveMaxWidth, (range: any) => {
-      pretextLines.push(range);
-    });
-
-    // Materialize each line
-    const materializedLines: any[] = [];
-    for (const range of pretextLines) {
-      materializedLines.push(materializeRichInlineLineRange(prepared, range));
-    }
-
-    // Phase 4: Position — per-call mode overrides the provider's global mode
-    const renderMode = mode ?? provider.getMode();
 
     // Per-layout glyph cache: map<text+font+size, Float32Array>
     // Lives only for the duration of one layout() call.
@@ -279,6 +284,35 @@ export class ParagraphLayoutEngine {
       return Math.round(total * 100) / 100;
     };
 
+    // Phase 3: Layout — walk lines, each as wide as the box minus the indents
+    // positioning will put on it (`leftIndent`, `indent` on the first line,
+    // the list marker zone, `rightIndent`). `nowrap` and `pre` never wrap
+    // automatically (`pre` breaks at \n only).
+    const effectiveListIndex = paragraph.style.listStyle ? (listIndex ?? 1) : undefined;
+    const marker = resolveListMarker(items, paragraph.style, renderMode, measureTextFn, paragraph.style.listStyle, effectiveListIndex, listMarkerWidth, extras);
+    const indents = paragraphLineIndents(marker, paragraph.style, paragraph.style.listStyle, extras);
+    const ws = paragraph.style.whiteSpace;
+    const noWrap = ws === 'nowrap' || ws === 'pre';
+    const pretextLines: any[] = [];
+    let cursor: RichInlineCursor | undefined;
+    for (;;) {
+      const lineWidth = noWrap ? Infinity : Math.max(0, maxWidth - (pretextLines.length === 0 ? indents.first : indents.rest) - indents.right);
+      const range = layoutNextRichInlineLineRange(prepared, lineWidth, cursor);
+      if (range === null) break;
+      pretextLines.push(range);
+      cursor = range.end;
+    }
+
+    // Materialize each line
+    const materializedLines: any[] = [];
+    for (const range of pretextLines) {
+      materializedLines.push(materializeRichInlineLineRange(prepared, range));
+    }
+    // Nothing to lay out (empty runs only): one strut line at the first run's size.
+    if (materializedLines.length === 0 && extras.strut && items.length > 0) {
+      materializedLines.push({ fragments: [], width: 0, end: { itemIndex: 0, segmentIndex: 0, graphemeIndex: 0 } });
+    }
+
     const { lines, contentWidth } = positionLines(
       materializedLines,
       items,
@@ -304,8 +338,18 @@ export class ParagraphLayoutEngine {
       measureTextFn,
       paragraph.id,
       paragraph.style.listStyle,
-      paragraph.style.listStyle ? (listIndex ?? 1) : undefined,
+      effectiveListIndex,
       listMarkerWidth,
+      { ...extras, strut: extras.strut && pretextLines.length === 0 },
+    );
+
+    // Source indices: spans → their range in the source text; lines tile it.
+    assignSourceIndices(
+      lines,
+      extras.sourceTexts ?? paragraph.children.map(sourceTextOf),
+      extras.sourceStart ?? 0,
+      !preservesSpaces(ws),
+      extras.endsWithBreak ?? false,
     );
 
     // Phase 4b: Fill per-glyph advances — opt-in (SVG "glyph" preset, hit-testing).

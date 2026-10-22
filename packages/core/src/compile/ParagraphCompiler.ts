@@ -63,6 +63,13 @@ export interface PreparedRichInlineItem {
    * grapheme boundaries.
    */
   overflowWrap?: 'normal' | 'break-word' | 'anywhere';
+  /**
+   * `'pre-wrap'` keeps this run's spaces (paragraph `whiteSpace` `pre` /
+   * `pre-wrap`); unset collapses them (CSS `normal`).
+   */
+  whiteSpace?: 'pre-wrap';
+  /** `false` when the paragraph sets `hyphenBreak: false` (no break after `-`). */
+  hyphenBreak?: false;
   /** Original text before text-transform (if transform was applied). Used for copy-paste / round-trip. */
   originalText?: string;
   metadata: {
@@ -74,9 +81,17 @@ export interface PreparedRichInlineItem {
   };
 }
 
-const SUPER_SUB_SCALE = 0.65;
-const SUPER_OFFSET_RATIO = -0.4;
-const SUB_OFFSET_RATIO = 0.25;
+/**
+ * Super / subscript: size and baseline shift as fractions of the run's own
+ * size (shift − = up). office: PowerPoint's Superscript / Subscript (DrawingML
+ * `baseline` 30000 / −25000) — drawn at exactly 2/3 size, shifted by the
+ * percentage of the full size (scripts/office-metrics/TEXT-FEATURES-RESULTS.md
+ * §10, 96 pt: 30 % → 28.8 pt, 50 % → 48, 80 % → 76.8).
+ */
+const SCRIPT_MODEL = {
+  browser: { scale: 0.65, superShift: -0.4, subShift: 0.25 },
+  office: { scale: 2 / 3, superShift: -0.3, subShift: 0.25 },
+} as const;
 
 /**
  * Collapsible whitespace (CSS Text §4.1.1): space (U+0020), tab (U+0009),
@@ -118,8 +133,9 @@ export function splitAndCollapseByHardBreaks(text: string): string[] {
 /**
  * Compile a paragraph into PreparedRichInlineItem[].
  */
-export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[] {
+export function compileParagraph(paragraph: Paragraph, mode: 'browser' | 'office' = 'browser'): PreparedRichInlineItem[] {
   const items: PreparedRichInlineItem[] = [];
+  const script = SCRIPT_MODEL[mode];
 
   for (let i = 0; i < paragraph.children.length; i++) {
     const run = paragraph.children[i];
@@ -130,11 +146,11 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
     let baselineOffset = 0;
 
     if (run.script === 'super') {
-      effectiveFontSize = baseFontSize * SUPER_SUB_SCALE;
-      baselineOffset = baseFontSize * SUPER_OFFSET_RATIO;
+      effectiveFontSize = baseFontSize * script.scale;
+      baselineOffset = baseFontSize * script.superShift;
     } else if (run.script === 'sub') {
-      effectiveFontSize = baseFontSize * SUPER_SUB_SCALE;
-      baselineOffset = baseFontSize * SUB_OFFSET_RATIO;
+      effectiveFontSize = baseFontSize * script.scale;
+      baselineOffset = baseFontSize * script.subShift;
     }
 
     // Inline-box: text → \uFFFC
@@ -173,6 +189,8 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
       font: makeFontToken(run, effectiveFontSize),
       letterSpacing: run.letterSpacing,
       overflowWrap: paragraph.style.overflowWrap,
+      ...(preservesSpaces(paragraph.style.whiteSpace) ? { whiteSpace: 'pre-wrap' as const } : {}),
+      ...(paragraph.style.hyphenBreak === false ? { hyphenBreak: false as const } : {}),
       // Save original text if transform was applied (for copy-paste / round-trip)
       ...(text !== rawText ? { originalText: rawText } : {}),
       metadata: {
@@ -196,87 +214,105 @@ export function compileParagraph(paragraph: Paragraph): PreparedRichInlineItem[]
   return items;
 }
 
-/**
- * Zero phase: split a Paragraph into virtual Paragraph[] on \n boundaries.
- *
- * For `pre-line`: whitespace is collapsed per segment.
- * For `pre`/`pre-wrap`: whitespace is preserved.
- * For `normal`/`nowrap`/`undefined`: returns [paragraph] unchanged.
- *
- * Each \n produces an empty Paragraph (children: []) which the layout engine
- * can fast-path as a hard-break line.
- *
- * Supports multi-run: when a run contains \n, the text after \n starts
- * a new virtual paragraph. Runs after the split run belong to the new
- * paragraph.
- *
- * @example
- *   "Hello\nWorld" (pre-line)
- *     → [{ children: [{ text: "Hello" }] }, { children: [{ text: "World" }] }]
- *
- *   "Hello\n\nWorld" (pre-line)
- *     → [{ children: [{ text: "Hello" }] }, { children: [] }, { children: [{ text: "World" }] }]
- *
- *   ["Hello Bold", "\n", "World"] (pre)
- *     → [{ children: [{ text: "Hello Bold" }] }, { children: [] }, { children: [{ text: "World" }] }]
- */
-export function splitParagraphByHardBreaks(paragraph: Paragraph): Paragraph[] {
-  const ws = paragraph.style.whiteSpace;
-  if (ws !== 'pre-line' && ws !== 'pre' && ws !== 'pre-wrap') {
-    return [paragraph];
-  }
-
-  const result: Paragraph[] = [];
-  let currentRuns: TextRun[] = [];
-
-  for (const run of paragraph.children) {
-    const segments = run.text.split('\n');
-
-    if (segments.length === 1) {
-      // No \n — entire run goes to current virtual paragraph
-      currentRuns.push({ ...run });
-      continue;
-    }
-
-    // Text has \n — process each segment
-    for (let i = 0; i < segments.length; i++) {
-      const seg = segments[i];
-      const textTransform = run.textTransform;
-      const effectiveFontSize = computeEffFs(run);
-
-      if (i === 0) {
-        // First segment → append to current paragraph
-        if (seg.length > 0) {
-          const text = ws === 'pre-line' ? collapseSegmentWhitespace(seg) : seg;
-          currentRuns.push({ ...run, text: transformText(text, textTransform) });
-        }
-        // First segment empty (leading \n) — still finalize current paragraph below
-      } else {
-        // Subsequent segment → finalize previous paragraph first
-        result.push({ style: paragraph.style, children: currentRuns });
-
-        if (seg.length > 0) {
-          // Non-empty segment → start new paragraph with this run
-          const text = ws === 'pre-line' ? collapseSegmentWhitespace(seg) : seg;
-          currentRuns = [{ ...run, text: transformText(text, textTransform) }];
-        } else {
-          // Empty segment (consecutive \n) → empty paragraph
-          result.push({ style: paragraph.style, children: [] });
-          currentRuns = [];
-        }
-      }
-    }
-  }
-
-  // Finalize last paragraph
-  result.push({ style: paragraph.style, children: currentRuns });
-
-  return result;
+/** `white-space` values that keep spaces (`pre`, `pre-wrap`). */
+export function preservesSpaces(whiteSpace: Paragraph['style']['whiteSpace']): boolean {
+  return whiteSpace === 'pre' || whiteSpace === 'pre-wrap';
 }
 
-function computeEffFs(run: TextRun): number {
-  const base = run.fontSize ?? DEFAULT_TEXT_STYLE.fontSize ?? 12;
-  return run.script === 'super' || run.script === 'sub' ? base * SUPER_SUB_SCALE : base;
+/** A run's text as line indices count it: an inline box is one character. */
+export function sourceTextOf(run: TextRun): string {
+  return run.type === 'inline-box' ? '\uFFFC' : run.text;
+}
+
+/** One line-break-free piece of a paragraph — see {@link splitParagraphAtHardBreaks}. */
+export interface HardBreakPiece {
+  /** The piece as a paragraph of its own (whitespace already collapsed for `pre-line`). */
+  paragraph: Paragraph;
+  /** Offset of the piece in the source paragraph text (`children` texts joined). */
+  sourceStart: number;
+  /** Source text of each of `paragraph.children`, before collapsing. */
+  sourceTexts: string[];
+  /** The piece is followed by a `\n` (which belongs to it, after its text). */
+  endsWithBreak: boolean;
+}
+
+/**
+ * Zero phase: split a paragraph on `\n` for `pre` / `pre-line` / `pre-wrap`
+ * into one piece per line-break-free stretch, keeping where each piece sits in
+ * the source text. Any other `white-space` returns the paragraph as one piece.
+ *
+ * For `pre-line` whitespace is collapsed per piece. An empty piece (`\n\n`, or
+ * a trailing `\n`) keeps one empty run with the style of the run whose `\n`
+ * produced it, so its line gets that run's size.
+ *
+ * @example
+ *   "Hello\n\nWorld" (pre-line) → "Hello" | "" | "World"   (3 lines)
+ *   ["Hello Bold", "\n", "World"] (pre) → "Hello Bold" | "World"   (2 lines)
+ *   "Hello\n" → "Hello" | ""   (the caller decides whether a trailing empty piece is a line)
+ */
+export function splitParagraphAtHardBreaks(paragraph: Paragraph): HardBreakPiece[] {
+  const ws = paragraph.style.whiteSpace;
+  if (ws !== 'pre-line' && ws !== 'pre' && ws !== 'pre-wrap') {
+    return [{ paragraph, sourceStart: 0, sourceTexts: paragraph.children.map(sourceTextOf), endsWithBreak: false }];
+  }
+
+  const pieces: HardBreakPiece[] = [];
+  let runs: TextRun[] = [];
+  let texts: string[] = [];
+  let pieceStart = 0;
+  let offset = 0;
+  let styleRun: TextRun | undefined; // run that carries the most recent text or \n
+
+  const finish = (endsWithBreak: boolean) => {
+    const children = runs.length > 0 ? runs : styleRun ? [{ ...styleRun, text: '' }] : [];
+    pieces.push({
+      paragraph: { ...paragraph, children },
+      sourceStart: pieceStart,
+      sourceTexts: runs.length > 0 ? texts : children.map(() => ''),
+      endsWithBreak,
+    });
+    runs = [];
+    texts = [];
+  };
+
+  for (const run of paragraph.children) {
+    if (run.type === 'inline-box') {
+      runs.push(run);
+      texts.push(sourceTextOf(run));
+      styleRun = run;
+      offset += 1;
+      continue;
+    }
+    if (runs.length === 0) styleRun = run; // an empty piece takes the size of its first run
+    const segments = run.text.split('\n');
+    for (let i = 0; i < segments.length; i++) {
+      const seg = segments[i];
+      if (i > 0) {
+        styleRun = run;
+        finish(true);
+        offset += 1; // the \n
+        pieceStart = offset;
+      }
+      if (seg.length > 0) {
+        const text = ws === 'pre-line' ? collapseSegmentWhitespace(seg) : seg;
+        runs.push({ ...run, text: transformText(text, run.textTransform) });
+        texts.push(seg);
+        styleRun = run;
+      }
+      offset += seg.length;
+    }
+  }
+  finish(false);
+  return pieces;
+}
+
+/**
+ * Split a paragraph into virtual paragraphs on `\n` — the paragraphs of
+ * {@link splitParagraphAtHardBreaks}. For `normal` / `nowrap` / unset returns
+ * `[paragraph]` unchanged.
+ */
+export function splitParagraphByHardBreaks(paragraph: Paragraph): Paragraph[] {
+  return splitParagraphAtHardBreaks(paragraph).map((piece) => piece.paragraph);
 }
 
 /**

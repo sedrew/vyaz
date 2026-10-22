@@ -38,6 +38,20 @@ auto-width natural-width measurement pass, see the core CHANGELOG-equivalent
 commit history for `PositioningEngine`), then measures `layoutTableFrame()`
 and `renderTableToSVG()` once each on the full grid.
 
+## Office mode
+
+```bash
+bun run bench:office                            # 1000 text boxes
+OFFICE_FRAMES=5000 bun run bench:office
+```
+
+`office.ts` lays out many small frames with `mode: 'office'` — a deck, where
+every text box is its own `layoutTextFrame()` call and the measure profile is
+installed and restored around each one. `cold` uses fresh paragraph text per
+pass (prepare-cache miss) over a shared vocabulary, `warm` repeats the same
+frames. Both depend on shaped widths surviving between calls; re-run after any
+change to `measurePx`, the measure profile, or the pretext cache keying.
+
 ## Resize
 
 ```bash

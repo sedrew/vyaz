@@ -20,6 +20,7 @@
 - [FontMetrics](interfaces/FontMetrics.md)
 - [FrameTransform](interfaces/FrameTransform.md)
 - [GlyphData](interfaces/GlyphData.md)
+- [HardBreakPiece](interfaces/HardBreakPiece.md)
 - [IFontMetricsProvider](interfaces/IFontMetricsProvider.md)
 - [InlineWidget](interfaces/InlineWidget.md)
 - [LayoutEngine](interfaces/LayoutEngine.md)
@@ -27,6 +28,7 @@
 - [LayoutOptions](interfaces/LayoutOptions.md)
 - [LayoutWarning](interfaces/LayoutWarning.md)
 - [Line](interfaces/Line.md)
+- [LineDecoration](interfaces/LineDecoration.md)
 - [ListStyle](interfaces/ListStyle.md)
 - [MeasureProfile](interfaces/MeasureProfile.md)
 - [MultiColumnConfig](interfaces/MultiColumnConfig.md)
@@ -96,6 +98,7 @@
 ## Functions
 
 - [applyScale](functions/applyScale.md)
+- [clearMeasureCache](functions/clearMeasureCache.md)
 - [collapseSegmentWhitespace](functions/collapseSegmentWhitespace.md)
 - [compileParagraph](functions/compileParagraph.md)
 - [computePixelMetrics](functions/computePixelMetrics.md)
@@ -115,5 +118,6 @@
 - [positionLines](functions/positionLines.md)
 - [setMeasureProfile](functions/setMeasureProfile.md)
 - [shapeRun](functions/shapeRun.md)
+- [splitParagraphAtHardBreaks](functions/splitParagraphAtHardBreaks.md)
 - [splitParagraphByHardBreaks](functions/splitParagraphByHardBreaks.md)
 - [transformText](functions/transformText.md)

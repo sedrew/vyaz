@@ -4,7 +4,7 @@
 
 > **LineFitEdge** = `"leading"` \| `"text"` \| `"cap"` \| `"ex"` \| `"ideographic"` \| `"ideographic-ink"` \| `"alphabetic"`
 
-Defined in: [core/src/types/Document.ts:138](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L138)
+Defined in: [core/src/types/Document.ts:142](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L142)
 
 **`Experimental`**
 

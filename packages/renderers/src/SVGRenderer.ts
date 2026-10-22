@@ -21,7 +21,7 @@
 import type { Line, Span, ParagraphLayoutResult, TextFrameLayoutResult, ParagraphGroup, MultiColumnConfig, FrameTransform } from '@vyaz/core';
 import { groupLinesByParagraph } from '@vyaz/core';
 import type { DebugFlags, SvgElement, SvgNode } from './types.js';
-import { computeBBox, escapeXml, fmt, paintableLine, safeColor, safeFamily, splitMixedDecorations, type DecorationRule } from './utils.js';
+import { computeBBox, escapeXml, fmt, layoutDecorations, paintableLine, safeColor, safeFamily, splitMixedDecorations, type DecorationRule } from './utils.js';
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -1115,7 +1115,13 @@ export function renderToSVG(
     // browser preset: decorated runs that mix font sizes get Chrome's
     // decorating-box lines instead of per-tspan `text-decoration`.
     let decoRules: DecorationRule[] = [];
-    if (opts.decorationBoxes) ({ line, rules: decoRules } = splitMixedDecorations(line, baselineY));
+    if (line.decorations?.length) {
+      // The layout defined the rules (`mode: 'office'`, PowerPoint's model):
+      // paint exactly those, and no per-span decoration of our own.
+      ({ line, rules: decoRules } = layoutDecorations(line));
+    } else if (opts.decorationBoxes) {
+      ({ line, rules: decoRules } = splitMixedDecorations(line, baselineY));
+    }
 
     // `<hr>` — a full-width horizontal bar in place of text (`line.rule`;
     // see `Paragraph.rule`). `<blockquote>`-style left bar (`line.leftRule`;

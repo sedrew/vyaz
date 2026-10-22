@@ -96,9 +96,13 @@ export type LineBreak = 'auto' | 'loose' | 'normal' | 'strict' | 'anywhere';
 /**
  * Overflow wrap behavior (whether long words can break).
  *
- * `'normal'` (the default) matches real browsers and PowerPoint: a word
- * wider than the available width overflows the line rather than being
- * split. `'break-word'` / `'anywhere'` force a break at grapheme boundaries
+ * `'normal'` (the default) matches real browsers: a word wider than the
+ * available width overflows the line rather than being split. PowerPoint
+ * breaks such a word inside instead — pass `'break-word'` for that in
+ * `mode: 'office'` (scripts/office-metrics/TEXT-FEATURES-RESULTS.md); it is
+ * not the office default because it would also split words under an
+ * intrinsic-width probe (`width: 1e-3`).
+ * `'break-word'` / `'anywhere'` force a break at grapheme boundaries
  * when a word doesn't fit — `'anywhere'` also lets that break point count
  * toward min-content sizing (both mapped to the same fallback here).
  *
@@ -163,7 +167,11 @@ export type ScriptType = 'normal' | 'sub' | 'super';
  * - `'nowrap'`: collapse whitespace, no wrap.
  * - `'pre'`: preserve whitespace, wrap on newline only.
  * - `'pre-line'`: collapse whitespace, wrap on newline and auto-wrap.
- * - `'pre-wrap'`: preserve whitespace, wrap on newline and auto-wrap.
+ * - `'pre-wrap'`: preserve whitespace, wrap on newline and auto-wrap; spaces
+ *   at the end of a line hang (they don't wrap and don't count for fit).
+ *
+ * `mode: 'office'` defaults to `'pre-wrap'` when the paragraph leaves this
+ * unset — PowerPoint keeps every space (leading, repeated, trailing).
  *
  * @see {@link https://www.w3.org/TR/css-text-3/#white-space-property | CSS Text: white-space}
  */
@@ -431,7 +439,12 @@ export interface ListStyle {
   /** Numbering format (only used when `type === 'number'`). Defaults to `'decimal'`. */
   numberFormat?: NumberFormat;
 
-  /** Starting number for numbered lists. Defaults to 1. */
+  /**
+   * Starting number for numbered lists. Defaults to 1. On a later item it
+   * starts a new count unless it equals the current count's own start or the
+   * next number (so it can be set on every item, as DrawingML `startAt` and
+   * `@vyaz/converters`' `<ol start>` do).
+   */
   startNumber?: number;
 
   /**
@@ -450,6 +463,20 @@ export interface ListStyle {
    * Falls back to `bulletIndent * (level + 1)` if not specified.
    */
   indents?: number[];
+
+  /**
+   * Marker size relative to the paragraph's first run (DrawingML `buSzPct`
+   * / 100 000, e.g. `0.5` = 50 %). Defaults to `1` for numbers; for bullets
+   * `0.9` in `mode: 'browser'` and `1` in `mode: 'office'` (PowerPoint's
+   * default, measured).
+   */
+  bulletSize?: number;
+
+  /**
+   * Font family for the marker (DrawingML `buFont`). Defaults to the font of
+   * the paragraph's first run.
+   */
+  bulletFont?: string;
 }
 
 // ── Paragraph (block-level) ─────────────────────────────────────────────
@@ -521,6 +548,14 @@ export interface ParagraphStyle {
    * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
    */
   hyphens?: boolean;
+  /**
+   * Whether a line may break after a hyphen (`-` U+002D, `‐` U+2010) inside a
+   * word or number — `well-│known`, `2024-│10-06`. Default `true`, which is
+   * what browsers and PowerPoint do. `false` keeps hyphenated words and
+   * codes (`TEST-1234`, dates, phone numbers) on one line, like U+2011.
+   * Unrelated to {@link ParagraphStyle.hyphens} (automatic hyphenation).
+   */
+  hyphenBreak?: boolean;
   /**
    * CSS `white-space` behaviour:
    * - `'normal'`: collapse whitespace, auto-wrap.

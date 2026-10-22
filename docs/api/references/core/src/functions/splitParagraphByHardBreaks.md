@@ -4,20 +4,11 @@
 
 > **splitParagraphByHardBreaks**(`paragraph`): [`Paragraph`](../interfaces/Paragraph.md)[]
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:223](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L223)
+Defined in: [core/src/compile/ParagraphCompiler.ts:314](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L314)
 
-Zero phase: split a Paragraph into virtual Paragraph[] on \n boundaries.
-
-For `pre-line`: whitespace is collapsed per segment.
-For `pre`/`pre-wrap`: whitespace is preserved.
-For `normal`/`nowrap`/`undefined`: returns [paragraph] unchanged.
-
-Each \n produces an empty Paragraph (children: []) which the layout engine
-can fast-path as a hard-break line.
-
-Supports multi-run: when a run contains \n, the text after \n starts
-a new virtual paragraph. Runs after the split run belong to the new
-paragraph.
+Split a paragraph into virtual paragraphs on `\n` — the paragraphs of
+[splitParagraphAtHardBreaks](splitParagraphAtHardBreaks.md). For `normal` / `nowrap` / unset returns
+`[paragraph]` unchanged.
 
 ## Parameters
 
@@ -28,16 +19,3 @@ paragraph.
 ## Returns
 
 [`Paragraph`](../interfaces/Paragraph.md)[]
-
-## Example
-
-```ts
-"Hello\nWorld" (pre-line)
-    → [{ children: [{ text: "Hello" }] }, { children: [{ text: "World" }] }]
-
-  "Hello\n\nWorld" (pre-line)
-    → [{ children: [{ text: "Hello" }] }, { children: [] }, { children: [{ text: "World" }] }]
-
-  ["Hello Bold", "\n", "World"] (pre)
-    → [{ children: [{ text: "Hello Bold" }] }, { children: [] }, { children: [{ text: "World" }] }]
-```

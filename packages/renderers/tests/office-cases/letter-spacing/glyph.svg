@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="269.6" viewBox="0 0 220 269.6">
+  <text x="0" y="15.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 12.5 24.4">The</tspan>
+    <tspan x="35.9"> </tspan>
+    <tspan x="49.1 61.2 73.1 80 91.3">quick</tspan>
+    <tspan x="102.5"> </tspan>
+    <tspan x="115.7 127.7 136 148.2 163.2">brown</tspan>
+    <tspan x="175.1"> </tspan>
+    <tspan x="188.3 196.9 209">fox</tspan>
+  </text>
+  <text x="0" y="34.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 6.9 18.8 35.8 47.8">jumps</tspan>
+    <tspan x="59"> </tspan>
+    <tspan x="74.5 86.6 97.3 108.8">over</tspan>
+    <tspan x="117.2"> </tspan>
+    <tspan x="132.7 140.9 152.8">the</tspan>
+    <tspan x="164.3"> </tspan>
+    <tspan x="179.8 186.6 198.4 209.4">lazy</tspan>
+  </text>
+  <text x="0" y="53.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 12 24.1">dog</tspan>
+    <tspan x="36.1"> </tspan>
+    <tspan x="57.1 72.1 83.9 90.8 97.7">while</tspan>
+    <tspan x="109.2"> </tspan>
+    <tspan x="130.1">a</tspan>
+    <tspan x="141.8"> </tspan>
+    <tspan x="162.8 171.4 179.8 191.5 208.5">frame</tspan>
+  </text>
+  <text x="0" y="72.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 17 28.5 40.3 51.5 63.4 71.8 83.3">measures</tspan>
+    <tspan x="94.5"> </tspan>
+    <tspan x="112.3 123.8 134.6 146.1 154.4">every</tspan>
+    <tspan x="165.1"> </tspan>
+    <tspan x="182.9 189.7 196.6 208.5">line</tspan>
+  </text>
+  <text x="0" y="92" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 12 24.1 35.1">box.</tspan>
+  </text>
+  <text x="9.31" y="121.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="9.3 21.8 33.7 45.2 52.2 64.3 76.2 83.1 94.4 105.6 112.6 124.6 132.9 145.1 160.1 171.9 178.9 187.6 199.7">The quick brown fox</tspan>
+  </text>
+  <text x="12.69" y="140.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="12.7 19.6 31.4 48.4 60.4 71.7 78.7 90.8 101.6 113.1 121.4 128.4 136.7 148.6 160.1 167.1 173.9 185.7 196.7">jumps over the lazy</tspan>
+  </text>
+  <text x="20.88" y="159.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="20.9 32.9 45 57 64 79 90.9 97.8 104.6 116.1 123.1 134.9 141.9 150.5 158.9 170.6 187.6">dog while a frame</tspan>
+  </text>
+  <text x="10.81" y="178.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="10.8 27.8 39.3 51.1 62.3 74.2 82.6 94.1 105.3 112.3 123.8 134.6 146.1 154.4 165.1 172.1 178.9 185.8 197.7">measures every line</tspan>
+  </text>
+  <text x="88.81" y="198" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="88.8 100.8 112.9 123.9">box.</tspan>
+  </text>
+  <text x="0" y="227.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 8.5 16.4 23.9 26.9 35 42.9 45.8 53.1 60.3 63.3 71.3 75.6 83.8 94.8 102.6 105.6 110.3 118.4 125.4 128.4 131.3 139.1 152.1 160.1 167.4 170.4 178.5 185.3 192.8 197.1 200.1 204.4 212.3">The quick brown fox jumps over the</tspan>
+  </text>
+  <text x="0" y="246.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="-3"> </tspan>
+    <tspan x="0 2.9 10.6 17.6 24.3 27.3 35.3 43.4 51.4 54.4 65.4 73.3 76.1 79 86.5 89.5 97.3 100.3 104.9 109.3 117 130 137.5 140.5 153.5 161 168.8 176 183.9 188.3 195.8">lazy dog while a frame measures</tspan>
+  </text>
+  <text x="0" y="265.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 7.5 14.3 21.8 26.1 32.8 35.8 38.6 41.5 49.4 56.9 59.9 67.9 76 83">every line box.</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="220" height="269.6" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="227" height="269.6" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

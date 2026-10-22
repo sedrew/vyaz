@@ -4,6 +4,6 @@
 
 > `const` **fontMetricsProvider**: [`FontMetricsProvider`](../classes/FontMetricsProvider.md)
 
-Defined in: [core/src/measure/FontMetricsProvider.ts:471](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L471)
+Defined in: [core/src/measure/FontMetricsProvider.ts:472](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontMetricsProvider.ts#L472)
 
 Singleton

@@ -59,6 +59,8 @@ export type PrepareOptions = {
      *  `'break-word'` / `'anywhere'` restore upstream's unconditional
      *  long-word grapheme fallback. */
     overflowWrap?: OverflowWrapMode;
+    /** Break after '-' / U+2010 inside a word. Default `true` (upstream). */
+    hyphenBreak?: boolean;
 };
 type PreparedLineChunk = {
     startSegmentIndex: number;

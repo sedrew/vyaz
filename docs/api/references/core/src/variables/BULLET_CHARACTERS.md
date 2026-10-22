@@ -4,6 +4,6 @@
 
 > `const` **BULLET\_CHARACTERS**: `Record`\<`number`, `string`\>
 
-Defined in: [core/src/index.ts:132](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L132)
+Defined in: [core/src/index.ts:133](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L133)
 
 **`Internal`**

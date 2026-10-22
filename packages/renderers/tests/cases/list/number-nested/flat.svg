@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="155.89" viewBox="-6 -10 120 155.89">
+  <text x="4" y="15" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">1.One</text>
+  <text x="28" y="34.39" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">a.a</text>
+  <text x="28" y="53.78" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">b.b</text>
+  <text x="4" y="73.17" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">2.Two</text>
+  <text x="28" y="92.56" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">a.a again</text>
+  <text x="37.2" y="111.95" font-family="Unifont" font-size="14.4" fill="#000000" font-weight="400" xml:space="preserve">○</text>
+  <text x="48" y="111.95" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">dot</text>
+  <text x="4" y="131.5" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">3.Three</text>
+<!-- debug overlay -->
+  <rect x="4" y="0" width="100" height="135.89" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

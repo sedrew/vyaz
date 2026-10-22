@@ -2,7 +2,7 @@
 
 # Interface: ParagraphStyle
 
-Defined in: [core/src/types/Document.ts:465](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L465)
+Defined in: [core/src/types/Document.ts:492](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L492)
 
 Block-level style for a paragraph.
 
@@ -19,9 +19,23 @@ and line-breaking rules for all runs inside the paragraph.
 
 > **alignment**: [`TextAlignment`](../type-aliases/TextAlignment.md)
 
-Defined in: [core/src/types/Document.ts:467](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L467)
+Defined in: [core/src/types/Document.ts:494](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L494)
 
 Horizontal text alignment.
+
+***
+
+### hyphenBreak?
+
+> `optional` **hyphenBreak?**: `boolean`
+
+Defined in: [core/src/types/Document.ts:558](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L558)
+
+Whether a line may break after a hyphen (`-` U+002D, `‐` U+2010) inside a
+word or number — `well-│known`, `2024-│10-06`. Default `true`, which is
+what browsers and PowerPoint do. `false` keeps hyphenated words and
+codes (`TEST-1234`, dates, phone numbers) on one line, like U+2011.
+Unrelated to [ParagraphStyle.hyphens](#hyphens) (automatic hyphenation).
 
 ***
 
@@ -29,7 +43,7 @@ Horizontal text alignment.
 
 > `optional` **hyphens?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:523](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L523)
+Defined in: [core/src/types/Document.ts:550](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L550)
 
 **`Experimental`**
 
@@ -42,7 +56,7 @@ Whether hyphenation is allowed.
 
 > `optional` **indent?**: `number`
 
-Defined in: [core/src/types/Document.ts:485](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L485)
+Defined in: [core/src/types/Document.ts:512](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L512)
 
 Left indent (first-line indent / "red line") in px.
 Applies only to the first line of the paragraph.
@@ -57,7 +71,7 @@ Rename or alias as `textIndent` for consistency with CSS.
 
 > `optional` **leftIndent?**: `number`
 
-Defined in: [core/src/types/Document.ts:487](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L487)
+Defined in: [core/src/types/Document.ts:514](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L514)
 
 Left margin for the whole paragraph in px.
 
@@ -67,7 +81,7 @@ Left margin for the whole paragraph in px.
 
 > `optional` **leftRule?**: `object`
 
-Defined in: [core/src/types/Document.ts:559](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L559)
+Defined in: [core/src/types/Document.ts:594](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L594)
 
 A vertical rule drawn along the paragraph's left edge, e.g. `<blockquote>`'s
 indent bar. Painted per-line (one short vertical segment per laid-out
@@ -96,7 +110,7 @@ to track a paragraph's overall bounding box.
 
 > `optional` **letterSpacing?**: `number`
 
-Defined in: [core/src/types/Document.ts:498](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L498)
+Defined in: [core/src/types/Document.ts:525](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L525)
 
 Letter-spacing (tracking) for the whole paragraph in px.
 
@@ -106,7 +120,7 @@ Letter-spacing (tracking) for the whole paragraph in px.
 
 > `optional` **lineBreak?**: [`LineBreak`](../type-aliases/LineBreak.md)
 
-Defined in: [core/src/types/Document.ts:513](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L513)
+Defined in: [core/src/types/Document.ts:540](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L540)
 
 **`Experimental`**
 
@@ -119,7 +133,7 @@ Line-break strictness (CJK).
 
 > **lineHeight**: `number`
 
-Defined in: [core/src/types/Document.ts:474](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L474)
+Defined in: [core/src/types/Document.ts:501](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L501)
 
 Line height as a **multiplier** relative to the font size.
 E.g. `1.4` means 1.4× the computed font height.
@@ -134,7 +148,7 @@ Support for absolute px values via a `lineHeightUnit` field.
 
 > `optional` **listRestart?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:545](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L545)
+Defined in: [core/src/types/Document.ts:580](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L580)
 
 Whether to restart numbering for this paragraph.
 Only has effect when `listStyle.type === 'number'`.
@@ -147,7 +161,7 @@ for this paragraph and subsequent ones in the same sequence.
 
 > `optional` **listStyle?**: [`ListStyle`](ListStyle.md)
 
-Defined in: [core/src/types/Document.ts:537](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L537)
+Defined in: [core/src/types/Document.ts:572](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L572)
 
 List marker configuration (bullet or numbered).
 When set, the paragraph is treated as a list item.
@@ -158,7 +172,7 @@ When set, the paragraph is treated as a list item.
 
 > `optional` **overflowWrap?**: [`OverflowWrap`](../type-aliases/OverflowWrap.md)
 
-Defined in: [core/src/types/Document.ts:518](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L518)
+Defined in: [core/src/types/Document.ts:545](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L545)
 
 Overflow-wrap / word-wrap behaviour. See [OverflowWrap](../type-aliases/OverflowWrap.md). Defaults
 to `'normal'` when unset.
@@ -169,7 +183,7 @@ to `'normal'` when unset.
 
 > `optional` **rightIndent?**: `number`
 
-Defined in: [core/src/types/Document.ts:489](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L489)
+Defined in: [core/src/types/Document.ts:516](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L516)
 
 Right margin for the whole paragraph in px.
 
@@ -179,7 +193,7 @@ Right margin for the whole paragraph in px.
 
 > **spaceAfter**: `number`
 
-Defined in: [core/src/types/Document.ts:478](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L478)
+Defined in: [core/src/types/Document.ts:505](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L505)
 
 Space **after** this paragraph (bottom margin) in px.
 
@@ -189,7 +203,7 @@ Space **after** this paragraph (bottom margin) in px.
 
 > **spaceBefore**: `number`
 
-Defined in: [core/src/types/Document.ts:476](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L476)
+Defined in: [core/src/types/Document.ts:503](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L503)
 
 Space **before** this paragraph (top margin) in px.
 
@@ -199,7 +213,7 @@ Space **before** this paragraph (top margin) in px.
 
 > `optional` **textAlignLast?**: [`TextAlignLast`](../type-aliases/TextAlignLast.md)
 
-Defined in: [core/src/types/Document.ts:503](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L503)
+Defined in: [core/src/types/Document.ts:530](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L530)
 
 **`Experimental`**
 
@@ -212,7 +226,7 @@ Alignment of the **last** line of a justified paragraph.
 
 > `optional` **textIndent?**: `number`
 
-Defined in: [core/src/types/Document.ts:496](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L496)
+Defined in: [core/src/types/Document.ts:523](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L523)
 
 **`Experimental`**
 
@@ -227,7 +241,7 @@ If set, overrides the generic `indent` for the first line.
 
 > `optional` **whiteSpace?**: [`WhiteSpace`](../type-aliases/WhiteSpace.md)
 
-Defined in: [core/src/types/Document.ts:531](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L531)
+Defined in: [core/src/types/Document.ts:566](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L566)
 
 CSS `white-space` behaviour:
 - `'normal'`: collapse whitespace, auto-wrap.
@@ -241,7 +255,7 @@ CSS `white-space` behaviour:
 
 > `optional` **wordBreak?**: [`WordBreak`](../type-aliases/WordBreak.md)
 
-Defined in: [core/src/types/Document.ts:508](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L508)
+Defined in: [core/src/types/Document.ts:535](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L535)
 
 **`Experimental`**
 

@@ -51,6 +51,16 @@ export interface FontFace {
    */
   readonly useTypoMetrics: boolean | null;
   /**
+   * Decoration geometry in font units, font-table signs: `post.underlinePosition`
+   * (top of the underline, negative = below the baseline) / `underlineThickness`,
+   * `OS/2.yStrikeoutPosition` (top of the strikeout, above the baseline) /
+   * `yStrikeoutSize`. `null` when the table is missing.
+   */
+  readonly underlinePosition: number | null;
+  readonly underlineThickness: number | null;
+  readonly strikeoutPosition: number | null;
+  readonly strikeoutSize: number | null;
+  /**
    * Set when the font has an `opsz` axis that registration left free: the
    * un-instanced master plus the registered axes, so {@link opticalSizeInstance}
    * can pin `opsz` to the used font size (CSS `font-optical-sizing: auto`).
@@ -92,8 +102,13 @@ function _extractMetrics(raw: any): {
   typoAscent: number | null;
   typoDescent: number | null;
   useTypoMetrics: boolean | null;
+  underlinePosition: number | null;
+  underlineThickness: number | null;
+  strikeoutPosition: number | null;
+  strikeoutSize: number | null;
 } {
   const os2 = raw['OS/2'];
+  const post = raw.post;
   return {
     unitsPerEm: raw.unitsPerEm,
     ascent: raw.ascent,
@@ -104,6 +119,23 @@ function _extractMetrics(raw: any): {
     typoAscent: os2?.typoAscender ?? null,
     typoDescent: os2?.typoDescender ?? null,
     useTypoMetrics: os2?.fsSelection?.useTypoMetrics ?? null,
+    underlinePosition: post ? post.underlinePosition ?? null : null,
+    underlineThickness: post?.underlineThickness ? post.underlineThickness : null,
+    strikeoutPosition: os2 ? os2.yStrikeoutPosition ?? null : null,
+    strikeoutSize: os2?.yStrikeoutSize ? os2.yStrikeoutSize : null,
+  };
+}
+
+/**
+ * Decoration metrics in px (y down from the baseline, top edge of each
+ * stroke) — see `FontMetrics.underlineTop`.
+ */
+export function decorationMetrics(font: FontFace, scale: number): Pick<FontMetrics, 'underlineTop' | 'underlineThickness' | 'strikeoutTop' | 'strikeoutThickness'> {
+  return {
+    underlineTop: font.underlinePosition != null ? -font.underlinePosition * scale : undefined,
+    underlineThickness: font.underlineThickness != null ? font.underlineThickness * scale : undefined,
+    strikeoutTop: font.strikeoutPosition != null ? -font.strikeoutPosition * scale : undefined,
+    strikeoutThickness: font.strikeoutSize != null ? font.strikeoutSize * scale : undefined,
   };
 }
 
@@ -263,6 +295,7 @@ export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'bro
       typoAscFrac,
       winAscFrac,
       useTypoMetrics,
+      ...decorationMetrics(font, scale),
     };
   }
 
@@ -276,6 +309,7 @@ export function computePixelMetrics(font: FontFace, fontSize: number, mode: 'bro
     typoAscFrac,
     winAscFrac,
     useTypoMetrics,
+    ...decorationMetrics(font, scale),
   };
 }
 

@@ -31,4 +31,4 @@ export declare const kinsokuEnd: Set<string>;
 export declare const leftStickyPunctuation: Set<string>;
 export declare function endsWithClosingQuote(text: string): boolean;
 export declare function isNumericRunSegment(text: string): boolean;
-export declare function analyzeText(text: string, profile: AnalysisProfile, whiteSpace?: WhiteSpaceMode, wordBreak?: WordBreakMode): TextAnalysis;
+export declare function analyzeText(text: string, profile: AnalysisProfile, whiteSpace?: WhiteSpaceMode, wordBreak?: WordBreakMode, hyphenBreak?: boolean): TextAnalysis;

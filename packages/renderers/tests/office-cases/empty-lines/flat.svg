@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="316.8" viewBox="0 0 200 316.8">
+  <text x="0" y="38" font-family="Roboto" font-size="40" fill="#000000" font-weight="400" xml:space="preserve">a</text>
+  <text x="0" y="134" font-family="Roboto" font-size="40" fill="#000000" font-weight="400" xml:space="preserve">b</text>
+  <text x="-19.75" y="210.8" font-family="Roboto" font-size="40" fill="#000000" font-weight="400" xml:space="preserve">  c</text>
+  <text x="0" y="306.8" font-family="Roboto" font-size="40" fill="#000000" font-weight="400" xml:space="preserve">d</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="200" height="316.8" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="40.75" height="316.8" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

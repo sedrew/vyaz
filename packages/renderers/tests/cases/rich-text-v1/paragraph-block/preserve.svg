@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="505.28" height="254.5" viewBox="-10 -10 505.28 254.5">
+<svg xmlns="http://www.w3.org/2000/svg" width="483.72" height="254.5" viewBox="-10 -10 483.72 254.5">
   <text x="0" y="12" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="430.77">Left, line-height 1.0. The quick brown fox jumps over the lazy dog</tspan>
   </text>
@@ -18,20 +18,64 @@
     <tspan x="336.5" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="123.5">near the riverbank.</tspan>
   </text>
   <text x="0" y="138.5" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="433.57">Justified, line-height 1.4. The quick brown fox jumps over the lazy</tspan>
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="61.07">Justified,</tspan>
+    <tspan x="61.07" textLength="6.36"> </tspan>
+    <tspan x="67.43" textLength="69.13">line-height</tspan>
+    <tspan x="136.56" textLength="6.36"> </tspan>
+    <tspan x="142.93" textLength="24.77">1.4.</tspan>
+    <tspan x="167.7" textLength="6.36"> </tspan>
+    <tspan x="174.06" textLength="25.17">The</tspan>
+    <tspan x="199.23" textLength="6.36"> </tspan>
+    <tspan x="205.59" textLength="35.9">quick</tspan>
+    <tspan x="241.49" textLength="6.36"> </tspan>
+    <tspan x="247.86" textLength="41.62">brown</tspan>
+    <tspan x="289.47" textLength="6.36"> </tspan>
+    <tspan x="295.84" textLength="21.21">fox</tspan>
+    <tspan x="317.05" textLength="6.36"> </tspan>
+    <tspan x="323.41" textLength="41.18">jumps</tspan>
+    <tspan x="364.59" textLength="6.36"> </tspan>
+    <tspan x="370.95" textLength="28.86">over</tspan>
+    <tspan x="399.81" textLength="6.36"> </tspan>
+    <tspan x="406.18" textLength="21.12">the</tspan>
+    <tspan x="427.3" textLength="6.36"> </tspan>
+    <tspan x="433.66" textLength="26.34">lazy</tspan>
   </text>
   <text x="0" y="159.5" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="452.97">dog near the riverbank. The quick brown fox jumps over the lazy dog</tspan>
+    <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="25.44">dog</tspan>
+    <tspan x="25.44" textLength="4.31"> </tspan>
+    <tspan x="29.75" textLength="29.48">near</tspan>
+    <tspan x="59.23" textLength="4.31"> </tspan>
+    <tspan x="63.53" textLength="21.12">the</tspan>
+    <tspan x="84.65" textLength="4.31"> </tspan>
+    <tspan x="88.96" textLength="65.46">riverbank.</tspan>
+    <tspan x="154.42" textLength="4.31"> </tspan>
+    <tspan x="158.72" textLength="25.17">The</tspan>
+    <tspan x="183.89" textLength="4.31"> </tspan>
+    <tspan x="188.2" textLength="35.9">quick</tspan>
+    <tspan x="224.1" textLength="4.31"> </tspan>
+    <tspan x="228.41" textLength="41.62">brown</tspan>
+    <tspan x="270.02" textLength="4.31"> </tspan>
+    <tspan x="274.33" textLength="21.21">fox</tspan>
+    <tspan x="295.54" textLength="4.31"> </tspan>
+    <tspan x="299.85" textLength="41.18">jumps</tspan>
+    <tspan x="341.03" textLength="4.31"> </tspan>
+    <tspan x="345.33" textLength="28.86">over</tspan>
+    <tspan x="374.19" textLength="4.31"> </tspan>
+    <tspan x="378.5" textLength="21.12">the</tspan>
+    <tspan x="399.62" textLength="4.31"> </tspan>
+    <tspan x="403.92" textLength="26.35">lazy</tspan>
+    <tspan x="430.27" textLength="4.31"> </tspan>
+    <tspan x="434.58" textLength="25.42">dog</tspan>
   </text>
   <text x="0" y="180.5" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
     <tspan x="0" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="123.5">near the riverbank.</tspan>
   </text>
   <text x="40" y="207.5" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="40" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="441.56">First-line indent 24, left/right indent 16. The quick brown fox jumps</tspan>
+    <tspan x="40" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="396.66">First-line indent 24, left/right indent 16. The quick brown fox</tspan>
   </text>
   <text x="16" y="228.5" font-family="Roboto" font-size="15" fill="#333333" font-weight="400" xml:space="preserve">
-    <tspan x="16" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="240.15">over the lazy dog near the riverbank.</tspan>
+    <tspan x="16" font-weight="400" font-style="normal" font-family="Roboto" font-size="15" fill="#333333" textLength="285.04">jumps over the lazy dog near the riverbank.</tspan>
   </text>
 <!-- debug overlay -->
-  <rect x="0" y="0" width="485.28" height="234.5" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+  <rect x="0" y="0" width="463.72" height="234.5" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
 </svg>

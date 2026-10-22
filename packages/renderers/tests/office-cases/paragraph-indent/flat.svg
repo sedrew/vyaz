@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="388.8" viewBox="0 0 240 388.8">
+  <text x="77.81" y="15.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">The quick brown fox</text>
+  <text x="55.63" y="34.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">jumps over the lazy dog</text>
+  <text x="54.69" y="53.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">while a frame measures</text>
+  <text x="46.44" y="72.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">every line box and decides</text>
+  <text x="55.69" y="92" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">where each word wraps</text>
+  <text x="47.13" y="111.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">inside the given rectangle.</text>
+  <text x="20" y="142.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">The quick brown fox</text>
+  <text x="40" y="161.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">jumps over the lazy dog</text>
+  <text x="40" y="180.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">while a frame</text>
+  <text x="40" y="200" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">measures every line</text>
+  <text x="40" y="219.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">box and decides where</text>
+  <text x="40" y="238.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">each word wraps inside</text>
+  <text x="40" y="257.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">the given rectangle.</text>
+  <text x="7.62" y="288.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">The quick brown fox jumps</text>
+  <text x="25.37" y="308" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">over the lazy dog while a</text>
+  <text x="12.37" y="327.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">frame measures every line</text>
+  <text x="36.5" y="346.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">box and decides where</text>
+  <text x="5.62" y="365.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">each word wraps inside the</text>
+  <text x="87.25" y="384.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">given rectangle.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="240" height="388.8" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="5.62" y="0" width="231.95" height="388.8" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

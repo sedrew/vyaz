@@ -45,6 +45,20 @@ function prepareWholeItemLine(prepared) {
         width,
     };
 }
+// vendored: width of the spaces a pre-wrap item ends a line with — they hang
+// past the line end (CSS pre-wrap, PowerPoint), so they don't count for fit.
+function trailingHangingWidth(prepared, start, end) {
+    if (end.graphemeIndex !== 0)
+        return 0;
+    let width = 0;
+    for (let k = end.segmentIndex - 1; k >= start.segmentIndex; k--) {
+        const kind = prepared.kinds[k];
+        if (kind !== 'preserved-space' && kind !== 'space')
+            break;
+        width += prepared.widths[k];
+    }
+    return width;
+}
 function endsInsideFirstSegment(segmentIndex, graphemeIndex) {
     return segmentIndex === 0 && graphemeIndex > 0;
 }
@@ -56,13 +70,16 @@ export function prepareRichInline(items) {
     for (let index = 0; index < items.length; index++) {
         const item = items[index];
         const letterSpacing = item.letterSpacing ?? 0;
-        const hasLeadingWhitespace = LEADING_COLLAPSIBLE_BOUNDARY_RE.test(item.text);
-        const hasTrailingWhitespace = TRAILING_COLLAPSIBLE_BOUNDARY_RE.test(item.text);
-        const trimmedText = item.text
+        // vendored: a `whiteSpace: 'pre-wrap'` item keeps its own spaces — no
+        // boundary trimming, no collapsed gap; they are segments of the item.
+        const preserveSpaces = item.whiteSpace === 'pre-wrap';
+        const hasLeadingWhitespace = !preserveSpaces && LEADING_COLLAPSIBLE_BOUNDARY_RE.test(item.text);
+        const hasTrailingWhitespace = !preserveSpaces && TRAILING_COLLAPSIBLE_BOUNDARY_RE.test(item.text);
+        const trimmedText = preserveSpaces ? item.text : item.text
             .replace(LEADING_COLLAPSIBLE_BOUNDARY_RE, '')
             .replace(TRAILING_COLLAPSIBLE_BOUNDARY_RE, '');
         if (trimmedText.length === 0) {
-            if (COLLAPSIBLE_BOUNDARY_RE.test(item.text) && pendingGapWidth === 0) {
+            if (!preserveSpaces && COLLAPSIBLE_BOUNDARY_RE.test(item.text) && pendingGapWidth === 0) {
                 pendingGapWidth = getCollapsedSpaceWidth(item.font, letterSpacing, collapsedSpaceWidthCache);
             }
             continue;
@@ -75,9 +92,14 @@ export function prepareRichInline(items) {
         // vendored: forward overflowWrap (upstream rich-inline.js never read
         // it — see VENDOR.json) so a per-item `overflow-wrap: normal` reaches
         // the same word-break fallback gate as the plain prepare() path.
-        const prepareOptions = letterSpacing === 0 && item.overflowWrap === undefined
+        const prepareOptions = letterSpacing === 0 && item.overflowWrap === undefined && !preserveSpaces && item.hyphenBreak !== false
             ? undefined
-            : { letterSpacing, overflowWrap: item.overflowWrap };
+            : {
+                letterSpacing,
+                overflowWrap: item.overflowWrap,
+                ...(preserveSpaces ? { whiteSpace: 'pre-wrap' } : {}),
+                ...(item.hyphenBreak === false ? { hyphenBreak: false } : {}),
+            };
         const prepared = prepareWithSegments(trimmedText, item.font, prepareOptions);
         const wholeLine = prepareWholeItemLine(prepared);
         if (wholeLine === null) {
@@ -95,6 +117,8 @@ export function prepareRichInline(items) {
             naturalWidth: wholeLine.width,
             prepared,
             sourceItemIndex: index,
+            preserveSpaces,
+            endsWithSpace: preserveSpaces && /\s$/.test(trimmedText),
         };
         preparedItems.push(preparedItem);
         itemsBySourceItemIndex[index] = preparedItem;
@@ -189,7 +213,8 @@ function stepRichInlineLine(flow, maxWidth, cursor, collectFragment) {
         const lineWidthContribution = gapBefore + itemOccupiedWidth;
         // The lower-level walker may force one unit to make progress. If that unit
         // only fits on a fresh line, wrap before this rich item instead.
-        if (lineWidth > 0 && atItemStart && lineWidthContribution > remainingWidth)
+        const hangingWidth = item.preserveSpaces ? trailingHangingWidth(item.prepared, cursor, lineEnd) : 0;
+        if (lineWidth > 0 && atItemStart && lineWidthContribution - hangingWidth > remainingWidth)
             break lineLoop;
         // If the only thing we can fit after paying the boundary gap is a partial
         // slice of the item's first segment, prefer wrapping before the item so we
@@ -198,7 +223,9 @@ function stepRichInlineLine(flow, maxWidth, cursor, collectFragment) {
         // keep filling the line.
         if (lineWidth > 0 &&
             atItemStart &&
-            gapBefore > 0 &&
+            // vendored: a pre-wrap item keeps the space it ends with, so the
+            // break opportunity before this item is that space, not gapBefore
+            (gapBefore > 0 || (itemIndex > 0 && flow.items[itemIndex - 1].endsWithSpace)) &&
             endsInsideFirstSegment(lineEnd.segmentIndex, lineEnd.graphemeIndex)) {
             const freshLineEnd = { segmentIndex: 0, graphemeIndex: 0 };
             const freshLineWidth = stepPreparedLineGeometry(item.prepared, freshLineEnd, Math.max(1, safeWidth - item.extraWidth));

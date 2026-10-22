@@ -4,7 +4,7 @@
 
 > **TextTransform** = `"none"` \| `"uppercase"` \| `"lowercase"` \| `"capitalize"`
 
-Defined in: [core/src/types/Document.ts:122](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L122)
+Defined in: [core/src/types/Document.ts:126](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L126)
 
 Text case transform.
 

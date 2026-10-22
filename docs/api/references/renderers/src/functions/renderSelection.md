@@ -4,7 +4,7 @@
 
 > **renderSelection**(`ctx`, `lines`, `start`, `end`, `color?`): `void`
 
-Defined in: [renderers/src/CanvasRenderer.ts:453](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/CanvasRenderer.ts#L453)
+Defined in: [renderers/src/CanvasRenderer.ts:460](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/CanvasRenderer.ts#L460)
 
 Render a text selection highlight overlay.
 

@@ -1,0 +1,114 @@
+{
+  "_comment": "office list markers, PowerPoint placement (text-features.json `l-bullet-*`, `l-number-12`, `l-bullet-pct`): bullet left-aligned at marL+indent (= leftIndent), 100% of the text size, text at marL (= leftIndent + bulletIndent) or right after a wider marker, per paragraph ('9.' vs '10.' do not align); bulletSize scales the marker without growing the line; a \\n continues the item without a marker.",
+  "frame": {
+    "wrap": true,
+    "width": 260,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Bullet, marL 27 indent -27, long enough to wrap",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "bullet",
+            "bulletChar": "•",
+            "bulletIndent": 27
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Big bullet\nafter a break",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "bullet",
+            "bulletChar": "•",
+            "bulletIndent": 27,
+            "bulletSize": 1.5
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Nine",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "startNumber": 9,
+            "bulletIndent": 12
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Ten",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "startNumber": 9,
+            "bulletIndent": 12
+          }
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

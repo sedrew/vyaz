@@ -4,7 +4,7 @@
 
 > **isFontEngineAvailable**(): `Promise`\<`boolean`\>
 
-Defined in: [core/src/measure/FontEngine.ts:286](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L286)
+Defined in: [core/src/measure/FontEngine.ts:320](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L320)
 
 Whether the fontkit module was successfully loaded.
 Useful for tests to verify the bundler isn't blocking fontkit.

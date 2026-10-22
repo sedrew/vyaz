@@ -8,6 +8,10 @@ export type RichInlineItem = {
     extraWidth?: number;
     /** CSS `overflow-wrap` for this item's own text. Default `'normal'`. */
     overflowWrap?: OverflowWrapMode;
+    /** `'pre-wrap'` keeps this item's spaces (no trimming, no collapsed gap). Default `'normal'`. */
+    whiteSpace?: 'normal' | 'pre-wrap';
+    /** Break after '-' / U+2010 inside a word. Default `true`. */
+    hyphenBreak?: boolean;
 };
 export type PreparedRichInline = {
     readonly [preparedRichInlineBrand]: true;

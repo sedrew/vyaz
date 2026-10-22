@@ -1,0 +1,329 @@
+{
+  "_comment": "office list numbering across levels, PowerPoint's rules (scripts/office-metrics/text-features.json `lv-*`): a deeper level keeps the outer count running (1. a. b. 2.), coming back up restarts the deeper one (a.), a nested bullet does not end the count, an empty numbered paragraph draws no marker and is not counted, a plain paragraph restarts, a startNumber that does not continue the count starts a new one (10. 11.).",
+  "frame": {
+    "wrap": true,
+    "width": 300,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "One",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 1,
+            "bulletIndent": 18
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "a under one",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 36,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "lower-alpha",
+            "startNumber": 1,
+            "level": 1,
+            "bulletIndent": 18,
+            "indents": [
+              18,
+              18
+            ]
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "b under one",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 36,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "lower-alpha",
+            "startNumber": 1,
+            "level": 1,
+            "bulletIndent": 18,
+            "indents": [
+              18,
+              18
+            ]
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Two, after the nested items",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 1,
+            "bulletIndent": 18
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "under two",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 36,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "lower-alpha",
+            "startNumber": 1,
+            "level": 1,
+            "bulletIndent": 18,
+            "indents": [
+              18,
+              18
+            ]
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "nested bullet",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 36,
+          "listStyle": {
+            "type": "bullet",
+            "bulletChar": "•",
+            "level": 1,
+            "bulletIndent": 18,
+            "indents": [
+              18,
+              18
+            ]
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Three",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 1,
+            "bulletIndent": 18
+          }
+        }
+      },
+      {
+        "children": [],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 1,
+            "bulletIndent": 18
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "Four, after an empty numbered paragraph",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 1,
+            "bulletIndent": 18
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "plain paragraph",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "One again",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 1,
+            "bulletIndent": 18
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "from ten",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 10,
+            "bulletIndent": 18
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "eleven",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0,
+          "leftIndent": 0,
+          "listStyle": {
+            "type": "number",
+            "numberFormat": "decimal",
+            "startNumber": 10,
+            "bulletIndent": 18
+          }
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

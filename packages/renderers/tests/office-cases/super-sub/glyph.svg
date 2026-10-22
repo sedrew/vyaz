@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="169.6" viewBox="0 0 200 169.6">
+  <text x="0" y="22.8" font-family="Roboto" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 13.6 19.6 32.8 38.8 59.8">E = mc</tspan>
+  </text>
+  <text x="0" y="15.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="72.4">2</tspan>
+  </text>
+  <text x="0" y="22.8" font-family="Roboto" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="81.4"> </tspan>
+    <tspan x="87.4 100.4 113.6 127.1 133.1">and H</tspan>
+  </text>
+  <text x="0" y="28.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="150.3">2</tspan>
+  </text>
+  <text x="0" y="22.8" font-family="Roboto" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="159.3">O</tspan>
+  </text>
+  <text x="0" y="105.2" font-family="Roboto" font-size="72" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">A</tspan>
+  </text>
+  <text x="0" y="83.6" font-family="Roboto" font-size="48" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="47">B</tspan>
+  </text>
+  <text x="0" y="123.2" font-family="Roboto" font-size="48" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="76.9">C</tspan>
+  </text>
+  <text x="0" y="146.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 14 23.1 28.5 37 41 53 62.1 67.5 76.5 84.8 88.8 94 103.1 107.1 119.1 124.5 133.3">more words to wrap</tspan>
+  </text>
+  <text x="0" y="169.6" font-family="Roboto" font-size="10.67" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 5.5 11.4">sub</tspan>
+  </text>
+  <text x="0" y="165.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="17.4"> </tspan>
+    <tspan x="21.4 30.1 39 48 52 60.5 69.4 78.4">and end.</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="200" height="169.6" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="175.76" height="169.6" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

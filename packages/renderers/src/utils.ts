@@ -58,7 +58,22 @@ export function paintableLine(line: Line): Line {
   return line.spans.some((s) => s.collapsed) ? { ...line, spans: line.spans.filter((s) => !s.collapsed) } : line;
 }
 
-/** An explicit decoration rule: `x` in span coordinates, `y` = line top edge, px. */
+/**
+ * Rules the layout already placed (`Line.decorations`, `mode: 'office'`) as
+ * {@link DecorationRule}s, with the spans' own underline / strikethrough
+ * flags cleared so nothing is drawn twice.
+ */
+export function layoutDecorations(line: Line): { line: Line; rules: DecorationRule[] } {
+  const rules = (line.decorations ?? []).map((d) => ({
+    x: d.x, width: d.width, y: line.y + d.y, thickness: d.thickness, color: safeColor(d.color, '#000000'),
+  }));
+  const spans = line.spans.map((s) => (s.style.underline || s.style.strikethrough
+    ? { ...s, style: { ...s.style, underline: false, strikethrough: false } }
+    : s));
+  return { line: { ...line, spans }, rules };
+}
+
+/** An explicit decoration rule: `x` in span coordinates, `y` = top edge (absolute), px. */
 export interface DecorationRule { x: number; width: number; y: number; thickness: number; color: string }
 
 type DecoKind = 'underline' | 'strikethrough';

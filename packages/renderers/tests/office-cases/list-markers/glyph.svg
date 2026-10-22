@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="115.2" viewBox="0 0 260 115.2">
+  <text x="0" y="15.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">•</tspan>
+    <tspan x="27 37 45.9 49.8 53.6 62.1 67.4 70.5 74.5 88.5 97.3 102.6 111.3 115.3 124.3 133.3 137.3 141.1 150 159 167.5 176.4 181.6 185.6 190 199 208 211.1 215.1 219 228.1 237">Bullet, marL 27 indent -27, long</tspan>
+  </text>
+  <text x="27" y="34.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="27 35.5 44.4 53.5 62.4 71.4 80.3 84.3 89.5 98.6 102.6 114.6 120 128.8">enough to wrap</tspan>
+  </text>
+  <text x="0" y="53.6" font-family="Roboto" font-size="24" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">•</tspan>
+  </text>
+  <text x="0" y="53.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="27 37 40.9 49.9 53.9 62.9 71.8 75.6 79.5 88">Big bullet</tspan>
+  </text>
+  <text x="27" y="72.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="27 35.8 41.4 46.6 55.1 60.5 64.5 73.3 77.3 86.3 91.6 100.1 108.9">after a break</tspan>
+  </text>
+  <text x="0" y="92" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">9.</tspan>
+    <tspan x="13.3 24.6 28.5 37.4">Nine</tspan>
+  </text>
+  <text x="0" y="111.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">10.</tspan>
+    <tspan x="22.3 31.8 40.3">Ten</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="260" height="115.2" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="250" height="115.2" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

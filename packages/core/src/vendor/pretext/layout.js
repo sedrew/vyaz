@@ -398,7 +398,8 @@ function prepareInternal(text, font, includeSegments, options) {
     // vendored: upstream has no such option (always `overflow-wrap:
     // break-word`) — see VENDOR.json. `'normal'` is the real CSS default.
     const overflowWrap = options?.overflowWrap ?? 'normal';
-    const analysis = analyzeText(text, getEngineProfile(), options?.whiteSpace, wordBreak);
+    // vendored: `hyphenBreak` (default true) — see analyzeText().
+    const analysis = analyzeText(text, getEngineProfile(), options?.whiteSpace, wordBreak, options?.hyphenBreak !== false);
     return measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing, overflowWrap);
 }
 // Prepare text for layout. Segments the text, measures each segment via canvas,

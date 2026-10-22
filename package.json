@@ -15,6 +15,7 @@
     "bench": "bun run bench/throughput.ts",
     "bench:tables": "bun run bench/table-throughput.ts",
     "bench:resize": "bun run bench/resize.ts",
+    "bench:office": "bun run bench/office.ts",
     "bench:satori": "bun run bench/vs-satori.ts",
     "bench:textkit": "bun run bench/vs-textkit.ts",
     "docs:dev": "cd docs && bunx vitepress dev",

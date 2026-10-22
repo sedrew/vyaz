@@ -396,3 +396,39 @@ describe('letterSpacing — wrapping behavior', () => {
     expect(resultLS.lines.length).toBeGreaterThanOrEqual(resultNoLS.lines.length);
   });
 });
+
+// A tracked run split at a line end: the pieces PositioningEngine measures
+// itself (text + its trailing space) carry the tracking too, as pretext's own
+// widths do — otherwise center / right / justify and the next span used the
+// untracked width (scripts/office-metrics/TEXT-FEATURES-RESULTS.md §9).
+describe('letterSpacing on a run split across lines', () => {
+  const TEXT = 'The quick brown fox jumps over the lazy dog while a frame measures every line box.';
+  const frameOf = (alignment: 'left' | 'center' | 'justify') => ({
+    width: 200, wrap: true,
+    paragraphs: [{ style: { alignment, lineHeight: 1.15, spaceBefore: 0, spaceAfter: 0 }, children: [{ type: 'text' as const, text: TEXT, fontFamily: 'Arial', fontSize: 16, fontWeight: 'normal' as const, fontStyle: 'normal' as const, color: '#000', letterSpacing: 3 }] }],
+  });
+  /** Right edge of a line's last glyph, the tracking after it included. */
+  const inkRight = (spans: { type: string; x: number; width: number; trailing?: boolean }[]) =>
+    Math.max(...spans.filter((s) => s.type === 'text' && !s.trailing).map((s) => s.x + s.width));
+
+  for (const mode of ['browser', 'office'] as const) {
+    test(`${mode}: every span is as wide as its tracked glyphs`, () => {
+      const r = layoutTextFrame(frameOf('left'), { mode, glyphAdvances: true });
+      for (const l of r.lines) for (const s of l.spans) {
+        if (s.type !== 'text' || !s.glyphAdvances) continue;
+        const tracked = Array.from(s.glyphAdvances).reduce((a, b) => a + b, 0) + 3 * s.glyphAdvances.length;
+        expect(Math.abs(s.width - tracked)).toBeLessThan(0.6); // shaped width vs per-glyph advances: kerning only
+      }
+    });
+
+    test(`${mode}: justified lines end at the box edge, not past it`, () => {
+      const r = layoutTextFrame(frameOf('justify'), { mode });
+      for (const l of r.lines.slice(0, -1)) expect(inkRight(l.spans)).toBeCloseTo(200, 0);
+    });
+
+    test(`${mode}: centred lines stay inside the box`, () => {
+      const r = layoutTextFrame(frameOf('center'), { mode });
+      for (const l of r.lines) expect(inkRight(l.spans)).toBeLessThanOrEqual(200.01);
+    });
+  }
+});

@@ -2,7 +2,7 @@
 
 # Interface: Line
 
-Defined in: [core/src/types/LayoutTypes.ts:100](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L100)
+Defined in: [core/src/types/LayoutTypes.ts:112](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L112)
 
 ## Properties
 
@@ -10,7 +10,7 @@ Defined in: [core/src/types/LayoutTypes.ts:100](https://github.com/sedrew/vyaz/b
 
 > `optional` **alignment?**: [`TextAlignment`](../type-aliases/TextAlignment.md)
 
-Defined in: [core/src/types/LayoutTypes.ts:130](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L130)
+Defined in: [core/src/types/LayoutTypes.ts:166](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L166)
 
 Paragraph alignment (optional, for PowerPoint render)
 
@@ -20,7 +20,7 @@ Paragraph alignment (optional, for PowerPoint render)
 
 > **ascent**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:120](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L120)
+Defined in: [core/src/types/LayoutTypes.ts:132](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L132)
 
 Maximum ascent in line
 
@@ -30,7 +30,7 @@ Maximum ascent in line
 
 > **baseline**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:118](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L118)
+Defined in: [core/src/types/LayoutTypes.ts:130](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L130)
 
 Baseline offset from y
 
@@ -40,9 +40,23 @@ Baseline offset from y
 
 > `optional` **columnIndex?**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:133](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L133)
+Defined in: [core/src/types/LayoutTypes.ts:169](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L169)
 
 Column index (0-based) when frame has multi-column layout.
+
+***
+
+### decorations?
+
+> `optional` **decorations?**: [`LineDecoration`](LineDecoration.md)[]
+
+Defined in: [core/src/types/LayoutTypes.ts:163](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L163)
+
+Underline / strikethrough rules for this line, when the layout mode
+defines their geometry (`mode: 'office'`, PowerPoint's model). `x` is in
+span coordinates (the same space as `Span.x`), `y` is the rule's **top
+edge** relative to the line top (like `baseline`). Renderers paint these
+instead of their own decoration lines when present.
 
 ***
 
@@ -50,7 +64,7 @@ Column index (0-based) when frame has multi-column layout.
 
 > **descent**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:122](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L122)
+Defined in: [core/src/types/LayoutTypes.ts:134](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L134)
 
 Maximum descent in line
 
@@ -60,9 +74,11 @@ Maximum descent in line
 
 > **endIndex**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:127](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L127)
+Defined in: [core/src/types/LayoutTypes.ts:148](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L148)
 
-Index of last character + 1 (for convenient length calculation)
+End of the line in the source text (exclusive). Covers the whitespace the
+line swallowed at its end and, for a line ended by `\n`, the `\n`
+itself; the last line of a paragraph ends at its text length.
 
 ***
 
@@ -70,7 +86,7 @@ Index of last character + 1 (for convenient length calculation)
 
 > **height**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:115](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L115)
+Defined in: [core/src/types/LayoutTypes.ts:127](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L127)
 
 Full line height (max spans × lineHeight)
 
@@ -80,7 +96,7 @@ Full line height (max spans × lineHeight)
 
 > `optional` **isHardBreak?**: `boolean`
 
-Defined in: [core/src/types/LayoutTypes.ts:143](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L143)
+Defined in: [core/src/types/LayoutTypes.ts:179](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L179)
 
 True when this line was created by a forced hard break (\n),
 as opposed to a soft wrap from line width exceeding maxWidth.
@@ -95,7 +111,7 @@ Backspace merging behaviour).
 
 > `optional` **leftRule?**: `object`
 
-Defined in: [core/src/types/LayoutTypes.ts:165](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L165)
+Defined in: [core/src/types/LayoutTypes.ts:201](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L201)
 
 Set when this line belongs to a paragraph with
 [ParagraphStyle.leftRule](ParagraphStyle.md#leftrule) (e.g. `<blockquote>`). The renderer
@@ -122,11 +138,22 @@ engine tracking the paragraph's overall bounding box.
 
 ***
 
+### pIdx?
+
+> `optional` **pIdx?**: `number`
+
+Defined in: [core/src/types/LayoutTypes.ts:154](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L154)
+
+Index of the source paragraph in `TextFrame.paragraphs[]` — on every
+line, including empty ones that carry no spans. Set by `layoutTextFrame`.
+
+***
+
 ### rule?
 
 > `optional` **rule?**: `object`
 
-Defined in: [core/src/types/LayoutTypes.ts:151](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L151)
+Defined in: [core/src/types/LayoutTypes.ts:187](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L187)
 
 Set when this line **is** a horizontal rule (`<hr>` — see
 [Paragraph.rule](Paragraph.md#rule)) rather than text: `spans` is empty and the
@@ -143,7 +170,7 @@ glyphs.
 
 > **spans**: [`Span`](Span.md)[]
 
-Defined in: [core/src/types/LayoutTypes.ts:167](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L167)
+Defined in: [core/src/types/LayoutTypes.ts:203](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L203)
 
 ***
 
@@ -151,9 +178,12 @@ Defined in: [core/src/types/LayoutTypes.ts:167](https://github.com/sedrew/vyaz/b
 
 > **startIndex**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:125](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L125)
+Defined in: [core/src/types/LayoutTypes.ts:142](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L142)
 
-Index of first character in the original paragraph text
+Index of the line's first character in the paragraph's source text (its
+`children` texts joined, `\n` included), before whitespace collapsing.
+Lines tile the paragraph: each starts where the previous one ended, the
+first at 0.
 
 ***
 
@@ -161,7 +191,7 @@ Index of first character in the original paragraph text
 
 > **width**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:112](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L112)
+Defined in: [core/src/types/LayoutTypes.ts:124](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L124)
 
 Line box width covering all spans (text + outside markers).
 Equals max(span.x + span.width) − min(span.x).
@@ -172,7 +202,7 @@ Equals max(span.x + span.width) − min(span.x).
 
 > **x**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:105](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L105)
+Defined in: [core/src/types/LayoutTypes.ts:117](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L117)
 
 Absolute X of the line box left edge within the container.
 Includes outside list markers when present (marker may sit left of text).
@@ -183,6 +213,6 @@ Includes outside list markers when present (marker may sit left of text).
 
 > **y**: `number`
 
-Defined in: [core/src/types/LayoutTypes.ts:107](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L107)
+Defined in: [core/src/types/LayoutTypes.ts:119](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/LayoutTypes.ts#L119)
 
 Absolute Y of line top edge

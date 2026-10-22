@@ -1183,7 +1183,33 @@ function mergeKeepAllTextSegments(normalized, segmentation, breakAfterPunctuatio
         starts,
     };
 }
-export function analyzeText(text, profile, whiteSpace = 'normal', wordBreak = 'normal') {
+// vendored: `hyphenBreak: false` — glue a text segment that ends in a hyphen
+// to the text segment after it, so no line breaks there. Upstream always
+// breaks after '-' / U+2010, like browsers (and PowerPoint) do.
+function mergeHyphenatedTextRuns(segmentation) {
+    const texts = [];
+    const isWordLike = [];
+    const kinds = [];
+    const starts = [];
+    for (let i = 0; i < segmentation.len; i++) {
+        const text = segmentation.texts[i];
+        const last = texts.length - 1;
+        if (last >= 0 &&
+            segmentation.kinds[i] === 'text' &&
+            kinds[last] === 'text' &&
+            /[-\u2010]$/.test(texts[last])) {
+            texts[last] += text;
+            isWordLike[last] = isWordLike[last] || segmentation.isWordLike[i];
+            continue;
+        }
+        texts.push(text);
+        isWordLike.push(segmentation.isWordLike[i]);
+        kinds.push(segmentation.kinds[i]);
+        starts.push(segmentation.starts[i]);
+    }
+    return { len: texts.length, texts, isWordLike, kinds, starts };
+}
+export function analyzeText(text, profile, whiteSpace = 'normal', wordBreak = 'normal', hyphenBreak = true) {
     const whiteSpaceProfile = getWhiteSpaceProfile(whiteSpace);
     const normalized = whiteSpaceProfile.mode === 'pre-wrap'
         ? normalizeWhitespacePreWrap(text)
@@ -1200,9 +1226,10 @@ export function analyzeText(text, profile, whiteSpace = 'normal', wordBreak = 'n
         };
     }
     const mergedSegmentation = buildMergedSegmentation(normalized, profile, whiteSpaceProfile);
-    const segmentation = wordBreak === 'keep-all'
+    const segmented = wordBreak === 'keep-all'
         ? mergeKeepAllTextSegments(normalized, mergedSegmentation, profile.breakKeepAllAfterPunctuation)
         : mergedSegmentation;
+    const segmentation = hyphenBreak ? segmented : mergeHyphenatedTextRuns(segmented);
     return {
         normalized,
         chunks: compileAnalysisChunks(segmentation, whiteSpaceProfile),

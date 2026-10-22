@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="264" viewBox="0 0 300 264">
+  <text x="0" y="15.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">1.</tspan>
+    <tspan x="18 29 37.9">One</tspan>
+  </text>
+  <text x="36" y="34.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="36">a.</tspan>
+    <tspan x="54 62.8 66.8 75.6 84.5 93.5 102 107.4 111.4 120.5 129.4">a under one</tspan>
+  </text>
+  <text x="36" y="53.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="36">b.</tspan>
+    <tspan x="54 63 67 75.9 84.8 93.8 102.3 107.6 111.6 120.8 129.6">b under one</tspan>
+  </text>
+  <text x="0" y="72.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">2.</tspan>
+    <tspan x="18 27.5 39.5 48.6 51.8 55.8 64.5 70.1 75.4 83.9 89.3 93.3 98.5 107.4 115.9 119.9 128.8 137.3 145.5 150.8 159.3 168.3 172.3 176.1 181.4 189.9 203.9">Two, after the nested items</tspan>
+  </text>
+  <text x="36" y="92" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="36">a.</tspan>
+    <tspan x="54 62.9 71.8 80.8 89.3 94.6 98.6 103.9 115.9">under two</tspan>
+  </text>
+  <text x="36" y="111.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="36">•</tspan>
+    <tspan x="54 62.9 71.4 79.6 84.9 93.4 102.4 106.4 115.4 124.3 128.1 132 140.5">nested bullet</tspan>
+  </text>
+  <text x="0" y="130.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">3.</tspan>
+    <tspan x="18 27.5 36.4 41.8 50.3">Three</tspan>
+  </text>
+  <text x="0" y="164" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">4.</tspan>
+    <tspan x="18 26.9 36 44.9 50.3 53.4 57.4 66.1 71.8 77 85.5 90.9 94.9 103.6 112.5 116.5 125 139 148 153.3 160.9 164.9 173.8 182.6 196.6 205.6 214.1 219.5 228">Four, after an empty numbered</tspan>
+  </text>
+  <text x="18" y="183.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="18 27 35.8 41.1 49.9 58.9 64.3 73 82">paragraph</tspan>
+  </text>
+  <text x="0" y="202.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0 9 12.9 21.6 25.5 34.4 38.4 47.4 56.1 61.5 70.3 79.3 84.6 93.4 102.4">plain paragraph</tspan>
+  </text>
+  <text x="0" y="221.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">1.</tspan>
+    <tspan x="18 29 37.9 46.4 50.4 59.1 68.1 76.9 80.8">One again</tspan>
+  </text>
+  <text x="0" y="240.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">10.</tspan>
+    <tspan x="22.3 27.9 33.3 42.4 56.4 60.4 65.6 74.1">from ten</tspan>
+  </text>
+  <text x="0" y="260" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="0">11.</tspan>
+    <tspan x="22.3 30.8 34.6 43.1 50.9 59.4">eleven</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="300" height="264" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="241" height="264" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

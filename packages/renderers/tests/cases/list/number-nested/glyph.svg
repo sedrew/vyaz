@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="155.89" viewBox="-6 -10 120 155.89">
+  <text x="4" y="15" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="4">1.</tspan>
+    <tspan x="24 32 40">One</tspan>
+  </text>
+  <text x="28" y="34.39" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="28">a.</tspan>
+    <tspan x="48">a</tspan>
+  </text>
+  <text x="28" y="53.78" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="28">b.</tspan>
+    <tspan x="48">b</tspan>
+  </text>
+  <text x="4" y="73.17" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="4">2.</tspan>
+    <tspan x="24 32 40">Two</tspan>
+  </text>
+  <text x="28" y="92.56" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="28">a.</tspan>
+    <tspan x="48 56 64 72 80 88 96">a again</tspan>
+  </text>
+  <text x="37.2" y="111.95" font-family="Unifont" font-size="14.4" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="37.2">○</tspan>
+  </text>
+  <text x="37.2" y="111.95" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="48 56 64">dot</tspan>
+  </text>
+  <text x="4" y="131.5" font-family="Unifont" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">
+    <tspan x="4">3.</tspan>
+    <tspan x="24 32 40 48 56">Three</tspan>
+  </text>
+<!-- debug overlay -->
+  <rect x="4" y="0" width="100" height="135.89" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

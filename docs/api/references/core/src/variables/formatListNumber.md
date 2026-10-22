@@ -4,7 +4,7 @@
 
 > `const` **formatListNumber**: (`n`, `format`) => `string` = `_fln`
 
-Defined in: [core/src/index.ts:128](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L128)
+Defined in: [core/src/index.ts:129](https://github.com/sedrew/vyaz/blob/main/packages/core/src/index.ts#L129)
 
 **`Internal`**
 

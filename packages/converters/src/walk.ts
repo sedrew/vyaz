@@ -255,7 +255,6 @@ function derive(
 
 // dt/dd flattening is lossy — warn once per document.
 let _dlWarned = false;
-let _nestedListWarned = false;
 
 // ── Lists ──────────────────────────────────────────────────────────────
 
@@ -294,10 +293,6 @@ function walkListItem(
       const tag = child.tagName.toLowerCase();
       if (LIST.has(tag)) {
         flush();
-        if (!_nestedListWarned) {
-          ctx.col.warn('nested-list', tag, 'nested list numbering may restart when a level changes');
-          _nestedListWarned = true;
-        }
         walkList(child, para, run, ctx, lc.level + 1);
         continue;
       }
@@ -596,7 +591,6 @@ export function walk(
   inlineBoxes: Record<string, string>,
 ): Paragraph[] {
   _dlWarned = false;
-  _nestedListWarned = false;
   const out: Paragraph[] = [];
   const ctx: Ctx = { opts, col, out, inlineBoxes, idSeq: { n: 0 } };
   processChildren(root, baseParaStyle(), baseRunStyle(opts), false, ctx);

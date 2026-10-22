@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="264" viewBox="0 0 300 264">
+  <text x="0" y="15.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">1.One</text>
+  <text x="36" y="34.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">a.a under one</text>
+  <text x="36" y="53.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">b.b under one</text>
+  <text x="0" y="72.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">2.Two, after the nested items</text>
+  <text x="36" y="92" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">a.under two</text>
+  <text x="36" y="111.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">•nested bullet</text>
+  <text x="0" y="130.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">3.Three</text>
+  <text x="0" y="164" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">4.Four, after an empty numbered</text>
+  <text x="18" y="183.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">paragraph</text>
+  <text x="0" y="202.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">plain paragraph</text>
+  <text x="0" y="221.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">1.One again</text>
+  <text x="0" y="240.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">10.from ten</text>
+  <text x="0" y="260" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" xml:space="preserve">11.eleven</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="300" height="264" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="241" height="264" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

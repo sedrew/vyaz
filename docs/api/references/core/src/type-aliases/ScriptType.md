@@ -4,7 +4,7 @@
 
 > **ScriptType** = `"normal"` \| `"sub"` \| `"super"`
 
-Defined in: [core/src/types/Document.ts:156](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L156)
+Defined in: [core/src/types/Document.ts:160](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L160)
 
 Subscript / superscript script mode.
 

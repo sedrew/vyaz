@@ -15,7 +15,7 @@
 
 import type { FontMetrics, IFontMetricsProvider } from '../types/FontTypes.js';
 import type { FontFace } from './FontEngine.js';
-import { opticalSizeInstance } from './FontEngine.js';
+import { decorationMetrics, opticalSizeInstance } from './FontEngine.js';
 import { FontNotFoundError } from './FontNotFoundError.js';
 
 // ── Reasonable default for missing glyphs ──────────────────────────────────
@@ -431,6 +431,7 @@ export class FontMetricsProvider implements IFontMetricsProvider {
         typoAscFrac,
         winAscFrac,
         useTypoMetrics,
+        ...decorationMetrics(font, scale),
       };
 
       this.metricsCache.set(metricsKey, metrics);

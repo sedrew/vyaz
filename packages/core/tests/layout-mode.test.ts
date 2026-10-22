@@ -70,23 +70,31 @@ describe('office line spacing (spcPct)', () => {
     expect(pitch(2.0) / p1).toBeCloseTo(2.0, 2);
   });
 
-  // At spcPct 100% real PowerPoint tracks (typoAscFrac + winAscFrac) / 2 of
-  // the dominant run's own font, not a flat 0.75 — 0.75 only happens to be
-  // Roboto's own typoAscFrac, which isn't the whole story (RESULTS.md
-  // "OFFICE_BASELINE_RATIO at spcPct = 100% is (typoAscFrac + winAscFrac) / 2").
+  // At spcPct 100% PowerPoint puts the baseline at the dominant run's own
+  // winAscFrac of the line box, not a flat 0.75 (0.75 is only Roboto's
+  // typoAscFrac) — scripts/office-metrics/TEXT-FEATURES-RESULTS.md
+  // "Baseline at spcPct 100 %".
   const roboto18OfficeMetrics = () => fontMetricsProvider.getMetrics('Roboto', 18, 'normal', 'normal', 'office');
 
-  test('line box is 1.20 x fontSize (font-independent), baseline (typoAscFrac + winAscFrac)/2 of it at spcPct 100%', () => {
+  test('line box is 1.20 x fontSize (font-independent), baseline at winAscFrac of it at spcPct 100%', () => {
     const l = office(1.0).lines[0];
     expect(l.height).toBeCloseTo(18 * 1.2, 1);           // PowerPoint's font-independent box
     const m = roboto18OfficeMetrics();
-    const expectedRatio = (m.typoAscFrac! + m.winAscFrac!) / 2;
-    expect(l.baseline).toBeCloseTo(l.height * expectedRatio, 1);
+    expect(l.baseline).toBeCloseTo(l.height * m.winAscFrac!, 1);
   });
 
-  test('the baseline ratio is flat 0.75 once spcPct > 100%, but (typoAscFrac + winAscFrac)/2 at spcPct = 100%', () => {
+  // PowerPoint's own numbers for Roboto 18 pt: its SVG export
+  // (office-cases/line-spacing-100/powerpoint.svg, 4.583 units / pt) puts the
+  // first baseline 78 units = 17.02 pt below the box top; Save as PDF agrees
+  // (scripts/office-metrics/text-features.json, j-roboto). The old
+  // (typo + win) / 2 model gave 16.65.
+  test('Roboto 18 pt at spcPct 100%: first baseline where PowerPoint draws it', () => {
+    expect(Math.abs(office(1.0).lines[0].baseline - 17.02)).toBeLessThanOrEqual(0.12);
+  });
+
+  test('the baseline ratio is flat 0.75 once spcPct > 100%, but winAscFrac at spcPct = 100%', () => {
     const m = roboto18OfficeMetrics();
-    const spc100Ratio = (m.typoAscFrac! + m.winAscFrac!) / 2;
+    const spc100Ratio = m.winAscFrac!;
     const expected: Record<number, number> = { 1.0: spc100Ratio, 1.5: 0.75, 2.0: 0.75 };
     for (const lh of [1.0, 1.5, 2.0]) {
       const l = office(lh).lines[0];

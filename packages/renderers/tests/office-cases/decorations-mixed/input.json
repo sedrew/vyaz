@@ -1,0 +1,96 @@
+{
+  "_comment": "office underline / strikethrough geometry from the font (post / OS/2), PowerPoint's model (text-features.json `u-mix-*`, `k-mix`, `u-wrap-trailing`): one underline per underlined stretch at the advance-weighted size, strikethrough per run, no rule under the spaces a line ends with.",
+  "frame": {
+    "wrap": true,
+    "width": 300,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "B",
+            "fontFamily": "Roboto",
+            "fontSize": 72,
+            "underline": true
+          },
+          {
+            "type": "text",
+            "text": " small text",
+            "fontFamily": "Roboto",
+            "fontSize": 12,
+            "underline": true
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "B",
+            "fontFamily": "Roboto",
+            "fontSize": 72,
+            "strikethrough": true
+          },
+          {
+            "type": "text",
+            "text": " small text",
+            "fontFamily": "Roboto",
+            "fontSize": 12,
+            "strikethrough": true
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "plain ",
+            "fontFamily": "Roboto",
+            "fontSize": 18
+          },
+          {
+            "type": "text",
+            "text": "underlined words that wrap here",
+            "fontFamily": "Roboto",
+            "fontSize": 18,
+            "underline": true
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 0
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

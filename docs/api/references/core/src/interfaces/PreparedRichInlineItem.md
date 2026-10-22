@@ -32,6 +32,16 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:55](https://github.com/sedrew
 
 ***
 
+### hyphenBreak?
+
+> `optional` **hyphenBreak?**: `false`
+
+Defined in: [core/src/compile/ParagraphCompiler.ts:72](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L72)
+
+`false` when the paragraph sets `hyphenBreak: false` (no break after `-`).
+
+***
+
 ### letterSpacing?
 
 > `optional` **letterSpacing?**: `number`
@@ -44,7 +54,7 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:56](https://github.com/sedrew
 
 > **metadata**: `object`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:68](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L68)
+Defined in: [core/src/compile/ParagraphCompiler.ts:75](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L75)
 
 #### baselineOffset
 
@@ -72,7 +82,7 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:68](https://github.com/sedrew
 
 > `optional` **originalText?**: `string`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:67](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L67)
+Defined in: [core/src/compile/ParagraphCompiler.ts:74](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L74)
 
 Original text before text-transform (if transform was applied). Used for copy-paste / round-trip.
 
@@ -96,3 +106,14 @@ grapheme boundaries.
 > **text**: `string`
 
 Defined in: [core/src/compile/ParagraphCompiler.ts:54](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L54)
+
+***
+
+### whiteSpace?
+
+> `optional` **whiteSpace?**: `"pre-wrap"`
+
+Defined in: [core/src/compile/ParagraphCompiler.ts:70](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L70)
+
+`'pre-wrap'` keeps this run's spaces (paragraph `whiteSpace` `pre` /
+`pre-wrap`); unset collapses them (CSS `normal`).

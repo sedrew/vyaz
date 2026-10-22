@@ -318,6 +318,82 @@ describe('numbered list layout', () => {
   });
 });
 
+// ── numbering across levels (PowerPoint's rules) ───────────────────────
+// scripts/office-metrics/TEXT-FEATURES-RESULTS.md §11 — every expectation
+// below is what PowerPoint for Mac 16.93 drew for the same DrawingML.
+
+describe('numbering across levels', () => {
+  const num = (level: number, extra: Partial<ListStyle> = {}): ListStyle => ({ type: 'number', numberFormat: 'decimal', level, ...extra });
+  const alpha = (level: number): ListStyle => ({ type: 'number', numberFormat: 'lower-alpha', level });
+  const bullet = (level: number): ListStyle => ({ type: 'bullet', level });
+  const plain = (text: string): Paragraph => ({ ...makeListParagraph(text, bullet(0)), style: { ...makeListParagraph(text, bullet(0)).style, listStyle: undefined } });
+  const markers = (paragraphs: Paragraph[], mode?: 'office' | 'browser') => {
+    const result = layoutTextFrame({ width: 400, wrap: true, paragraphs }, mode ? { mode } : {});
+    return paragraphs.map((_, i) => result.lines.find((l) => l.pIdx === i)?.spans.find((s) => s.type === 'marker')?.text ?? null);
+  };
+
+  test('a deeper level keeps the outer count running: 1. a. b. 2. 3.', () => {
+    expect(markers([
+      makeListParagraph('One', num(0)), makeListParagraph('a', alpha(1)), makeListParagraph('b', alpha(1)),
+      makeListParagraph('Two', num(0)), makeListParagraph('Three', num(0)),
+    ])).toEqual(['1.', 'a.', 'b.', '2.', '3.']);
+  });
+
+  test('a nested bullet does not end the outer count either', () => {
+    expect(markers([makeListParagraph('One', num(0)), makeListParagraph('dot', bullet(1)), makeListParagraph('Two', num(0))]))
+      .toEqual(['1.', '○', '2.']);
+  });
+
+  test('coming back up ends the deeper count: 1. a. b. 2. a.', () => {
+    expect(markers([
+      makeListParagraph('One', num(0)), makeListParagraph('a', alpha(1)), makeListParagraph('b', alpha(1)),
+      makeListParagraph('Two', num(0)), makeListParagraph('a again', alpha(1)),
+    ])).toEqual(['1.', 'a.', 'b.', '2.', 'a.']);
+  });
+
+  test('a list that starts deeper, then level 0 from 1', () => {
+    expect(markers([makeListParagraph('a', alpha(1)), makeListParagraph('b', alpha(1)), makeListParagraph('One', num(0))]))
+      .toEqual(['a.', 'b.', '1.']);
+  });
+
+  test('a bullet at the same level or a plain paragraph restarts the count', () => {
+    expect(markers([makeListParagraph('One', num(0)), makeListParagraph('dot', bullet(0)), makeListParagraph('again', num(0))]))
+      .toEqual(['1.', '•', '1.']);
+    expect(markers([makeListParagraph('One', num(0)), plain('plain'), makeListParagraph('again', num(0))]))
+      .toEqual(['1.', null, '1.']);
+  });
+
+  test('a new number format starts a new count (roman from 4, then alpha from 25)', () => {
+    const roman = (): ListStyle => ({ type: 'number', numberFormat: 'upper-roman', startNumber: 4 });
+    const alpha25 = (): ListStyle => ({ type: 'number', numberFormat: 'lower-alpha', startNumber: 25 });
+    expect(markers([makeListParagraph('r', roman()), makeListParagraph('r', roman()), makeListParagraph('y', alpha25()), makeListParagraph('z', alpha25())]))
+      .toEqual(['IV.', 'V.', 'y.', 'z.']);
+  });
+
+  test('a startNumber that does not continue the count starts a new one: 1. 2. 10. 11. 1.', () => {
+    const at = (n: number) => num(0, { startNumber: n });
+    expect(markers([at(1), at(1), at(10), at(10), at(1)].map((ls, i) => makeListParagraph(`p${i}`, ls))))
+      .toEqual(['1.', '2.', '10.', '11.', '1.']);
+  });
+
+  test('a startNumber equal to the next number continues (HTML <ol start> sets one per item)', () => {
+    expect(markers([at5(5), at5(6), makeListParagraph('nested', alpha(1)), at5(7)]))
+      .toEqual(['5.', '6.', 'a.', '7.']);
+    function at5(n: number) { return makeListParagraph(`p${n}`, num(0, { startNumber: n })); }
+  });
+
+  test('office: an empty numbered paragraph draws no marker and is not counted', () => {
+    const empty: Paragraph = { ...makeListParagraph('', num(0)), children: [] };
+    expect(markers([makeListParagraph('One', num(0)), empty, makeListParagraph('Two', num(0))], 'office'))
+      .toEqual(['1.', null, '2.']);
+  });
+
+  test('browser: an empty list item still takes its number (CSS)', () => {
+    const empty: Paragraph = { ...makeListParagraph('', num(0)), children: [makeRun('')] };
+    expect(markers([makeListParagraph('One', num(0)), empty, makeListParagraph('Two', num(0))], 'browser')[2]).toBe('3.');
+  });
+});
+
 // ── list-style-position ─────────────────────────────────────────────────
 
 describe('list-style-position', () => {

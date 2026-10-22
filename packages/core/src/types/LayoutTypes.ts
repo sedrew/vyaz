@@ -25,6 +25,16 @@ export interface Span {
   /** Optional paragraph tag (set by user via Paragraph.id). */
   tag?: string;
 
+  /**
+   * Half-open `[startIndex, endIndex)` range of this span in the paragraph's
+   * source text (its `children` texts joined, `\n` included) — before
+   * whitespace collapsing. A collapsed space span covers the whole whitespace
+   * run it stands for; a gap a span merely represents may be empty. Markers
+   * carry none. Set by `layoutTextFrame`.
+   */
+  startIndex?: number;
+  endIndex?: number;
+
   /** Physical font metrics for this span */
   fontMetrics: SpanFontMetrics;
 
@@ -69,10 +79,12 @@ export interface Span {
   trailing?: boolean;
 
   /**
-   * Trailing whitespace that CSS removes at the line end (white-space `normal`,
-   * `nowrap`, `pre-line`; CSS Text §4.1.2). Kept in `spans` for text and index
-   * fidelity (it may carry the `\n` of a hard break) but never painted:
-   * renderers draw no background, decoration or glyph for it.
+   * Trailing whitespace that is not painted at the line end: CSS removes it
+   * (white-space `normal`, `nowrap`, `pre-line`; CSS Text §4.1.2), and
+   * PowerPoint draws no underline under it (`mode: 'office'`, every
+   * white-space). Kept in `spans` for text and index fidelity (it may carry
+   * the `\n` of a hard break) but never painted: renderers draw no
+   * background, decoration or glyph for it.
    */
   collapsed?: boolean;
 
@@ -121,10 +133,34 @@ export interface Line {
   /** Maximum descent in line */
   descent: number;
 
-  /** Index of first character in the original paragraph text */
+  /**
+   * Index of the line's first character in the paragraph's source text (its
+   * `children` texts joined, `\n` included), before whitespace collapsing.
+   * Lines tile the paragraph: each starts where the previous one ended, the
+   * first at 0.
+   */
   startIndex: number;
-  /** Index of last character + 1 (for convenient length calculation) */
+  /**
+   * End of the line in the source text (exclusive). Covers the whitespace the
+   * line swallowed at its end and, for a line ended by `\n`, the `\n`
+   * itself; the last line of a paragraph ends at its text length.
+   */
   endIndex: number;
+
+  /**
+   * Index of the source paragraph in `TextFrame.paragraphs[]` — on every
+   * line, including empty ones that carry no spans. Set by `layoutTextFrame`.
+   */
+  pIdx?: number;
+
+  /**
+   * Underline / strikethrough rules for this line, when the layout mode
+   * defines their geometry (`mode: 'office'`, PowerPoint's model). `x` is in
+   * span coordinates (the same space as `Span.x`), `y` is the rule's **top
+   * edge** relative to the line top (like `baseline`). Renderers paint these
+   * instead of their own decoration lines when present.
+   */
+  decorations?: LineDecoration[];
 
   /** Paragraph alignment (optional, for PowerPoint render) */
   alignment?: TextAlignment;
@@ -165,6 +201,18 @@ export interface Line {
   leftRule?: { x: number; width: number; color: string };
 
   spans: Span[];
+}
+
+/** One underline / strikethrough rule — see {@link Line.decorations}. */
+export interface LineDecoration {
+  kind: 'underline' | 'strikethrough';
+  /** Left edge, span coordinates (same space as `Span.x`). */
+  x: number;
+  width: number;
+  /** Top edge, relative to the line top. */
+  y: number;
+  thickness: number;
+  color: string;
 }
 
 // ── ParagraphLayoutResult (single paragraph) ─────────────────────────────

@@ -18,7 +18,7 @@
 
 import type { ParagraphStyle, ListStyle, NumberFormat } from '../types/Document.js';
 import type { FontMetrics } from '../types/FontTypes.js';
-import type { Line, Span, SpanFontMetrics } from '../types/LayoutTypes.js';
+import type { Line, LineDecoration, Span, SpanFontMetrics } from '../types/LayoutTypes.js';
 import type { PreparedRichInlineItem } from '../compile/ParagraphCompiler.js';
 import { formatListNumber, defaultBulletChar } from '../utils/list.js';
 
@@ -81,6 +81,127 @@ function resolveBulletIndent(
   return defaultIndent * (level + 1);
 }
 
+/**
+ * Marker font size relative to the paragraph's first run. PowerPoint draws
+ * bullets and numbers at 100 % (× `buSzPct`); vyaz's browser bullet has
+ * always been 0.9×.
+ */
+function markerSizeFactor(listStyle: ListStyle, mode: 'browser' | 'office'): number {
+  if (listStyle.bulletSize !== undefined) return listStyle.bulletSize;
+  return listStyle.type === 'bullet' && mode === 'browser' ? 0.9 : 1;
+}
+
+/** Context for one line-break-free piece of a paragraph — see {@link positionLines}. */
+export interface PositionExtras {
+  /**
+   * Justify the piece's last line too: it ends in a `\n` that is not the
+   * paragraph's end (`mode: 'office'` — PowerPoint stretches a line ending in
+   * `<a:br/>`; CSS does not).
+   */
+  justifyLastLine?: boolean;
+  /** List paragraph continued after a `\n`: indent like a list item, draw no marker. */
+  noMarker?: boolean;
+  /** The single pretext line is a synthetic empty one: emit a zero-width strut span for the first run. */
+  strut?: boolean;
+}
+
+/** Collapsible whitespace inside a span, for justify splitting. */
+const SPACE_RUN_RE = /[ \t\f\r]+/g;
+
+/**
+ * Split each text span that contains spaces into text / space spans, so every
+ * space can take its share of justify slack (PowerPoint and CSS stretch every
+ * space of the line, not only those between runs).
+ */
+function splitSpacesForJustify(
+  spans: Span[],
+  measureText: (text: string, fontSize: number, fontFamily?: string, fontWeight?: string, fontStyle?: string) => number,
+  metricsOf: Map<Span, FontMetrics>,
+): Span[] {
+  const out: Span[] = [];
+  for (const span of spans) {
+    if (span.type !== 'text' || span.inlineWidget || !/[ \t\f\r]/.test(span.text)) { out.push(span); continue; }
+    const { fontFamily, fontWeight, fontStyle } = span.style;
+    const w = String(fontWeight || 400);
+    const st = fontStyle || 'normal';
+    const pieces: Span[] = [];
+    let last = 0;
+    for (const m of span.text.matchAll(SPACE_RUN_RE)) {
+      if (m.index! > last) pieces.push({ ...span, text: span.text.slice(last, m.index), type: 'text' });
+      pieces.push({ ...span, text: m[0], type: 'space' });
+      last = m.index! + m[0].length;
+    }
+    if (last < span.text.length) pieces.push({ ...span, text: span.text.slice(last), type: 'text' });
+    const tracking = span.style.letterSpacing ?? 0;
+    let sum = 0;
+    for (const piece of pieces) {
+      piece.width = measureText(piece.text, span.fontMetrics.fontSize, fontFamily, w, st) + tracking * [...piece.text].length;
+      sum += piece.width;
+    }
+    // keep the span's own width: shaped / quantized widths of the pieces may not add up exactly
+    if (pieces.length > 0) pieces[pieces.length - 1].width += span.width - sum;
+    const metrics = metricsOf.get(span);
+    if (metrics) for (const piece of pieces) metricsOf.set(piece, metrics);
+    out.push(...pieces);
+  }
+  return out;
+}
+
+/**
+ * `mode: 'office'` underline / strikethrough rules, PowerPoint's model
+ * (scripts/office-metrics/TEXT-FEATURES-RESULTS.md §5, measured 8–144 pt):
+ *
+ * - underline: one rule per contiguous underlined stretch of the line (same
+ *   colour), top at `baseline + underlineTop`, thickness `underlineThickness`,
+ *   both the run-advance-weighted average over the stretch (`post` table);
+ * - strikethrough: one rule per run, at that run's own `OS/2` strikeout;
+ * - trailing spaces at the line end carry none.
+ */
+function officeDecorations(
+  spans: Span[],
+  metricsOf: Map<Span, FontMetrics>,
+  baseline: number,
+): LineDecoration[] {
+  const out: LineDecoration[] = [];
+  const color = (s: Span) => s.style.color ?? '#000000';
+  const uTop = (s: Span) => metricsOf.get(s)?.underlineTop ?? s.fontMetrics.fontSize * 0.1;
+  const uThick = (s: Span) => metricsOf.get(s)?.underlineThickness ?? s.fontMetrics.fontSize * 0.05;
+  const kTop = (s: Span) => metricsOf.get(s)?.strikeoutTop ?? -s.fontMetrics.fontSize * 0.26;
+  const kThick = (s: Span) => metricsOf.get(s)?.strikeoutThickness ?? s.fontMetrics.fontSize * 0.05;
+  const painted = spans.filter((s) => s.type !== 'marker' && !s.trailing && !s.inlineWidget);
+
+  for (let i = 0; i < painted.length;) {
+    const first = painted[i];
+    if (!first.style.underline) { i++; continue; }
+    let j = i;
+    while (j + 1 < painted.length && painted[j + 1].style.underline && color(painted[j + 1]) === color(first)) j++;
+    let w = 0, top = 0, thick = 0;
+    for (let k = i; k <= j; k++) {
+      const s = painted[k];
+      const sw = Math.max(s.width, 1e-6);
+      w += sw; top += sw * uTop(s); thick += sw * uThick(s);
+    }
+    const last = painted[j];
+    out.push({ kind: 'underline', x: first.x, width: round2(last.x + last.width - first.x), y: round2(baseline + top / w), thickness: round2(thick / w), color: color(first) });
+    i = j + 1;
+  }
+  for (let i = 0; i < painted.length;) {
+    const first = painted[i];
+    if (!first.style.strikethrough) { i++; continue; }
+    let j = i;
+    while (j + 1 < painted.length && painted[j + 1].style.strikethrough && painted[j + 1].itemIndex === first.itemIndex) j++;
+    const last = painted[j];
+    out.push({ kind: 'strikethrough', x: first.x, width: round2(last.x + last.width - first.x), y: round2(baseline + kTop(first)), thickness: round2(kThick(first)), color: color(first) });
+    i = j + 1;
+  }
+  return out;
+}
+
+function hasDecoration(spans: Span[]): boolean {
+  for (const s of spans) if (s.style.underline || s.style.strikethrough) return true;
+  return false;
+}
+
 // ── PositioningEngine ─────────────────────────────────────────────────
 
 /**
@@ -106,8 +227,9 @@ const OFFICE_LINE_BOX_RATIO = 1.20;
  *
  * At `style.lineHeight === 1` with a normal (non-`useTypoMetrics`) OS/2
  * table, this constant is **not** used — see the `baselineRatio` computation
- * below, `(typoAscFrac + winAscFrac) / 2` of the dominant run's own font
- * instead (scripts/office-metrics/RESULTS.md "font-grid" corpus).
+ * below, the dominant run's own `winAscFrac` instead: PowerPoint fills the
+ * line box with the font's win box scaled to fit (7 fonts × 6–9 sizes,
+ * scripts/office-metrics/TEXT-FEATURES-RESULTS.md "Baseline at spcPct 100 %").
  */
 const OFFICE_BASELINE_RATIO = 0.75;
 
@@ -177,6 +299,101 @@ function round2(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
+/** Marker text, size and the indents it puts on the paragraph's lines. */
+export interface ListMarkerLayout {
+  isListItem: boolean;
+  markerText: string;
+  markerWidth: number;
+  markerFontSize: number;
+  markerFontFamily: string;
+  /** Width of the marker zone (outside markers). */
+  bulletZoneIndent: number;
+  /** Left edge of every line's text: `leftIndent` + the outside marker zone. */
+  effectiveLeftIndent: number;
+  /** office: extra first-line indent when the marker is wider than its zone. */
+  firstLineMarkerOverflow: number;
+}
+
+/**
+ * Resolve a paragraph's list marker and the left indents that follow from
+ * it — shared by `positionLines` (where each line goes) and line breaking
+ * (how wide each line may be), so the two always agree.
+ */
+export function resolveListMarker(
+  items: PreparedRichInlineItem[],
+  style: ParagraphStyle,
+  mode: 'browser' | 'office',
+  measureText: (text: string, fontSize: number, fontFamily?: string, fontWeight?: string, fontStyle?: string) => number,
+  listStyle?: ListStyle,
+  listIndex?: number,
+  listMarkerWidth?: number,
+  extras: PositionExtras = {},
+): ListMarkerLayout {
+  const isListItem = !!listStyle && listStyle.type !== 'none' && listIndex !== undefined;
+  let markerText = '';
+  let markerWidth = 0;
+  let markerFontSize = 0;
+  let markerFontFamily = 'Arial';
+  let bulletZoneIndent = 0;
+  let effectiveLeftIndent = style.leftIndent ?? 0;
+  // office: the first line's text starts after the marker when the marker is
+  // wider than the hanging indent (PowerPoint, per paragraph — no list-wide
+  // alignment); continuation lines stay at the hanging indent.
+  let firstLineMarkerOverflow = 0;
+
+  if (isListItem) {
+    markerText = getMarkerText(listStyle!, listIndex!);
+    const paraFontSize = getParagraphFontSize(items);
+    bulletZoneIndent = resolveBulletIndent(listStyle!, paraFontSize);
+
+    // browser: expand bulletIndent to fit the widest marker in the list group
+    if (mode === 'browser' && listMarkerWidth !== undefined && listMarkerWidth > bulletZoneIndent) {
+      bulletZoneIndent = listMarkerWidth;
+    }
+
+    // Marker font: `bulletFont`, else the paragraph's first run's font.
+    markerFontFamily = listStyle!.bulletFont ?? items[0]?.metadata.style.fontFamily ?? 'Arial';
+    const firstRunFontWeight = String(items[0]?.metadata.style.fontWeight ?? 400);
+    const firstRunFontStyle = items[0]?.metadata.style.fontStyle ?? 'normal';
+
+    markerFontSize = paraFontSize * markerSizeFactor(listStyle!, mode);
+    // office: PowerPoint does not kern an auto-number ("11." is two whole "1"s).
+    markerWidth = mode === 'office'
+      ? [...markerText].reduce((w, ch) => w + measureText(ch, markerFontSize, markerFontFamily, firstRunFontWeight, firstRunFontStyle), 0)
+      : measureText(markerText, markerFontSize, markerFontFamily, firstRunFontWeight, firstRunFontStyle);
+
+    // For 'outside': text block is shifted right by bulletZoneIndent
+    if (listStyle!.position !== 'inside') {
+      effectiveLeftIndent += bulletZoneIndent;
+      if (mode === 'office' && !extras.noMarker) firstLineMarkerOverflow = Math.max(0, markerWidth - bulletZoneIndent);
+    }
+  }
+
+  return { isListItem, markerText, markerWidth, markerFontSize, markerFontFamily, bulletZoneIndent, effectiveLeftIndent, firstLineMarkerOverflow };
+}
+
+/**
+ * How far in from each side a paragraph's lines start: the first line of a
+ * piece (`style.indent`, an office marker wider than its zone, an inside
+ * marker and its gap) and every other line; `right` is `style.rightIndent`.
+ * Line breaking narrows each line by these, positioning moves it by them.
+ */
+export function paragraphLineIndents(
+  marker: ListMarkerLayout,
+  style: ParagraphStyle,
+  listStyle?: ListStyle,
+  extras: PositionExtras = {},
+): { first: number; rest: number; right: number } {
+  const insideMarker = marker.isListItem && !extras.noMarker && listStyle?.position === 'inside'
+    ? marker.markerWidth + marker.markerFontSize * 0.5
+    : 0;
+  return {
+    first: marker.effectiveLeftIndent + (style.indent || 0) + marker.firstLineMarkerOverflow + insideMarker,
+    rest: marker.effectiveLeftIndent,
+    right: style.rightIndent || 0,
+  };
+}
+
 /**
  * Build Line[] from pretext lines with alignment and metrics.
  *
@@ -210,6 +427,7 @@ export function positionLines(
   listStyle?: ListStyle,
   listIndex?: number,
   listMarkerWidth?: number,
+  extras: PositionExtras = {},
 ): { lines: Line[]; contentWidth: number } {
   const lines: Line[] = [];
   let currentY = startY + style.spaceBefore;
@@ -218,39 +436,10 @@ export function positionLines(
   let contentWidth = 0;
 
   // ── Pre-compute marker-related values ──────────────────────────
-  const isListItem = listStyle && listStyle.type !== 'none' && listIndex !== undefined;
-  let markerText = '';
-  let markerWidth = 0;
-  let bulletZoneIndent = 0;
-  let effectiveLeftIndent = style.leftIndent ?? 0;
-
-  if (isListItem) {
-    markerText = getMarkerText(listStyle!, listIndex!);
-    const paraFontSize = getParagraphFontSize(items);
-    bulletZoneIndent = resolveBulletIndent(listStyle!, paraFontSize);
-
-    // Expand bulletIndent to fit the widest marker in the list group
-    if (listMarkerWidth !== undefined && listMarkerWidth > bulletZoneIndent) {
-      bulletZoneIndent = listMarkerWidth;
-    }
-
-    // Measure marker width using paragraph's first run font
-    const firstRunFontFamily = items[0]?.metadata.style.fontFamily ?? 'Arial';
-    const firstRunFontWeight = String(items[0]?.metadata.style.fontWeight ?? 400);
-    const firstRunFontStyle = items[0]?.metadata.style.fontStyle ?? 'normal';
-
-    // Marker font-size: same as paragraph font size for numbered,
-    // slightly smaller (0.9x) for bullets (PowerPoint convention)
-    const markerFontSize = listStyle!.type === 'bullet'
-      ? paraFontSize * 0.9
-      : paraFontSize;
-    markerWidth = measureText(markerText, markerFontSize, firstRunFontFamily, firstRunFontWeight, firstRunFontStyle);
-
-    // For 'outside': text block is shifted right by bulletZoneIndent
-    if (listStyle!.position !== 'inside') {
-      effectiveLeftIndent += bulletZoneIndent;
-    }
-  }
+  const {
+    isListItem, markerText, markerWidth, markerFontSize, markerFontFamily,
+    bulletZoneIndent, effectiveLeftIndent, firstLineMarkerOverflow,
+  } = resolveListMarker(items, style, mode, measureText, listStyle, listIndex, listMarkerWidth, extras);
 
   for (let lineIdx = 0; lineIdx < pretextLines.length; lineIdx++) {
     const ptLine = pretextLines[lineIdx];
@@ -266,12 +455,19 @@ export function positionLines(
     let dominantTypoAscFrac: number | undefined;
     let dominantWinAscFrac: number | undefined;
     let dominantUseTypoMetrics: boolean | undefined;
-    const spans: Span[] = [];
+    let spans: Span[] = [];
     const inlineBoxes: BrowserInlineBox[] = [];
+    const metricsOf = new Map<Span, FontMetrics>();
 
-    for (const frag of ptLine.fragments) {
+    // A strut line (empty paragraph / piece) has no fragments: lay out one
+    // empty fragment of the first run so the line takes that run's size.
+    const fragments: PretextFragment[] = ptLine.fragments.length === 0 && extras.strut
+      ? [{ itemIndex: 0, text: '', gapBefore: 0, occupiedWidth: 0, start: { segmentIndex: 0, graphemeIndex: 0 }, end: { segmentIndex: 0, graphemeIndex: 0 } }]
+      : ptLine.fragments;
+    for (const frag of fragments) {
       const item = items[frag.itemIndex];
       if (!item) continue;
+      const spansBefore = spans.length;
 
       const metrics = fontMetricsFn(item);
       // baselineOffset: superscript → negative (glyph moves up).
@@ -379,9 +575,12 @@ export function positionLines(
       const fsWeight = String(fontWeight || 400);
       const fsStyle = fontStyle || 'normal';
 
+      // measureText knows no letter-spacing; pretext adds it after every
+      // character, so a measured piece gets it back the same way
+      const tracking = item.metadata.style.letterSpacing ?? 0;
       const resolvedWidths: number[] = fragments.length === 1
         ? [textWidth]
-        : fragments.map((t) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle));
+        : fragments.map((t) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle) + tracking * [...t].length);
       let resolvedIdx = 0;
       const leadingWidth = leadingSpaceChars > 0 ? resolvedWidths[resolvedIdx++] : 0;
       const trimmedWidth = remainingText.length > 0 ? resolvedWidths[resolvedIdx++] : 0;
@@ -438,6 +637,22 @@ export function positionLines(
           type: 'space',
         });
       }
+
+      // strut: a zero-width empty span carries the run's style and metrics
+      if (text.length === 0 && spans.length === spansBefore) {
+        spans.push({
+          x: 0,
+          width: 0,
+          text: '',
+          itemIndex: frag.itemIndex,
+          pIdx: 0,
+          tag,
+          fontMetrics: baseFontMetrics,
+          style: item.metadata.style,
+          type: 'text',
+        });
+      }
+      for (let k = spansBefore; k < spans.length; k++) metricsOf.set(spans[k], metrics);
     }
 
     // ── Inline-box width correction ─────────────────────────
@@ -454,10 +669,8 @@ export function positionLines(
     // For 'outside': marker is added after X positioning with a custom x in the bullet zone.
     let outsideMarkerSpan: Span | null = null;
 
-    if (isListItem && isFirstLine) {
-      const paraFontSize = getParagraphFontSize(items);
+    if (isListItem && isFirstLine && !extras.noMarker) {
       const firstRun = items[0];
-      const markerFontSize = listStyle!.type === 'bullet' ? paraFontSize * 0.9 : paraFontSize;
       const markerAscent = markerFontSize * 0.8; // approximate ascent for marker
       const markerDescent = markerFontSize * 0.2;
 
@@ -477,7 +690,10 @@ export function positionLines(
           text: markerText,
         }),
         fontSize: markerFontSize,
+        fontFamily: markerFontFamily,
         text: markerText,
+        // PowerPoint draws no underline / strike through a bullet
+        ...(mode === 'office' ? { underline: false, strikethrough: false } : {}),
       };
 
       const markerSpanBase: Span = {
@@ -544,9 +760,10 @@ export function positionLines(
     // browser: where spaces collapse (normal / nowrap / pre-line), CSS removes
     // them at the line end altogether — nothing is painted there, no background
     // or underline (a `<mark>` ending in a soft wrap stops at its last glyph).
-    // office keeps painting them (PowerPoint was not measured on this).
+    // office: PowerPoint draws no underline under the spaces a line ends with,
+    // whatever the white-space (scripts/office-metrics/TEXT-FEATURES-RESULTS.md §5).
     const ws = style.whiteSpace ?? 'normal';
-    const collapsible = mode === 'browser' && (ws === 'normal' || ws === 'nowrap' || ws === 'pre-line');
+    const collapsible = mode === 'office' || ws === 'normal' || ws === 'nowrap' || ws === 'pre-line';
     for (let i = trailingStartIndex; i < spans.length; i++) {
       spans[i].trailing = true;
       if (collapsible) spans[i].collapsed = true;
@@ -561,7 +778,7 @@ export function positionLines(
 
     // ── X positioning ───────────────────────────────
     const indent = isFirstLine
-      ? effectiveLeftIndent + (style.indent || 0)
+      ? effectiveLeftIndent + (style.indent || 0) + firstLineMarkerOverflow
       : effectiveLeftIndent;
     const rightIndent = style.rightIndent || 0;
     const availableWidth = maxWidth - indent - rightIndent;
@@ -591,19 +808,26 @@ export function positionLines(
       // Parley alignment.rs: excludes last line (line.break_reason == None/Explicit)
       //   and lines with num_spaces == 0.
       //
-      // Determine if this is the last line in the paragraph.
-      const isLastLine = lineIdx === pretextLines.length - 1;
+      // Determine if this is the last line in the paragraph. A piece of a
+      // paragraph that ends in `\n` justifies its last line in office
+      // (PowerPoint stretches a line ending in <a:br/>), never in browser.
+      const isLastLine = lineIdx === pretextLines.length - 1 && !extras.justifyLastLine;
 
-      // Count only "stretchable" spaces: type === 'space' and !trailing
-      const stretchableSpaces = spans.filter(
-        (f) => f.type === 'space' && !f.trailing,
-      );
-      const spaceCount = stretchableSpaces.length;
-
-      if (!isLastLine && spaceCount > 0 && slack > 0) {
-        const extraPerSpace = slack / spaceCount;
-        for (const sf of stretchableSpaces) {
-          sf.width += extraPerSpace;
+      if (!isLastLine && slack > 0) {
+        // Every space of the line takes an equal share — including spaces
+        // inside a run, which pretext hands over inside one text fragment.
+        spans = splitSpacesForJustify(spans, measureText, metricsOf);
+        // Count only "stretchable" spaces: type === 'space' and !trailing,
+        // one share per space character.
+        const stretchableSpaces = spans.filter(
+          (f) => f.type === 'space' && !f.trailing,
+        );
+        const shares = stretchableSpaces.reduce((n, f) => n + f.text.length, 0);
+        if (shares > 0) {
+          const extraPerSpace = slack / shares;
+          for (const sf of stretchableSpaces) {
+            sf.width += extraPerSpace * sf.text.length;
+          }
         }
       }
 
@@ -620,15 +844,20 @@ export function positionLines(
     }
 
     // ── Outside marker: place in the bullet zone (left of text) ──
-    // Marker is right-aligned within the bullet zone so multi-digit
-    // numbers ("9." vs "10.") share the same right edge.
-    // CSS list-style-position: outside — marker is outside the principal box.
-    // OOXML a:buFont / a:buChar — bullet sits in the indent zone.
+    // browser: right-aligned within the bullet zone so multi-digit numbers
+    // ("9." vs "10.") share the same right edge (CSS list-style-position:
+    // outside — the marker is outside the principal box).
+    // office: left-aligned at the start of the zone (`marL + indent`), the text
+    // after it (PowerPoint, measured — TEXT-FEATURES-RESULTS.md §2).
     if (outsideMarkerSpan) {
-      // Right edge of the bullet zone = xOffset (start of text)
-      // Marker right-aligned: x = xOffset - markerWidth - small gap
-      const gap = outsideMarkerSpan.fontMetrics.fontSize * 0.25; // 0.25em gap
-      outsideMarkerSpan.x = Math.round((xOffset - outsideMarkerSpan.width - gap) * 100) / 100;
+      if (mode === 'office') {
+        outsideMarkerSpan.x = round2(xOffset - bulletZoneIndent - firstLineMarkerOverflow);
+      } else {
+        // Right edge of the bullet zone = xOffset (start of text)
+        // Marker right-aligned: x = xOffset - markerWidth - small gap
+        const gap = outsideMarkerSpan.fontMetrics.fontSize * 0.25; // 0.25em gap
+        outsideMarkerSpan.x = Math.round((xOffset - outsideMarkerSpan.width - gap) * 100) / 100;
+      }
       // Prepend so it appears first in the spans array
       spans.unshift(outsideMarkerSpan);
     }
@@ -677,21 +906,23 @@ export function positionLines(
     //   exports match this pitch exactly for Roboto at spcPct 1.0 / 1.5 / 2.0
     //   (see office-cases/MIGRATION.md). Baseline sits at OFFICE_BASELINE_RATIO
     //   (0.75) × lineBox from the box top, every line including the first —
-    //   *except* at spcPct = 100% (style.lineHeight === 1), where real
-    //   PowerPoint measurably tracks `(typoAscFrac + winAscFrac) / 2` of the
-    //   dominant run's own font instead of the flat constant — neither ratio
-    //   alone (scripts/office-metrics/RESULTS.md "font-grid" corpus, 4 fonts
-    //   × 11 sizes: the average lands within ~1%, either ratio alone off by
-    //   2–3%, including for Roboto — 0.75 was never an exact match for it
-    //   either, that just never showed up because every earlier check used
-    //   same-size line pitch, which cancels the ratio out algebraically).
-    //   Fonts with OS/2 `fsSelection.useTypoMetrics` set (only Unifont so
-    //   far) don't fit this formula and fall back to the flat constant — one
-    //   data point isn't enough to derive their own rule (still open). No
-    //   fresh spcPct≠100% data contradicts flat 0.75 there — Arial's own
-    //   ls125–ls200 points land within ~0.2pt of it — so only the
-    //   lineHeight===1, non-useTypoMetrics case is switched.
-    const maxFontSize = spans.reduce((max, f) => Math.max(max, f.fontMetrics.fontSize), 0);
+    //   *except* at spcPct = 100% (style.lineHeight === 1), where PowerPoint
+    //   puts it at the dominant run's own `winAscFrac` =
+    //   winAscent / (winAscent + winDescent): the font's win box scaled to the
+    //   1.2 × size line box. Measured on Arial, Roboto, Times New Roman,
+    //   Georgia, Verdana, Courier New and Tahoma, 12–144 pt: every PDF
+    //   baseline (whole slide points) lies within its rounding of this ratio,
+    //   and the SVG export of Roboto 18 pt agrees (scripts/office-metrics/
+    //   TEXT-FEATURES-RESULTS.md). The older `(typoAscFrac + winAscFrac) / 2`
+    //   (RESULTS.md "font-grid" corpus) sat 1.7–3.6 pt too high at 144 pt;
+    //   Courier New, whose win ratio is below its typo ratio, rules out any
+    //   blend with the typo ratio. Fonts with OS/2 `fsSelection.useTypoMetrics`
+    //   set (only Unifont so far) fall back to the flat constant — one data
+    //   point isn't enough to derive their own rule. spcPct ≠ 100% keeps flat
+    //   0.75 (PowerPoint's SVG export matches it within 0.1 pt at 150 / 200%).
+    // office: the marker does not size the line (a 150 % bullet leaves the
+    // line box at 1.2 × the text — PowerPoint, measured).
+    const maxFontSize = spans.reduce((max, f) => (mode === 'office' && f.type === 'marker' ? max : Math.max(max, f.fontMetrics.fontSize)), 0);
 
     let lineBoxHeight: number;
     let baseline: number;
@@ -701,8 +932,8 @@ export function positionLines(
       if (style.lineHeight === 1 && dominantUseTypoMetrics !== true) {
         const t = dominantTypoAscFrac;
         const w = dominantWinAscFrac;
-        if (t != null && t > 0 && t < 1 && w != null && w > 0 && w < 1) {
-          baselineRatio = (t + w) / 2;
+        if (w != null && w > 0 && w < 1) {
+          baselineRatio = w;
         } else if (t != null && t > 0 && t < 1) {
           baselineRatio = t; // OS/2 present but winAscent/winDescent missing
         }
@@ -755,6 +986,7 @@ export function positionLines(
       startIndex: startIdx,
       endIndex: endIdx,
       alignment: style.alignment,
+      ...(mode === 'office' && hasDecoration(spans) ? { decorations: officeDecorations(spans, metricsOf, baseline) } : {}),
       spans,
     });
 

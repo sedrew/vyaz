@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="269.6" viewBox="0 0 220 269.6">
+  <text x="0" y="15.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">The quick brown fox</text>
+  <text x="0" y="34.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">jumps over the lazy</text>
+  <text x="0" y="53.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">dog while a frame</text>
+  <text x="0" y="72.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">measures every line</text>
+  <text x="0" y="92" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">box.</text>
+  <text x="9.31" y="121.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">The quick brown fox</text>
+  <text x="12.69" y="140.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">jumps over the lazy</text>
+  <text x="20.88" y="159.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">dog while a frame</text>
+  <text x="10.81" y="178.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">measures every line</text>
+  <text x="88.81" y="198" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">box.</text>
+  <text x="0" y="227.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="-1" xml:space="preserve">The quick brown fox jumps over the</text>
+  <text x="-3" y="246.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="-1" xml:space="preserve"> lazy dog while a frame measures</text>
+  <text x="0" y="265.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="-1" xml:space="preserve">every line box.</text>
+<!-- debug overlay -->
+  <rect x="0" y="0" width="220" height="269.6" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
+  <rect x="0" y="0" width="227" height="269.6" fill="none" stroke="rgba(255,60,140,0.8)" stroke-width="1" stroke-dasharray="1,2" />
+</svg>

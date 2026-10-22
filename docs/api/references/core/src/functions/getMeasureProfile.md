@@ -4,7 +4,7 @@
 
 > **getMeasureProfile**(): [`MeasureProfile`](../interfaces/MeasureProfile.md)
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:118](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L118)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:124](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L124)
 
 The active measurement profile.
 

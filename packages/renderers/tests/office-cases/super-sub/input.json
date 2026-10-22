@@ -1,0 +1,128 @@
+{
+  "_comment": "office super / subscript, PowerPoint's model (text-features.json `x-*`): 2/3 size, 30 % up / 25 % down of the full size, the line box keeps the run's size; a run after a pre-wrap space wraps whole (x-wrap: 'sub' never splits as 'su|b').",
+  "frame": {
+    "wrap": true,
+    "width": 200,
+    "paragraphs": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "E = mc",
+            "fontFamily": "Roboto",
+            "fontSize": 24
+          },
+          {
+            "type": "text",
+            "text": "2",
+            "fontFamily": "Roboto",
+            "fontSize": 24,
+            "script": "super"
+          },
+          {
+            "type": "text",
+            "text": " and H",
+            "fontFamily": "Roboto",
+            "fontSize": 24
+          },
+          {
+            "type": "text",
+            "text": "2",
+            "fontFamily": "Roboto",
+            "fontSize": 24,
+            "script": "sub"
+          },
+          {
+            "type": "text",
+            "text": "O",
+            "fontFamily": "Roboto",
+            "fontSize": 24
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 8
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "A",
+            "fontFamily": "Roboto",
+            "fontSize": 72
+          },
+          {
+            "type": "text",
+            "text": "B",
+            "fontFamily": "Roboto",
+            "fontSize": 72,
+            "script": "super"
+          },
+          {
+            "type": "text",
+            "text": "C",
+            "fontFamily": "Roboto",
+            "fontSize": 72,
+            "script": "sub"
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 8
+        }
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "text": "more words to wrap ",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          },
+          {
+            "type": "text",
+            "text": "sub",
+            "fontFamily": "Roboto",
+            "fontSize": 16,
+            "script": "sub"
+          },
+          {
+            "type": "text",
+            "text": " and end.",
+            "fontFamily": "Roboto",
+            "fontSize": 16
+          }
+        ],
+        "style": {
+          "alignment": "left",
+          "lineHeight": 1.0,
+          "spaceBefore": 0,
+          "spaceAfter": 8,
+          "overflowWrap": "break-word",
+          "rightIndent": 45
+        }
+      }
+    ]
+  },
+  "renders": {
+    "flat": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "flat"
+    },
+    "glyph": {
+      "debug": {
+        "frameBox": true,
+        "contentBox": true
+      },
+      "preset": "glyph"
+    }
+  }
+}

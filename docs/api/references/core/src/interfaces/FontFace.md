@@ -12,7 +12,7 @@ Opaque font face handle returned by FontEngine.create()
 
 > `readonly` `optional` **\_opticalSize?**: `object`
 
-Defined in: [core/src/measure/FontEngine.ts:58](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L58)
+Defined in: [core/src/measure/FontEngine.ts:68](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L68)
 
 Set when the font has an `opsz` axis that registration left free: the
 un-instanced master plus the registered axes, so opticalSizeInstance
@@ -70,6 +70,22 @@ Defined in: [core/src/measure/FontEngine.ts:38](https://github.com/sedrew/vyaz/b
 
 ***
 
+### strikeoutPosition
+
+> `readonly` **strikeoutPosition**: `number` \| `null`
+
+Defined in: [core/src/measure/FontEngine.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L61)
+
+***
+
+### strikeoutSize
+
+> `readonly` **strikeoutSize**: `number` \| `null`
+
+Defined in: [core/src/measure/FontEngine.ts:62](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L62)
+
+***
+
 ### typoAscent
 
 > `readonly` **typoAscent**: `number` \| `null`
@@ -85,6 +101,27 @@ OS/2 typoAscender / typoDescender (font units) — null when the font has no OS/
 > `readonly` **typoDescent**: `number` \| `null`
 
 Defined in: [core/src/measure/FontEngine.ts:44](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L44)
+
+***
+
+### underlinePosition
+
+> `readonly` **underlinePosition**: `number` \| `null`
+
+Defined in: [core/src/measure/FontEngine.ts:59](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L59)
+
+Decoration geometry in font units, font-table signs: `post.underlinePosition`
+(top of the underline, negative = below the baseline) / `underlineThickness`,
+`OS/2.yStrikeoutPosition` (top of the strikeout, above the baseline) /
+`yStrikeoutSize`. `null` when the table is missing.
+
+***
+
+### underlineThickness
+
+> `readonly` **underlineThickness**: `number` \| `null`
+
+Defined in: [core/src/measure/FontEngine.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L60)
 
 ***
 

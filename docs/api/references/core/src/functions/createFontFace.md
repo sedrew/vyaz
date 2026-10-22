@@ -4,7 +4,7 @@
 
 > **createFontFace**(`buffer`, `opts?`): `Promise`\<[`FontFace`](../interfaces/FontFace.md)\>
 
-Defined in: [core/src/measure/FontEngine.ts:136](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L136)
+Defined in: [core/src/measure/FontEngine.ts:168](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontEngine.ts#L168)
 
 Create a font face from a binary buffer.
 

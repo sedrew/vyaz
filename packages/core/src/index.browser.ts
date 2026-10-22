@@ -38,13 +38,13 @@ export type { TableLayoutResult, TableRowLayoutResult, TableCellLayoutResult, Ta
 export { applyScale, findScale } from './layout/AutoFitEngine.js';
 
 // ── Compiler — stable ───────────────────────────────────
-export { compileParagraph, getParagraphText, makeFontToken, collapseSegmentWhitespace, splitParagraphByHardBreaks } from './compile/ParagraphCompiler.js';
+export { compileParagraph, getParagraphText, makeFontToken, collapseSegmentWhitespace, splitParagraphByHardBreaks, splitParagraphAtHardBreaks } from './compile/ParagraphCompiler.js';
 
 // ── Font metrics — stable ───────────────────────────────
 export { FontMetricsProvider, fontMetricsProvider } from './measure/FontMetricsProvider.js';
 export { createFontFace, getGlyphAdvance, computePixelMetrics, isFontEngineAvailable, shapeRun } from './measure/FontEngine.js';
 export type { ShapedRun, ShapedGlyph } from './measure/FontEngine.js';
-export { setMeasureProfile, getMeasureProfile, measurePx } from './measure/FontkitMeasureContext.js';
+export { setMeasureProfile, getMeasureProfile, measurePx, clearMeasureCache } from './measure/FontkitMeasureContext.js';
 export type { MeasureProfile } from './measure/FontkitMeasureContext.js';
 export { getFontBuffer } from './utils/font.js';
 

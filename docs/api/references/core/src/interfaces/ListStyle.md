@@ -2,7 +2,7 @@
 
 # Interface: ListStyle
 
-Defined in: [core/src/types/Document.ts:412](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L412)
+Defined in: [core/src/types/Document.ts:420](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L420)
 
 Configuration for list markers (bullet or numbered).
 
@@ -36,7 +36,7 @@ across the entire list group during layout.
 
 > `optional` **bulletChar?**: `string`
 
-Defined in: [core/src/types/Document.ts:429](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L429)
+Defined in: [core/src/types/Document.ts:437](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L437)
 
 Override marker character for bullet lists.
 If not set, defaults depend on `level`:
@@ -46,11 +46,22 @@ If not set, defaults depend on `level`:
 
 ***
 
+### bulletFont?
+
+> `optional` **bulletFont?**: `string`
+
+Defined in: [core/src/types/Document.ts:479](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L479)
+
+Font family for the marker (DrawingML `buFont`). Defaults to the font of
+the paragraph's first run.
+
+***
+
 ### bulletIndent?
 
 > `optional` **bulletIndent?**: `number`
 
-Defined in: [core/src/types/Document.ts:445](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L445)
+Defined in: [core/src/types/Document.ts:458](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L458)
 
 Indent in px for the marker zone.
 All lines of the paragraph share this indent (for `outside` position).
@@ -61,11 +72,24 @@ across the entire list group.
 
 ***
 
+### bulletSize?
+
+> `optional` **bulletSize?**: `number`
+
+Defined in: [core/src/types/Document.ts:473](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L473)
+
+Marker size relative to the paragraph's first run (DrawingML `buSzPct`
+/ 100 000, e.g. `0.5` = 50 %). Defaults to `1` for numbers; for bullets
+`0.9` in `mode: 'browser'` and `1` in `mode: 'office'` (PowerPoint's
+default, measured).
+
+***
+
 ### indents?
 
 > `optional` **indents?**: `number`[]
 
-Defined in: [core/src/types/Document.ts:452](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L452)
+Defined in: [core/src/types/Document.ts:465](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L465)
 
 Per-level indent overrides (indexed by nesting level).
 E.g. `indents[1]` is the indent for level 1 (first nested).
@@ -77,7 +101,7 @@ Falls back to `bulletIndent * (level + 1)` if not specified.
 
 > `optional` **level?**: `number`
 
-Defined in: [core/src/types/Document.ts:417](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L417)
+Defined in: [core/src/types/Document.ts:425](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L425)
 
 List nesting level (0-based). 0 = top-level.
 
@@ -87,7 +111,7 @@ List nesting level (0-based). 0 = top-level.
 
 > `optional` **numberFormat?**: [`NumberFormat`](../type-aliases/NumberFormat.md)
 
-Defined in: [core/src/types/Document.ts:432](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L432)
+Defined in: [core/src/types/Document.ts:440](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L440)
 
 Numbering format (only used when `type === 'number'`). Defaults to `'decimal'`.
 
@@ -97,7 +121,7 @@ Numbering format (only used when `type === 'number'`). Defaults to `'decimal'`.
 
 > `optional` **position?**: [`ListStylePosition`](../type-aliases/ListStylePosition.md)
 
-Defined in: [core/src/types/Document.ts:420](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L420)
+Defined in: [core/src/types/Document.ts:428](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L428)
 
 Marker position. Defaults to `'outside'`.
 
@@ -107,9 +131,12 @@ Marker position. Defaults to `'outside'`.
 
 > `optional` **startNumber?**: `number`
 
-Defined in: [core/src/types/Document.ts:435](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L435)
+Defined in: [core/src/types/Document.ts:448](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L448)
 
-Starting number for numbered lists. Defaults to 1.
+Starting number for numbered lists. Defaults to 1. On a later item it
+starts a new count unless it equals the current count's own start or the
+next number (so it can be set on every item, as DrawingML `startAt` and
+`@vyaz/converters`' `<ol start>` do).
 
 ***
 
@@ -117,6 +144,6 @@ Starting number for numbered lists. Defaults to 1.
 
 > **type**: [`ListType`](../type-aliases/ListType.md)
 
-Defined in: [core/src/types/Document.ts:414](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L414)
+Defined in: [core/src/types/Document.ts:422](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L422)
 
 List type.
