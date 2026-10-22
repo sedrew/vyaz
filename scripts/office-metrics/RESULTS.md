@@ -143,6 +143,10 @@ Generator picks: **HTML** → `frame` / `content`; **PDF** → `textBox`; **PPTX
 
 ## `OFFICE_BASELINE_RATIO` at spcPct = 100 % is `(typoAscFrac + winAscFrac) / 2`, not flat 0.75 (v0.4.6)
 
+> **Superseded.** The ratio is `winAscFrac` alone — 7 fonts, 303 PDF
+> baselines and the Roboto 18 pt SVG export, see TEXT-FEATURES-RESULTS.md §7.
+> The eye-judged font-grid values below were 1–2.5 % low; kept for history.
+
 Resolves the "needs a font whose typo sum ≠ 1 em" caveat above item 5 — Arial
 is that font (`typoAsc+typoDesc = 0.938em`, vs Roboto's exactly `1.000em`).
 
