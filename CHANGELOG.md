@@ -7,6 +7,16 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+### Performance
+
+- **Layout 13–58 % faster with pretext 1.0**, same machine and input
+  (`bench/PRETEXT-1.0.txt`): office cold 83 → 35 ms per 1000 frames,
+  100k runs cold 126 → 104 ms, warm 118 → 95 ms, 100×100 table 149 → 130 ms,
+  a 100k-run resize drag 4.26 → 3.22 s. Render is unchanged. README and
+  `bench/README.md` tables re-measured (median of 4 runs); the Satori /
+  textkit ratios there are lower than the old figures on 0.0.8 too — this
+  machine, not a regression.
+
 ### Changed
 
 - **Vendored pretext 0.0.8 → 1.0.0.** Line breaking now follows ports of

@@ -29,7 +29,7 @@ Horizontal text alignment.
 
 > `optional` **hyphenBreak?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:558](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L558)
+Defined in: [core/src/types/Document.ts:561](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L561)
 
 Whether a line may break after a hyphen (`-` U+002D, `‐` U+2010) inside a
 word or number — `well-│known`, `2024-│10-06`. Default `true`, which is
@@ -43,7 +43,7 @@ Unrelated to [ParagraphStyle.hyphens](#hyphens) (automatic hyphenation).
 
 > `optional` **hyphens?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:550](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L550)
+Defined in: [core/src/types/Document.ts:553](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L553)
 
 **`Experimental`**
 
@@ -81,7 +81,7 @@ Left margin for the whole paragraph in px.
 
 > `optional` **leftRule?**: `object`
 
-Defined in: [core/src/types/Document.ts:594](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L594)
+Defined in: [core/src/types/Document.ts:597](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L597)
 
 A vertical rule drawn along the paragraph's left edge, e.g. `<blockquote>`'s
 indent bar. Painted per-line (one short vertical segment per laid-out
@@ -120,7 +120,7 @@ Letter-spacing (tracking) for the whole paragraph in px.
 
 > `optional` **lineBreak?**: [`LineBreak`](../type-aliases/LineBreak.md)
 
-Defined in: [core/src/types/Document.ts:540](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L540)
+Defined in: [core/src/types/Document.ts:543](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L543)
 
 **`Experimental`**
 
@@ -148,7 +148,7 @@ Support for absolute px values via a `lineHeightUnit` field.
 
 > `optional` **listRestart?**: `boolean`
 
-Defined in: [core/src/types/Document.ts:580](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L580)
+Defined in: [core/src/types/Document.ts:583](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L583)
 
 Whether to restart numbering for this paragraph.
 Only has effect when `listStyle.type === 'number'`.
@@ -161,7 +161,7 @@ for this paragraph and subsequent ones in the same sequence.
 
 > `optional` **listStyle?**: [`ListStyle`](ListStyle.md)
 
-Defined in: [core/src/types/Document.ts:572](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L572)
+Defined in: [core/src/types/Document.ts:575](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L575)
 
 List marker configuration (bullet or numbered).
 When set, the paragraph is treated as a list item.
@@ -172,7 +172,7 @@ When set, the paragraph is treated as a list item.
 
 > `optional` **overflowWrap?**: [`OverflowWrap`](../type-aliases/OverflowWrap.md)
 
-Defined in: [core/src/types/Document.ts:545](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L545)
+Defined in: [core/src/types/Document.ts:548](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L548)
 
 Overflow-wrap / word-wrap behaviour. See [OverflowWrap](../type-aliases/OverflowWrap.md). Defaults
 to `'normal'` when unset.
@@ -241,7 +241,7 @@ If set, overrides the generic `indent` for the first line.
 
 > `optional` **whiteSpace?**: [`WhiteSpace`](../type-aliases/WhiteSpace.md)
 
-Defined in: [core/src/types/Document.ts:566](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L566)
+Defined in: [core/src/types/Document.ts:569](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L569)
 
 CSS `white-space` behaviour:
 - `'normal'`: collapse whitespace, auto-wrap.
@@ -255,9 +255,12 @@ CSS `white-space` behaviour:
 
 > `optional` **wordBreak?**: [`WordBreak`](../type-aliases/WordBreak.md)
 
-Defined in: [core/src/types/Document.ts:535](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L535)
+Defined in: [core/src/types/Document.ts:538](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L538)
 
 **`Experimental`**
 
-Word-break rules (CJK / non-CJK).
- Accepted in the type but ignored by the layout engine (no-op until implemented).
+Word-break rules (CJK / non-CJK). `'keep-all'` keeps Chinese, Japanese and
+Korean words whole, breaking only where non-CJK text would (spaces,
+punctuation), like CSS `word-break: keep-all`.
+ Only `'normal'` (default) and `'keep-all'` are laid out;
+`'break-all'` / `'break-word'` are accepted and laid out as `'normal'`.

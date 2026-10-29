@@ -113,18 +113,20 @@ one thing you have to get right (fonts go to the engine *and* `document.fonts`).
 ## Benchmark
 
 `bun run bench` — a `TextFrame` of N styled runs (~50 runs/paragraph, width 800,
-wrapping), Unifont from the test fixture. `min` of N iterations:
+wrapping), Unifont from the test fixture. `min` of N iterations, median of 4
+runs (every table in this section, 2026-10-30):
 
 | runs | layout (cold) | layout (warm cache) | render → SVG |
 |---:|---:|---:|---:|
-| 1,000 | 0.9 ms | 0.8 ms | 1.1 ms |
-| 10,000 | 8.5 ms | 8.9 ms | 13.4 ms |
-| 100,000 | 101 ms | 87 ms | 134 ms |
-| 1,000,000 | 1.09 s | 1.03 s | 2.0 s |
+| 1,000 | 0.99 ms | 0.82 ms | 1.9 ms |
+| 10,000 | 9.0 ms | 9.3 ms | 20.1 ms |
+| 100,000 | 104 ms | 96 ms | 200 ms |
+| 1,000,000 | 1.15 s | 1.18 s | 4.0 s |
 
-≈ **1M styled runs/second** laid out, ≈ 1.2M/s on a warm prepared-line cache.
+≈ **1M styled runs/second** laid out, cold or warm.
 `bench/BASELINE.txt` holds reference numbers — re-run and diff after touching the
-layout hot path.
+layout hot path. `bench/PRETEXT-1.0.txt` compares vendored pretext 0.0.8 and 1.0.0
+on one machine: layout 13–58 % faster, render unchanged.
 
 `bun run bench:tables` — `layoutTableFrame` + `renderTableToSVG` on an R×C
 multiplication-table grid, center-aligned, Unifont. Configurable via env vars
@@ -132,9 +134,9 @@ multiplication-table grid, center-aligned, Unifont. Configurable via env vars
 
 | grid (rows×cols) | cells | layout | render |
 |---:|---:|---:|---:|
-| 11×11 | 121 | 18.5 ms | 2.9 ms |
-| 51×51 | 2,601 | 60.9 ms | 16.8 ms |
-| 101×101 | 10,201 | 117.1 ms | 53.5 ms |
+| 11×11 | 121 | 20.4 ms | 3.6 ms |
+| 51×51 | 2,601 | 67.2 ms | 24.5 ms |
+| 101×101 | 10,201 | 169 ms | 75.0 ms |
 
 `bun run bench:resize` — re-layout cost when only `width` changes (a
 drag-resize), same frame reused each step so the prepare-cache should hit
@@ -143,10 +145,10 @@ both `TextFrame` and `TableFrame`:
 
 | size | min/step (resize) | cold (fresh) | cold/min |
 |---|---:|---:|---:|
-| 10,000 runs (text) | 9.3 ms | 10.0 ms | 1.1× |
-| 100,000 runs (text) | 90.0 ms | 101 ms | 1.1× |
-| 50×50 table (2,601 cells) | 11.3 ms | 18.9 ms | 1.7× |
-| 100×100 table (10,201 cells) | 52.0 ms | 73.6 ms | 1.4× |
+| 10,000 runs (text) | 10.3 ms | 11.1 ms | 1.1× |
+| 100,000 runs (text) | 95.9 ms | 101 ms | 1.0× |
+| 50×50 table (2,601 cells) | 14.9 ms | 20.8 ms | 1.4× |
+| 100×100 table (10,201 cells) | 61.9 ms | 82.7 ms | 1.3× |
 
 The prepare-cache's win here is modest — most of a resize's cost is line
 re-breaking and (for tables) the two-pass column/row re-measurement, neither
@@ -165,8 +167,8 @@ to compare it on):
 
 | | 50 words | 500 words | 2,000 words | 10,000 words |
 |---|---:|---:|---:|---:|
-| vs. Satori (full pipeline) | 10.1× | 20.9× | 30.4× | 40.1× |
-| vs. textkit (layout only) | 8.7× | 11.3× | 12.4× | 14.9× |
+| vs. Satori (full pipeline) | 8.4× | 16.4× | 22.2× | 28.8× |
+| vs. textkit (layout only) | 7.7× | 7.7× | 9.1× | 12.8× |
 
 Exact ms and output-size figures, plus what each number actually includes:
 [`bench/README.md`](bench/README.md#vs-satori--vs-react-pdftextkit).

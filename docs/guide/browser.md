@@ -232,8 +232,16 @@ const result = layoutTextFrame(frame, { shaping: true });
 
 This applies GPOS kerning and GSUB (`liga`, `clig`, `calt`) — what a browser does
 by default — and lands within a fraction of a pixel of Chrome for Latin /
-Cyrillic / Greek. Leave it off for the `glyph` preset (its per-character `x` is
-not shaping-aware yet).
+Cyrillic / Greek. Kerning between a word and the space beside it counts too, so
+a line is as wide as the run shaped whole. Leave it off for the `glyph` preset
+(its per-character `x` is not shaping-aware yet).
+
+### Where lines break
+
+Line breaks follow Chrome's rules (a port of Chrome's line breaker, vendored
+with pretext) in every runtime — Bun, Node and any browser — so a document lays
+out the same everywhere. Safari and Firefox wrap some edge cases differently on
+their own (CJK punctuation, dashes, URLs); vyaz does not follow them there.
 
 ### Legacy family names
 

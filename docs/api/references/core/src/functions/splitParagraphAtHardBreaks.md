@@ -4,7 +4,7 @@
 
 > **splitParagraphAtHardBreaks**(`paragraph`): [`HardBreakPiece`](../interfaces/HardBreakPiece.md)[]
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:253](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L253)
+Defined in: [core/src/compile/ParagraphCompiler.ts:233](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L233)
 
 Zero phase: split a paragraph on `\n` for `pre` / `pre-line` / `pre-wrap`
 into one piece per line-break-free stretch, keeping where each piece sits in

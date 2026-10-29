@@ -2,43 +2,20 @@
 
 # Interface: PreparedRichInlineItem
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:53](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L53)
-
-Compilation context (passed to pretext)
-
-## Properties
-
-### break?
-
-> `optional` **break?**: `"normal"` \| `"never"`
-
 Defined in: [core/src/compile/ParagraphCompiler.ts:58](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L58)
 
-***
+Compilation context (passed to pretext). Paragraph-level line-breaking
+options (`whiteSpace`, `overflowWrap`, `hyphenBreak`, `wordBreak`) go to
+`prepareRichInline()` once for the paragraph, not per item; an inline-box
+run is handed to pretext as a box of its widget's width.
 
-### extraWidth?
-
-> `optional` **extraWidth?**: `number`
-
-Defined in: [core/src/compile/ParagraphCompiler.ts:57](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L57)
-
-***
+## Properties
 
 ### font
 
 > **font**: `string`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:55](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L55)
-
-***
-
-### hyphenBreak?
-
-> `optional` **hyphenBreak?**: `false`
-
-Defined in: [core/src/compile/ParagraphCompiler.ts:72](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L72)
-
-`false` when the paragraph sets `hyphenBreak: false` (no break after `-`).
+Defined in: [core/src/compile/ParagraphCompiler.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L60)
 
 ***
 
@@ -46,7 +23,7 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:72](https://github.com/sedrew
 
 > `optional` **letterSpacing?**: `number`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:56](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L56)
+Defined in: [core/src/compile/ParagraphCompiler.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L61)
 
 ***
 
@@ -54,7 +31,7 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:56](https://github.com/sedrew
 
 > **metadata**: `object`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:75](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L75)
+Defined in: [core/src/compile/ParagraphCompiler.ts:64](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L64)
 
 #### baselineOffset
 
@@ -82,22 +59,9 @@ Defined in: [core/src/compile/ParagraphCompiler.ts:75](https://github.com/sedrew
 
 > `optional` **originalText?**: `string`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:74](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L74)
+Defined in: [core/src/compile/ParagraphCompiler.ts:63](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L63)
 
 Original text before text-transform (if transform was applied). Used for copy-paste / round-trip.
-
-***
-
-### overflowWrap?
-
-> `optional` **overflowWrap?**: `"normal"` \| `"break-word"` \| `"anywhere"`
-
-Defined in: [core/src/compile/ParagraphCompiler.ts:65](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L65)
-
-CSS `overflow-wrap` for this run's text — from the paragraph's
-`overflowWrap` style. `'normal'` (the default) means a word wider than
-the available width overflows the line instead of being force-split at
-grapheme boundaries.
 
 ***
 
@@ -105,15 +69,4 @@ grapheme boundaries.
 
 > **text**: `string`
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:54](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L54)
-
-***
-
-### whiteSpace?
-
-> `optional` **whiteSpace?**: `"pre-wrap"`
-
-Defined in: [core/src/compile/ParagraphCompiler.ts:70](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L70)
-
-`'pre-wrap'` keeps this run's spaces (paragraph `whiteSpace` `pre` /
-`pre-wrap`); unset collapses them (CSS `normal`).
+Defined in: [core/src/compile/ParagraphCompiler.ts:59](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L59)
