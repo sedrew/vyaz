@@ -62,9 +62,9 @@
     "get-system-fonts": "^2.0.2"
   },
   "devDependencies": {
-    "@chenglou/pretext": "^0.0.8",
-    "@types/node": "^26.0.0",
+    "@chenglou/pretext": "^1.0.0",
     "@clean-jsdoc-theme/typedoc": "^5.0.6",
+    "@types/node": "^26.0.0",
     "typedoc": "^0.28.19"
   }
 }

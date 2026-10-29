@@ -336,7 +336,9 @@ missing Arial into a failure instead of a skip.
 Vyaz is inspired by two open-source projects. Thanks to their authors:
 
 - **[pretext](https://github.com/chenglou/pretext)** — line breaking and text
-  segmentation, vendored into `@vyaz/core` (MIT).
+  segmentation, vendored into `@vyaz/core` (MIT). It carries line-break and
+  grapheme data ported from Chromium, WebKit, ICU and ICU4X; their notices
+  (BSD, Unicode-3.0, ICU) are in `packages/core/src/vendor/pretext/LICENSE`.
 - **[svg-table](https://github.com/wootra/svg-table)** — the `TableFrame` table
   API is modelled on `svg-table-core`.
 

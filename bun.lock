@@ -47,7 +47,7 @@
         "js-yaml": "^5.0.0",
       },
       "devDependencies": {
-        "@chenglou/pretext": "^0.0.8",
+        "@chenglou/pretext": "1.0.0",
         "@clean-jsdoc-theme/typedoc": "^5.0.6",
         "@types/node": "^26.0.0",
         "typedoc": "^0.28.19",
@@ -73,7 +73,7 @@
     },
   },
   "packages": {
-    "@chenglou/pretext": ["@chenglou/pretext@0.0.8", "", {}, "sha512-yqm2GMxnPI7VHcHwe84P8ZF0JK/2d2DMKPqMN+s95jQhwDMYYXKVFVJUMEaVWckQStdsjdLav/0Vu+d9YbtGxA=="],
+    "@chenglou/pretext": ["@chenglou/pretext@1.0.0", "", {}, "sha512-BxKiDMxWJhyzL8asvcgg3T9YnUU7OUFsKO8oRaR2SYAPX4Sh2wM9gqTBjrBaZ4fnl84cEQ8czC0Q1M83z3chsA=="],
 
     "@clean-jsdoc-theme/bhasha": ["@clean-jsdoc-theme/bhasha@5.0.7", "", { "dependencies": { "@clean-jsdoc-theme/utils": "^5.0.7", "preact": "^10.22.0" } }, "sha512-0zEbtjvdn9/VI1KNQVx4HPnJnxTx/S2hN7HDp24nKmHhIww6Xsw0q0ftDFuJnaSid5AHbZTxf+GSy+pmCkqYBQ=="],
 

@@ -1,12 +1,12 @@
 /**
  * FontkitMeasureContext.ts — the measurement seam for vendored pretext.
  *
- * `src/vendor/pretext/measurement.js` calls `getMeasureContext()` from this
- * module instead of reaching for a canvas 2d context. That is the whole
- * integration: pretext only ever uses two members of the object it gets back —
- * `ctx.font = "..."` and `ctx.measureText(s).width` — so the contract is tiny.
- * It draws nothing, and it reads no other property (letter-spacing is pretext's
- * own arithmetic, not the canvas attribute).
+ * `src/vendor/pretext/measurement.js` takes its "canvas" context from
+ * `createMeasureContextProxy()` in this module instead of making a canvas 2d
+ * context. The proxy forwards to the context installed at the time of each
+ * call. pretext uses a small slice of the canvas API — see
+ * {@link MeasureContextLike}. It draws nothing, and the context has no
+ * `letterSpacing` attribute, so letter spacing stays pretext's own arithmetic.
  *
  * Backends:
  *
@@ -31,10 +31,25 @@ import { FontNotFoundError } from './FontNotFoundError.js';
 
 /**
  * The slice of `CanvasRenderingContext2D` that pretext actually consumes.
+ *
+ * `font` must read back what was written (pretext checks that a context took a
+ * font string), `fontKerning = 'none'` must turn kerning off (pretext compares
+ * the two to find a font's kerning with the space and between kana), and
+ * U+2028 must measure as the space glyph (Blink draws it with that glyph, and
+ * pretext probes space kerning with it). The ink box is only read for kana and
+ * CJK punctuation probes.
  */
 export interface MeasureContextLike {
   font: string;
-  measureText(text: string): { width: number };
+  fontKerning?: string;
+  measureText(text: string): MeasuredText;
+}
+
+/** What {@link MeasureContextLike.measureText} returns. */
+export interface MeasuredText {
+  width: number;
+  actualBoundingBoxLeft?: number;
+  actualBoundingBoxRight?: number;
 }
 
 /**
@@ -161,6 +176,45 @@ export function getMeasureContext(): MeasureContextLike {
   if (active !== null) return active;
   if (canvasFallback === null) canvasFallback = createCanvasMeasureContext();
   return canvasFallback;
+}
+
+/**
+ * The context vendored pretext measures through: every member forwards to
+ * {@link getMeasureContext} at the time of the call. pretext keeps the object
+ * it makes for good, so a later `setMeasureContext()` still takes effect.
+ *
+ * `fontKerning` and `textRendering` are kept per proxy (pretext makes a second
+ * context for whole-run probes) and applied around each measurement.
+ */
+export function createMeasureContextProxy(): MeasureContextLike & { lang?: string; textRendering?: string } {
+  let fontKerning = 'auto';
+  return {
+    lang: undefined,
+    textRendering: 'auto',
+    get font(): string {
+      return getMeasureContext().font;
+    },
+    set font(spec: string) {
+      getMeasureContext().font = spec;
+    },
+    get fontKerning(): string {
+      return fontKerning;
+    },
+    set fontKerning(value: string) {
+      fontKerning = value;
+    },
+    measureText(text: string): MeasuredText {
+      const ctx = getMeasureContext();
+      if (fontKerning === 'auto') return ctx.measureText(text);
+      const before = ctx.fontKerning;
+      ctx.fontKerning = fontKerning;
+      try {
+        return ctx.measureText(text);
+      } finally {
+        ctx.fontKerning = before;
+      }
+    },
+  };
 }
 
 // ── Canvas backend (upstream behaviour) ──────────────────────────────────
@@ -351,6 +405,14 @@ function computePx(raw: any, scale: number, fontSize: number, text: string, prof
       const positions = run.positions ?? [];
       let px = 0;
       for (let i = 0; i < run.glyphs.length; i++) {
+        // A missing code point (.notdef, glyph 0) gets the same estimate as in
+        // the per-code-point sum, not the .notdef box advance — or a text with
+        // one measures differently whole and in pieces (pretext reads that
+        // difference as kerning with the space).
+        if (run.glyphs[i].id === 0) {
+          px += fontSize * MISSING_GLYPH_FACTOR;
+          continue;
+        }
         const base = run.glyphs[i].advanceWidth ?? 0;
         const shaped = positions[i]?.xAdvance ?? base;
         // grid-snapped base advance + unrounded kerning (xAdvance − advanceWidth)
@@ -379,6 +441,22 @@ function computePx(raw: any, scale: number, fontSize: number, text: string, prof
   return width;
 }
 
+/** CSS generic family keywords — pretext probes `16px serif` / `16px monospace` itself. */
+const GENERIC_FAMILIES = new Set(['serif', 'sans-serif', 'monospace', 'cursive', 'fantasy', 'system-ui']);
+
+/** `p` with kerning off (`fontKerning = 'none'`), one object per profile so width caches hit. */
+const unkernedProfiles = new WeakMap<MeasureProfile, MeasureProfile>();
+function unkerned(p: MeasureProfile): MeasureProfile {
+  // `advance` never kerns
+  if (p.engine !== 'shape') return p;
+  let q = unkernedProfiles.get(p);
+  if (q === undefined) {
+    q = { ...p, features: { ...p.features, kern: false } };
+    unkernedProfiles.set(p, q);
+  }
+  return q;
+}
+
 /**
  * Build a measure context backed by the font tables.
  *
@@ -387,7 +465,7 @@ function computePx(raw: any, scale: number, fontSize: number, text: string, prof
 export function createFontkitMeasureContext(resolver: FontResolver): MeasureContextLike {
   // Keyed by the raw `font` string: pretext re-assigns the same handful of
   // shorthands thousands of times per document.
-  const states = new Map<string, MeasureState>();
+  const states = new Map<string, MeasureState | null>();
   let spec = '';
   let state: MeasureState | null = null;
 
@@ -405,6 +483,12 @@ export function createFontkitMeasureContext(resolver: FontResolver): MeasureCont
       if (font !== undefined) break;
     }
     if (font === undefined) {
+      // pretext's own probes (`1px serif`, `16px monospace`) name only generic
+      // families; vyaz never lays text out in one, so they measure nothing.
+      if (parsed.families.every((f) => GENERIC_FAMILIES.has(f.toLowerCase()))) {
+        states.set(key, null);
+        return null;
+      }
       throw new FontNotFoundError(parsed.families[0], parsed.weight, parsed.style);
     }
 
@@ -420,6 +504,8 @@ export function createFontkitMeasureContext(resolver: FontResolver): MeasureCont
   }
 
   return {
+    fontKerning: 'auto',
+
     get font(): string {
       return spec;
     },
@@ -429,12 +515,17 @@ export function createFontkitMeasureContext(resolver: FontResolver): MeasureCont
       state = resolve(nextSpec);
     },
 
-    measureText(text: string): { width: number } {
-      if (state === null || text.length === 0) return { width: 0 };
+    measureText(text: string): MeasuredText {
+      if (state === null || text.length === 0) return { width: 0, actualBoundingBoxLeft: 0, actualBoundingBoxRight: 0 };
       // the profile may have switched optical sizing since this font was resolved
       if (state.opticalSizing !== (profile.opticalSizing !== false)) state = resolve(spec);
-      if (state === null) return { width: 0 };
-      return { width: measurePx(state.raw, state.scale, state.size, text, profile) };
+      if (state === null) return { width: 0, actualBoundingBoxLeft: 0, actualBoundingBoxRight: 0 };
+      // Blink draws U+2028 with the space glyph; pretext probes kerning with the space through it
+      const measured = text.includes(' ') ? text.replaceAll(' ', ' ') : text;
+      const prof = this.fontKerning === 'none' ? unkerned(profile) : profile;
+      const width = measurePx(state.raw, state.scale, state.size, measured, prof);
+      // No ink box from the advance tables: report the advance box.
+      return { width, actualBoundingBoxLeft: 0, actualBoundingBoxRight: width };
     },
   };
 }

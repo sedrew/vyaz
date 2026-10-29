@@ -1,12 +1,124 @@
-const collapsibleWhitespaceRunRe = /[ \t\n\r\f]+/g;
+import { getGeckoLineBreaks, isDiscardable, isEastAsianSegmentBreak, isJapaneseOrChinese, isSpaceCombiningSequenceTail, isSpaceOrTabOrSegmentBreak } from './gecko-line-breaks.js';
+import { isBidiControl } from './graphemes.js';
+import { BREAK, CLUSTER_START, FORCED_BREAK, ITEM_START, SOFT_HYPHEN_BREAK, getBlinkLineBreaks, getWebKitBreakBetweenItems, getWebKitLineBreaks } from './line-breaks.js';
+// A segment's flags byte: its kind's code in the low four bits, then what else the
+// walkers read of it.
+export const TEXT = 0;
+export const SPACE = 1;
+export const ZERO_WIDTH_BREAK = 2;
+export const SOFT_HYPHEN = 3;
+export const PRESERVED_SPACE = 4;
+export const TAB = 5;
+export const ZERO_WIDTH_GLUE = 6;
+export const CONTROL = 7;
+// Ends its chunk: a line's walk stops there, and the next line starts after it.
+export const HARD_BREAK = 8;
+// In a rich-inline paragraph's handle (src/rich-inline.ts), an atomic item or a box: one object with
+// a break on both sides and none inside, which a line fits and paints as it does text. The start
+// edge of a padded item that opens with white space, a hard break or a zero-width space is one too,
+// with no break before it where the text has none there. No analysis makes one.
+export const OBJECT = 9;
+export const KIND_BITS = 0x0F;
+// The segment takes letter spacing after its graphemes. Set by measurement.
+export const SPACED = 0x10;
+// The engine's scan gives no break before the segment, so no line ends there.
+export const UNBROKEN = 0x20;
+// The scan gives a break before the segment, in text that also has unbroken
+// boundaries, where a line that overflows at one returns to the latest such break.
+export const RETURNABLE = 0x40;
+// The engine's clusters don't split the segment, so no emergency break splits it
+// either. Measurement clears it.
+export const ONE_CLUSTER = 0x80;
+// Each kind's name by its code, as prepareWithSegments() gives them.
+export const SEGMENT_KINDS = [
+    'text', 'space', 'zero-width-break', 'soft-hyphen', 'preserved-space', 'tab', 'zero-width-glue', 'control', 'hard-break',
+];
+// The runs that collapsing changes: a lone space is already the space its run becomes.
+const collapsibleWhitespaceRunRe = /[ \t\n\r\f]{2,}|[\t\n\r\f]/g;
 const needsWhitespaceNormalizationRe = /[\t\n\r\f]| {2,}|^ | $/;
-function getWhiteSpaceProfile(whiteSpace) {
-    const mode = whiteSpace ?? 'normal';
-    return mode === 'pre-wrap'
-        ? { mode, preserveOrdinarySpaces: true, preserveHardBreaks: true }
-        : { mode, preserveOrdinarySpaces: false, preserveHardBreaks: false };
+function isSegmentBreakRunSpace(code, scan) {
+    return code === 0x20 || code === 0x09 || code === 0x0A || (code === 0x0D && scan === 'blink');
 }
-export function normalizeWhitespaceNormal(text) {
+// CSS segment break transformation in normal white space. Blink and Gecko
+// delete a collapsible run containing LF when a ZWSP immediately precedes or
+// follows the run; WebKit turns it into a space. Gecko also deletes it between two
+// East Asian wide characters other than Hangul, and on a `ja` or `zh` page next to
+// East Asian punctuation, reading past default-ignorable characters on both sides
+// (TransformWhiteSpaces, nsTextFrameUtils.cpp:84-209, with the predicates of
+// nsUnicharUtils.cpp:500-527). Each engine collects its own run, and engines Pretext
+// doesn't recognize take Blink's, as they take its scan:
+// - Blink: SPACE, TAB, LF and CR.
+// - Gecko: SPACE, TAB and LF, continuing through the characters Gecko discards
+//   (SHY and bidi controls) without ending on one, and leaving out a last SPACE
+//   before a combining sequence tail. Text holding a ZWSP is 16-bit in Gecko.
+// Characters outside the run, such as FF, keep the ordinary collapse, or take no room in the
+// Gecko profile (analyzeText).
+export function removeSkippableSegmentBreaks(text, profile, language = null) {
+    const scan = profile.lineBreakScan;
+    if (scan === 'webkit' || !text.includes('\n'))
+        return text;
+    const eastAsian = scan === 'gecko' && maybeEastAsianRe.test(text);
+    if (!eastAsian && !text.includes('\u200B'))
+        return text;
+    const japaneseOrChinese = eastAsian && isJapaneseOrChinese(language);
+    let result = '';
+    let copied = 0;
+    // Only a run containing LF can be removed. Expand each LF to its run once;
+    // the next search starts where this run's scan stopped.
+    for (let newline = text.indexOf('\n'); newline !== -1;) {
+        let start = newline;
+        for (let index = newline - 1; index >= 0; index--) {
+            const code = text.charCodeAt(index);
+            if (isSegmentBreakRunSpace(code, scan))
+                start = index;
+            else if (!(scan === 'gecko' && isDiscardable(code, false)))
+                break;
+        }
+        let end = newline + 1;
+        let index = end;
+        for (; index < text.length; index++) {
+            const code = text.charCodeAt(index);
+            if (isSegmentBreakRunSpace(code, scan))
+                end = index + 1;
+            else if (!(scan === 'gecko' && isDiscardable(code, false)))
+                break;
+        }
+        newline = text.indexOf('\n', index);
+        if (scan === 'gecko' && text.charCodeAt(end - 1) === 0x20 && isSpaceCombiningSequenceTail(text, end))
+            end--;
+        if (text.charCodeAt(start - 1) !== 0x200B && text.charCodeAt(end) !== 0x200B &&
+            !(eastAsian && isEastAsianSegmentBreak(text, start, end, japaneseOrChinese)))
+            continue;
+        result += text.slice(copied, start);
+        for (let member = start; member < end; member++) {
+            if (!isSegmentBreakRunSpace(text.charCodeAt(member), scan))
+                result += text[member];
+        }
+        copied = end;
+    }
+    return copied === 0 ? text : result + text.slice(copied);
+}
+// Where the collapsible white space that ends text[from, text.length) starts, which the analysis
+// leaves out and a line end trims, or the text's length where none ends it. Gecko's white-space
+// run reads through the bidi controls in it and after it (TransformText, nsTextFrameUtils.cpp:
+// 319-345), so there it is the first white space after the last character that is neither, and
+// the controls stay.
+function getTrailingCollapsibleStart(text, from, profile) {
+    let start = text.length;
+    for (let i = text.length - 1; i >= from; i--) {
+        const code = text.charCodeAt(i);
+        if (isCollapsibleSpaceCode(code))
+            start = i;
+        else if (!(profile.lineBreakScan === 'gecko' && isBidiControl(code)))
+            break;
+    }
+    return start;
+}
+// Every East Asian wide, fullwidth or halfwidth character is at or above U+1100.
+const maybeEastAsianRe = /[\u1100-\uFFFF]/;
+// Normal white space after the segment break transformation: each run of SPACE, TAB, LF,
+// CR and FF becomes one space, or nothing at either end.
+function collapseWhitespaceNormal(text) {
     if (!needsWhitespaceNormalizationRe.test(text))
         return text;
     let normalized = text.replace(collapsibleWhitespaceRunRe, ' ');
@@ -25,1214 +137,543 @@ function normalizeWhitespacePreWrap(text) {
         .replace(/\r\n/g, '\n')
         .replace(/[\r\f]/g, '\n');
 }
-let sharedWordSegmenter = null;
-let segmenterLocale;
-function getSharedWordSegmenter() {
-    if (sharedWordSegmenter === null) {
-        sharedWordSegmenter = new Intl.Segmenter(segmenterLocale, { granularity: 'word' });
-    }
-    return sharedWordSegmenter;
-}
-export function clearAnalysisCaches() {
-    sharedWordSegmenter = null;
-}
-export function setAnalysisLocale(locale) {
-    const nextLocale = locale && locale.length > 0 ? locale : undefined;
-    if (segmenterLocale === nextLocale)
-        return;
-    segmenterLocale = nextLocale;
-    sharedWordSegmenter = null;
-}
-const arabicScriptRe = /\p{Script=Arabic}/u;
 const combiningMarkRe = /\p{M}/u;
-const decimalDigitRe = /\p{Nd}/u;
-function containsArabicScript(text) {
-    return arabicScriptRe.test(text);
+function classifySegmentBreakCode(code, whiteSpace, scan) {
+    if (whiteSpace === 'pre-wrap') {
+        if (code === 0x20)
+            return PRESERVED_SPACE;
+        if (code === 0x09)
+            return TAB;
+        if (code === 0x0A)
+            return HARD_BREAK;
+    }
+    if (code === 0x20)
+        return SPACE;
+    if (code === 0x200B)
+        return ZERO_WIDTH_BREAK;
+    if (code === 0x00AD)
+        return SOFT_HYPHEN;
+    // NEL (UAX #14 NL) offers a break after itself and no ordinary break before it (LB5, LB6),
+    // as the scans find. The WebKit profile gives NEL its own control segment for letter
+    // spacing: WebKit's simple text path gives NEL no letter spacing, at either sign, and its
+    // complex path spaces it. A NEL control segment takes spacing after text in WebKit's
+    // complex ranges, or before such text that starts with a combining mark. Preparation
+    // cannot see the page direction, so after complex text whose direction differs from the
+    // page's it keeps spacing Safari omits. Blink spaces NEL outside cursive runs, and release
+    // Gecko draws NEL with no advance while its Canvas measures a space, so both keep NEL as
+    // ordinary text.
+    if (code === 0x0085 && scan === 'webkit')
+        return CONTROL;
+    return TEXT;
 }
-function isCJKCodePoint(codePoint) {
-    return ((codePoint >= 0x4E00 && codePoint <= 0x9FFF) ||
-        (codePoint >= 0x3400 && codePoint <= 0x4DBF) ||
-        (codePoint >= 0x20000 && codePoint <= 0x2A6DF) ||
-        (codePoint >= 0x2A700 && codePoint <= 0x2B73F) ||
-        (codePoint >= 0x2B740 && codePoint <= 0x2B81F) ||
-        (codePoint >= 0x2B820 && codePoint <= 0x2CEAF) ||
-        (codePoint >= 0x2CEB0 && codePoint <= 0x2EBEF) ||
-        (codePoint >= 0x2EBF0 && codePoint <= 0x2EE5D) ||
-        (codePoint >= 0x2F800 && codePoint <= 0x2FA1F) ||
-        (codePoint >= 0x30000 && codePoint <= 0x3134F) ||
-        (codePoint >= 0x31350 && codePoint <= 0x323AF) ||
-        (codePoint >= 0x323B0 && codePoint <= 0x33479) ||
-        (codePoint >= 0xF900 && codePoint <= 0xFAFF) ||
-        (codePoint >= 0x3000 && codePoint <= 0x303F) ||
-        (codePoint >= 0x3040 && codePoint <= 0x309F) ||
-        (codePoint >= 0x30A0 && codePoint <= 0x30FF) ||
-        (codePoint >= 0x3130 && codePoint <= 0x318F) ||
-        (codePoint >= 0xAC00 && codePoint <= 0xD7AF) ||
-        (codePoint >= 0xFF00 && codePoint <= 0xFFEF));
+export function isCollapsibleSpaceCode(code) {
+    return code === 0x20 || code === 0x09 || code === 0x0A || code === 0x0D || code === 0x0C;
 }
-export function isCJK(s) {
-    for (let i = 0; i < s.length; i++) {
-        const first = s.charCodeAt(i);
-        if (first < 0x3000)
-            continue;
-        if (first >= 0xD800 && first <= 0xDBFF && i + 1 < s.length) {
-            const second = s.charCodeAt(i + 1);
-            if (second >= 0xDC00 && second <= 0xDFFF) {
-                const codePoint = ((first - 0xD800) << 10) + (second - 0xDC00) + 0x10000;
-                if (isCJKCodePoint(codePoint))
-                    return true;
+// WebKit and Gecko scan a text node's source, where normalization collapsed white space: in
+// normal white space each run of SPACE, TAB, LF, CR and FF became one space, or nothing
+// at either end, and in pre-wrap CRLF became LF. A break before a run's first unit is a
+// break before what the run became. A break before a later unit, as before a CR after a
+// space, follows white space, so it is a break after what the run became. A mark without a
+// break goes with its unit: Gecko's cluster start, which only a unit that stays text reads,
+// and WebKit's forced break after a separator, which keeps its mark at the end too, also
+// where the white space that ends the text starts at a break: at an item's edge in a
+// paragraph, or after a lone CR the analysis took out, whose mark it took (RESEARCH.md,
+// Decisions Log, 2026-10-07).
+// Fills spaceSources, when given, in normal white space.
+function mapSourceLineBreaks(source, normalizedLength, sourceBreaks, whiteSpace, spaceSources) {
+    const breaks = new Uint8Array(normalizedLength + 1);
+    let normalizedIndex = 0;
+    if (whiteSpace === 'pre-wrap') {
+        for (let i = 0; i < source.length; i++, normalizedIndex++) {
+            breaks[normalizedIndex] = sourceBreaks[i];
+            if (source.charCodeAt(i) === 0x0D && source.charCodeAt(i + 1) === 0x0A) {
                 i++;
-                continue;
+                if ((sourceBreaks[i] & BREAK) !== 0)
+                    breaks[normalizedIndex] = sourceBreaks[i];
             }
         }
-        if (isCJKCodePoint(first))
-            return true;
+        breaks[normalizedLength] = sourceBreaks[source.length];
+        return breaks;
     }
-    return false;
-}
-function endsWithLineStartProhibitedText(text) {
-    const last = getLastCodePoint(text);
-    return last !== null && (kinsokuStart.has(last) || leftStickyPunctuation.has(last));
-}
-const keepAllGlueChars = new Set([
-    '\u00A0',
-    '\u202F',
-    '\u2060',
-    '\uFEFF',
-]);
-const keepAllDashBreakChars = new Set([
-    '-',
-    '\u2010',
-    '\u2013',
-    '\u2014',
-]);
-function endsWithKeepAllGlueText(text) {
-    const last = getLastCodePoint(text);
-    return last !== null && keepAllGlueChars.has(last);
-}
-function endsWithKeepAllDashBreakText(text) {
-    const last = getLastCodePoint(text);
-    return last !== null && keepAllDashBreakChars.has(last);
-}
-export function canContinueKeepAllTextRun(previousText, breakAfterPunctuation) {
-    if (endsWithKeepAllGlueText(previousText))
-        return false;
-    if (!breakAfterPunctuation)
-        return true;
-    if (endsWithLineStartProhibitedText(previousText))
-        return false;
-    if (endsWithKeepAllDashBreakText(previousText))
-        return false;
-    return true;
-}
-export const kinsokuStart = new Set([
-    '\uFF0C',
-    '\uFF0E',
-    '\uFF01',
-    '\uFF1A',
-    '\uFF1B',
-    '\uFF1F',
-    '\u3001',
-    '\u3002',
-    '\u30FB',
-    '\uFF09',
-    '\u3015',
-    '\u3009',
-    '\u300B',
-    '\u300D',
-    '\u300F',
-    '\u3011',
-    '\u3017',
-    '\u3019',
-    '\u301B',
-    '\u30FC',
-    '\u3005',
-    '\u303B',
-    '\u309D',
-    '\u309E',
-    '\u30FD',
-    '\u30FE',
-]);
-export const kinsokuEnd = new Set([
-    '"',
-    '(', '[', '{',
-    '¡', '¿',
-    '“', '‘', '‚', '„', '«', '‹',
-    '\u2E18',
-    '\uFF08',
-    '\u3014',
-    '\u3008',
-    '\u300A',
-    '\u300C',
-    '\u300E',
-    '\u3010',
-    '\u3016',
-    '\u3018',
-    '\u301A',
-]);
-const forwardStickyGlue = new Set([
-    "'", '’',
-]);
-export const leftStickyPunctuation = new Set([
-    '.', ',', '!', '?', ':', ';',
-    '\u060C',
-    '\u061B',
-    '\u061F',
-    '\u0964',
-    '\u0965',
-    '\u104A',
-    '\u104B',
-    '\u104C',
-    '\u104D',
-    '\u104F',
-    ')', ']', '}',
-    '%',
-    '"',
-    '”', '’', '»', '›',
-    '…',
-]);
-const arabicNoSpaceTrailingPunctuation = new Set([
-    ':',
-    '.',
-    '\u060C',
-    '\u061B',
-]);
-const myanmarMedialGlue = new Set([
-    '\u104F',
-]);
-const closingQuoteChars = new Set([
-    '”', '’', '»', '›',
-    '\u300D',
-    '\u300F',
-    '\u3011',
-    '\u300B',
-    '\u3009',
-    '\u3015',
-    '\uFF09',
-]);
-function isLeftStickyPunctuationSegment(segment) {
-    if (isEscapedQuoteClusterSegment(segment))
-        return true;
-    let sawPunctuation = false;
-    for (const ch of segment) {
-        if (leftStickyPunctuation.has(ch) || isLineBreakNumericAffix(ch)) {
-            sawPunctuation = true;
-            continue;
-        }
-        if (sawPunctuation && combiningMarkRe.test(ch))
-            continue;
-        return false;
-    }
-    return sawPunctuation;
-}
-function isCJKLineStartProhibitedSegment(segment) {
-    for (const ch of segment) {
-        if (!kinsokuStart.has(ch) && !leftStickyPunctuation.has(ch))
-            return false;
-    }
-    return segment.length > 0;
-}
-function isForwardStickyClusterSegment(segment) {
-    if (isEscapedQuoteClusterSegment(segment))
-        return true;
-    for (const ch of segment) {
-        if (!kinsokuEnd.has(ch) &&
-            !forwardStickyGlue.has(ch) &&
-            !combiningMarkRe.test(ch) &&
-            !isLineBreakNumericAffix(ch)) {
-            return false;
-        }
-    }
-    return segment.length > 0;
-}
-function isEscapedQuoteClusterSegment(segment) {
-    let sawQuote = false;
-    for (const ch of segment) {
-        if (ch === '\\' || combiningMarkRe.test(ch))
-            continue;
-        if (kinsokuEnd.has(ch) || leftStickyPunctuation.has(ch) || forwardStickyGlue.has(ch)) {
-            sawQuote = true;
-            continue;
-        }
-        return false;
-    }
-    return sawQuote;
-}
-function previousCodePointStart(text, end) {
-    const last = end - 1;
-    if (last <= 0)
-        return Math.max(last, 0);
-    const lastCodeUnit = text.charCodeAt(last);
-    if (lastCodeUnit < 0xDC00 || lastCodeUnit > 0xDFFF)
-        return last;
-    const maybeHigh = last - 1;
-    if (maybeHigh < 0)
-        return last;
-    const highCodeUnit = text.charCodeAt(maybeHigh);
-    return highCodeUnit >= 0xD800 && highCodeUnit <= 0xDBFF ? maybeHigh : last;
-}
-function getLastCodePoint(text) {
-    if (text.length === 0)
-        return null;
-    const start = previousCodePointStart(text, text.length);
-    return text.slice(start);
-}
-function getFirstSignificantCodePoint(text) {
-    for (const ch of text) {
-        if (!combiningMarkRe.test(ch))
-            return ch;
-    }
-    return null;
-}
-function getLastSignificantCodePoint(text) {
-    for (let end = text.length; end > 0;) {
-        const start = previousCodePointStart(text, end);
-        const ch = text.slice(start, end);
-        if (!combiningMarkRe.test(ch))
-            return ch;
-        end = start;
-    }
-    return null;
-}
-// Unicode line-break PR/PO classes from UAX #14, stored as start/end pairs.
-const lineBreakNumericAffixRanges = [
-    0x0024, 0x0025, 0x002B, 0x002B, 0x005C, 0x005C, 0x00A2, 0x00A5, 0x00B0, 0x00B1,
-    0x058F, 0x058F, 0x0609, 0x060B, 0x066A, 0x066A, 0x07FE, 0x07FF, 0x09F2, 0x09F3,
-    0x09F9, 0x09FB, 0x0AF1, 0x0AF1, 0x0BF9, 0x0BF9, 0x0D79, 0x0D79, 0x0E3F, 0x0E3F,
-    0x17DB, 0x17DB, 0x2030, 0x2037, 0x2057, 0x2057, 0x20A0, 0x20CF, 0x2103, 0x2103,
-    0x2109, 0x2109, 0x2116, 0x2116, 0x2212, 0x2213, 0xA838, 0xA838, 0xFDFC, 0xFDFC,
-    0xFE69, 0xFE6A, 0xFF04, 0xFF05, 0xFFE0, 0xFFE1, 0xFFE5, 0xFFE6,
-    0x11FDD, 0x11FE0, 0x1E2FF, 0x1E2FF, 0x1ECAC, 0x1ECAC, 0x1ECB0, 0x1ECB0,
-];
-function isCodePointInRanges(codePoint, ranges) {
-    for (let i = 0; i < ranges.length; i += 2) {
-        if (codePoint >= ranges[i] && codePoint <= ranges[i + 1])
-            return true;
-    }
-    return false;
-}
-function isLineBreakNumericAffix(ch) {
-    const codePoint = ch.codePointAt(0);
-    return codePoint !== undefined && isCodePointInRanges(codePoint, lineBreakNumericAffixRanges);
-}
-function endsWithLineBreakNumericAffix(text) {
-    const last = getLastSignificantCodePoint(text);
-    return last !== null && isLineBreakNumericAffix(last);
-}
-function startsWithDecimalDigit(text) {
-    const first = getFirstSignificantCodePoint(text);
-    return first !== null && decimalDigitRe.test(first);
-}
-function splitTrailingForwardStickyCluster(text) {
-    const chars = Array.from(text);
-    let splitIndex = chars.length;
-    while (splitIndex > 0) {
-        const ch = chars[splitIndex - 1];
-        if (combiningMarkRe.test(ch)) {
-            splitIndex--;
-            continue;
-        }
-        if (kinsokuEnd.has(ch) || forwardStickyGlue.has(ch)) {
-            splitIndex--;
-            continue;
-        }
-        break;
-    }
-    if (splitIndex <= 0 || splitIndex === chars.length)
-        return null;
-    return {
-        head: chars.slice(0, splitIndex).join(''),
-        tail: chars.slice(splitIndex).join(''),
-    };
-}
-function getRepeatableSingleCharRunChar(text, isWordLike, kind) {
-    return kind === 'text' && !isWordLike && text.length === 1 && text !== '-' && text !== '—'
-        ? text
-        : null;
-}
-function materializeDeferredSingleCharRun(texts, chars, lengths, index) {
-    const ch = chars[index];
-    const text = texts[index];
-    if (ch == null)
-        return text;
-    const length = lengths[index];
-    if (text.length === length)
-        return text;
-    const materialized = ch.repeat(length);
-    texts[index] = materialized;
-    return materialized;
-}
-function hasArabicNoSpacePunctuation(containsArabic, lastCodePoint) {
-    return containsArabic && lastCodePoint !== null && arabicNoSpaceTrailingPunctuation.has(lastCodePoint);
-}
-function endsWithMyanmarMedialGlue(segment) {
-    const lastCodePoint = getLastCodePoint(segment);
-    return lastCodePoint !== null && myanmarMedialGlue.has(lastCodePoint);
-}
-function splitLeadingSpaceAndMarks(segment) {
-    if (segment.length < 2 || segment[0] !== ' ')
-        return null;
-    const marks = segment.slice(1);
-    if (/^\p{M}+$/u.test(marks)) {
-        return { space: ' ', marks };
-    }
-    return null;
-}
-export function endsWithClosingQuote(text) {
-    let end = text.length;
-    while (end > 0) {
-        const start = previousCodePointStart(text, end);
-        const ch = text.slice(start, end);
-        if (closingQuoteChars.has(ch))
-            return true;
-        if (!leftStickyPunctuation.has(ch))
-            return false;
-        end = start;
-    }
-    return false;
-}
-function classifySegmentBreakChar(ch, whiteSpaceProfile) {
-    if (whiteSpaceProfile.preserveOrdinarySpaces || whiteSpaceProfile.preserveHardBreaks) {
-        if (ch === ' ')
-            return 'preserved-space';
-        if (ch === '\t')
-            return 'tab';
-        if (whiteSpaceProfile.preserveHardBreaks && ch === '\n')
-            return 'hard-break';
-    }
-    if (ch === ' ')
-        return 'space';
-    if (ch === '\u00A0' || ch === '\u202F' || ch === '\u2060' || ch === '\uFEFF') {
-        return 'glue';
-    }
-    if (ch === '\u200B')
-        return 'zero-width-break';
-    if (ch === '\u00AD')
-        return 'soft-hyphen';
-    return 'text';
-}
-// All characters that classifySegmentBreakChar maps to a non-'text' kind.
-const breakCharRe = /[\x20\t\n\xA0\xAD\u200B\u202F\u2060\uFEFF]/;
-function joinTextParts(parts) {
-    return parts.length === 1 ? parts[0] : parts.join('');
-}
-function joinReversedPrefixParts(prefixParts, tail) {
-    const parts = [];
-    for (let i = prefixParts.length - 1; i >= 0; i--) {
-        parts.push(prefixParts[i]);
-    }
-    parts.push(tail);
-    return joinTextParts(parts);
-}
-function splitSegmentByBreakKind(segment, isWordLike, start, whiteSpaceProfile) {
-    if (!breakCharRe.test(segment)) {
-        return [{ text: segment, isWordLike, kind: 'text', start }];
-    }
-    const pieces = [];
-    let currentKind = null;
-    let currentTextParts = [];
-    let currentStart = start;
-    let currentWordLike = false;
-    let offset = 0;
-    for (const ch of segment) {
-        const kind = classifySegmentBreakChar(ch, whiteSpaceProfile);
-        const wordLike = kind === 'text' && isWordLike;
-        if (currentKind !== null && kind === currentKind && wordLike === currentWordLike) {
-            currentTextParts.push(ch);
-            offset += ch.length;
-            continue;
-        }
-        if (currentKind !== null) {
-            pieces.push({
-                text: joinTextParts(currentTextParts),
-                isWordLike: currentWordLike,
-                kind: currentKind,
-                start: currentStart,
-            });
-        }
-        currentKind = kind;
-        currentTextParts = [ch];
-        currentStart = start + offset;
-        currentWordLike = wordLike;
-        offset += ch.length;
-    }
-    if (currentKind !== null) {
-        pieces.push({
-            text: joinTextParts(currentTextParts),
-            isWordLike: currentWordLike,
-            kind: currentKind,
-            start: currentStart,
-        });
-    }
-    return pieces;
-}
-function isTextRunBoundary(kind) {
-    return (kind === 'space' ||
-        kind === 'preserved-space' ||
-        kind === 'zero-width-break' ||
-        kind === 'hard-break');
-}
-const urlSchemeSegmentRe = /^[A-Za-z][A-Za-z0-9+.-]*:$/;
-function isUrlLikeRunStart(segmentation, index) {
-    const text = segmentation.texts[index];
-    if (text.startsWith('www.'))
-        return true;
-    return (urlSchemeSegmentRe.test(text) &&
-        index + 1 < segmentation.len &&
-        segmentation.kinds[index + 1] === 'text' &&
-        segmentation.texts[index + 1] === '//');
-}
-function isUrlQueryBoundarySegment(text) {
-    return text.includes('?') && (text.includes('://') || text.startsWith('www.'));
-}
-function mergeUrlLikeRuns(segmentation) {
-    const texts = segmentation.texts.slice();
-    const isWordLike = segmentation.isWordLike.slice();
-    const kinds = segmentation.kinds.slice();
-    const starts = segmentation.starts.slice();
-    for (let i = 0; i < segmentation.len; i++) {
-        if (kinds[i] !== 'text' || !isUrlLikeRunStart(segmentation, i))
-            continue;
-        const mergedParts = [texts[i]];
-        let j = i + 1;
-        while (j < segmentation.len && !isTextRunBoundary(kinds[j])) {
-            mergedParts.push(texts[j]);
-            isWordLike[i] = true;
-            const endsQueryPrefix = texts[j].includes('?');
-            kinds[j] = 'text';
-            texts[j] = '';
-            j++;
-            if (endsQueryPrefix)
+    let i = 0;
+    while (i < source.length && isCollapsibleSpaceCode(source.charCodeAt(i)))
+        i++;
+    while (i < source.length) {
+        let end = i + 1;
+        if (isCollapsibleSpaceCode(source.charCodeAt(i))) {
+            while (end < source.length && isCollapsibleSpaceCode(source.charCodeAt(end)))
+                end++;
+            if (end === source.length)
                 break;
         }
-        texts[i] = joinTextParts(mergedParts);
-    }
-    let compactLen = 0;
-    for (let read = 0; read < texts.length; read++) {
-        const text = texts[read];
-        if (text.length === 0)
-            continue;
-        if (compactLen !== read) {
-            texts[compactLen] = text;
-            isWordLike[compactLen] = isWordLike[read];
-            kinds[compactLen] = kinds[read];
-            starts[compactLen] = starts[read];
+        if ((sourceBreaks[i] & BREAK) === 0 && breaks[normalizedIndex] === 0)
+            breaks[normalizedIndex] = sourceBreaks[i];
+        if (spaceSources !== null)
+            spaceSources[normalizedIndex] = source.charCodeAt(i);
+        const start = i;
+        for (; i < end; i++) {
+            if ((sourceBreaks[i] & BREAK) !== 0)
+                breaks[i === start ? normalizedIndex : normalizedIndex + 1] = sourceBreaks[i];
         }
-        compactLen++;
+        normalizedIndex++;
     }
-    texts.length = compactLen;
-    isWordLike.length = compactLen;
-    kinds.length = compactLen;
-    starts.length = compactLen;
-    return {
-        len: compactLen,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
+    breaks[normalizedLength] = (sourceBreaks[i] & BREAK) === 0 ? sourceBreaks[i] : sourceBreaks[i] & FORCED_BREAK;
+    return breaks;
 }
-function mergeUrlQueryRuns(segmentation) {
-    const texts = [];
-    const isWordLike = [];
-    const kinds = [];
+// A FORCED_BREAK after U+2028 or U+2029 makes the separator a hard break in every white-space
+// mode, and a SOFT_HYPHEN_BREAK makes a soft hyphen a zero-width break: the line can end there
+// without a hyphen. One with only soft hyphens before it on its chunk stays a soft hyphen, since
+// a zero-width break there holds a line and Firefox, which drops soft hyphens from its text runs,
+// gives it none.
+function classifySegmentUnit(normalized, breaks, i, code, whiteSpace, scan) {
+    if ((code === 0x2028 || code === 0x2029) && (breaks[i + 1] & FORCED_BREAK) !== 0)
+        return HARD_BREAK;
+    if (code === 0x00AD && (breaks[i + 1] & SOFT_HYPHEN_BREAK) !== 0 && followsChunkContent(normalized, i))
+        return ZERO_WIDTH_BREAK;
+    return classifySegmentBreakCode(code, whiteSpace, scan);
+}
+function followsChunkContent(normalized, i) {
+    let j = i - 1;
+    while (j >= 0 && normalized.charCodeAt(j) === 0x00AD)
+        j--;
+    return j >= 0 && normalized.charCodeAt(j) !== 0x0A;
+}
+// Characters of these kinds share a segment when no break falls between them. Each
+// tab, hard break, ZWSP and NEL control stays its own segment.
+function gathersKind(kind) {
+    return kind === TEXT || kind === SPACE || kind === PRESERVED_SPACE || kind === SOFT_HYPHEN;
+}
+// A control character that stays its own text segment, measured alone: the C0 and C1
+// controls that white-space normalization leaves as text, and the line and paragraph
+// separators where they don't end a line.
+function isControlSegmentCode(code) {
+    return code < 0x20 || (code >= 0x7F && code <= 0x9F) || code === 0x2028 || code === 0x2029;
+}
+// Segments are the text between an engine's break opportunities, split where the
+// break kind changes and where an item of a rich-inline paragraph starts (ITEM_START), and a
+// control stays alone. A ZWSP or soft hyphen that the scan
+// doesn't break after, as at the start of a WebKit scan, before a combining mark or a
+// closing bracket, or under keep-all, is zero-width glue: it stays its own zero-width
+// segment, takes no letter spacing and doesn't end a line.
+// Combining marks right after it, or after a control, stay apart from the text after
+// them, a segment of their own that measurement measures alone, as it does any text
+// (ENGINE_FOLLOWUPS.md, Canvas answers that differ from the page). Where the Gecko
+// scan marks cluster starts, a segment is ONE_CLUSTER unless one falls inside it.
+//
+// Firefox leaves soft hyphens and bidi controls out of the text run it breaks and maps a line end
+// past the characters it left out (IsDiscardable, nsTextFrameUtils.cpp:32-49; nsTextFrame.cpp:
+// 11161-11170), so a line ends after a run of them, never before one, and none starts with one
+// after a wrap. Where the Gecko scan's text run left out a bidi control, a run of such characters
+// with a control in it goes with the segment before it up to its last control: the scan finds no
+// break inside the run and gives the one after it after the run. A soft hyphen after the last
+// control keeps its break, and one before it offers none (GetHyphenationBreaks,
+// nsTextFrame.cpp:4436-4442). A run that starts a chunk is a text segment that starts its line,
+// with the text after it: Firefox trims no leading space there, since the content doesn't start
+// with one (nsTextFrame.cpp:10935-10950), and the break the scan gives after the run, after a hard
+// break or collapsed leading white space, can't end a line that holds nothing yet. A chunk of only
+// such a run is no content of its own, so the hard break before it takes it (nsTextFrame.cpp:
+// 11421-11429). After a control or marks that stay alone, the run starts a text segment. The
+// profile's graphemes look past these characters (src/graphemes.ts), so a cluster extender after
+// them joins the cluster before, and the text after them goes on in the segment as without them.
+// A run of them ends where an item of a rich-inline paragraph starts inside it, and an item that
+// starts with one starts a text segment with the text after it, as a chunk does, after the break
+// the scan gives at the run, so its fragments keep the controls it starts with.
+function segmentAtLineBreaks(normalized, spaceSources, breaks, whiteSpace, scan, hangTabs, dropsBidiControl) {
+    const oneCluster = scan === 'gecko' ? ONE_CLUSTER : 0;
     const starts = [];
-    for (let i = 0; i < segmentation.len; i++) {
-        const text = segmentation.texts[i];
-        texts.push(text);
-        isWordLike.push(segmentation.isWordLike[i]);
-        kinds.push(segmentation.kinds[i]);
-        starts.push(segmentation.starts[i]);
-        if (!isUrlQueryBoundarySegment(text))
+    // A plain array, which measurement copies into the prepared handle's bytes: a Uint8Array for
+    // each text slowed short texts' preparation (RESEARCH.md, Keeping Work Bounded).
+    const flags = [];
+    let lastAlone = false;
+    let markRun = false;
+    // Where the last run of what the text run drops, handled at its start, ends.
+    let droppedEnd = -1;
+    // The last segment's kind, -1 before the first unit, which starts one.
+    let lastKind = -1;
+    for (let i = 0; i < normalized.length; i++) {
+        const code = normalized.charCodeAt(i);
+        if (dropsBidiControl && i < droppedEnd)
             continue;
-        const nextIndex = i + 1;
-        if (nextIndex >= segmentation.len ||
-            isTextRunBoundary(segmentation.kinds[nextIndex])) {
-            continue;
-        }
-        const queryParts = [];
-        const queryStart = segmentation.starts[nextIndex];
-        let j = nextIndex;
-        while (j < segmentation.len && !isTextRunBoundary(segmentation.kinds[j])) {
-            queryParts.push(segmentation.texts[j]);
-            j++;
-        }
-        if (queryParts.length > 0) {
-            texts.push(joinTextParts(queryParts));
-            isWordLike.push(true);
-            kinds.push('text');
-            starts.push(queryStart);
-            i = j - 1;
-        }
-    }
-    return {
-        len: texts.length,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
-}
-const numericJoinerChars = new Set([
-    ':', '-', '/', '×', ',', '.', '+',
-    '\u2013',
-    '\u2014',
-]);
-const wordInternalSymbolRe = /[\p{P}\p{S}\p{Co}]/u;
-const emojiPresentationRe = /\p{Emoji_Presentation}/u;
-const noSpaceWordBreakAfterChars = new Set([
-    '?',
-    '\u058A',
-    '-',
-    '\u2010',
-    '\u2012',
-    '\u2013',
-    '\u2014',
-    '\u2026',
-    '\u203C',
-    '\u203D',
-    '\u2049',
-]);
-function isAsciiWordInternalSymbolCode(code) {
-    return ((code >= 0x21 && code <= 0x2F && code !== 0x2D) ||
-        (code >= 0x3A && code <= 0x40 && code !== 0x3F) ||
-        (code >= 0x5B && code <= 0x60) ||
-        (code >= 0x7B && code <= 0x7E));
-}
-function isNoSpaceWordInternalSymbol(ch) {
-    const code = ch.charCodeAt(0);
-    if (code < 0x80)
-        return isAsciiWordInternalSymbolCode(code);
-    return (!noSpaceWordBreakAfterChars.has(ch) &&
-        !emojiPresentationRe.test(ch) &&
-        wordInternalSymbolRe.test(ch));
-}
-function isNoSpaceWordInternalSymbolSegment(text) {
-    let sawSymbol = false;
-    for (const ch of text) {
-        if (combiningMarkRe.test(ch))
-            continue;
-        if (!isNoSpaceWordInternalSymbol(ch))
-            return false;
-        sawSymbol = true;
-    }
-    return sawSymbol;
-}
-function endsWithNoSpaceWordJoiner(text) {
-    for (let end = text.length; end > 0;) {
-        const start = previousCodePointStart(text, end);
-        const ch = text.slice(start, end);
-        if (combiningMarkRe.test(ch)) {
-            end = start;
-            continue;
-        }
-        return isNoSpaceWordInternalSymbol(ch) || isLineBreakNumericAffix(ch);
-    }
-    return false;
-}
-function canJoinNoSpaceWordBoundary(leftText, leftWordLike, rightText, rightWordLike) {
-    const leftSymbol = !leftWordLike && isNoSpaceWordInternalSymbolSegment(leftText);
-    const rightSymbol = !rightWordLike && isNoSpaceWordInternalSymbolSegment(rightText);
-    const leftAffix = endsWithLineBreakNumericAffix(leftText);
-    const leftEndsJoiner = (leftWordLike || leftAffix) && endsWithNoSpaceWordJoiner(leftText);
-    if (!leftSymbol && !rightSymbol && !leftEndsJoiner)
-        return false;
-    if (isCJK(leftText) || isCJK(rightText))
-        return false;
-    return (leftWordLike || leftSymbol || leftAffix) && (rightWordLike || rightSymbol);
-}
-function segmentContainsDecimalDigit(text) {
-    for (const ch of text) {
-        if (decimalDigitRe.test(ch))
-            return true;
-    }
-    return false;
-}
-export function isNumericRunSegment(text) {
-    if (text.length === 0)
-        return false;
-    for (const ch of text) {
-        if (decimalDigitRe.test(ch) || numericJoinerChars.has(ch))
-            continue;
-        return false;
-    }
-    return true;
-}
-function mergeNumericRuns(segmentation) {
-    const texts = [];
-    const isWordLike = [];
-    const kinds = [];
-    const starts = [];
-    for (let i = 0; i < segmentation.len; i++) {
-        const text = segmentation.texts[i];
-        const kind = segmentation.kinds[i];
-        if (kind === 'text' && isNumericRunSegment(text) && segmentContainsDecimalDigit(text)) {
-            const mergedParts = [text];
-            let j = i + 1;
-            while (j < segmentation.len &&
-                segmentation.kinds[j] === 'text' &&
-                isNumericRunSegment(segmentation.texts[j])) {
-                mergedParts.push(segmentation.texts[j]);
-                j++;
+        if (dropsBidiControl && isDiscardable(code, false) && (i === 0 || (breaks[i] & ITEM_START) !== 0 || !isDiscardable(normalized.charCodeAt(i - 1), false))) {
+            // The run of what the text run drops from here, and where its last bidi control ends.
+            let j = i;
+            let controlEnd = -1;
+            for (; j < normalized.length && isDiscardable(normalized.charCodeAt(j), false) && (j === i || (breaks[j] & ITEM_START) === 0); j++)
+                if (isBidiControl(normalized.charCodeAt(j)))
+                    controlEnd = j + 1;
+            if (controlEnd > 0) {
+                const startsItem = lastKind >= 0 && lastKind !== HARD_BREAK && (breaks[i] & ITEM_START) !== 0;
+                const chunkStart = lastKind < 0 || lastKind === HARD_BREAK || startsItem;
+                if (chunkStart) {
+                    const endsChunk = j === normalized.length || classifySegmentUnit(normalized, breaks, j, normalized.charCodeAt(j), whiteSpace, scan) === HARD_BREAK;
+                    if (!endsChunk) {
+                        if (startsItem)
+                            breaks[i] = breaks[i] | (breaks[j] & BREAK);
+                        breaks[j] = breaks[j] & ~(BREAK | SOFT_HYPHEN_BREAK);
+                    }
+                    droppedEnd = j;
+                    if (endsChunk && lastKind >= 0)
+                        continue;
+                }
+                else {
+                    droppedEnd = controlEnd;
+                }
+                if (chunkStart || lastAlone || markRun) {
+                    starts.push(i);
+                    flags.push(TEXT | oneCluster);
+                    lastKind = TEXT;
+                    lastAlone = false;
+                    markRun = false;
+                }
+                continue;
             }
-            texts.push(joinTextParts(mergedParts));
-            isWordLike.push(true);
-            kinds.push('text');
-            starts.push(segmentation.starts[i]);
-            i = j - 1;
+        }
+        const kind = classifySegmentUnit(normalized, breaks, i, code, whiteSpace, scan);
+        const alone = kind === TEXT && isControlSegmentCode(code);
+        const unbroken = (breaks[i] & BREAK) === 0;
+        if ((breaks[i] & (BREAK | ITEM_START)) === 0 && !alone && !lastAlone && !(markRun && !combiningMarkRe.test(normalized[i])) &&
+            kind === lastKind && gathersKind(kind)) {
+            if ((breaks[i] & CLUSTER_START) !== 0)
+                flags[flags.length - 1] = flags[flags.length - 1] & ~ONE_CLUSTER;
             continue;
         }
-        texts.push(text);
-        isWordLike.push(segmentation.isWordLike[i]);
-        kinds.push(kind);
-        starts.push(segmentation.starts[i]);
+        markRun = unbroken && kind === TEXT && combiningMarkRe.test(normalized[i]) &&
+            (lastAlone || lastKind === ZERO_WIDTH_BREAK || lastKind === SOFT_HYPHEN || lastKind === CONTROL);
+        starts.push(i);
+        flags.push(kind | oneCluster);
+        lastKind = kind;
+        lastAlone = alone;
     }
-    return {
-        len: texts.length,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
-}
-function mergeNoSpaceWordChains(segmentation) {
+    // A line ends only where the scan breaks, so the walkers learn where it doesn't:
+    // before text, zero-width glue or a control, other than at a line start. A
+    // ZWSP or soft hyphen there is zero-width glue. Before a space, tab or hard break
+    // the scan has no break either, but the line can still end there, as they hang or
+    // end it, so it keeps its kind. A tab that doesn't hang (EngineProfile's hangTabs) ends
+    // no line before itself, nor do the spaces after it, which hang only where the run of
+    // white space ends the line: Gecko breaks only after the whole run (nsLineBreaker.cpp:
+    // 318-330). A soft hyphen before the tab keeps its break (GetHyphenationBreaks,
+    // nsTextFrame.cpp:4409-4457).
+    let hasUnbroken = false;
+    const count = flags.length;
+    for (let j = count - 2; j >= 0; j--) {
+        const kind = flags[j] & KIND_BITS;
+        const next = flags[j + 1] & KIND_BITS;
+        if ((breaks[starts[j + 1]] & BREAK) !== 0 || kind === HARD_BREAK)
+            continue;
+        if (!hangTabs && (next === TAB || (next === PRESERVED_SPACE && kind === TAB))) {
+            if (kind === SOFT_HYPHEN)
+                continue;
+        }
+        else if (next === TEXT || next === ZERO_WIDTH_GLUE || next === CONTROL) {
+            if (kind === ZERO_WIDTH_BREAK || kind === SOFT_HYPHEN)
+                flags[j] = flags[j] & ~KIND_BITS | ZERO_WIDTH_GLUE;
+        }
+        else {
+            continue;
+        }
+        flags[j + 1] = flags[j + 1] | UNBROKEN;
+        hasUnbroken = true;
+    }
+    if (hasUnbroken)
+        for (let j = 0; j < count; j++)
+            if ((flags[j] & UNBROKEN) === 0)
+                flags[j] = flags[j] | RETURNABLE;
+    // Each segment's text, sliced once here for measurement and the neighbours it reads: sliced
+    // where measurement reads it, Firefox's rich-inline preparation ran 11-19% slower (RESEARCH.md,
+    // Keeping Work Bounded).
     const texts = [];
-    const isWordLike = [];
-    const kinds = [];
-    const starts = [];
+    for (let j = 0; j < count; j++)
+        texts.push(normalized.slice(starts[j], j + 1 < count ? starts[j + 1] : normalized.length));
+    return { normalized, spaceSources, texts, starts, flags, hasUnbroken };
+}
+// vendored: `hyphenBreak: false` — drop the break opportunities right after a
+// hyphen ('-' / U+2010) that more text follows, so a hyphenated word or code
+// stays on one line. Upstream always breaks there, like browsers (and
+// PowerPoint) do. A forced break stays.
+function dropHyphenBreaks(normalized, breaks) {
+    for (let i = 1; i < normalized.length; i++) {
+        const before = normalized.charCodeAt(i - 1);
+        if ((before === 0x2D || before === 0x2010) && (breaks[i] & FORCED_BREAK) === 0 && !isCollapsibleSpaceCode(normalized.charCodeAt(i)))
+            breaks[i] = breaks[i] & ~BREAK;
+    }
+}
+export function analyzeText(text, profile, whiteSpace = 'normal', wordBreak = 'normal', 
+// Preparation's language (getPreparationLanguage), which picks Chrome's and WebKit's
+// line tables, WebKit's quotation remap and Gecko's rule for newlines next to East
+// Asian punctuation.
+language = null, 
+// The items of the rich-inline paragraph whose text this is, else null.
+paragraph = null,
+// vendored: `hyphenBreak: false` — no line break after '-' / U+2010 (dropHyphenBreaks).
+hyphenBreak = true) {
+    const preserve = whiteSpace === 'pre-wrap';
+    // Where each of a paragraph's items starts in the source the engine scans.
+    const scanStarts = paragraph === null ? null : [];
+    // The source a text node's engine scans, after the segment break transformation.
+    let source = preserve ? text
+        : paragraph !== null && paragraph.ownSegmentBreaks ? removeItemsSkippableSegmentBreaks(text, paragraph.starts, profile, language, scanStarts)
+            : removeSkippableSegmentBreaks(text, profile, language);
+    if (paragraph !== null && scanStarts.length === 0)
+        for (let k = 0; k < paragraph.starts.length; k++)
+            scanStarts.push(paragraph.starts[k]);
+    let normalized = preserve ? normalizeWhitespacePreWrap(text) : collapseWhitespaceNormal(source);
+    const keepAll = wordBreak === 'keep-all';
+    let breaks;
+    let spaceSources = null;
+    let dropsBidiControl = false;
+    if (profile.lineBreakScan === 'blink') {
+        breaks = getBlinkLineBreaks(normalized, keepAll, language);
+    }
+    else {
+        // WebKit and Gecko scan the source. Gecko's scan collapses its white space as Firefox does.
+        let sourceBreaks;
+        if (profile.lineBreakScan === 'webkit') {
+            sourceBreaks = paragraph === null ? getWebKitLineBreaks(source, preserve, keepAll, language) : getWebKitParagraphBreaks(source, paragraph, preserve, keepAll, language);
+            // A CR is no white space to WebKit (moveToNextNonWhitespacePosition, InlineItemsBuilder.cpp:
+            // 55-73) and stays in its text item with no advance and no letter spacing: Core Text's
+            // shaping gives its glyph none (CTFontShapeGlyphs, from Font::applyTransforms,
+            // FontCoreText.cpp:617-699; the complex path at ComplexTextController.cpp:762-768), and only
+            // a character that advances is spaced (WidthIterator.cpp:508-516). Every Canvas measures
+            // it as a space, so the source leaves it out, as the Gecko profile's does below, and white
+            // space on its two sides is one space, where Safari keeps two. The scan read it, so the
+            // unit after it keeps its own break: ICU's, after the CR, where the scan takes it, as before
+            // a letter above U+00FF, and none elsewhere, its table having none beside a control
+            // (BreakablePositions.h:179-187, 238-251; RESEARCH.md, Engine Facts, Safari (WebKit), CR and
+            // FF, has where). That unit also takes the CR's break, the one after white space. The CR of a
+            // CRLF stays, to collapse into the line feed's space; in a paragraph that is also a CR that
+            // ends an item before a line feed that starts the next, whose space is the line feed's item's
+            // (alignToSource). In the installed fonts that take WebKit's fixed-pitch shortcut, Menlo
+            // and so the generic monospace among them, text on simplified measuring is as wide as its
+            // characters are many, the CR among them (Font::determinePitch, FontCoreText.cpp:753-785;
+            // widthForSimpleTextWithFixedPitch, FontCascade.cpp:414-421), which Canvas can't show, so
+            // the profile gives those fonts up (RESEARCH.md, Decisions Log, 2026-10-06;
+            // ENGINE_FOLLOWUPS.md, White space and controls).
+            if (!preserve && source !== normalized && /\r(?!\n)/.test(source)) {
+                let count = 0;
+                for (let i = 0; i < source.length; i++) {
+                    if (source.charCodeAt(i) !== 0x0D || source.charCodeAt(i + 1) === 0x0A)
+                        sourceBreaks[count++] = sourceBreaks[i];
+                    else
+                        sourceBreaks[i + 1] = sourceBreaks[i + 1] | sourceBreaks[i];
+                }
+                sourceBreaks[count] = sourceBreaks[source.length];
+                source = source.replace(/\r(?!\n)/g, '');
+                normalized = collapseWhitespaceNormal(source);
+            }
+        }
+        else {
+            const gecko = getGeckoLineBreaks(source, preserve, keepAll, profile.graphemeTable, scanStarts);
+            dropsBidiControl = gecko.dropsBidiControl;
+            sourceBreaks = gecko.breaks;
+            // Gecko's line breaker starts again after an atomic frame (BuildTextRunsScanner::ScanFrame,
+            // nsTextFrame.cpp:2248-2251, 2264-2268), so the text after one has no break of the scan's at
+            // its start, where the scan finds one after the U+FFFC: a soft hyphen that starts that text
+            // hyphenates there, and the break after the atomic item comes before it (markItemStarts).
+            if (paragraph !== null) {
+                for (let k = 0; k < paragraph.atomic.length; k++) {
+                    if (!paragraph.atomic[k])
+                        continue;
+                    let after = scanStarts[k] + 1;
+                    while (after < source.length && isDiscardable(source.charCodeAt(after), false))
+                        after++;
+                    sourceBreaks[after] = sourceBreaks[after] & ~SOFT_HYPHEN_BREAK;
+                }
+            }
+            // Gecko's white-space run reads through the soft hyphens and bidi controls in it, which its
+            // text run drops, and keeps its segment break if it holds one, or else its first white space
+            // (TransformWhiteSpaces, nsTextFrameUtils.cpp:151-193); the scan takes the text as one text
+            // frame (transformText in src/gecko-line-breaks.ts). The white space the scan's text run left
+            // out of such a run leaves the source too, and so does white space before only bidi controls
+            // at the end, which the line end trims, and a CR or FF, which ends a run and takes no room
+            // (the CR of a CRLF stays, to collapse into the line feed's space); white space on its two
+            // sides then touches and is one space, where Firefox keeps two.
+            // The other units keep their breaks: none is at white space, and the unit after a CR or FF
+            // has its own, as a CR is one of nsLineBreaker's breakable spaces, whose run gives the unit
+            // after it a break (IsSegmentSpace, nsLineBreaker.h:260-264; nsLineBreaker.cpp:318-327), and
+            // an FF is UAX #14's BK, which the word breaker breaks after. Only a combining mark there has
+            // none, since a break inside a cluster holds only after a space (SetPotentialLineBreaks,
+            // gfxTextRun.cpp:219-226), so the break Firefox has before the CR is lost (ENGINE_FOLLOWUPS.md).
+            // Where the white space right after a soft hyphen leaves, the break after it stays that white
+            // space's, which draws no hyphen (SOFT_HYPHEN_BREAK): Gecko hyphenates only at a soft hyphen
+            // that ends what its text run left out (GetHyphenationBreaks, nsTextFrame.cpp:4436-4443).
+            const leftOut = gecko.leftOut;
+            const trailing = !preserve && (dropsBidiControl || leftOut !== null) ? getTrailingCollapsibleStart(source, 0, profile) : source.length;
+            if (leftOut !== null || trailing < source.length) {
+                // A run that goes on into that trailing white space and keeps its one white space there, as
+                // a segment break after a soft hyphen, keeps its first white space instead: the text before
+                // the trailing white space holds the run's space, as a rich-inline paragraph's run keeps the
+                // white space of the item it starts in (transformText in src/gecko-line-breaks.ts).
+                let runSpace = -1;
+                if (leftOut !== null && trailing < source.length) {
+                    for (let i = trailing - 1; i >= 0; i--) {
+                        const code = source.charCodeAt(i);
+                        if (!isSpaceOrTabOrSegmentBreak(code) && !isDiscardable(code, false))
+                            break;
+                        if (isSpaceOrTabOrSegmentBreak(code) && leftOut[i] !== 1) {
+                            runSpace = -1;
+                            break;
+                        }
+                        if (isSpaceOrTabOrSegmentBreak(code))
+                            runSpace = i;
+                    }
+                }
+                // Only the units from the first one that leaves move.
+                const from = leftOut === null ? trailing : 0;
+                let kept = '';
+                let copied = 0;
+                let count = from;
+                let last = from - 1;
+                for (let i = from; i < source.length; i++) {
+                    if (i < trailing ? leftOut !== null && leftOut[i] === 1 && i !== runSpace : isCollapsibleSpaceCode(source.charCodeAt(i))) {
+                        kept += source.slice(copied, i);
+                        copied = i + 1;
+                        continue;
+                    }
+                    const breakBefore = sourceBreaks[i];
+                    sourceBreaks[count++] = last >= 0 && last < i - 1 && (breakBefore & BREAK) !== 0 && source.charCodeAt(last) === 0x00AD ? breakBefore | SOFT_HYPHEN_BREAK : breakBefore;
+                    last = i;
+                }
+                sourceBreaks[count] = sourceBreaks[source.length];
+                source = kept + source.slice(copied);
+                normalized = collapseWhitespaceNormal(source);
+            }
+        }
+        if (profile.lineBreakScan === 'webkit' && !preserve && source !== normalized)
+            spaceSources = new Uint16Array(normalized.length);
+        breaks = source === normalized ? sourceBreaks : mapSourceLineBreaks(source, normalized.length, sourceBreaks, whiteSpace, spaceSources);
+    }
+    if (paragraph !== null)
+        markItemStarts(text, normalized, breaks, paragraph, profile.lineBreakScan);
+    if (!hyphenBreak)
+        dropHyphenBreaks(normalized, breaks);
+    return segmentAtLineBreaks(normalized, spaceSources, breaks, whiteSpace, profile.lineBreakScan, profile.hangTabs, dropsBidiControl);
+}
+// A paragraph's text after each item's own segment break transformation, where the engine
+// transforms segment breaks in each text frame's text apart (ParagraphItems), and in
+// `resultStarts` where each item starts in it.
+function removeItemsSkippableSegmentBreaks(text, starts, profile, language, resultStarts) {
+    if (profile.lineBreakScan === 'webkit' || !text.includes('\n'))
+        return text;
+    let result = '';
+    // Where the text that isn't in `result` yet starts. Only an item that holds a line feed can
+    // change, so only those are cut out and transformed, and the text between two that changed is
+    // copied in one piece.
+    let copied = 0;
+    let newline = text.indexOf('\n');
+    for (let k = 0; k < starts.length; k++) {
+        const start = starts[k];
+        const end = k + 1 < starts.length ? starts[k + 1] : text.length;
+        resultStarts.push(result.length + start - copied);
+        if (newline < 0 || newline >= end)
+            continue;
+        const item = text.slice(start, end);
+        const transformed = removeSkippableSegmentBreaks(item, profile, language);
+        if (transformed.length !== item.length) {
+            result += text.slice(copied, start) + transformed;
+            copied = end;
+        }
+        newline = text.indexOf('\n', end);
+    }
+    return copied === 0 ? text : result + text.slice(copied);
+}
+// The offset in `source` that each unit of `normalized` comes from. Normalization only removes
+// white space and, in the Gecko profile, a CR or FF, and in the WebKit profile a lone CR, turns a
+// run of white space into one space, which comes from the run's first unit, and turns CR, CRLF
+// and FF into LF, so a greedy walk aligns the two. Under the WebKit and Gecko scans no space
+// comes from a CR, nor under Gecko's from an FF, one right before the white space included:
+// neither is white space to that engine (moveToNextNonWhitespacePosition,
+// InlineItemsBuilder.cpp:55-73; IsSpaceOrTabOrSegmentBreak, nsTextFrameUtils.cpp:51-57), so the
+// run starts after it, and the box that holds the run's first character has its space, in that
+// box's font and letter spacing. WebKit makes a white-space item of its text box, as wide as
+// that box's space (InlineItemsBuilder.cpp:947, 963-987), and takes out only white space that
+// follows other white space, an earlier box's too (Line::appendText, InlineLine.cpp:357-365);
+// Gecko transforms a frame at a time from the white-space state the frame before it left, which
+// a CR or FF clears (nsTextFrameUtils.cpp:286-309, 382-386). So the space after a CR that ends
+// an item is the next item's, as is the line feed of a CRLF split there, and a fragment that
+// ends with a space after a CR ends after that space in its item's text, and one that starts
+// with such a space starts at it. To Blink a CR is white space (Character::IsCollapsibleSpace,
+// platform/text/character.h:150-153), its run's first unit, and an FF is still a space in the
+// Blink and WebKit profiles.
+export function alignToSource(source, normalized, scan) {
+    const offsets = new Int32Array(normalized.length);
+    // The units no space comes from under `scan`, or -1.
+    const cr = scan === 'blink' ? -1 : 0x0D;
+    const ff = scan === 'gecko' ? 0x0C : -1;
     let i = 0;
-    while (i < segmentation.len) {
-        const text = segmentation.texts[i];
-        const kind = segmentation.kinds[i];
-        const wordLike = segmentation.isWordLike[i];
-        if (kind === 'text') {
-            const mergedParts = [text];
-            let j = i + 1;
-            let mergedWordLike = wordLike;
-            while (j < segmentation.len &&
-                segmentation.kinds[j] === 'text' &&
-                canJoinNoSpaceWordBoundary(segmentation.texts[j - 1], segmentation.isWordLike[j - 1], segmentation.texts[j], segmentation.isWordLike[j])) {
-                const nextText = segmentation.texts[j];
-                mergedParts.push(nextText);
-                mergedWordLike = mergedWordLike || segmentation.isWordLike[j];
-                j++;
-            }
-            if (j > i + 1) {
-                texts.push(joinTextParts(mergedParts));
-                isWordLike.push(mergedWordLike);
-                kinds.push('text');
-                starts.push(segmentation.starts[i]);
-                i = j;
-                continue;
-            }
+    for (let j = 0; j < normalized.length; j++) {
+        const unit = normalized.charCodeAt(j);
+        while (i < source.length) {
+            const code = source.charCodeAt(i);
+            if (code === unit || (isCollapsibleSpaceCode(code) && (unit === 0x20 ? code !== cr && code !== ff : unit === 0x0A)))
+                break;
+            i++;
         }
-        texts.push(text);
-        isWordLike.push(wordLike);
-        kinds.push(kind);
-        starts.push(segmentation.starts[i]);
-        i++;
+        offsets[j] = i++;
+        // CRLF became one LF.
+        if (unit === 0x0A && source.charCodeAt(i - 1) === 0x0D && source.charCodeAt(i) === 0x0A)
+            i++;
     }
-    return {
-        len: texts.length,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
+    return offsets;
 }
-function splitHyphenatedNumericRuns(segmentation) {
-    const texts = [];
-    const isWordLike = [];
-    const kinds = [];
-    const starts = [];
-    for (let i = 0; i < segmentation.len; i++) {
-        const text = segmentation.texts[i];
-        if (segmentation.kinds[i] === 'text' && text.includes('-')) {
-            const parts = text.split('-');
-            let shouldSplit = parts.length > 1;
-            for (let j = 0; j < parts.length; j++) {
-                const part = parts[j];
-                if (!shouldSplit)
-                    break;
-                if (part.length === 0 ||
-                    !segmentContainsDecimalDigit(part) ||
-                    !isNumericRunSegment(part)) {
-                    shouldSplit = false;
-                }
-            }
-            if (shouldSplit) {
-                let offset = 0;
-                for (let j = 0; j < parts.length; j++) {
-                    const part = parts[j];
-                    const splitText = j < parts.length - 1 ? `${part}-` : part;
-                    texts.push(splitText);
-                    isWordLike.push(true);
-                    kinds.push('text');
-                    starts.push(segmentation.starts[i] + offset);
-                    offset += splitText.length;
-                }
-                continue;
-            }
+// Marks where each item of a paragraph starts in its normalized text (ITEM_START), at the first
+// unit that comes from the item or from one after it, and a break on both sides of an atomic item,
+// under keep-all too: Blink breaks after an atomic inline and before one (CanBreakAfterAtomicInline
+// and CanBreakAfter, line_breaker.cc:1168-1263 in core/layout/inline), WebKit finds a soft wrap
+// opportunity on either side of one (InlineFormattingUtils.cpp:445-449), and Gecko records a break
+// after one and breaks before one that doesn't fit (nsLineLayout.cpp:1057-1068, 1339-1340).
+function markItemStarts(text, normalized, breaks, paragraph, scan) {
+    const offsets = paragraph.sourceOffsets = alignToSource(text, normalized, scan);
+    const { starts, atomic } = paragraph;
+    for (let k = 0, j = 0; k < starts.length; k++) {
+        while (j < normalized.length && offsets[j] < starts[k])
+            j++;
+        if (j === normalized.length)
+            break;
+        breaks[j] = breaks[j] | ITEM_START;
+        if (atomic[k] && offsets[j] === starts[k]) {
+            breaks[j] = breaks[j] | BREAK;
+            breaks[j + 1] = breaks[j + 1] | BREAK | ITEM_START;
         }
-        texts.push(text);
-        isWordLike.push(segmentation.isWordLike[i]);
-        kinds.push(segmentation.kinds[i]);
-        starts.push(segmentation.starts[i]);
     }
-    return {
-        len: texts.length,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
 }
-function mergeGlueConnectedTextRuns(segmentation) {
-    const texts = [];
-    const isWordLike = [];
-    const kinds = [];
-    const starts = [];
-    let read = 0;
-    while (read < segmentation.len) {
-        const textParts = [segmentation.texts[read]];
-        let wordLike = segmentation.isWordLike[read];
-        let kind = segmentation.kinds[read];
-        let start = segmentation.starts[read];
-        if (kind === 'glue') {
-            const glueParts = [textParts[0]];
-            const glueStart = start;
-            read++;
-            while (read < segmentation.len && segmentation.kinds[read] === 'glue') {
-                glueParts.push(segmentation.texts[read]);
-                read++;
-            }
-            const glueText = joinTextParts(glueParts);
-            if (read < segmentation.len && segmentation.kinds[read] === 'text') {
-                textParts[0] = glueText;
-                textParts.push(segmentation.texts[read]);
-                wordLike = segmentation.isWordLike[read];
-                kind = 'text';
-                start = glueStart;
-                read++;
-            }
-            else {
-                texts.push(glueText);
-                isWordLike.push(false);
-                kinds.push('glue');
-                starts.push(glueStart);
-                continue;
-            }
-        }
-        else {
-            read++;
-        }
-        if (kind === 'text') {
-            while (read < segmentation.len && segmentation.kinds[read] === 'glue') {
-                const glueParts = [];
-                while (read < segmentation.len && segmentation.kinds[read] === 'glue') {
-                    glueParts.push(segmentation.texts[read]);
-                    read++;
-                }
-                const glueText = joinTextParts(glueParts);
-                if (read < segmentation.len && segmentation.kinds[read] === 'text') {
-                    textParts.push(glueText, segmentation.texts[read]);
-                    wordLike = wordLike || segmentation.isWordLike[read];
-                    read++;
-                    continue;
-                }
-                textParts.push(glueText);
-            }
-        }
-        texts.push(joinTextParts(textParts));
-        isWordLike.push(wordLike);
-        kinds.push(kind);
-        starts.push(start);
-    }
-    return {
-        len: texts.length,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
-}
-function carryTrailingForwardStickyAcrossCJKBoundary(segmentation) {
-    const texts = segmentation.texts.slice();
-    const isWordLike = segmentation.isWordLike.slice();
-    const kinds = segmentation.kinds.slice();
-    const starts = segmentation.starts.slice();
-    for (let i = 0; i < texts.length - 1; i++) {
-        if (kinds[i] !== 'text' || kinds[i + 1] !== 'text')
+// Where a line may start in a paragraph's source, in WebKit: it finds breaks inside each inline
+// box from that box's own text, and at a boundary between boxes from the scan over the next box's
+// text with the last two characters before it as prior context (TextUtil.cpp:374-396), so a
+// paragraph's breaks are each item's own scan, joined by that check (getWebKitBreakBetweenItems).
+// Collapsible white space on either side of a boundary breaks there, as inside a text, but a CR,
+// which is no white space to WebKit: beside one the check decides. It takes the pair of a CR and
+// a character up to U+00FF from its table, which has no break for it, so at a boundary only a
+// character above U+00FF right after the CR brings ICU's break, where inside a text a letter above
+// U+00FF before the CR can too, before an ASCII letter. The analysis then takes a lone CR out with
+// the breaks found around it (analyzeText). The source is the items' texts joined as they are, an
+// atomic item as one U+FFFC, which is never scanned (removeItemsSkippableSegmentBreaks leaves
+// WebKit's text alone), so a scan takes an item's own text and nothing is cut out of the source
+// before the scans.
+function getWebKitParagraphBreaks(source, paragraph, preserve, keepAll, language) {
+    const { items, starts, atomic } = paragraph;
+    const breaks = new Uint8Array(source.length + 1);
+    let previous = -1;
+    for (let k = 0; k < starts.length; k++) {
+        const start = starts[k];
+        const end = k + 1 < starts.length ? starts[k + 1] : source.length;
+        if (start === end)
             continue;
-        if (!isCJK(texts[i]) || !isCJK(texts[i + 1]))
-            continue;
-        const split = splitTrailingForwardStickyCluster(texts[i]);
-        if (split === null)
-            continue;
-        texts[i] = split.head;
-        texts[i + 1] = split.tail + texts[i + 1];
-        starts[i + 1] = starts[i] + split.head.length;
-    }
-    return {
-        len: texts.length,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
-}
-function buildMergedSegmentation(normalized, profile, whiteSpaceProfile) {
-    const wordSegmenter = getSharedWordSegmenter();
-    let mergedLen = 0;
-    const mergedTexts = [];
-    const mergedTextParts = [];
-    const mergedWordLike = [];
-    const mergedKinds = [];
-    const mergedStarts = [];
-    // Track repeatable single-char punctuation runs structurally so identical
-    // merges stay O(1) instead of re-scanning the accumulated segment each time.
-    const mergedSingleCharRunChars = [];
-    const mergedSingleCharRunLengths = [];
-    const mergedContainsCJK = [];
-    const mergedContainsArabicScript = [];
-    const mergedEndsWithClosingQuote = [];
-    const mergedEndsWithMyanmarMedialGlue = [];
-    const mergedHasArabicNoSpacePunctuation = [];
-    for (const s of wordSegmenter.segment(normalized)) {
-        for (const piece of splitSegmentByBreakKind(s.segment, s.isWordLike ?? false, s.index, whiteSpaceProfile)) {
-            const isText = piece.kind === 'text';
-            const repeatableSingleCharRunChar = getRepeatableSingleCharRunChar(piece.text, piece.isWordLike, piece.kind);
-            const pieceContainsCJK = isCJK(piece.text);
-            const pieceContainsArabicScript = containsArabicScript(piece.text);
-            const pieceLastCodePoint = getLastCodePoint(piece.text);
-            const pieceEndsWithClosingQuote = endsWithClosingQuote(piece.text);
-            const pieceEndsWithMyanmarMedialGlue = endsWithMyanmarMedialGlue(piece.text);
-            const prevIndex = mergedLen - 1;
-            function appendPieceToPrevious() {
-                if (mergedSingleCharRunChars[prevIndex] !== null) {
-                    mergedTextParts[prevIndex] = [
-                        materializeDeferredSingleCharRun(mergedTexts, mergedSingleCharRunChars, mergedSingleCharRunLengths, prevIndex),
-                    ];
-                    mergedSingleCharRunChars[prevIndex] = null;
-                }
-                mergedTextParts[prevIndex].push(piece.text);
-                mergedWordLike[prevIndex] = mergedWordLike[prevIndex] || piece.isWordLike;
-                mergedContainsCJK[prevIndex] = mergedContainsCJK[prevIndex] || pieceContainsCJK;
-                mergedContainsArabicScript[prevIndex] =
-                    mergedContainsArabicScript[prevIndex] || pieceContainsArabicScript;
-                mergedEndsWithClosingQuote[prevIndex] = pieceEndsWithClosingQuote;
-                mergedEndsWithMyanmarMedialGlue[prevIndex] = pieceEndsWithMyanmarMedialGlue;
-                mergedHasArabicNoSpacePunctuation[prevIndex] = hasArabicNoSpacePunctuation(mergedContainsArabicScript[prevIndex], pieceLastCodePoint);
-            }
-            // First-pass keeps: no-space script-specific joins and punctuation glue
-            // that depend on the immediately preceding text run.
-            if (profile.carryCJKAfterClosingQuote &&
-                isText &&
-                mergedLen > 0 &&
-                mergedKinds[prevIndex] === 'text' &&
-                pieceContainsCJK &&
-                mergedContainsCJK[prevIndex] &&
-                mergedEndsWithClosingQuote[prevIndex]) {
-                appendPieceToPrevious();
-            }
-            else if (isText &&
-                mergedLen > 0 &&
-                mergedKinds[prevIndex] === 'text' &&
-                isCJKLineStartProhibitedSegment(piece.text) &&
-                mergedContainsCJK[prevIndex]) {
-                appendPieceToPrevious();
-            }
-            else if (isText &&
-                mergedLen > 0 &&
-                mergedKinds[prevIndex] === 'text' &&
-                mergedEndsWithMyanmarMedialGlue[prevIndex]) {
-                appendPieceToPrevious();
-            }
-            else if (isText &&
-                mergedLen > 0 &&
-                mergedKinds[prevIndex] === 'text' &&
-                piece.isWordLike &&
-                pieceContainsArabicScript &&
-                mergedHasArabicNoSpacePunctuation[prevIndex]) {
-                appendPieceToPrevious();
-                mergedWordLike[prevIndex] = true;
-            }
-            else if (repeatableSingleCharRunChar !== null &&
-                mergedLen > 0 &&
-                mergedKinds[prevIndex] === 'text' &&
-                mergedSingleCharRunChars[prevIndex] === repeatableSingleCharRunChar) {
-                mergedSingleCharRunLengths[prevIndex] = (mergedSingleCharRunLengths[prevIndex] ?? 1) + 1;
-            }
-            else if (isText &&
-                !piece.isWordLike &&
-                mergedLen > 0 &&
-                mergedKinds[prevIndex] === 'text' &&
-                !mergedContainsCJK[prevIndex] &&
-                (isLeftStickyPunctuationSegment(piece.text) ||
-                    (piece.text === '-' && mergedWordLike[prevIndex]))) {
-                appendPieceToPrevious();
-            }
-            else {
-                mergedTexts[mergedLen] = piece.text;
-                mergedTextParts[mergedLen] = [piece.text];
-                mergedWordLike[mergedLen] = piece.isWordLike;
-                mergedKinds[mergedLen] = piece.kind;
-                mergedStarts[mergedLen] = piece.start;
-                mergedSingleCharRunChars[mergedLen] = repeatableSingleCharRunChar;
-                mergedSingleCharRunLengths[mergedLen] = repeatableSingleCharRunChar === null ? 0 : 1;
-                mergedContainsCJK[mergedLen] = pieceContainsCJK;
-                mergedContainsArabicScript[mergedLen] = pieceContainsArabicScript;
-                mergedEndsWithClosingQuote[mergedLen] = pieceEndsWithClosingQuote;
-                mergedEndsWithMyanmarMedialGlue[mergedLen] = pieceEndsWithMyanmarMedialGlue;
-                mergedHasArabicNoSpacePunctuation[mergedLen] = hasArabicNoSpacePunctuation(pieceContainsArabicScript, pieceLastCodePoint);
-                mergedLen++;
-            }
+        // An item of one unit, as a space between two styled words or an atomic item's U+FFFC, has
+        // no break inside, and its scan marks its end only after a line or paragraph separator
+        // (getWebKitLineBreaks), so only those are scanned.
+        const first = source.charCodeAt(start);
+        if (end - start > 1 || first === 0x2028 || first === 0x2029) {
+            const itemBreaks = getWebKitLineBreaks(items[k].text, preserve, keepAll, language);
+            for (let i = 1; i <= end - start; i++)
+                breaks[start + i] = itemBreaks[i];
         }
-    }
-    for (let i = 0; i < mergedLen; i++) {
-        if (mergedSingleCharRunChars[i] !== null) {
-            mergedTexts[i] = materializeDeferredSingleCharRun(mergedTexts, mergedSingleCharRunChars, mergedSingleCharRunLengths, i);
-            continue;
+        if (previous >= 0 && !atomic[k] && !atomic[previous]) {
+            const last = source.charCodeAt(start - 1);
+            const collapses = !preserve && ((first !== 0x0D && isCollapsibleSpaceCode(first)) || (last !== 0x0D && isCollapsibleSpaceCode(last)));
+            if (collapses || getWebKitBreakBetweenItems(items[previous].text, items[k].text, keepAll, language))
+                breaks[start] = breaks[start] | BREAK;
         }
-        mergedTexts[i] = joinTextParts(mergedTextParts[i]);
+        previous = k;
     }
-    // Later passes operate on the merged text stream itself: contextual escaped
-    // quote glue, forward-sticky carry, compaction, then the broader URL/numeric
-    // and Arabic-leading-mark fixes.
-    for (let i = 1; i < mergedLen; i++) {
-        if (mergedKinds[i] === 'text' &&
-            !mergedWordLike[i] &&
-            isEscapedQuoteClusterSegment(mergedTexts[i]) &&
-            mergedKinds[i - 1] === 'text' &&
-            !mergedContainsCJK[i - 1]) {
-            mergedTexts[i - 1] += mergedTexts[i];
-            mergedWordLike[i - 1] = mergedWordLike[i - 1] || mergedWordLike[i];
-            mergedTexts[i] = '';
-        }
-    }
-    const forwardStickyPrefixParts = Array.from({ length: mergedLen }, () => null);
-    let nextLiveIndex = -1;
-    for (let i = mergedLen - 1; i >= 0; i--) {
-        const text = mergedTexts[i];
-        if (text.length === 0)
-            continue;
-        if (mergedKinds[i] === 'text' &&
-            !mergedWordLike[i] &&
-            nextLiveIndex >= 0 &&
-            mergedKinds[nextLiveIndex] === 'text' &&
-            (isForwardStickyClusterSegment(text) ||
-                (text === '-' && startsWithDecimalDigit(mergedTexts[nextLiveIndex])))) {
-            const prefixParts = forwardStickyPrefixParts[nextLiveIndex] ?? [];
-            prefixParts.push(text);
-            forwardStickyPrefixParts[nextLiveIndex] = prefixParts;
-            mergedStarts[nextLiveIndex] = mergedStarts[i];
-            mergedTexts[i] = '';
-            continue;
-        }
-        nextLiveIndex = i;
-    }
-    for (let i = 0; i < mergedLen; i++) {
-        const prefixParts = forwardStickyPrefixParts[i];
-        if (prefixParts == null)
-            continue;
-        mergedTexts[i] = joinReversedPrefixParts(prefixParts, mergedTexts[i]);
-    }
-    let compactLen = 0;
-    for (let read = 0; read < mergedLen; read++) {
-        const text = mergedTexts[read];
-        if (text.length === 0)
-            continue;
-        if (compactLen !== read) {
-            mergedTexts[compactLen] = text;
-            mergedWordLike[compactLen] = mergedWordLike[read];
-            mergedKinds[compactLen] = mergedKinds[read];
-            mergedStarts[compactLen] = mergedStarts[read];
-        }
-        compactLen++;
-    }
-    mergedTexts.length = compactLen;
-    mergedWordLike.length = compactLen;
-    mergedKinds.length = compactLen;
-    mergedStarts.length = compactLen;
-    const compacted = mergeGlueConnectedTextRuns({
-        len: compactLen,
-        texts: mergedTexts,
-        isWordLike: mergedWordLike,
-        kinds: mergedKinds,
-        starts: mergedStarts,
-    });
-    const withMergedUrls = carryTrailingForwardStickyAcrossCJKBoundary(mergeNoSpaceWordChains(splitHyphenatedNumericRuns(mergeNumericRuns(mergeUrlQueryRuns(mergeUrlLikeRuns(compacted))))));
-    for (let i = 0; i < withMergedUrls.len - 1; i++) {
-        const split = splitLeadingSpaceAndMarks(withMergedUrls.texts[i]);
-        if (split === null)
-            continue;
-        if ((withMergedUrls.kinds[i] !== 'space' && withMergedUrls.kinds[i] !== 'preserved-space') ||
-            withMergedUrls.kinds[i + 1] !== 'text' ||
-            !containsArabicScript(withMergedUrls.texts[i + 1])) {
-            continue;
-        }
-        withMergedUrls.texts[i] = split.space;
-        withMergedUrls.isWordLike[i] = false;
-        withMergedUrls.kinds[i] = withMergedUrls.kinds[i] === 'preserved-space' ? 'preserved-space' : 'space';
-        withMergedUrls.texts[i + 1] = split.marks + withMergedUrls.texts[i + 1];
-        withMergedUrls.starts[i + 1] = withMergedUrls.starts[i] + split.space.length;
-    }
-    return withMergedUrls;
-}
-function compileAnalysisChunks(segmentation, whiteSpaceProfile) {
-    if (segmentation.len === 0)
-        return [];
-    if (!whiteSpaceProfile.preserveHardBreaks) {
-        return [{
-                startSegmentIndex: 0,
-                endSegmentIndex: segmentation.len,
-                consumedEndSegmentIndex: segmentation.len,
-            }];
-    }
-    const chunks = [];
-    let startSegmentIndex = 0;
-    for (let i = 0; i < segmentation.len; i++) {
-        if (segmentation.kinds[i] !== 'hard-break')
-            continue;
-        chunks.push({
-            startSegmentIndex,
-            endSegmentIndex: i,
-            consumedEndSegmentIndex: i + 1,
-        });
-        startSegmentIndex = i + 1;
-    }
-    if (startSegmentIndex < segmentation.len) {
-        chunks.push({
-            startSegmentIndex,
-            endSegmentIndex: segmentation.len,
-            consumedEndSegmentIndex: segmentation.len,
-        });
-    }
-    return chunks;
-}
-function mergeKeepAllTextSegments(normalized, segmentation, breakAfterPunctuation) {
-    if (segmentation.len <= 1)
-        return segmentation;
-    const texts = [];
-    const isWordLike = [];
-    const kinds = [];
-    const starts = [];
-    let groupStart = -1;
-    let groupContainsCJK = false;
-    function pushOriginalText(index) {
-        texts.push(segmentation.texts[index]);
-        isWordLike.push(segmentation.isWordLike[index]);
-        kinds.push('text');
-        starts.push(segmentation.starts[index]);
-    }
-    function pushMergedText(start, end) {
-        let wordLike = false;
-        for (let i = start; i < end; i++) {
-            wordLike = wordLike || segmentation.isWordLike[i];
-        }
-        const sourceStart = segmentation.starts[start];
-        const sourceEnd = end < segmentation.len ? segmentation.starts[end] : normalized.length;
-        texts.push(normalized.slice(sourceStart, sourceEnd));
-        isWordLike.push(wordLike);
-        kinds.push('text');
-        starts.push(sourceStart);
-    }
-    function flushGroup(end) {
-        if (groupStart < 0)
-            return;
-        if (groupContainsCJK) {
-            if (groupStart + 1 === end) {
-                pushOriginalText(groupStart);
-            }
-            else {
-                pushMergedText(groupStart, end);
-            }
-        }
-        else {
-            for (let i = groupStart; i < end; i++)
-                pushOriginalText(i);
-        }
-        groupStart = -1;
-        groupContainsCJK = false;
-    }
-    for (let i = 0; i < segmentation.len; i++) {
-        const text = segmentation.texts[i];
-        const kind = segmentation.kinds[i];
-        if (kind === 'text') {
-            if (groupStart >= 0 &&
-                !canContinueKeepAllTextRun(segmentation.texts[i - 1], breakAfterPunctuation)) {
-                flushGroup(i);
-            }
-            if (groupStart < 0)
-                groupStart = i;
-            groupContainsCJK = groupContainsCJK || isCJK(text);
-            continue;
-        }
-        flushGroup(i);
-        texts.push(text);
-        isWordLike.push(segmentation.isWordLike[i]);
-        kinds.push(kind);
-        starts.push(segmentation.starts[i]);
-    }
-    flushGroup(segmentation.len);
-    return {
-        len: texts.length,
-        texts,
-        isWordLike,
-        kinds,
-        starts,
-    };
-}
-// vendored: `hyphenBreak: false` — glue a text segment that ends in a hyphen
-// to the text segment after it, so no line breaks there. Upstream always
-// breaks after '-' / U+2010, like browsers (and PowerPoint) do.
-function mergeHyphenatedTextRuns(segmentation) {
-    const texts = [];
-    const isWordLike = [];
-    const kinds = [];
-    const starts = [];
-    for (let i = 0; i < segmentation.len; i++) {
-        const text = segmentation.texts[i];
-        const last = texts.length - 1;
-        if (last >= 0 &&
-            segmentation.kinds[i] === 'text' &&
-            kinds[last] === 'text' &&
-            /[-\u2010]$/.test(texts[last])) {
-            texts[last] += text;
-            isWordLike[last] = isWordLike[last] || segmentation.isWordLike[i];
-            continue;
-        }
-        texts.push(text);
-        isWordLike.push(segmentation.isWordLike[i]);
-        kinds.push(segmentation.kinds[i]);
-        starts.push(segmentation.starts[i]);
-    }
-    return { len: texts.length, texts, isWordLike, kinds, starts };
-}
-export function analyzeText(text, profile, whiteSpace = 'normal', wordBreak = 'normal', hyphenBreak = true) {
-    const whiteSpaceProfile = getWhiteSpaceProfile(whiteSpace);
-    const normalized = whiteSpaceProfile.mode === 'pre-wrap'
-        ? normalizeWhitespacePreWrap(text)
-        : normalizeWhitespaceNormal(text);
-    if (normalized.length === 0) {
-        return {
-            normalized,
-            chunks: [],
-            len: 0,
-            texts: [],
-            isWordLike: [],
-            kinds: [],
-            starts: [],
-        };
-    }
-    const mergedSegmentation = buildMergedSegmentation(normalized, profile, whiteSpaceProfile);
-    const segmented = wordBreak === 'keep-all'
-        ? mergeKeepAllTextSegments(normalized, mergedSegmentation, profile.breakKeepAllAfterPunctuation)
-        : mergedSegmentation;
-    const segmentation = hyphenBreak ? segmented : mergeHyphenatedTextRuns(segmented);
-    return {
-        normalized,
-        chunks: compileAnalysisChunks(segmentation, whiteSpaceProfile),
-        ...segmentation,
-    };
+    return breaks;
 }

@@ -3,9 +3,9 @@
  *
  * Why vendor at all
  * ----------------
- * pretext reaches for a canvas 2d context in exactly one place —
- * `getMeasureContext()` in measurement.js — and there is no injection seam
- * (module-private `measureContext`, no setter). The alternatives to vendoring
+ * pretext measures text through a canvas 2d context it makes itself —
+ * `createContext()` in measurement.js — and there is no injection seam
+ * (module-private measure state, no setter). The alternatives to vendoring
  * are all worse for us:
  *
  *   - polyfilling globalThis.document / OffscreenCanvas / patching
@@ -16,14 +16,15 @@
  *   - a bundler resolve plugin — does not cover the `"bun": "./src/index.ts"`
  *     export condition, where consumers run our TypeScript unbundled.
  *
- * So: copy the published `dist/` verbatim and rewrite that one function to
- * delegate to our own measure context.
+ * So: copy the published `dist/` verbatim and rewrite the context factory to
+ * hand out our own measure context, plus the few places where pretext reads
+ * the browser it runs in (see MEASUREMENT_PATCHES).
  *
  * Why dist/ and not src/
  * ----------------------
  *   - packages/core has `isolatedDeclarations: true`; third-party TS will not
  *     satisfy it;
- *   - pretext builds with TypeScript 6.x, this repo is on 5.x;
+ *   - pretext builds with TypeScript 7.x, this repo is on 5.x;
  *   - dist/ already ships .d.ts, so the vendored code needs no compilation at
  *     all — tsc reads the declarations, bun bundles/executes the JavaScript.
  *
@@ -41,167 +42,204 @@
 import { mkdir, readdir, readFile, rm, writeFile, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname, join, relative } from 'node:path';
-import { TEXT_PATCHES, TEXT_PATCH_NOTES } from './vendor-pretext-text-patches.ts';
+import { TEXT_PATCHES, TEXT_PATCH_NOTES, type TextPatch } from './vendor-pretext-text-patches.ts';
 
 const PKG = 'node_modules/@chenglou/pretext';
 const OUT = 'src/vendor/pretext';
 
 /** Import specifier the vendored measurement.js delegates to. */
 const SEAM_IMPORT =
-  "import { getMeasureContext as __vyazGetMeasureContext, getMeasureProfileKey as __vyazGetMeasureProfileKey } from '../../measure/FontkitMeasureContext.js';\n";
+  "import { createMeasureContextProxy as __vyazCreateMeasureContext, getMeasureProfileKey as __vyazGetMeasureProfileKey } from '../../measure/FontkitMeasureContext.js';\n";
 
 /**
- * Exact upstream body of measurement.js `getMeasureContext()` as emitted by
- * pretext's tsc build. Anchored verbatim — see the header note on failing loud.
+ * The measurement seam. pretext 1.0 makes a context per measure state (and a
+ * second one for whole-run kana probes) and talks to it like a canvas: `font`,
+ * `measureText()`, `fontKerning`, `lang`. vyaz hands it a proxy onto the
+ * installed fontkit context instead.
  */
-const JS_ANCHOR = `export function getMeasureContext() {
-    if (measureContext !== null)
-        return measureContext;
-    if (typeof OffscreenCanvas !== 'undefined') {
-        measureContext = new OffscreenCanvas(1, 1).getContext('2d');
-        return measureContext;
-    }
-    if (typeof document !== 'undefined') {
-        measureContext = document.createElement('canvas').getContext('2d');
-        return measureContext;
-    }
-    throw new Error('Text measurement requires OffscreenCanvas or a DOM canvas context.');
-}`;
-
-/**
- * Replacement. Delegation is lazy — resolved on first call, not at module
- * init — so there is no installation order to get wrong and no window in
- * which a worker thread can measure through the wrong backend.
- */
-const JS_REPLACEMENT = `export function getMeasureContext() {
-    // vendored: delegates to src/measure/FontkitMeasureContext.ts
-    return __vyazGetMeasureContext();
-}`;
-
-/**
- * Upstream keys its per-segment width cache by `font` alone — one canvas, one
- * way to measure. vyaz measures the same font differently per measure profile,
- * so the profile becomes part of the key: widths never cross-feed, and a
- * profile switch (every `mode: 'office'` layout) no longer has to flush it.
- */
-const PROFILE_KEY_JS_ANCHOR = `export function getSegmentMetricCache(font) {
-    let cache = segmentMetricCaches.get(font);
-    if (!cache) {
-        cache = new Map();
-        segmentMetricCaches.set(font, cache);
-    }
-    return cache;
-}`;
-const PROFILE_KEY_JS_REPLACEMENT = `export function getSegmentMetricCache(font) {
-    // vendored: upstream keys this cache by \`font\` alone. vyaz measures the
+const MEASUREMENT_PATCHES: TextPatch[] = [
+  {
+    file: 'measurement.js',
+    where: 'measurement.js (createContext)',
+    anchor: `function createContext(language) {
+    // jsdom and happy-dom have a document whose canvas gives no 2D context: getContext() returns null there.
+    let context = null;
+    if (typeof OffscreenCanvas !== 'undefined')
+        context = new OffscreenCanvas(1, 1).getContext('2d');
+    else if (typeof document !== 'undefined')
+        context = document.createElement('canvas').getContext('2d');
+    if (context === null)
+        throw new Error('Text measurement requires OffscreenCanvas or a DOM canvas context.');`,
+    replacement: `function createContext(language) {
+    // vendored: measure through src/measure/FontkitMeasureContext.ts, never a canvas.
+    // The proxy forwards to whatever context is installed at the time of each call.
+    const context = __vyazCreateMeasureContext();`,
+  },
+  {
+    // Upstream keys its per-font measurements by \`font\` alone — one canvas, one
+    // way to measure. vyaz measures the same font differently per measure
+    // profile, so the profile becomes part of the key: widths never cross-feed,
+    // and a profile switch (every \`mode: 'office'\` layout) does not flush them.
+    file: 'measurement.js',
+    where: 'measurement.js (font measurement cache key)',
+    anchor: `    let measurement = fonts.get(font);
+    if (measurement === undefined) {`,
+    replacement: `    // vendored: upstream keys this cache by \`font\` alone. vyaz measures the
     // same font differently per measure profile (advance / shape, kerning
     // threshold, advance grid, optical sizing), so the profile is part of the key.
-    const key = __vyazGetMeasureProfileKey() + font;
-    let cache = segmentMetricCaches.get(key);
-    if (!cache) {
-        cache = new Map();
-        segmentMetricCaches.set(key, cache);
-    }
-    return cache;
-}`;
-
-const DTS_ANCHOR =
-  'export declare function getMeasureContext(): CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;';
-
-const DTS_REPLACEMENT =
-  'export declare function getMeasureContext(): { font: string; measureText(text: string): { width: number } };';
-
-/** `measureContext` is now unused in the vendored file; drop the dead binding. */
-const DEAD_STATE_ANCHOR = 'let measureContext = null;\n';
+    const fontKey = __vyazGetMeasureProfileKey() + font;
+    let measurement = fonts.get(fontKey);
+    if (measurement === undefined) {`,
+  },
+  {
+    file: 'measurement.js',
+    where: 'measurement.js (font measurement cache store)',
+    anchor: '        fonts.set(font, measurement);',
+    replacement: '        fonts.set(fontKey, measurement);',
+  },
+  {
+    // Layout must not depend on the page it runs in: the same document lays out
+    // the same in Bun, Node and every browser. Upstream reads \`<html lang>\`.
+    file: 'measurement.js',
+    where: 'measurement.js (getPreparationLanguage)',
+    anchor: `    let language = localeLanguage ?? null;
+    if (localeLanguage === undefined && typeof document !== 'undefined') {
+        const lang = document.documentElement?.lang;
+        if (typeof lang === 'string')
+            language = lang;
+    }`,
+    replacement: `    // vendored: the page's <html lang> is not read — layout must not depend on
+    // the page it runs in. setLocale() still sets a language.
+    const language = localeLanguage ?? null;`,
+  },
+  {
+    // Upstream picks Chrome's, Safari's or Firefox's rules from the user agent,
+    // to match the browser's own canvas and layout. vyaz measures with fontkit,
+    // not that canvas, and must lay out identically everywhere: always Blink,
+    // which is also what upstream does outside a browser.
+    file: 'measurement.js',
+    where: 'measurement.js (buildEngineProfile)',
+    anchor: "    const ua = typeof navigator === 'undefined' ? '' : navigator.userAgent ?? '';",
+    replacement: `    // vendored: always Blink's profile, whatever runtime vyaz is in — the user
+    // agent describes the browser's canvas, which vyaz does not measure with.
+    const ua = '';`,
+  },
+  {
+    // The correction undoes canvas emoji inflation, read off a DOM span; the
+    // fontkit backend has neither.
+    file: 'measurement.js',
+    where: 'measurement.js (getEmojiCorrection)',
+    anchor: 'export function getEmojiCorrection(font, measurement) {',
+    replacement: `export function getEmojiCorrection(font, measurement) {
+    // vendored: fontkit has no canvas emoji inflation to correct, and no DOM to read.
+    return 0;
+}
+// vendored: upstream's getEmojiCorrection, unused.
+export function upstreamGetEmojiCorrection(font, measurement) {`,
+  },
+];
 
 /**
- * Second rewrite: `overflow-wrap: normal` support.
+ * `overflow-wrap: normal` support.
  *
  * Upstream pretext targets a fixed CSS profile — `overflow-wrap: break-word`
- * unconditionally (see README / github.com/chenglou/pretext#206) — so any
- * word wider than the available width is *always* sliced at grapheme
- * boundaries, with no option to opt out. Real browsers and PowerPoint default
- * to `overflow-wrap: normal`: an unbreakable word instead overflows the line.
- * We add that missing mode as a new `overflowWrap` option, threaded from
- * `prepare()`/`prepareWithSegments()` down to the one call site that decides
- * whether a word-like segment may be broken mid-word.
+ * unconditionally (see README, Caveats) — so any word wider than the available
+ * width is *always* sliced at grapheme boundaries, with no option to opt out.
+ * Real browsers and PowerPoint default to `overflow-wrap: normal`: an
+ * unbreakable word instead overflows the line. We add that missing mode as an
+ * `overflowWrap` option of `prepare()` / `prepareRichInline()`, threaded into
+ * measureAnalysis()'s `overflowBreaks` flag, which already turns the
+ * emergency grapheme breaks off for atomic rich items.
  */
-const OVERFLOW_WRAP_JS_SIGNATURE_ANCHOR =
-  'function measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing) {';
-const OVERFLOW_WRAP_JS_SIGNATURE_REPLACEMENT =
-  'function measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing, overflowWrap) {';
-
-const OVERFLOW_WRAP_JS_CALLSITE_ANCHOR =
-  '        pushMeasuredTextSegment(segText, segKind, segStart, segWordLike, true);';
-const OVERFLOW_WRAP_JS_CALLSITE_REPLACEMENT = `        // vendored: upstream always allowed overflow breaks here (hardcoded
-        // \`true\`, i.e. \`overflow-wrap: break-word\` unconditionally — see
-        // VENDOR.json). Gate it on the caller's actual \`overflowWrap\` /
-        // \`wordBreak\` instead, so \`overflow-wrap: normal\` (the real CSS
-        // default) lets an atomic word overflow the line instead of being
-        // sliced at grapheme boundaries.
-        pushMeasuredTextSegment(segText, segKind, segStart, segWordLike, overflowWrap !== 'normal' || wordBreak === 'break-all');`;
-
-const OVERFLOW_WRAP_JS_PREPARE_ANCHOR = `function prepareInternal(text, font, includeSegments, options) {
-    const wordBreak = options?.wordBreak ?? 'normal';
-    const letterSpacing = options?.letterSpacing ?? 0;
-    const analysis = analyzeText(text, getEngineProfile(), options?.whiteSpace, wordBreak);
-    return measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing);`;
-const OVERFLOW_WRAP_JS_PREPARE_REPLACEMENT = `function prepareInternal(text, font, includeSegments, options) {
-    const wordBreak = options?.wordBreak ?? 'normal';
-    const letterSpacing = options?.letterSpacing ?? 0;
-    // vendored: upstream has no such option (always \`overflow-wrap:
-    // break-word\`) — see VENDOR.json. \`'normal'\` is the real CSS default.
-    const overflowWrap = options?.overflowWrap ?? 'normal';
-    const analysis = analyzeText(text, getEngineProfile(), options?.whiteSpace, wordBreak);
-    return measureAnalysis(analysis, font, includeSegments, wordBreak, letterSpacing, overflowWrap);`;
-
-const OVERFLOW_WRAP_DTS_ANCHOR = `export type PrepareOptions = {
+const OVERFLOW_WRAP_PATCHES: TextPatch[] = [
+  {
+    file: 'layout.js',
+    where: 'layout.js (prepareInternal)',
+    anchor: `    const analysis = analyzeText(text, engineProfile, options?.whiteSpace, wordBreak, language);
+    return measureAnalysis(analysis, 0, analysis.flags.length, font, includeSegments, letterSpacing, engineProfile, language, true, null);`,
+    replacement: `    // vendored: \`overflowWrap\` (default 'normal', the real CSS default) and
+    // \`hyphenBreak\` (default true) — upstream has neither, see VENDOR.json.
+    const overflowBreaks = (options?.overflowWrap ?? 'normal') !== 'normal';
+    const analysis = analyzeText(text, engineProfile, options?.whiteSpace, wordBreak, language, null, options?.hyphenBreak !== false);
+    return measureAnalysis(analysis, 0, analysis.flags.length, font, includeSegments, letterSpacing, engineProfile, language, overflowBreaks, null);`,
+  },
+  {
+    file: 'layout.d.ts',
+    where: 'layout.d.ts (PrepareOptions)',
+    anchor: `export type PrepareOptions = {
     whiteSpace?: WhiteSpaceMode;
     wordBreak?: WordBreakMode;
     letterSpacing?: number;
-};`;
-const OVERFLOW_WRAP_DTS_REPLACEMENT = `export type OverflowWrapMode = 'normal' | 'break-word' | 'anywhere';
+};`,
+    replacement: `export type OverflowWrapMode = 'normal' | 'break-word' | 'anywhere';
 export type PrepareOptions = {
     whiteSpace?: WhiteSpaceMode;
     wordBreak?: WordBreakMode;
     letterSpacing?: number;
-    /** CSS \`overflow-wrap\`. Default \`'normal'\` — an atomic word wider than
-     *  the line overflows instead of being sliced at grapheme boundaries.
+    /** CSS \`overflow-wrap\`. Default \`'normal'\` — a word wider than the line
+     *  overflows instead of being sliced at grapheme boundaries.
      *  \`'break-word'\` / \`'anywhere'\` restore upstream's unconditional
      *  long-word grapheme fallback. */
     overflowWrap?: OverflowWrapMode;
-};`;
-
-const OVERFLOW_WRAP_RICH_JS_ANCHOR =
-  '        const prepared = prepareWithSegments(trimmedText, item.font, letterSpacing === 0 ? undefined : { letterSpacing });';
-const OVERFLOW_WRAP_RICH_JS_REPLACEMENT = `        // vendored: forward overflowWrap (upstream rich-inline.js never read
-        // it — see VENDOR.json) so a per-item \`overflow-wrap: normal\` reaches
-        // the same word-break fallback gate as the plain prepare() path.
-        const prepareOptions = letterSpacing === 0 && item.overflowWrap === undefined
-            ? undefined
-            : { letterSpacing, overflowWrap: item.overflowWrap };
-        const prepared = prepareWithSegments(trimmedText, item.font, prepareOptions);`;
-
-const OVERFLOW_WRAP_RICH_DTS_ANCHOR = `import { type LayoutCursor } from './layout.js';
-declare const preparedRichInlineBrand: unique symbol;
-export type RichInlineItem = {
-    text: string;
-    font: string;
-    letterSpacing?: number;
-    break?: 'normal' | 'never';
-    extraWidth?: number;
-};`;
-const OVERFLOW_WRAP_RICH_DTS_REPLACEMENT = `import { type LayoutCursor, type OverflowWrapMode } from './layout.js';
-declare const preparedRichInlineBrand: unique symbol;
-export type RichInlineItem = {
-    text: string;
-    font: string;
-    letterSpacing?: number;
-    break?: 'normal' | 'never';
-    extraWidth?: number;
-    /** CSS \`overflow-wrap\` for this item's own text. Default \`'normal'\`. */
+    /** Break after '-' / U+2010 inside a word. Default \`true\` (upstream). */
+    hyphenBreak?: boolean;
+};`,
+  },
+  {
+    file: 'rich-inline.js',
+    where: 'rich-inline.js (prepareRichInline options)',
+    anchor: `    const wordBreak = options?.wordBreak ?? 'normal';
+    const preserve = whiteSpace === 'pre-wrap';`,
+    replacement: `    const wordBreak = options?.wordBreak ?? 'normal';
+    const preserve = whiteSpace === 'pre-wrap';
+    // vendored: \`overflowWrap\` (default 'normal') and \`hyphenBreak\` (default
+    // true) — upstream has neither, see VENDOR.json.
+    const overflowBreaks = (options?.overflowWrap ?? 'normal') !== 'normal';
+    const hyphenBreak = options?.hyphenBreak !== false;`,
+  },
+  {
+    file: 'rich-inline.js',
+    where: 'rich-inline.js (one-item paragraph)',
+    anchor: `        const analysis = analyzeText(only.text, profile, whiteSpace, wordBreak, language);
+        const data = measureAnalysis(analysis, 0, analysis.flags.length, only.font, true, readLetterSpacing(only.letterSpacing, profile), profile, language, true, null);`,
+    replacement: `        const analysis = analyzeText(only.text, profile, whiteSpace, wordBreak, language, null, hyphenBreak);
+        const data = measureAnalysis(analysis, 0, analysis.flags.length, only.font, true, readLetterSpacing(only.letterSpacing, profile), profile, language, overflowBreaks, null);`,
+  },
+  {
+    file: 'rich-inline.js',
+    where: 'rich-inline.js (paragraph analysis)',
+    anchor: '    const analysis = analyzeText(source, profile, whiteSpace, wordBreak, language, paragraph);',
+    replacement: '    const analysis = analyzeText(source, profile, whiteSpace, wordBreak, language, paragraph, hyphenBreak);',
+  },
+  {
+    file: 'rich-inline.js',
+    where: 'rich-inline.js (item measurement)',
+    anchor: '        const sub = measureAnalysis(analysis, from, to, item.font, false, letterSpacing, profile, language, true, lists);',
+    replacement: '        const sub = measureAnalysis(analysis, from, to, item.font, false, letterSpacing, profile, language, overflowBreaks, lists);',
+  },
+  {
+    file: 'rich-inline.d.ts',
+    where: 'rich-inline.d.ts (RichInlineOptions)',
+    anchor: `import type { LayoutCursor, WordBreakMode } from './layout.js';`,
+    replacement: `import type { LayoutCursor, OverflowWrapMode, WordBreakMode } from './layout.js';`,
+  },
+  {
+    file: 'rich-inline.d.ts',
+    where: 'rich-inline.d.ts (RichInlineOptions fields)',
+    anchor: `export type RichInlineOptions = {
+    whiteSpace?: WhiteSpaceMode;
+    wordBreak?: WordBreakMode;
+};`,
+    replacement: `export type RichInlineOptions = {
+    whiteSpace?: WhiteSpaceMode;
+    wordBreak?: WordBreakMode;
+    /** CSS \`overflow-wrap\` of the paragraph. Default \`'normal'\`. */
     overflowWrap?: OverflowWrapMode;
-};`;
+    /** Break after '-' / U+2010 inside a word. Default \`true\`. */
+    hyphenBreak?: boolean;
+};`,
+  },
+];
 
 function fail(message: string): never {
   console.error(`\n  vendor-pretext: ${message}\n`);
@@ -214,7 +252,7 @@ function replaceOnce(source: string, anchor: string, replacement: string, where:
   if (first === -1) {
     fail(
       `anchor not found in ${where}.\n` +
-        `  Upstream changed the measurement seam — re-read it and update the anchor.\n` +
+        `  Upstream changed the patched code — re-read it and update the anchor.\n` +
         `  Expected:\n${anchor.split('\n').map((l) => `    ${l}`).join('\n')}`,
     );
   }
@@ -271,67 +309,17 @@ async function main(): Promise<void> {
   const files: string[] = [];
   await copyTree(join(PKG, 'dist'), OUT, files);
 
-  // MIT — keep the licence next to the code it covers.
+  // MIT, plus the Chromium / WebKit / ICU notices — keep them next to the code they cover.
   await writeFile(join(OUT, 'LICENSE'), await readFile(join(PKG, 'LICENSE')));
   files.push('LICENSE');
 
-  // ── the one rewrite ──────────────────────────────────────────────────
-  const jsPath = join(OUT, 'measurement.js');
-  let js = await readFile(jsPath, 'utf8');
-  js = replaceOnce(js, JS_ANCHOR, JS_REPLACEMENT, 'measurement.js');
-  js = replaceOnce(js, DEAD_STATE_ANCHOR, '', 'measurement.js (dead state)');
-  js = replaceOnce(js, PROFILE_KEY_JS_ANCHOR, PROFILE_KEY_JS_REPLACEMENT, 'measurement.js (segment cache key)');
-  await writeFile(jsPath, SEAM_IMPORT + js);
-
-  const dtsPath = join(OUT, 'measurement.d.ts');
-  const dts = replaceOnce(
-    await readFile(dtsPath, 'utf8'),
-    DTS_ANCHOR,
-    DTS_REPLACEMENT,
-    'measurement.d.ts',
-  );
-  await writeFile(dtsPath, dts);
-
-  // ── the second rewrite: overflow-wrap: normal ─────────────────────────
-  const layoutJsPath = join(OUT, 'layout.js');
-  let layoutJs = await readFile(layoutJsPath, 'utf8');
-  layoutJs = replaceOnce(layoutJs, OVERFLOW_WRAP_JS_SIGNATURE_ANCHOR, OVERFLOW_WRAP_JS_SIGNATURE_REPLACEMENT, 'layout.js (measureAnalysis signature)');
-  layoutJs = replaceOnce(layoutJs, OVERFLOW_WRAP_JS_CALLSITE_ANCHOR, OVERFLOW_WRAP_JS_CALLSITE_REPLACEMENT, 'layout.js (allowOverflowBreaks call site)');
-  layoutJs = replaceOnce(layoutJs, OVERFLOW_WRAP_JS_PREPARE_ANCHOR, OVERFLOW_WRAP_JS_PREPARE_REPLACEMENT, 'layout.js (prepareInternal)');
-  await writeFile(layoutJsPath, layoutJs);
-
-  const layoutDtsPath = join(OUT, 'layout.d.ts');
-  const layoutDts = replaceOnce(
-    await readFile(layoutDtsPath, 'utf8'),
-    OVERFLOW_WRAP_DTS_ANCHOR,
-    OVERFLOW_WRAP_DTS_REPLACEMENT,
-    'layout.d.ts (PrepareOptions)',
-  );
-  await writeFile(layoutDtsPath, layoutDts);
-
-  const richInlineJsPath = join(OUT, 'rich-inline.js');
-  const richInlineJs = replaceOnce(
-    await readFile(richInlineJsPath, 'utf8'),
-    OVERFLOW_WRAP_RICH_JS_ANCHOR,
-    OVERFLOW_WRAP_RICH_JS_REPLACEMENT,
-    'rich-inline.js (prepareWithSegments call)',
-  );
-  await writeFile(richInlineJsPath, richInlineJs);
-
-  const richInlineDtsPath = join(OUT, 'rich-inline.d.ts');
-  const richInlineDts = replaceOnce(
-    await readFile(richInlineDtsPath, 'utf8'),
-    OVERFLOW_WRAP_RICH_DTS_ANCHOR,
-    OVERFLOW_WRAP_RICH_DTS_REPLACEMENT,
-    'rich-inline.d.ts (RichInlineItem)',
-  );
-  await writeFile(richInlineDtsPath, richInlineDts);
-
-  // ── the third rewrite: pre-wrap rich items, hyphenBreak ───────────────
-  for (const patch of TEXT_PATCHES) {
+  // ── the rewrites: measurement seam, overflow-wrap, hyphen breaks ───────
+  for (const patch of [...MEASUREMENT_PATCHES, ...OVERFLOW_WRAP_PATCHES, ...TEXT_PATCHES]) {
     const path = join(OUT, patch.file);
     await writeFile(path, replaceOnce(await readFile(path, 'utf8'), patch.anchor, patch.replacement, patch.where));
   }
+  const measurementPath = join(OUT, 'measurement.js');
+  await writeFile(measurementPath, SEAM_IMPORT + (await readFile(measurementPath, 'utf8')));
 
   // ── provenance stamp ─────────────────────────────────────────────────
   const hashes: Record<string, string> = {};
@@ -341,10 +329,11 @@ async function main(): Promise<void> {
   }
 
   const BASE_NOTES: Record<string, string> = {
-    'layout.js': "adds an `overflowWrap` option (default 'normal', the real CSS default) gating the word-break grapheme fallback — upstream hardcodes 'overflow-wrap: break-word' unconditionally",
-    'layout.d.ts': 'PrepareOptions gets overflowWrap?: OverflowWrapMode',
-    'rich-inline.js': 'forwards RichInlineItem.overflowWrap into prepareWithSegments()',
-    'rich-inline.d.ts': 'RichInlineItem gets overflowWrap?: OverflowWrapMode',
+    'measurement.js': "createContext() hands out a proxy onto ../../measure/FontkitMeasureContext.ts instead of a canvas; per-font measurements keyed by measure profile + font; <html lang> not read; engine profile always Blink (no user-agent sniffing); getEmojiCorrection() returns 0 (fontkit has no canvas emoji inflation)",
+    'layout.js': "prepare() gets `overflowWrap` (default 'normal', the real CSS default) gating the emergency grapheme breaks — upstream hardcodes 'overflow-wrap: break-word' — and forwards `hyphenBreak` to analyzeText()",
+    'layout.d.ts': 'PrepareOptions gets overflowWrap?: OverflowWrapMode, hyphenBreak?: boolean',
+    'rich-inline.js': 'prepareRichInline() options get overflowWrap / hyphenBreak, forwarded as in prepare()',
+    'rich-inline.d.ts': 'RichInlineOptions gets overflowWrap?: OverflowWrapMode, hyphenBreak?: boolean',
   };
   await writeFile(
     join(OUT, 'VENDOR.json'),
@@ -354,8 +343,6 @@ async function main(): Promise<void> {
         upstream: `${manifest.name}@${manifest.version}`,
         generatedFrom: 'dist/',
         patched: {
-          'measurement.js': 'getMeasureContext() delegates to ../../measure/FontkitMeasureContext.ts; getSegmentMetricCache() keys by measure profile + font',
-          'measurement.d.ts': 'getMeasureContext() return type widened to the structural shape',
           ...BASE_NOTES,
           ...Object.fromEntries(Object.entries(TEXT_PATCH_NOTES).map(([file, note]) => [file, file in BASE_NOTES ? `${BASE_NOTES[file]}; ${note}` : note])),
         },

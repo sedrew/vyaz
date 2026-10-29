@@ -49,27 +49,16 @@ export function makeFontToken(run: TextRun, effectiveFontSize: number): string {
   return `${fontStyle} ${fontWeight} ${effectiveFontSize}px ${fontFamily}`;
 }
 
-/** Compilation context (passed to pretext) */
+/**
+ * Compilation context (passed to pretext). Paragraph-level line-breaking
+ * options (`whiteSpace`, `overflowWrap`, `hyphenBreak`, `wordBreak`) go to
+ * `prepareRichInline()` once for the paragraph, not per item; an inline-box
+ * run is handed to pretext as a box of its widget's width.
+ */
 export interface PreparedRichInlineItem {
   text: string;
   font: string;
   letterSpacing?: number;
-  extraWidth?: number;         // padding, border for inline-box
-  break?: 'normal' | 'never';  // for atomic chips
-  /**
-   * CSS `overflow-wrap` for this run's text — from the paragraph's
-   * `overflowWrap` style. `'normal'` (the default) means a word wider than
-   * the available width overflows the line instead of being force-split at
-   * grapheme boundaries.
-   */
-  overflowWrap?: 'normal' | 'break-word' | 'anywhere';
-  /**
-   * `'pre-wrap'` keeps this run's spaces (paragraph `whiteSpace` `pre` /
-   * `pre-wrap`); unset collapses them (CSS `normal`).
-   */
-  whiteSpace?: 'pre-wrap';
-  /** `false` when the paragraph sets `hyphenBreak: false` (no break after `-`). */
-  hyphenBreak?: false;
   /** Original text before text-transform (if transform was applied). Used for copy-paste / round-trip. */
   originalText?: string;
   metadata: {
@@ -188,9 +177,6 @@ export function compileParagraph(paragraph: Paragraph, mode: 'browser' | 'office
       text,
       font: makeFontToken(run, effectiveFontSize),
       letterSpacing: run.letterSpacing,
-      overflowWrap: paragraph.style.overflowWrap,
-      ...(preservesSpaces(paragraph.style.whiteSpace) ? { whiteSpace: 'pre-wrap' as const } : {}),
-      ...(paragraph.style.hyphenBreak === false ? { hyphenBreak: false as const } : {}),
       // Save original text if transform was applied (for copy-paste / round-trip)
       ...(text !== rawText ? { originalText: rawText } : {}),
       metadata: {
@@ -201,12 +187,6 @@ export function compileParagraph(paragraph: Paragraph, mode: 'browser' | 'office
         inlineWidget: run.inlineWidget,
       },
     };
-
-    // Inline-box: add extraWidth and break: 'never'
-    if (run.type === 'inline-box' && run.inlineWidget) {
-      item.extraWidth = run.inlineWidget.width;
-      item.break = 'never';
-    }
 
     items.push(item);
   }

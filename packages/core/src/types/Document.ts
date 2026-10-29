@@ -529,8 +529,11 @@ export interface ParagraphStyle {
    */
   textAlignLast?: TextAlignLast;
   /**
-   * Word-break rules (CJK / non-CJK).
-   * @experimental Accepted in the type but ignored by the layout engine (no-op until implemented).
+   * Word-break rules (CJK / non-CJK). `'keep-all'` keeps Chinese, Japanese and
+   * Korean words whole, breaking only where non-CJK text would (spaces,
+   * punctuation), like CSS `word-break: keep-all`.
+   * @experimental Only `'normal'` (default) and `'keep-all'` are laid out;
+   * `'break-all'` / `'break-word'` are accepted and laid out as `'normal'`.
    */
   wordBreak?: WordBreak;
   /**

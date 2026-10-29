@@ -178,8 +178,9 @@ Direction, not a schedule. Order within a section is rough priority.
     v0.4.8 (glyph advances sit on a 1/8pt grid, kerning from 12pt on kern-table
     fonts, 1pt fit padding — verified on the 1336-box `gen-stress.ts` deck). Still open: the original "5 lines vs 3"
     mixed-size run (`mixed-run` in `kern-context.pptx`, re-check with the new
-    model), kerning of pairs around a space (pretext measures word by word;
-    Times New Roman 16pt line ≈1.5pt short), `AV`/`LT` in Times New Roman
+    model), kerning of pairs around a space (Times New Roman 16pt line ≈1.5pt
+    short while pretext measured word by word; pretext 1.0 now counts the
+    font's kerning with the space — re-measure against PowerPoint), `AV`/`LT` in Times New Roman
     (0.36pt tighter in PowerPoint than the font), STIX Two Text (kerned in
     PowerPoint without a `kern` table).
   - **`<a:spcPts>`** (absolute-point line spacing, vs. today's `spcPct`-only
