@@ -16,6 +16,7 @@ import { fontMetricsProvider, layoutTextFrame, layoutTableFrame } from '@vyaz/co
 import type { TextFrame, TableFrame } from '@vyaz/core';
 import { renderToSVG } from '../src/index.ts';
 import { renderTableToSVG } from '../src/TableRenderer.js';
+import { escapeXml } from '../src/utils.js';
 import { convert } from '../../converters/tests/helpers.ts';
 import { registerUnifont } from './helpers.ts';
 
@@ -126,6 +127,31 @@ describe('text and href', () => {
     const svg = renderToSVG(layoutTextFrame(frame({ data: { href: 'https://x.test/" onclick="alert(1)' } })), { preset: 'browser', sizing: 'content' });
     expect(injected(svg)).toBe(false);
   });
+});
+
+describe('escapeXml', () => {
+  test('values with nothing to escape come back unchanged', () => {
+    expect(escapeXml('Roboto')).toBe('Roboto');
+    expect(escapeXml('')).toBe('');
+    expect(escapeXml(12.5)).toBe('12.5');
+    expect(escapeXml(0)).toBe('0');
+  });
+
+  test('every special character, repeated and adjacent, becomes a numeric reference', () => {
+    expect(escapeXml('a&b<c>d"e')).toBe('a&#38;b&#60;c&#62;d&#34;e');
+    expect(escapeXml('&&<<>>""')).toBe('&#38;&#38;&#60;&#60;&#62;&#62;&#34;&#34;');
+    expect(escapeXml('&#38;')).toBe('&#38;#38;'); // already-escaped input is escaped again, not trusted
+  });
+
+  test("the global regex keeps no state between calls (lastIndex)", () => {
+    for (let i = 0; i < 3; i++) expect(escapeXml('x"y')).toBe('x&#34;y');
+  });
+});
+
+test.each(['flat', 'browser', 'glyph'] as const)('markup in text is escaped in the %s preset', (preset: 'flat' | 'browser' | 'glyph') => {
+  const svg = renderToSVG(layoutTextFrame({ ...frame({}), paragraphs: [{ ...frame({}).paragraphs[0], children: [{ type: 'text', text: 'a & b </text><script>x</script>', fontFamily: 'Roboto', fontSize: 16 } as any] }] }), { preset, sizing: 'content' });
+  expect(svg).not.toContain('<script');
+  expect(svg).toContain('a &#38; b');
 });
 
 describe('through @vyaz/converters (untrusted HTML)', () => {
