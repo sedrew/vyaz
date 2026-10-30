@@ -1,4 +1,7 @@
-import type { PreparedTextWithSegments } from './layout.js';
-export declare function getLineTextCache(prepared: PreparedTextWithSegments): Map<number, string[]>;
-export declare function buildLineTextFromRange(prepared: PreparedTextWithSegments, cache: Map<number, string[]>, startSegmentIndex: number, startGraphemeIndex: number, endSegmentIndex: number, endGraphemeIndex: number): string;
-export declare function clearLineTextCaches(): void;
+import { type PreparedLineData } from './line-break.js';
+export type PreparedSegments = PreparedLineData & {
+    segments: string[];
+};
+export declare function getGraphemeEnds(prepared: PreparedSegments, segmentIndex: number): Int32Array;
+export declare function buildRangeText(prepared: PreparedSegments, startSegmentIndex: number, startGraphemeIndex: number, endSegmentIndex: number, endGraphemeIndex: number): string;
+export declare function buildLineTextFromRange(prepared: PreparedSegments, startSegmentIndex: number, startGraphemeIndex: number, endSegmentIndex: number, endGraphemeIndex: number): string;

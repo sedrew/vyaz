@@ -1,4 +1,5 @@
-import { type LayoutCursor, type OverflowWrapMode } from './layout.js';
+import type { LayoutCursor, OverflowWrapMode, WordBreakMode } from './layout.js';
+import { type WhiteSpaceMode } from './analysis.js';
 declare const preparedRichInlineBrand: unique symbol;
 export type RichInlineItem = {
     text: string;
@@ -6,10 +7,17 @@ export type RichInlineItem = {
     letterSpacing?: number;
     break?: 'normal' | 'never';
     extraWidth?: number;
-    /** CSS `overflow-wrap` for this item's own text. Default `'normal'`. */
+    width?: never;
+};
+export type RichInlineBox = {
+    width: number;
+    text?: never;
+};
+export type RichInlineOptions = {
+    whiteSpace?: WhiteSpaceMode;
+    wordBreak?: WordBreakMode;
+    /** CSS `overflow-wrap` of the paragraph. Default `'normal'`. */
     overflowWrap?: OverflowWrapMode;
-    /** `'pre-wrap'` keeps this item's spaces (no trimming, no collapsed gap). Default `'normal'`. */
-    whiteSpace?: 'normal' | 'pre-wrap';
     /** Break after '-' / U+2010 inside a word. Default `true`. */
     hyphenBreak?: boolean;
 };
@@ -25,13 +33,15 @@ export type RichInlineFragment = {
     itemIndex: number;
     text: string;
     gapBefore: number;
+    gapItemIndex: number;
     occupiedWidth: number;
-    start: LayoutCursor;
-    end: LayoutCursor;
+    sourceStart: number;
+    sourceEnd: number;
 };
 export type RichInlineFragmentRange = {
     itemIndex: number;
     gapBefore: number;
+    gapItemIndex: number;
     occupiedWidth: number;
     start: LayoutCursor;
     end: LayoutCursor;
@@ -50,7 +60,7 @@ export type RichInlineStats = {
     lineCount: number;
     maxLineWidth: number;
 };
-export declare function prepareRichInline(items: RichInlineItem[]): PreparedRichInline;
+export declare function prepareRichInline(items: Array<RichInlineItem | RichInlineBox>, options?: RichInlineOptions): PreparedRichInline;
 export declare function layoutNextRichInlineLineRange(prepared: PreparedRichInline, maxWidth: number, start?: RichInlineCursor): RichInlineLineRange | null;
 export declare function materializeRichInlineLineRange(prepared: PreparedRichInline, line: RichInlineLineRange): RichInlineLine;
 export declare function walkRichInlineLineRanges(prepared: PreparedRichInline, maxWidth: number, onLine: (line: RichInlineLineRange) => void): number;

@@ -4,7 +4,7 @@
 
 > **compileParagraph**(`paragraph`, `mode?`): [`PreparedRichInlineItem`](../interfaces/PreparedRichInlineItem.md)[]
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:136](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L136)
+Defined in: [core/src/compile/ParagraphCompiler.ts:125](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L125)
 
 Compile a paragraph into PreparedRichInlineItem[].
 

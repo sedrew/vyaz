@@ -1,26 +1,12 @@
 import { type SegmentBreakKind, type WhiteSpaceMode, type WordBreakMode as AnalysisWordBreakMode } from './analysis.js';
 declare const preparedTextBrand: unique symbol;
-type PreparedCore = {
-    widths: number[];
-    lineEndFitAdvances: number[];
-    lineEndPaintAdvances: number[];
-    kinds: SegmentBreakKind[];
-    simpleLineWalkFastPath: boolean;
-    segLevels: Int8Array | null;
-    breakableFitAdvances: (number[] | null)[];
-    breakablePreferredBreaks: (number[] | null)[];
-    letterSpacing: number;
-    spacingGraphemeCounts: number[];
-    discretionaryHyphenWidth: number;
-    tabStopAdvance: number;
-    chunks: PreparedLineChunk[];
-};
 export type PreparedText = {
     readonly [preparedTextBrand]: true;
 };
-type InternalPreparedText = PreparedText & PreparedCore;
-export type PreparedTextWithSegments = InternalPreparedText & {
-    segments: string[];
+export type PreparedTextWithSegments = PreparedText & {
+    readonly segments: readonly string[];
+    readonly kinds: readonly SegmentBreakKind[];
+    readonly widths: ArrayLike<number>;
 };
 export type LayoutCursor = {
     segmentIndex: number;
@@ -54,28 +40,23 @@ export type PrepareOptions = {
     whiteSpace?: WhiteSpaceMode;
     wordBreak?: WordBreakMode;
     letterSpacing?: number;
-    /** CSS `overflow-wrap`. Default `'normal'` — an atomic word wider than
-     *  the line overflows instead of being sliced at grapheme boundaries.
+    /** CSS `overflow-wrap`. Default `'normal'` — a word wider than the line
+     *  overflows instead of being sliced at grapheme boundaries.
      *  `'break-word'` / `'anywhere'` restore upstream's unconditional
      *  long-word grapheme fallback. */
     overflowWrap?: OverflowWrapMode;
     /** Break after '-' / U+2010 inside a word. Default `true` (upstream). */
     hyphenBreak?: boolean;
 };
-type PreparedLineChunk = {
-    startSegmentIndex: number;
-    endSegmentIndex: number;
-    consumedEndSegmentIndex: number;
-};
 export declare function prepare(text: string, font: string, options?: PrepareOptions): PreparedText;
 export declare function prepareWithSegments(text: string, font: string, options?: PrepareOptions): PreparedTextWithSegments;
 export declare function layout(prepared: PreparedText, maxWidth: number, lineHeight: number): LayoutResult;
 export declare function materializeLineRange(prepared: PreparedTextWithSegments, line: LayoutLineRange): LayoutLine;
-export declare function walkLineRanges(prepared: PreparedTextWithSegments, maxWidth: number, onLine: (line: LayoutLineRange) => void): number;
-export declare function measureLineStats(prepared: PreparedTextWithSegments, maxWidth: number): LineStats;
-export declare function measureNaturalWidth(prepared: PreparedTextWithSegments): number;
-export declare function layoutNextLine(prepared: PreparedTextWithSegments, start: LayoutCursor, maxWidth: number): LayoutLine | null;
-export declare function layoutNextLineRange(prepared: PreparedTextWithSegments, start: LayoutCursor, maxWidth: number): LayoutLineRange | null;
+export declare function walkLineRanges(prepared: PreparedText, maxWidth: number, onLine: (line: LayoutLineRange) => void): number;
+export declare function measureLineStats(prepared: PreparedText, maxWidth: number): LineStats;
+export declare function measureNaturalWidth(prepared: PreparedText): number;
+export declare function layoutNextLine(prepared: PreparedTextWithSegments, maxWidth: number, start?: LayoutCursor): LayoutLine | null;
+export declare function layoutNextLineRange(prepared: PreparedText, maxWidth: number, start?: LayoutCursor): LayoutLineRange | null;
 export declare function layoutWithLines(prepared: PreparedTextWithSegments, maxWidth: number, lineHeight: number): LayoutLinesResult;
 export declare function clearCache(): void;
 export declare function setLocale(locale?: string): void;

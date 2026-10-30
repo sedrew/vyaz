@@ -10,7 +10,7 @@
   <text x="10.81" y="178.8" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">measures every line</text>
   <text x="88.81" y="198" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="3" xml:space="preserve">box.</text>
   <text x="0" y="227.2" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="-1" xml:space="preserve">The quick brown fox jumps over the</text>
-  <text x="-3" y="246.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="-1" xml:space="preserve"> lazy dog while a frame measures</text>
+  <text x="0" y="246.4" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="-1" xml:space="preserve">lazy dog while a frame measures</text>
   <text x="0" y="265.6" font-family="Roboto" font-size="16" fill="#000000" font-weight="400" letter-spacing="-1" xml:space="preserve">every line box.</text>
 <!-- debug overlay -->
   <rect x="0" y="0" width="220" height="269.6" fill="none" stroke="rgba(0,140,255,0.8)" stroke-width="1" stroke-dasharray="4,3" />
