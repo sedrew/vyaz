@@ -8,14 +8,19 @@ import type { Line } from '@vyaz/core';
  * Escape text for use in XML character data or a double-quoted attribute value.
  * Numeric references (not `&amp;`) so the output is valid in SVG-as-XML,
  * SVG-in-HTML and inside a CSS `style` attribute alike.
+ *
+ * Hot path of every renderer: most values (numbers, family names, colours,
+ * plain words) need no escaping, so one `test` returns them as they are and
+ * only the rest pay for a single `replace`.
  */
 export function escapeXml(text: string | number): string {
-  return String(text)
-    .replace(/&/g, '&#38;')
-    .replace(/</g, '&#60;')
-    .replace(/>/g, '&#62;')
-    .replace(/"/g, '&#34;');
+  const s = '' + text;
+  return XML_SPECIAL.test(s) ? s.replace(XML_SPECIAL_G, (c) => XML_ENTITY[c]) : s;
 }
+
+const XML_SPECIAL = /[&<>"]/;
+const XML_SPECIAL_G = /[&<>"]/g;
+const XML_ENTITY: Record<string, string> = { '&': '&#38;', '<': '&#60;', '>': '&#62;', '"': '&#34;' };
 
 /**
  * A CSS/SVG paint value that cannot carry anything but a colour: `#rgb[a]`,

@@ -7,6 +7,16 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+### Performance
+
+- **SVG render ~3× faster, byte-identical output.** `escapeXml` returns
+  values with nothing to escape as they are (one `test`, then one `replace`
+  only when needed) instead of four `replace` passes on every value, and the
+  flat `<text>` emit, `serializeSvg` and the table shape helpers build
+  attributes by direct concatenation instead of `Object.entries` / `map` /
+  `join`. 100k runs, `render flat` 211 → 65 ms; 20k runs, `browser`
+  97 → 31 ms, `glyph` 85 → 26 ms. Render is now faster than layout.
+
 ## [0.6.0] - 2026-10-22
 
 `@vyaz/core`, `@vyaz/renderer`, `@vyaz/converters` 0.5.0 → 0.6.0. 0.5.1 was
