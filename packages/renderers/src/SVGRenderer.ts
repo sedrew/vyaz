@@ -535,7 +535,8 @@ function buildSpanFitAttr(span: Span, opts: ResolvedOptions): Record<string, str
 function el(tag: string, attrs: Record<string, string | number | undefined> = {}, children: SvgNode[] = []): SvgElement {
   // Strip undefined values from attrs
   const cleanAttrs: Record<string, string | number> = {};
-  for (const [k, v] of Object.entries(attrs)) {
+  for (const k in attrs) {
+    const v = attrs[k];
     if (v !== undefined) {
       cleanAttrs[k] = v;
     }
@@ -578,12 +579,14 @@ function serializeSvg(node: SvgNode, indent = 0): string {
 
     case 'element': {
       const tag = node.tag;
-      const attrsStr = Object.entries(node.attrs)
-        .map(([k, v]) => `${k}="${escapeXml(v ?? "")}"`)
-        .join(' ');
+      // Direct concatenation (no Object.entries/map/join): this runs once per
+      // element of the expanded / glyph presets. Each attribute carries its
+      // leading space.
+      let attrsStr = '';
+      for (const k in node.attrs) attrsStr += ` ${k}="${escapeXml(node.attrs[k] ?? '')}"`;
 
       if (node.children.length === 0) {
-        return `${pad}<${tag}${attrsStr ? ' ' + attrsStr : ''} />\n`;
+        return `${pad}<${tag}${attrsStr} />\n`;
       }
 
       // If all children are text nodes, render inline (same line as opening tag).
@@ -591,15 +594,14 @@ function serializeSvg(node: SvgNode, indent = 0): string {
       // was emitted as a single string without extra newlines.
       const allTextChildren = node.children.every(c => c.type === 'text');
       if (allTextChildren) {
-        const text = node.children.map(c => (c as any).value).join('');
-        return `${pad}<${tag}${attrsStr ? ' ' + attrsStr : ''}>${escapeXml(text)}</${tag}>\n`;
+        let text = '';
+        for (const c of node.children) text += (c as any).value;
+        return `${pad}<${tag}${attrsStr}>${escapeXml(text)}</${tag}>\n`;
       }
 
-      const openTag = `${pad}<${tag}${attrsStr ? ' ' + attrsStr : ''}>\n`;
-      const childrenStr = node.children.map(c => serializeSvg(c, indent + 1)).join('');
-      const closeTag = `${pad}</${tag}>\n`;
-
-      return openTag + childrenStr + closeTag;
+      let out = `${pad}<${tag}${attrsStr}>\n`;
+      for (const c of node.children) out += serializeSvg(c, indent + 1);
+      return out + `${pad}</${tag}>\n`;
     }
   }
 }
@@ -1280,30 +1282,25 @@ export function renderToSVG(
       const fitAttr = buildFitAttr(line, opts);
       for (const group of groups) {
         const s = defaultStyleState(group.spans[0]);
-        const text = group.spans.map(sp => escapeXml(sp.text)).join('');
         // line.x includes padding.left. span.x includes alignment offset but NOT padding.
         // For single-span groups: span.x = firstTextX → x = line.x (correct for padding & alignment).
         // For sub/super script: span.x differs from firstTextX → x = line.x + span.x - firstTextX.
         const groupX = line.x + (group.spans[0].x - firstTextX);
-        const textAttrs: Record<string, string | number> = {
-          x: fmt(groupX),
-          y: fmt(group.targetY),
-          'font-family': s.fontFamily,
-          'font-size': fmt(group.fontSize),
-          fill: s.color,
-          'font-weight': s.fontWeight,
-        };
-        if (s.fontStyle === 'italic') textAttrs['font-style'] = 'italic';
-        if (s.decoration) textAttrs['text-decoration'] = s.decoration;
-        if (s.letterSpacing !== undefined && s.letterSpacing !== 0) textAttrs['letter-spacing'] = fmt(s.letterSpacing);
-        textAttrs['xml:space'] = 'preserve';
+        // Hot path (one <text> per style group): built by direct concatenation,
+        // not an attrs object + Object.entries/map/join. `fmt` output is a
+        // plain number and needs no escaping; every other value is escaped.
+        let attrsStr = `x="${fmt(groupX)}" y="${fmt(group.targetY)}" font-family="${escapeXml(s.fontFamily)}"`
+          + ` font-size="${fmt(group.fontSize)}" fill="${escapeXml(s.color)}" font-weight="${escapeXml(s.fontWeight)}"`;
+        if (s.fontStyle === 'italic') attrsStr += ' font-style="italic"';
+        if (s.decoration) attrsStr += ` text-decoration="${escapeXml(s.decoration)}"`;
+        if (s.letterSpacing !== undefined && s.letterSpacing !== 0) attrsStr += ` letter-spacing="${fmt(s.letterSpacing)}"`;
+        attrsStr += ' xml:space="preserve"';
         if (fitAttr) {
-          Object.assign(textAttrs, fitAttr);
+          for (const k in fitAttr) attrsStr += ` ${k}="${escapeXml(fitAttr[k])}"`;
         }
+        let text = '';
+        for (const sp of group.spans) text += escapeXml(sp.text);
         // For flat mode, use addRawLine to skip text tracking
-        const attrsStr = Object.entries(textAttrs)
-          .map(([k, v]) => `${k}="${escapeXml(v)}"`)
-          .join(' ');
         builder.addRawLine(`  <text ${attrsStr}>${text}</text>\n`);
       }
     } else {

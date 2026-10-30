@@ -12,10 +12,17 @@ item when it closes or advances one.
 - **Layout 13–58 % faster with pretext 1.0**, same machine and input
   (`bench/PRETEXT-1.0.txt`): office cold 83 → 35 ms per 1000 frames,
   100k runs cold 126 → 104 ms, warm 118 → 95 ms, 100×100 table 149 → 130 ms,
-  a 100k-run resize drag 4.26 → 3.22 s. Render is unchanged. README and
-  `bench/README.md` tables re-measured (median of 4 runs); the Satori /
-  textkit ratios there are lower than the old figures on 0.0.8 too — this
-  machine, not a regression.
+  a 100k-run resize drag 4.26 → 3.22 s. Render is unchanged by the upgrade.
+  README and `bench/README.md` tables re-measured (median of 4 runs); the
+  Satori / textkit ratios there are lower than the old figures on 0.0.8
+  too — this machine, not a regression.
+- **SVG render ~3× faster, byte-identical output.** `escapeXml` returns
+  values with nothing to escape as they are (one `test`, then one `replace`
+  only when needed) instead of four `replace` passes on every value, and the
+  flat `<text>` emit, `serializeSvg` and the table shape helpers build
+  attributes by direct concatenation instead of `Object.entries` / `map` /
+  `join`. 100k runs, `render flat` 211 → 65 ms; 20k runs, `browser`
+  97 → 31 ms, `glyph` 85 → 26 ms. Render is now faster than layout.
 
 ### Changed
 

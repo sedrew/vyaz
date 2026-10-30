@@ -67,12 +67,14 @@ function withOverflowVisible(svg: string): string {
 // ── Shape helpers ────────────────────────────────────────────────────────
 
 function rect(x: number, y: number, w: number, h: number, attrs: Record<string, string | number>): string {
-  const a = Object.entries(attrs).map(([k, v]) => `${k}="${escapeXml(v)}"`).join(' ');
+  let a = '';
+  for (const k in attrs) a += `${a ? ' ' : ''}${k}="${escapeXml(attrs[k])}"`;
   return `  <rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(Math.max(0, w))}" height="${fmt(Math.max(0, h))}" ${a} />\n`;
 }
 
 function line(x1: number, y1: number, x2: number, y2: number, color: string, width: number, extra: Record<string, string> = {}): string {
-  const extraAttrs = Object.entries(extra).map(([k, v]) => ` ${k}="${escapeXml(v)}"`).join('');
+  let extraAttrs = '';
+  for (const k in extra) extraAttrs += ` ${k}="${escapeXml(extra[k])}"`;
   return `  <line x1="${fmt(x1)}" y1="${fmt(y1)}" x2="${fmt(x2)}" y2="${fmt(y2)}" stroke="${escapeXml(safeColor(color, "#000000"))}" stroke-width="${fmt(width)}"${extraAttrs} />\n`;
 }
 
