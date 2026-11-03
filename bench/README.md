@@ -21,7 +21,8 @@ width 800, wrapping), then measures per size:
 from the test fixture so results don't depend on system fonts.
 
 `BASELINE.txt` — reference numbers captured before the Slice-3 cache/hot-path
-work. Re-run and diff after any change to `layout-*`, `ParagraphCompiler`,
+work. `PRETEXT-1.0.txt` — vendored pretext 0.0.8 vs 1.0.0 on one machine, same
+input (the benches are deterministic), sides alternated run by run. Re-run and diff after any change to `layout-*`, `ParagraphCompiler`,
 `PositioningEngine`, or the pretext measure path.
 
 ## Tables
@@ -90,8 +91,8 @@ no full-pipeline number to compare it on) — not one race, two different jobs:
 
 | | 50 words | 500 words | 2,000 words | 10,000 words |
 |---|---:|---:|---:|---:|
-| vs. Satori (full pipeline) | 10.1× | 20.9× | 30.4× | 40.1× |
-| vs. textkit (layout only) | 8.7× | 11.3× | 12.4× | 14.9× |
+| vs. Satori (full pipeline) | 8.4× | 16.4× | 22.2× | 28.8× |
+| vs. textkit (layout only) | 7.7× | 7.7× | 9.1× | 12.8× |
 
 Exact ms and output-size figures are in the two tables below.
 
@@ -113,15 +114,15 @@ throws under Bun). Static PT Sans (`bench/fixtures/`, OFL) is registered with
 both engines, since Satori's `opentype.js` fork can't parse variable-font
 `fvar` tables — no `Inter-Variable.ttf` here.
 
-Per word count, `min` of N iterations for the full pipeline (parse + layout +
+Per word count, `min` of N iterations (median of 4 runs, 2026-10-30) for the full pipeline (parse + layout +
 serialize to SVG for vyaz; `satori()` for Satori) plus output size:
 
 | words | vyaz total | vyaz svg | satori total | satori svg | time ratio | size ratio |
 |---:|---:|---:|---:|---:|---:|---:|
-| 50 | 0.4 ms | 3.8 KB | 3.8 ms | 142 KB | 10.1× | 37.2× |
-| 500 | 1.5 ms | 35 KB | 31.6 ms | 1.58 MB | 20.9× | 45.1× |
-| 2,000 | 4.2 ms | 139 KB | 126.5 ms | 6.77 MB | 30.4× | 48.6× |
-| 10,000 | 17.4 ms | 698 KB | 698.7 ms | 35.8 MB | 40.1× | 51.3× |
+| 50 | 0.5 ms | 3.9 KB | 4.2 ms | 142 KB | 8.4× | 36.6× |
+| 500 | 2.0 ms | 35.7 KB | 32.8 ms | 1.58 MB | 16.4× | 44.3× |
+| 2,000 | 5.9 ms | 142 KB | 129.7 ms | 6.77 MB | 22.2× | 47.6× |
+| 10,000 | 23.4 ms | 712 KB | 671.8 ms | 35.8 MB | 28.8× | 50.3× |
 
 **Not an apples-to-apples output**, and the ratios say so, not just "vyaz is
 faster": vyaz emits `<text>`/`<tspan>` referencing the font by name (small,
@@ -159,10 +160,10 @@ header comment for the full rationale.
 
 | words | vyaz layout | vyaz lines | textkit layout | textkit lines | time ratio |
 |---:|---:|---:|---:|---:|---:|
-| 50 | 0.09 ms | 4 | 0.80 ms | 4 | 8.7× |
-| 500 | 0.46 ms | 38 | 5.16 ms | 38 | 11.3× |
-| 2,000 | 1.58 ms | 150 | 19.50 ms | 150 | 12.4× |
-| 10,000 | 5.96 ms | 750 | 88.58 ms | 750 | 14.9× |
+| 50 | 0.11 ms | 4 | 0.85 ms | 4 | 7.7× |
+| 500 | 0.69 ms | 38 | 5.31 ms | 38 | 7.7× |
+| 2,000 | 2.26 ms | 150 | 20.57 ms | 150 | 9.1× |
+| 10,000 | 6.95 ms | 750 | 89.29 ms | 750 | 12.8× |
 
 Line counts matching across every size is the content-parity check: both
 engines wrap the identical word/style stream to (in this case) the same

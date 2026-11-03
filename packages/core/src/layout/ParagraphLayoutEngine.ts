@@ -34,7 +34,7 @@ import type { LayoutWarning } from '../types/LayoutTypes.js';
 // Vendored pretext — see src/vendor/pretext/VENDOR.json and
 // scripts/vendor-pretext.ts. The vendored copy routes text measurement through
 // src/measure/FontkitMeasureContext.ts instead of a global canvas context.
-import { prepareRichInline, materializeRichInlineLineRange, layoutNextRichInlineLineRange, type PreparedRichInline, type RichInlineCursor } from '../vendor/pretext/rich-inline.js';
+import { prepareRichInline, materializeRichInlineLineRange, layoutNextRichInlineLineRange, type PreparedRichInline, type RichInlineBox, type RichInlineCursor, type RichInlineItem, type RichInlineOptions } from '../vendor/pretext/rich-inline.js';
 
 // ── Text measurement backend ──────────────────────────────────────────────
 //
@@ -107,8 +107,7 @@ function getFontMetricsForItem(item: PreparedRichInlineItem, mode?: 'browser' | 
  *
  * Covers exactly the fields that `compileParagraph` + `prepareRichInline`
  * consume (text/shape + resolved font token inputs + letterSpacing), plus the
- * paragraph-level `overflowWrap` (it flows into every item and changes what
- * `prepareRichInline` returns — see `PreparedRichInlineItem.overflowWrap`).
+ * paragraph-level options {@link richInlineOptions} hands `prepareRichInline`.
  * Style that only affects positioning or painting — colour, alignment,
  * line-height, spacing, decoration — is deliberately excluded so an editor
  * re-layout after a colour change still hits the cache. `JSON.stringify(paragraph)`
@@ -118,7 +117,8 @@ function preparedCacheKey(paragraph: Paragraph): string {
   const c = paragraph.children;
   let k = (paragraph.style.overflowWrap ?? '') + '|'
     + (preservesSpaces(paragraph.style.whiteSpace) ? 'P' : '')
-    + (paragraph.style.hyphenBreak === false ? 'H' : '') + '|';
+    + (paragraph.style.hyphenBreak === false ? 'H' : '')
+    + (paragraph.style.wordBreak === 'keep-all' ? 'K' : '') + '|';
   const S ='\u0000';   // field/record separator — never present in a real text run
   for (let i = 0; i < c.length; i++) {
     const r = c[i];
@@ -133,6 +133,31 @@ function preparedCacheKey(paragraph: Paragraph): string {
       + S;
   }
   return k;
+}
+
+/**
+ * The paragraph-level line-breaking options for `prepareRichInline`.
+ *
+ * `pre` / `pre-wrap` keep spaces (CSS `white-space: pre-wrap`; `pre` never
+ * wraps at all, see `layout`). `overflowWrap` defaults to CSS `'normal'`: a
+ * word wider than the line overflows rather than being cut between graphemes.
+ * Of `wordBreak`, only `keep-all` is supported.
+ */
+function richInlineOptions(paragraph: Paragraph): RichInlineOptions {
+  const st = paragraph.style;
+  return {
+    whiteSpace: preservesSpaces(st.whiteSpace) ? 'pre-wrap' : 'normal',
+    overflowWrap: st.overflowWrap ?? 'normal',
+    ...(st.hyphenBreak === false ? { hyphenBreak: false } : {}),
+    ...(st.wordBreak === 'keep-all' ? { wordBreak: 'keep-all' as const } : {}),
+  };
+}
+
+/** Compiled items as pretext takes them: an inline-box run is a box of its widget's width. */
+function toPretextItems(items: PreparedRichInlineItem[]): Array<RichInlineItem | RichInlineBox> {
+  return items.map((item) => item.metadata.inlineWidget
+    ? { width: item.metadata.inlineWidget.width }
+    : { text: item.text, font: item.font, letterSpacing: item.letterSpacing });
 }
 
 const DEFAULT_PREPARED_CACHE_MAX = 4096;
@@ -234,7 +259,7 @@ export class ParagraphLayoutEngine {
       this.preparedCache.delete(cacheKey);
       this.preparedCache.set(cacheKey, prepared);
     } else {
-      prepared = prepareRichInline(items);
+      prepared = prepareRichInline(toPretextItems(items), richInlineOptions(paragraph));
       this.preparedCache.set(cacheKey, prepared);
       if (this.preparedCache.size > this.cacheMax) {
         this.preparedCache.delete(this.preparedCache.keys().next().value as string);

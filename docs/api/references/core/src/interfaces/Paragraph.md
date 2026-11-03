@@ -2,7 +2,7 @@
 
 # Interface: Paragraph
 
-Defined in: [core/src/types/Document.ts:614](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L614)
+Defined in: [core/src/types/Document.ts:617](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L617)
 
 A single paragraph (block-level text container).
 
@@ -27,7 +27,7 @@ Contains one or more `TextRun` children that form the paragraph content.
 
 > **children**: [`TextRun`](TextRun.md)[]
 
-Defined in: [core/src/types/Document.ts:620](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L620)
+Defined in: [core/src/types/Document.ts:623](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L623)
 
 Inline-level text runs forming the paragraph.
 
@@ -37,7 +37,7 @@ Inline-level text runs forming the paragraph.
 
 > `optional` **id?**: `string`
 
-Defined in: [core/src/types/Document.ts:616](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L616)
+Defined in: [core/src/types/Document.ts:619](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L619)
 
 Unique identifier for this paragraph (optional, for debugging).
 
@@ -47,7 +47,7 @@ Unique identifier for this paragraph (optional, for debugging).
 
 > `optional` **rule?**: `object`
 
-Defined in: [core/src/types/Document.ts:628](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L628)
+Defined in: [core/src/types/Document.ts:631](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L631)
 
 When set, this paragraph **is** a horizontal rule (`<hr>`) — `children`
 is ignored (should be `[]`) and the paragraph lays out as a single line
@@ -69,6 +69,6 @@ still apply as the rule's own vertical margin.
 
 > **style**: [`ParagraphStyle`](ParagraphStyle.md)
 
-Defined in: [core/src/types/Document.ts:618](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L618)
+Defined in: [core/src/types/Document.ts:621](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L621)
 
 Block-level paragraph style.

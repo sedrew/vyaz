@@ -4,6 +4,6 @@
 
 > `const` **paragraphLayoutEngine**: [`ParagraphLayoutEngine`](../classes/ParagraphLayoutEngine.md)
 
-Defined in: [core/src/layout/ParagraphLayoutEngine.ts:500](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L500)
+Defined in: [core/src/layout/ParagraphLayoutEngine.ts:525](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L525)
 
 Singleton

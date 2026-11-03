@@ -9,6 +9,13 @@ item when it closes or advances one.
 
 ### Performance
 
+- **Layout 13–58 % faster with pretext 1.0**, same machine and input
+  (`bench/PRETEXT-1.0.txt`): office cold 83 → 35 ms per 1000 frames,
+  100k runs cold 126 → 104 ms, warm 118 → 95 ms, 100×100 table 149 → 130 ms,
+  a 100k-run resize drag 4.26 → 3.22 s. Render is unchanged by the upgrade.
+  README and `bench/README.md` tables re-measured (median of 4 runs); the
+  Satori / textkit ratios there are lower than the old figures on 0.0.8
+  too — this machine, not a regression.
 - **SVG render ~3× faster, byte-identical output.** `escapeXml` returns
   values with nothing to escape as they are (one `test`, then one `replace`
   only when needed) instead of four `replace` passes on every value, and the
@@ -16,6 +23,59 @@ item when it closes or advances one.
   attributes by direct concatenation instead of `Object.entries` / `map` /
   `join`. 100k runs, `render flat` 211 → 65 ms; 20k runs, `browser`
   97 → 31 ms, `glyph` 85 → 26 ms. Render is now faster than layout.
+
+### Changed
+
+- **Vendored pretext 0.0.8 → 1.0.0.** Line breaking now follows ports of
+  Chrome's own line breaker and its data (CJK punctuation, quotes, dashes,
+  URLs, Thai) instead of pretext's rules, and a paragraph's runs are laid out
+  as one paragraph: a word split across runs wraps whole, and punctuation
+  that starts a run stays with the word before it (0.0.8 could end a line at
+  any run boundary). Always Chrome's rules, in every runtime — the vendored
+  copy no longer reads the user agent or `<html lang>`, so a document lays
+  out the same in Bun, Node and every browser. The measurement seam moved
+  (`createContext()` now hands pretext a proxy onto the fontkit context);
+  `overflowWrap` and `hyphenBreak` are re-implemented on 1.0 as paragraph
+  options of `prepareRichInline()`; vyaz's own per-item `pre-wrap` patches
+  are gone — 1.0 takes `whiteSpace: 'pre-wrap'` itself. Browser bundle
+  ≈ 980 KB (pretext's break tables). **Output changes** (goldens
+  `fonts/roboto-kerning`, `fonts/roboto-cyrillic`, `fonts/inter-weights`,
+  `office-cases/letter-spacing` — reviewed: kerning with the space, and the
+  negative-letter-spacing line start below).
+- `PreparedRichInlineItem` loses `overflowWrap`, `whiteSpace`, `hyphenBreak`,
+  `extraWidth` and `break`: those are paragraph options or a box now.
+
+### Added
+
+- **`wordBreak: 'keep-all'`** is laid out (was a no-op): Chinese, Japanese
+  and Korean words stay whole. `'break-all'` / `'break-word'` still lay out
+  as `'normal'`.
+
+### Fixed
+
+- **Kerning with the space was ignored with shaping on.** Words were measured
+  apart, so a line with pairs like `R W`, `o Y` or `А А` against the space
+  was up to a pixel wider than the same line shaped whole; a content box
+  sized to it was too wide. pretext 1.0 reads the font's kerning with the
+  space (Roboto 32 px "AVATAR Wave To Yo": 289.41 → 288.78, the whole-run
+  shaped width). `mode: 'office'` gets it too where it kerns at all (fonts
+  with a `kern` table, from 12 pt); not yet checked against PowerPoint — see
+  [Roadmap](ROADMAP.md), "kerning of pairs around a space".
+- **The collapsed space between two runs could take the wrong run's paint**
+  when both had a space (`"aa "` + `" bb"`): it went to the second run; CSS
+  keeps the first. pretext now names the run that holds the space
+  (`gapItemIndex`), replacing vyaz's guess.
+- **Inline boxes were measured as a U+FFFC character plus their width** while
+  breaking lines, so a line holding one broke as if it were wider than it
+  was. An inline box is now a box of exactly its widget's width, with a break
+  opportunity on both sides like `<img>`.
+- **Under negative letter spacing a wrapped line started with a space**
+  (office `letter-spacing` golden: `x="-3"`, " lazy dog…"), as in
+  `sp-minus1` of `scripts/office-metrics/TEXT-FEATURES-RESULTS.md` §2. It now
+  starts after the space, as PowerPoint and browsers start it.
+- **A text with a missing glyph measured differently whole and in pieces**
+  with shaping on: the whole-run width used the `.notdef` box advance, the
+  per-character one the shared estimate. Both use the estimate now.
 
 ## [0.6.0] - 2026-10-22
 

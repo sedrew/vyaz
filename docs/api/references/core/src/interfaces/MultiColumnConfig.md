@@ -2,7 +2,7 @@
 
 # Interface: MultiColumnConfig
 
-Defined in: [core/src/types/Document.ts:647](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L647)
+Defined in: [core/src/types/Document.ts:650](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L650)
 
 Configuration for multi-column layout (flowing columns).
 
@@ -25,7 +25,7 @@ use multiple `TextFrame` instances placed side-by-side.
 
 > **count**: `number`
 
-Defined in: [core/src/types/Document.ts:649](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L649)
+Defined in: [core/src/types/Document.ts:652](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L652)
 
 Number of columns (like CSS `column-count`).
 
@@ -35,7 +35,7 @@ Number of columns (like CSS `column-count`).
 
 > `optional` **fill?**: `"auto"` \| `"balance"`
 
-Defined in: [core/src/types/Document.ts:662](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L662)
+Defined in: [core/src/types/Document.ts:665](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L665)
 
 Column fill strategy:
 - `'auto'`: fill columns sequentially (top-to-bottom, then next column).
@@ -57,6 +57,6 @@ Defaults to `'auto'` when absent.
 
 > **gap**: `number`
 
-Defined in: [core/src/types/Document.ts:651](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L651)
+Defined in: [core/src/types/Document.ts:654](https://github.com/sedrew/vyaz/blob/main/packages/core/src/types/Document.ts#L654)
 
 Gap between columns in px (like CSS `column-gap`).

@@ -2,7 +2,7 @@
 
 # Class: ParagraphLayoutEngine
 
-Defined in: [core/src/layout/ParagraphLayoutEngine.ts:156](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L156)
+Defined in: [core/src/layout/ParagraphLayoutEngine.ts:181](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L181)
 
 ## Constructors
 
@@ -10,7 +10,7 @@ Defined in: [core/src/layout/ParagraphLayoutEngine.ts:156](https://github.com/se
 
 > **new ParagraphLayoutEngine**(`cacheMax?`): `ParagraphLayoutEngine`
 
-Defined in: [core/src/layout/ParagraphLayoutEngine.ts:161](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L161)
+Defined in: [core/src/layout/ParagraphLayoutEngine.ts:186](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L186)
 
 #### Parameters
 
@@ -28,7 +28,7 @@ Defined in: [core/src/layout/ParagraphLayoutEngine.ts:161](https://github.com/se
 
 > **clearCache**(): `void`
 
-Defined in: [core/src/layout/ParagraphLayoutEngine.ts:166](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L166)
+Defined in: [core/src/layout/ParagraphLayoutEngine.ts:191](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L191)
 
 Drop all cached prepared-line data (e.g. on document close).
 
@@ -42,7 +42,7 @@ Drop all cached prepared-line data (e.g. on document close).
 
 > **layout**(`paragraph`, `maxWidth`, `yOffset?`, `fontProvider?`, `listStyle?`, `listIndex?`, `listMarkerWidth?`, `wantGlyphAdvances?`, `mode?`, `onMissingFont?`, `markMissingGlyphs?`, `extras?`): [`ParagraphLayoutResult`](../interfaces/ParagraphLayoutResult.md)
 
-Defined in: [core/src/layout/ParagraphLayoutEngine.ts:178](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L178)
+Defined in: [core/src/layout/ParagraphLayoutEngine.ts:203](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L203)
 
 Layout a single paragraph — basic variant.
 
@@ -114,7 +114,7 @@ ParagraphLayoutResult with Line[]
 
 > **layoutGlyph**(`paragraph`, `maxWidth`, `yOffset?`): [`ParagraphLayoutResult`](../interfaces/ParagraphLayoutResult.md)
 
-Defined in: [core/src/layout/ParagraphLayoutEngine.ts:409](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L409)
+Defined in: [core/src/layout/ParagraphLayoutEngine.ts:434](https://github.com/sedrew/vyaz/blob/main/packages/core/src/layout/ParagraphLayoutEngine.ts#L434)
 
 Layout with per-glyph advance widths filled on every text span
 (SVG "glyph" preset, caret hit-testing).

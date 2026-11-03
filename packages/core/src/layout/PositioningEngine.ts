@@ -28,15 +28,14 @@ interface PretextFragment {
   itemIndex: number;
   text: string;
   gapBefore: number;
+  /** Item whose collapsed space `gapBefore` measures, or -1 when no space precedes the fragment. */
+  gapItemIndex: number;
   occupiedWidth: number;
-  start: { segmentIndex: number; graphemeIndex: number };
-  end: { segmentIndex: number; graphemeIndex: number };
 }
 
 interface PretextLine {
   fragments: PretextFragment[];
   width: number;         // natural width (without stretching)
-  end: { segmentIndex: number; graphemeIndex: number };
 }
 
 // ── List marker helpers ─────────────────────────────────────────────────
@@ -462,7 +461,7 @@ export function positionLines(
     // A strut line (empty paragraph / piece) has no fragments: lay out one
     // empty fragment of the first run so the line takes that run's size.
     const fragments: PretextFragment[] = ptLine.fragments.length === 0 && extras.strut
-      ? [{ itemIndex: 0, text: '', gapBefore: 0, occupiedWidth: 0, start: { segmentIndex: 0, graphemeIndex: 0 }, end: { segmentIndex: 0, graphemeIndex: 0 } }]
+      ? [{ itemIndex: 0, text: '', gapBefore: 0, gapItemIndex: -1, occupiedWidth: 0 }]
       : ptLine.fragments;
     for (const frag of fragments) {
       const item = items[frag.itemIndex];
@@ -508,27 +507,18 @@ export function positionLines(
       };
 
       if (gapWidth > 0) {
-        // pretext collapses two different things into `gapBefore`: whitespace at
-        // the START of this item, and whitespace at the END of the previous item
-        // (measured with the previous item's font). Those belong to different
-        // runs. When the gap came from the previous run's trailing space it must
-        // carry that run's paint — background / underline / colour — not this
-        // run's, or a highlighted word bleeds its background onto the space in
-        // front of it. Matches how a browser attributes a collapsed space to the
-        // element that contains it in source.
-        const prevItem = items[frag.itemIndex - 1];
-        // A lone separator run (the " " between `</b>` and `<del>`) owns the
-        // space too — it must not pick up the following run's strikethrough.
-        const gapFromPrev =
-          !!prevItem &&
-          /\s$/.test(prevItem.text ?? '') &&
-          !/^\s/.test(item.text ?? '');
-        const gapItem = gapFromPrev ? prevItem : item;
+        // The collapsed space before this fragment belongs to the run that holds
+        // it in source — this one, the previous one, or a lone separator run
+        // (the " " between `</b>` and `<del>`) — and carries that run's paint
+        // (background / underline / colour), as a browser attributes it.
+        // pretext names that run (`gapItemIndex`), and measured the space in its font.
+        const gapIndex = frag.gapItemIndex >= 0 && items[frag.gapItemIndex] ? frag.gapItemIndex : frag.itemIndex;
+        const gapItem = items[gapIndex];
         spans.push({
           x: 0,
           width: gapWidth,
           text: ' ',
-          itemIndex: gapFromPrev ? frag.itemIndex - 1 : frag.itemIndex,
+          itemIndex: gapIndex,
           pIdx: 0,
           tag,
           fontMetrics: baseFontMetrics,
@@ -539,8 +529,10 @@ export function positionLines(
       }
 
       // Split leading/trailing spaces from frag.text into separate space spans
-      // This is needed for SVG rendering to avoid xml:space="preserve" dependency
-      const text = frag.text;
+      // This is needed for SVG rendering to avoid xml:space="preserve" dependency.
+      // An inline box is a box to pretext, with no text: it stands for U+FFFC,
+      // as the run does in the source text.
+      const text = item.metadata.inlineWidget ? '\uFFFC' : frag.text;
       const leadingMatch = text.match(/^(\s+)/);
 
       let remainingText = text;
@@ -561,7 +553,9 @@ export function positionLines(
 
       // Split the pretext fragment into leading-space / trimmed-text /
       // trailing-space pieces and give each a width.
-      //  - one piece → use pretext's authoritative width for the whole fragment
+      //  - one piece of text → use pretext's authoritative width for the whole
+      //    fragment (a piece of only spaces is measured: in pre-wrap pretext
+      //    leaves the spaces that hang at the line end out of its width)
       //  - several  → measure each piece directly. Line breaking and positioning
       //    now read the same fontkit tables, so the pieces sum back to the
       //    fragment width; the old proportional `correctToSumInvariant` fix-up
@@ -578,7 +572,7 @@ export function positionLines(
       // measureText knows no letter-spacing; pretext adds it after every
       // character, so a measured piece gets it back the same way
       const tracking = item.metadata.style.letterSpacing ?? 0;
-      const resolvedWidths: number[] = fragments.length === 1
+      const resolvedWidths: number[] = fragments.length === 1 && remainingText.length > 0
         ? [textWidth]
         : fragments.map((t) => measureText(t, baseFontMetrics.fontSize, fontFamily, fsWeight, fsStyle) + tracking * [...t].length);
       let resolvedIdx = 0;

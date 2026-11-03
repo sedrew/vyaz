@@ -1,0 +1,27 @@
+pretext 0.0.8 -> 1.0.0 (feat(core)!: vendor pretext 1.0.0)
+
+Same machine, same input on both sides: the benches are deterministic (no
+RNG; text comes from the index) and bench/ did not change. Base: a worktree of
+c7590d2 (release: 0.6.0, vendored 0.0.8). Sides alternated run by run. Median
+of 4 runs for office, tables and throughput up to 100k; one run otherwise.
+
+  scenario                                 0.0.8       1.0.0      delta
+  ───────────────────────────────────────  ──────────  ─────────  ──────
+  office cold, 1000 frames                 82.9 ms     35.0 ms    -58%
+  office warm                              23.0 ms     19.0 ms    -17%
+  throughput 1k runs, layout cold          1.29 ms     1.02 ms    -21%
+  throughput 10k runs, layout cold         11.7 ms     8.9 ms     -24%
+  throughput 100k runs, layout cold        125.7 ms    104.2 ms   -17%
+  throughput 100k runs, layout warm        117.9 ms    94.8 ms    -20%
+  throughput 1M runs, layout cold (1 run)  1.38 s      1.09 s     -21%
+  heap delta, 100k runs (1 run)            251 MB      283 MB     +13%
+  heap delta, 1M runs (1 run)              841 MB      686 MB     -18%
+  table 100x100, layout                    149 ms      130 ms     -13%
+  resize 100k runs, 30-step drag (1 run)   4.26 s      3.22 s     -24%
+  resize table 100x100, drag (1 run)       2.83 s      2.44 s     -14%
+  vs textkit, 10k words, vyaz layout       7.43 ms     6.96 ms    -6%
+  vs satori, 10k words, vyaz pipeline      22.5 ms     22.3 ms    ~0
+  render flat, 100k runs (control)         202 ms      198 ms     ~0
+
+Layout only: render, and the Satori bench's full pipeline (where layout is a
+small share), stay where they were.

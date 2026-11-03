@@ -4,7 +4,7 @@
 
 > **splitParagraphByHardBreaks**(`paragraph`): [`Paragraph`](../interfaces/Paragraph.md)[]
 
-Defined in: [core/src/compile/ParagraphCompiler.ts:314](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L314)
+Defined in: [core/src/compile/ParagraphCompiler.ts:294](https://github.com/sedrew/vyaz/blob/main/packages/core/src/compile/ParagraphCompiler.ts#L294)
 
 Split a paragraph into virtual paragraphs on `\n` — the paragraphs of
 [splitParagraphAtHardBreaks](splitParagraphAtHardBreaks.md). For `normal` / `nowrap` / unset returns

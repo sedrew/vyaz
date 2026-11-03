@@ -2,7 +2,7 @@
 
 # Interface: MeasureProfile
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:60](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L60)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:75](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L75)
 
 How widths are computed from the font tables.
 
@@ -19,7 +19,7 @@ How widths are computed from the font tables.
 
 > `optional` **advanceQuantum?**: `number`
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:83](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L83)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:98](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L98)
 
 Round every glyph advance to a multiple of this many px (PowerPoint lays glyphs
 out on a 1/8 pt grid: all 266 glyphs of a Roboto / Times New Roman alphabet at
@@ -32,7 +32,7 @@ to nearest). Kerning is added on top, unrounded. Ignored when unset or 0.
 
 > **engine**: `"advance"` \| `"shape"`
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:61](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L61)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:76](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L76)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [core/src/measure/FontkitMeasureContext.ts:61](https://github.com/se
 
 > `optional` **features?**: `Record`\<`string`, `boolean`\>
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:63](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L63)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:78](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L78)
 
 `'shape'` only — OpenType feature overrides, e.g. `{ liga: false }`.
 
@@ -50,7 +50,7 @@ Defined in: [core/src/measure/FontkitMeasureContext.ts:63](https://github.com/se
 
 > `optional` **kernMinSize?**: `number`
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:70](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L70)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:85](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L85)
 
 `'shape'` only — kerning applies just to text at `fontSize >= kernMinSize`
 (smaller text is shaped with `kern: false`). Mirrors DrawingML's
@@ -63,7 +63,7 @@ default is 12pt.
 
 > `optional` **kernRequiresTable?**: `boolean`
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:76](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L76)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:91](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L91)
 
 `'shape'` only — kern only fonts that carry a classic `kern` table. PowerPoint kerns
 Times New Roman / Arial / Calibri (kern table) but never Roboto / Inter (GPOS only):
@@ -75,7 +75,7 @@ measured on Roboto at 11, 16, 20, 24 and 72pt, no pair ever kerns.
 
 > `optional` **opticalSizing?**: `boolean`
 
-Defined in: [core/src/measure/FontkitMeasureContext.ts:89](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L89)
+Defined in: [core/src/measure/FontkitMeasureContext.ts:104](https://github.com/sedrew/vyaz/blob/main/packages/core/src/measure/FontkitMeasureContext.ts#L104)
 
 Instance fonts with a free `opsz` axis at the used size, like CSS
 `font-optical-sizing: auto` (see `opticalSizeInstance`). On unless `false`;
