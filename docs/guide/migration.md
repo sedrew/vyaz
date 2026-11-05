@@ -13,13 +13,16 @@ you get back, and what to re-check. Versions are listed newest first; when you
 skip several, read every section in between. The [changelog](https://github.com/sedrew/vyaz/blob/main/CHANGELOG.md)
 has the full detail and the commits.
 
-## 0.6 → next release (unreleased)
+## 0.6 → 0.7
 
 The vendored line breaker moved from `@chenglou/pretext` 0.0.8 to 1.0.0. The
 public entry points are the same; one exported type lost fields, and line
 breaking follows Chrome's rules, so some lines break in different places.
 
 ### Code changes
+
+- **Peer ranges are `^0.7.0`.** A `^0.6.0` range does not include 0.7, so
+  bump all three packages together.
 
 `PreparedRichInlineItem`, the item type `compileParagraph()` returns, no longer
 carries the paragraph's line-breaking options or the inline-box hints. They are
@@ -120,6 +123,9 @@ Both modes:
 - `whiteSpace` defaults to `'pre-wrap'`.
 
 ## 0.4 → 0.5
+
+0.5.0 was not published to npm: from 0.4.13 the next published version is
+0.6.0. Coming from 0.4, read this section and the one above.
 
 ### Code changes
 

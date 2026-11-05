@@ -9,6 +9,12 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/@vyaz/core"><img src="https://img.shields.io/npm/v/@vyaz/core?label=%40vyaz%2Fcore" alt="@vyaz/core on npm"></a>
+  <a href="https://www.npmjs.com/package/@vyaz/renderer"><img src="https://img.shields.io/npm/v/@vyaz/renderer?label=%40vyaz%2Frenderer" alt="@vyaz/renderer on npm"></a>
+  <a href="https://www.npmjs.com/package/@vyaz/converters"><img src="https://img.shields.io/npm/v/@vyaz/converters?label=%40vyaz%2Fconverters" alt="@vyaz/converters on npm"></a>
+</p>
+
+<p align="center">
   <a href="https://sedrew.github.io/vyaz/playground">Playground</a> ·
   <a href="https://sedrew.github.io/vyaz/cases">Cases</a> ·
   <a href="https://sedrew.github.io/vyaz/">Docs</a>

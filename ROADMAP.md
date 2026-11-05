@@ -80,7 +80,7 @@ Direction, not a schedule. Order within a section is rough priority.
   Turkish — needs a `lang`/locale signal on the run (not in `TextRun` today)
   to know when to use `tr` casing instead of the default.
 - **Browser parity — what is still off against Chrome** (measured, see
-  `CHANGELOG.md` Unreleased for what already matches):
+  `CHANGELOG.md` 0.5.0 for what already matches):
   - **CSS strut** — a line box is at least the paragraph font's own inline box
     in CSS; the document model has no paragraph-level font, so a line made
     only of smaller runs (`<small>`, a lone `<sub>`) comes out shorter than in
