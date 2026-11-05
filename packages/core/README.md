@@ -14,6 +14,8 @@ bun add @vyaz/core
 npm install @vyaz/core
 ```
 
+Upgrading from an earlier version: see the [upgrade guide](https://sedrew.github.io/vyaz/guide/migration).
+
 ## Quick Start
 
 ```ts

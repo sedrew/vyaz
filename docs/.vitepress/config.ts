@@ -23,6 +23,7 @@ export default defineConfig({
           { text: 'Browser usage', link: '/guide/browser' },
           { text: 'SVG rendering', link: '/guide/render' },
           { text: 'Tables', link: '/guide/tables' },
+          { text: 'Upgrading', link: '/guide/migration' },
         ],
       },
       {
@@ -49,6 +50,7 @@ export default defineConfig({
           { text: 'Browser usage', link: '/guide/browser' },
           { text: 'SVG rendering', link: '/guide/render' },
           { text: 'Tables', link: '/guide/tables' },
+          { text: 'Upgrading', link: '/guide/migration' },
           { text: 'Playground', link: '/playground' },
           { text: 'Converter', link: '/converter' },
           { text: 'Cases', link: '/cases' },

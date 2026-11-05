@@ -4,7 +4,7 @@
 
 > **renderTableToSVG**(`result`, `opts?`): `string`
 
-Defined in: [renderers/src/TableRenderer.ts:141](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/TableRenderer.ts#L141)
+Defined in: [renderers/src/TableRenderer.ts:143](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/TableRenderer.ts#L143)
 
 ## Parameters
 
