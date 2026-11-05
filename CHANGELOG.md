@@ -7,13 +7,19 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
-**Upgrading — read this.** `PreparedRichInlineItem` loses `overflowWrap`,
-`whiteSpace`, `hyphenBreak`, `extraWidth` and `break`; code that reads
-`compileParagraph()` items takes them from `paragraph.style` and
-`metadata.inlineWidget` instead. Line breaking follows Chrome's rules, so
-lines break in different places in CJK text, around punctuation, in URLs and
-in words split across runs. The [upgrade guide](docs/guide/migration.md) has
-the field mapping and what to re-check.
+## [0.7.0] - 2026-11-05
+
+`@vyaz/core`, `@vyaz/renderer`, `@vyaz/converters` 0.6.0 → 0.7.0.
+
+**Upgrading — read this.** Install the three packages together at `0.7.x`
+(the peer ranges are `^0.7.0`; `^0.6.0` does not include it).
+`PreparedRichInlineItem` loses `overflowWrap`, `whiteSpace`, `hyphenBreak`,
+`extraWidth` and `break`; code that reads `compileParagraph()` items takes
+them from `paragraph.style` and `metadata.inlineWidget` instead. Line
+breaking follows Chrome's rules, so lines break in different places in CJK
+text, around punctuation, in URLs and in words split across runs. The
+[upgrade guide](docs/guide/migration.md) has the field mapping and what to
+re-check.
 
 ### Performance
 
@@ -58,6 +64,12 @@ the field mapping and what to re-check.
 - **`wordBreak: 'keep-all'`** is laid out (was a no-op): Chinese, Japanese
   and Korean words stay whole. `'break-all'` / `'break-word'` still lay out
   as `'normal'`.
+- Docs: an upgrade guide, `docs/guide/migration.md` ("Upgrading" on the
+  site), and benchmarks re-measured on 0.7.
+- Tests: justify across runs of different weight, size and tracking
+  (`j-multirun`, `j-mixed-size` against PowerPoint; an equal share per space
+  in `mode: 'browser'`). `mode: 'office'` still differs from PowerPoint on
+  lines mixing space sizes or tracked spaces — see [Roadmap](ROADMAP.md).
 
 ### Fixed
 

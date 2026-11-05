@@ -84,10 +84,9 @@ pack-test: build
 		(cd packages/$$pkg && npm pack --pack-destination $(DIST_TMP) > /dev/null); \
 	done
 	@cd $(DIST_TMP) && npm init -y > /dev/null 2>&1
-	@# Install in dependency order: core first, then renderer
-	@cd $(DIST_TMP) && npm install ./vyaz-core-*.tgz > /dev/null 2>&1
-	@cd $(DIST_TMP) && npm install ./vyaz-converters-*.tgz > /dev/null 2>&1
-	@cd $(DIST_TMP) && npm install ./vyaz-renderer-*.tgz > /dev/null 2>&1
+	@# All three in one install: converters' peers (core, renderer) resolve to the
+	@# local tarballs, not to the registry, where a new version is not published yet
+	@cd $(DIST_TMP) && npm install ./vyaz-core-*.tgz ./vyaz-renderer-*.tgz ./vyaz-converters-*.tgz > /dev/null 2>&1
 	@echo "→ Testing imports from clean npm install..."
 	@cd $(DIST_TMP) && node --input-type=module -e " \
 		import('@vyaz/core').then(m => console.log('  ✅ @vyaz/core:', Object.keys(m).length, 'exports')); \
