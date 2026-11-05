@@ -422,6 +422,61 @@ describe('Different paragraph styles', () => {
   });
 });
 
+// ── 7b. justify across runs of different style ───────────────────────────
+//
+// A justified line that mixes runs (weight, size, tracking): every space of
+// the line takes the same extra advance — the spaces inside a run as well as
+// the ones between runs (CSS text-justify: inter-word, as Chrome lays it out).
+// The last line of a paragraph keeps its natural spacing. Unifont: a space is
+// exactly 0.5 em.
+//
+// Browser only. PowerPoint gives the same equal share while every space of
+// the line has one size and no tracking (office-text-features.test.ts
+// j-multirun / j-mixed-size), but not on this line: a larger space gets more
+// (0.5·size + C) and a tracked space's tracking is absorbed by the extra —
+// ROADMAP "mode: 'office' justify on lines mixing space sizes or tracked
+// spaces".
+
+describe('justify — mixed-style lines', () => {
+  const uni = (text: string, extra: Record<string, unknown> = {}) =>
+    ({ type: 'text' as const, text, fontFamily: 'Unifont', fontSize: 16, ...extra });
+  const children = [
+    uni('aa bb cc '), uni('dd ee', { fontWeight: 'bold' }), uni(' ff gg hh ii '),
+    uni('jj kk', { fontSize: 24 }), uni(' ll mm nn oo pp qq', { letterSpacing: 2 }), uni(' rr ss tt.'),
+  ];
+  const frame = { width: 203, wrap: true, paragraphs: [{ style: { alignment: 'justify' as const, lineHeight: 1, spaceBefore: 0, spaceAfter: 0 }, children }] };
+  const naturalSpace = (s: { style: { fontSize?: number; letterSpacing?: number } }) =>
+    (s.style.fontSize ?? 16) / 2 + (s.style.letterSpacing ?? 0);
+
+  test('browser: every space of a non-last line gets the same extra, inside runs too', () => {
+    const r = layoutTextFrame(frame, { mode: 'browser', textBoxPadding: 0 });
+    expect(r.lines.length).toBeGreaterThan(2);
+    for (const [i, line] of r.lines.entries()) {
+      const content = line.spans.filter((s) => s.type !== 'marker' && !s.trailing);
+      const spaces = content.filter((s) => s.type === 'space');
+      const extras = spaces.map((s) => s.width / s.text.length - naturalSpace(s));
+      const right = Math.max(...content.map((s) => s.x + s.width));
+      if (i < r.lines.length - 1) {
+        expect(right).toBeCloseTo(203, 1);
+        // every space was split out of its run's text span to take its share
+        for (const s of content) if (s.type === 'text') expect(s.text).not.toMatch(/ /);
+        for (const e of extras) expect(e).toBeCloseTo(extras[0], 2);
+        expect(extras[0]).toBeGreaterThan(0);
+      } else {
+        for (const e of extras) expect(e).toBeCloseTo(0, 2);
+      }
+    }
+  });
+
+  test.todo('office: a larger space gets 0.5·size + C and a tracked space absorbs its tracking (PowerPoint)');
+
+  test('lines mixing runs: the spaces that stretch belong to several runs', () => {
+    const r = layoutTextFrame(frame, { mode: 'browser', textBoxPadding: 0 });
+    const mixed = r.lines.slice(0, -1).filter((l) => new Set(l.spans.filter((s) => s.type === 'space' && !s.trailing).map((s) => s.itemIndex)).size > 1);
+    expect(mixed.length).toBeGreaterThan(0);
+  });
+});
+
 // ── 8. Invariants ──────────────────────────────────────────────────────
 
 describe('Invariants', () => {

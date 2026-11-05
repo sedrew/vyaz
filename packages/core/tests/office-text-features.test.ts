@@ -63,6 +63,38 @@ describe.skipIf(!REAL_ARIAL)('justify — every space of the line stretches (Pow
     for (const s of spaces) expect(s.width / s.text.length).toBeCloseTo(6.23, 1);
   });
 
+  // Word starts on every justified line, PowerPoint's glyph-run x
+  // (scripts/office-metrics/text-features.json). Lines that mix runs of
+  // different weight / size: the slack goes to every space of the line —
+  // inside the runs too — not only to the gaps between runs.
+  const wordX = (l: Line) => l.spans.filter((s) => s.type === 'text' && s.text.trim()).map((s) => s.x);
+  test('runs of different weight: same share for spaces inside and between runs (j-multirun)', () => {
+    const r = office(200, [para([run('The quick '), run('brown fox', { fontWeight: 'bold' }), run(' jumps over the lazy dog while a frame measures every line box.')], { alignment: 'justify' })]);
+    expect(r.lines.map(textOf)).toEqual(['The quick brown fox jumps ', 'over the lazy dog while a ', 'frame measures every line ', 'box.']);
+    const ppt = [[0, 32.66, 75.06, 128.22, 157.38], [0, 40.42, 71.97, 109.65, 145.57, 191.13], [0, 49.3, 127.84, 175.25]];
+    ppt.forEach((xs, i) => {
+      const got = wordX(r.lines[i]);
+      expect(got.length).toBe(xs.length);
+      got.forEach((x, k) => expect(Math.abs(x - xs[k])).toBeLessThan(0.1));
+      expect(inkRight(r.lines[i])).toBeCloseTo(200, 1);
+    });
+    const shares = r.lines[0].spans.filter((s) => s.type === 'space' && !s.trailing).map((s) => s.width);
+    expect(shares.length).toBe(4); // 'The|quick' and 'brown|fox' sit inside runs
+    for (const w of shares) expect(w).toBeCloseTo(shares[0], 2);
+  });
+
+  test('runs of different size: one extra per space, whatever its run (j-mixed-size)', () => {
+    const r = office(220, [para([run('Small words then '), run('BIG', { fontSize: 28 }), run(' and more small words that wrap onto further lines.')], { alignment: 'justify' })]);
+    expect(r.lines.map(textOf)).toEqual(['Small words then BIG and ', 'more small words that wrap ', 'onto further lines.']);
+    const ppt = [[0, 47.78, 98.31, 137.34, 193.38], [0, 47.07, 94.88, 148.07, 185.38]];
+    ppt.forEach((xs, i) => {
+      const got = wordX(r.lines[i]);
+      expect(got.length).toBe(xs.length);
+      got.forEach((x, k) => expect(Math.abs(x - xs[k])).toBeLessThan(0.1));
+    });
+    expect(wordX(r.lines[2])).toEqual([0]); // last line: not stretched, one text span
+  });
+
   test('office stretches a line ending in \\n, browser does not (j-br)', () => {
     const p = [para([run('Short line ends in a break\nthen the text continues long enough to wrap twice inside the box.')], { alignment: 'justify' })];
     expect(inkRight(office(200, p).lines[0])).toBeCloseTo(200, 1);
