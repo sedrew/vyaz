@@ -4,6 +4,27 @@ Direction, not a schedule. Order within a section is rough priority.
 
 ## Next
 
+- **`mode: 'office'` justify on lines mixing space sizes or tracked spaces.**
+  vyaz gives every space of a justified line the same extra on top of its
+  advance and tracking (what Chrome, LibreOffice Impress and Writer do).
+  PowerPoint 16.93 does not, measured through its object model (per-character
+  widths) on Arial:
+  - a space of size *s* is `0.5·s + C` wide, `C` shared by the line: a 32 pt
+    space is 8.00 pt wider than a 16 pt one at every box width tried (20 / 24
+    / 32 / 48 pt → +2 / 4 / 8 / 16), where the font's own advances differ by
+    0.28 em per pt; lines PowerPoint compresses below natural deviate up to
+    ~0.9 pt;
+  - a tracked space is `max(the line's plain space, advance + spc)`: the
+    justify extra absorbs its tracking (spc 1 / 3 / 6 pt), while the tracking
+    of the letter before it stays.
+
+  On lines whose spaces share one size and no tracking both rules equal the
+  current one, so the text-features oracle (`j-multirun`, `j-mixed-size`,
+  `sp-justify`) matches to 0.02 pt and could not show this. Error today: word
+  starts up to 2.9 pt off with tracked spaces, up to 4 pt with 32 pt spaces.
+  Word follows PowerPoint with ~0.44·Δs. Office only; browser keeps the equal
+  extra. Needs these cases in `text-features-cases.ts`, then the rule in
+  `PositioningEngine` justify.
 - **Motion hooks — track text across re-layouts.** Layout is a pure, sub-ms
   function, so motion tools (Remotion, Motion Canvas) can re-lay out every
   frame — a Remotion promo reel built on Vyaz does exactly that, and had to
