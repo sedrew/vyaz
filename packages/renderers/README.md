@@ -12,7 +12,8 @@ npm install @vyaz/core @vyaz/renderer
 ```
 
 `@vyaz/core` is a **peer dependency** — install both, so there is a single copy
-(one font registry) in your app.
+(one font registry) in your app. Upgrading from an earlier version: see the
+[upgrade guide](https://sedrew.github.io/vyaz/guide/migration).
 
 ## Quick start — text
 

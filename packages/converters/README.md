@@ -12,7 +12,8 @@ bun add @vyaz/converters @vyaz/core @vyaz/renderer
 ```
 
 `@vyaz/core` and `@vyaz/renderer` are **peer dependencies** — install them
-alongside, so your app has one copy of each.
+alongside, so your app has one copy of each. Upgrading from an earlier version:
+see the [upgrade guide](https://sedrew.github.io/vyaz/guide/migration).
 
 ```ts
 import { htmlToTextFrame } from '@vyaz/converters'

@@ -22,8 +22,9 @@ from the test fixture so results don't depend on system fonts.
 
 `BASELINE.txt` — reference numbers captured before the Slice-3 cache/hot-path
 work. `PRETEXT-1.0.txt` — vendored pretext 0.0.8 vs 1.0.0 on one machine, same
-input (the benches are deterministic), sides alternated run by run. Re-run and diff after any change to `layout-*`, `ParagraphCompiler`,
-`PositioningEngine`, or the pretext measure path.
+input (the benches are deterministic), sides alternated run by run. Re-run and
+diff after any change to `layout-*`, `ParagraphCompiler`, `PositioningEngine`,
+or the pretext measure path.
 
 ## Tables
 
@@ -76,7 +77,7 @@ over `RESIZE_STEPS` steps, simulating a drag out and back rather than one
 jump. Each row reports `total` (one full drag session), `min`/`median`/`max`
 per step, and a `cold` baseline (min of several fresh, fully-unique-content
 layouts at the same size) so `cold/min` shows how much the prepare-cache is
-actually worth for this scenario — in practice a modest 1.1×–1.9×, not the
+actually worth for this scenario — in practice a modest 1.0×–1.4×, not the
 dramatic win the cache gives `throughput.ts`'s cold/warm split, because most
 of a resize's cost is line re-breaking and (for tables) the two-pass
 column/row re-measurement, neither of which the prepare-cache touches.
@@ -91,8 +92,8 @@ no full-pipeline number to compare it on) — not one race, two different jobs:
 
 | | 50 words | 500 words | 2,000 words | 10,000 words |
 |---|---:|---:|---:|---:|
-| vs. Satori (full pipeline) | 8.4× | 16.4× | 22.2× | 28.8× |
-| vs. textkit (layout only) | 7.7× | 7.7× | 9.1× | 12.8× |
+| vs. Satori (full pipeline) | 9.2× | 19.6× | 28.5× | 40.0× |
+| vs. textkit (layout only) | 6.6× | 7.6× | 8.6× | 13.1× |
 
 Exact ms and output-size figures are in the two tables below.
 
@@ -114,15 +115,16 @@ throws under Bun). Static PT Sans (`bench/fixtures/`, OFL) is registered with
 both engines, since Satori's `opentype.js` fork can't parse variable-font
 `fvar` tables — no `Inter-Variable.ttf` here.
 
-Per word count, `min` of N iterations (median of 4 runs, 2026-10-30) for the full pipeline (parse + layout +
-serialize to SVG for vyaz; `satori()` for Satori) plus output size:
+Per word count, `min` of N iterations (median of 4 runs, 2026-11-03; the time
+ratio is the median of the four runs' ratios) for the full pipeline (parse +
+layout + serialize to SVG for vyaz; `satori()` for Satori) plus output size:
 
 | words | vyaz total | vyaz svg | satori total | satori svg | time ratio | size ratio |
 |---:|---:|---:|---:|---:|---:|---:|
-| 50 | 0.5 ms | 3.9 KB | 4.2 ms | 142 KB | 8.4× | 36.6× |
-| 500 | 2.0 ms | 35.7 KB | 32.8 ms | 1.58 MB | 16.4× | 44.3× |
-| 2,000 | 5.9 ms | 142 KB | 129.7 ms | 6.77 MB | 22.2× | 47.6× |
-| 10,000 | 23.4 ms | 712 KB | 671.8 ms | 35.8 MB | 28.8× | 50.3× |
+| 50 | 0.4 ms | 3.9 KB | 4.0 ms | 142 KB | 9.2× | 36.6× |
+| 500 | 1.7 ms | 35.7 KB | 33.0 ms | 1.58 MB | 19.6× | 44.3× |
+| 2,000 | 4.5 ms | 142 KB | 128.7 ms | 6.77 MB | 28.5× | 47.6× |
+| 10,000 | 16.9 ms | 712 KB | 685.0 ms | 35.8 MB | 40.0× | 50.3× |
 
 **Not an apples-to-apples output**, and the ratios say so, not just "vyaz is
 faster": vyaz emits `<text>`/`<tspan>` referencing the font by name (small,
@@ -158,12 +160,15 @@ which internally shapes every run via fontkit, then runs Knuth-Plass line
 breaking, bidi, script itemization, and justification). See the file's own
 header comment for the full rationale.
 
+`min` of N iterations, median of 4 runs (2026-11-03); the time ratio is the
+median of the four runs' ratios:
+
 | words | vyaz layout | vyaz lines | textkit layout | textkit lines | time ratio |
 |---:|---:|---:|---:|---:|---:|
-| 50 | 0.11 ms | 4 | 0.85 ms | 4 | 7.7× |
-| 500 | 0.69 ms | 38 | 5.31 ms | 38 | 7.7× |
-| 2,000 | 2.26 ms | 150 | 20.57 ms | 150 | 9.1× |
-| 10,000 | 6.95 ms | 750 | 89.29 ms | 750 | 12.8× |
+| 50 | 0.12 ms | 4 | 0.81 ms | 4 | 6.6× |
+| 500 | 0.68 ms | 38 | 5.17 ms | 38 | 7.6× |
+| 2,000 | 2.23 ms | 150 | 19.27 ms | 150 | 8.6× |
+| 10,000 | 6.74 ms | 750 | 88.52 ms | 750 | 13.1× |
 
 Line counts matching across every size is the content-parity check: both
 engines wrap the identical word/style stream to (in this case) the same
@@ -175,24 +180,8 @@ Satori bench above.
 
 ### Fuzzing vyaz vs. textkit
 
-```bash
-bun run fuzz:textkit                              # 300 cases, seed 1
-FUZZ_CASES=2000 FUZZ_SEED=7 bun run fuzz:textkit
-FUZZ_GARBLE_RATE=0 bun run fuzz:textkit           # isolate line-breaking divergence
-                                                   # from unbreakable-token overflow
-FUZZ_VERBOSE=1 bun run fuzz:textkit               # print every flagged case's params
-```
-
-`fuzz-vs-textkit.ts` randomizes rich-text documents (size, weight, italic,
-letter-spacing, alignment, occasional unbreakable long tokens) and diffs
-vyaz against textkit for: crashes, content loss, overflow (a line wider than
-its box when a break opportunity existed), line-count outliers, and autofit
-divergence (vyaz's real `AutoFitEngine` 1%-grid shrink-to-fit search vs. a
-hand-rolled textkit equivalent, same grid). It is **not** a pass/fail gate —
-the two engines use different line-breaking algorithms (greedy vs.
-Knuth-Plass) and are not expected to wrap identically — it prints a report
-of what it found. See the file's own header comment for the full rationale
-and the known limitations of its overflow-tolerance heuristics (hanging
-trailing space/letter-spacing at a wrap point is expected and excluded, but
-imperfectly — see the comments around `UNBREAKABLE_WORD_LEN` and
-`spacingTolerance`).
+A differential fuzz harness (`fuzz-vs-textkit.ts`, `bun run fuzz:textkit`) is
+on the unmerged `fuzz/textkit-vs-vyaz` branch, not on `main`. It randomizes
+rich-text documents and reports crashes, content loss, overflow, line-count
+outliers and autofit divergence against textkit; it is a report, not a
+pass/fail gate.

@@ -60,6 +60,10 @@ Install them **together**: `@vyaz/renderer` and `@vyaz/converters` declare
 therefore one font registry (`fontMetricsProvider`) shared by layout, the renderer's
 `registerFont` and the converters.
 
+Upgrading from an earlier version? The [upgrade guide](https://sedrew.github.io/vyaz/guide/migration)
+lists, per version, what can break your code, what changes in the layout and
+what to re-check.
+
 ## Quick start
 
 ```ts
@@ -114,19 +118,20 @@ one thing you have to get right (fonts go to the engine *and* `document.fonts`).
 
 `bun run bench` — a `TextFrame` of N styled runs (~50 runs/paragraph, width 800,
 wrapping), Unifont from the test fixture. `min` of N iterations, median of 4
-runs (every table in this section, 2026-10-30):
+runs (every table in this section, 2026-11-03):
 
 | runs | layout (cold) | layout (warm cache) | render → SVG |
 |---:|---:|---:|---:|
-| 1,000 | 0.99 ms | 0.82 ms | 1.9 ms |
-| 10,000 | 9.0 ms | 9.3 ms | 20.1 ms |
-| 100,000 | 104 ms | 96 ms | 200 ms |
-| 1,000,000 | 1.15 s | 1.18 s | 4.0 s |
+| 1,000 | 0.99 ms | 0.81 ms | 0.67 ms |
+| 10,000 | 9.0 ms | 9.4 ms | 7.3 ms |
+| 100,000 | 104 ms | 90 ms | 63 ms |
+| 1,000,000 | 1.04 s | 1.21 s | 1.09 s |
 
 ≈ **1M styled runs/second** laid out, cold or warm.
 `bench/BASELINE.txt` holds reference numbers — re-run and diff after touching the
 layout hot path. `bench/PRETEXT-1.0.txt` compares vendored pretext 0.0.8 and 1.0.0
-on one machine: layout 13–58 % faster, render unchanged.
+on one machine: layout 13–58 % faster. SVG render is about 3× faster than in 0.6
+with byte-identical output (see the [changelog](CHANGELOG.md)).
 
 `bun run bench:tables` — `layoutTableFrame` + `renderTableToSVG` on an R×C
 multiplication-table grid, center-aligned, Unifont. Configurable via env vars
@@ -134,9 +139,9 @@ multiplication-table grid, center-aligned, Unifont. Configurable via env vars
 
 | grid (rows×cols) | cells | layout | render |
 |---:|---:|---:|---:|
-| 11×11 | 121 | 20.4 ms | 3.6 ms |
-| 51×51 | 2,601 | 67.2 ms | 24.5 ms |
-| 101×101 | 10,201 | 169 ms | 75.0 ms |
+| 11×11 | 121 | 19.0 ms | 2.8 ms |
+| 51×51 | 2,601 | 58.3 ms | 12.4 ms |
+| 101×101 | 10,201 | 130 ms | 42.5 ms |
 
 `bun run bench:resize` — re-layout cost when only `width` changes (a
 drag-resize), same frame reused each step so the prepare-cache should hit
@@ -145,10 +150,10 @@ both `TextFrame` and `TableFrame`:
 
 | size | min/step (resize) | cold (fresh) | cold/min |
 |---|---:|---:|---:|
-| 10,000 runs (text) | 10.3 ms | 11.1 ms | 1.1× |
-| 100,000 runs (text) | 95.9 ms | 101 ms | 1.0× |
-| 50×50 table (2,601 cells) | 14.9 ms | 20.8 ms | 1.4× |
-| 100×100 table (10,201 cells) | 61.9 ms | 82.7 ms | 1.3× |
+| 10,000 runs (text) | 10.1 ms | 10.5 ms | 1.0× |
+| 100,000 runs (text) | 93.4 ms | 102 ms | 1.1× |
+| 50×50 table (2,601 cells) | 14.5 ms | 20.3 ms | 1.4× |
+| 100×100 table (10,201 cells) | 60.2 ms | 82.8 ms | 1.4× |
 
 The prepare-cache's win here is modest — most of a resize's cost is line
 re-breaking and (for tables) the two-pass column/row re-measurement, neither
@@ -167,8 +172,8 @@ to compare it on):
 
 | | 50 words | 500 words | 2,000 words | 10,000 words |
 |---|---:|---:|---:|---:|
-| vs. Satori (full pipeline) | 8.4× | 16.4× | 22.2× | 28.8× |
-| vs. textkit (layout only) | 7.7× | 7.7× | 9.1× | 12.8× |
+| vs. Satori (full pipeline) | 9.2× | 19.6× | 28.5× | 40.0× |
+| vs. textkit (layout only) | 6.6× | 7.6× | 8.6× | 13.1× |
 
 Exact ms and output-size figures, plus what each number actually includes:
 [`bench/README.md`](bench/README.md#vs-satori--vs-react-pdftextkit).

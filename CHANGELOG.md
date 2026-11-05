@@ -7,6 +7,14 @@ item when it closes or advances one.
 
 ## [Unreleased]
 
+**Upgrading — read this.** `PreparedRichInlineItem` loses `overflowWrap`,
+`whiteSpace`, `hyphenBreak`, `extraWidth` and `break`; code that reads
+`compileParagraph()` items takes them from `paragraph.style` and
+`metadata.inlineWidget` instead. Line breaking follows Chrome's rules, so
+lines break in different places in CJK text, around punctuation, in URLs and
+in words split across runs. The [upgrade guide](docs/guide/migration.md) has
+the field mapping and what to re-check.
+
 ### Performance
 
 - **Layout 13–58 % faster with pretext 1.0**, same machine and input

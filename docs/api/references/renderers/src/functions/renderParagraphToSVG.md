@@ -4,7 +4,7 @@
 
 > **renderParagraphToSVG**(`lines`, `paragraphWidth`, `paragraphHeight`, `options?`): `string`
 
-Defined in: [renderers/src/SVGRenderer.ts:1446](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/SVGRenderer.ts#L1446)
+Defined in: [renderers/src/SVGRenderer.ts:1443](https://github.com/sedrew/vyaz/blob/main/packages/renderers/src/SVGRenderer.ts#L1443)
 
 Render one ParagraphLayoutResult to SVG (convenience wrapper).
 
